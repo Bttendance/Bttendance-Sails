@@ -16,7 +16,7 @@ module.exports.adapters = {
 
   // If you leave the adapter config unspecified 
   // in a model definition, 'default' will be used.
-  'default': 'disk',
+  'default': 'mongo',
 
   // In-memory adapter for DEVELOPMENT ONLY
   memory: {
@@ -41,4 +41,17 @@ module.exports.adapters = {
     password: 'YOUR_MYSQL_PASSWORD', 
     database: 'YOUR_MYSQL_DB'
   }
+
+  // MONGOLAB_URI: mongodb://bttendance:dsa372je382k8sgqa4hadm2g6g@ds053858.mongolab.com:53858/heroku_app18988288
+  mongo: {
+    module   : 'sails-mongo',
+    host     : 'ds053858.mongolab.com',
+    port     : 53858,
+    user     : 'bttendance',
+    password : 'dsa372je382k8sgqa4hadm2g6g',
+    database : 'heroku_app18988288'
+  }
+
+  // Shell Command
+  // mongo heroku_app18988288 --host ds053858.mongolab.com --port 53858 --username bttendance --password dsa372je382k8sgqa4hadm2g6g
 };
