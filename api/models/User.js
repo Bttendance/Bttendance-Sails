@@ -37,6 +37,11 @@ module.exports = {
       columnName: 'encrypted_password'
     },
 
+    macAddress: {
+      type: 'string',
+      required: true,
+    },
+
     // Prof, TA, Std, Admin
     userType: {
       type: 'string'
