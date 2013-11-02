@@ -40,7 +40,7 @@ module.exports.adapters = {
     // so you don't inadvertently push it up if you're using version control
     password: 'YOUR_MYSQL_PASSWORD', 
     database: 'YOUR_MYSQL_DB'
-  }
+  },
 
   // MONGOLAB_URI: mongodb://bttendance:dsa372je382k8sgqa4hadm2g6g@ds053858.mongolab.com:53858/heroku_app18988288
   mongo: {
