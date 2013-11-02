@@ -42,7 +42,7 @@ module.exports.adapters = {
     database: 'YOUR_MYSQL_DB'
   },
 
-  // MONGOLAB_URI: mongodb://bttendance:dsa372je382k8sgqa4hadm2g6g@ds053858.mongolab.com:53858/heroku_app18988288
+  // MONGOLAB_URI: mongodb://<dbuser>:<dbpassword>@ds053858.mongolab.com:53858/heroku_app18988288
   mongo: {
     module   : 'sails-mongo',
     host     : 'ds053858.mongolab.com',

@@ -22,7 +22,7 @@ module.exports.views = {
   // atpl, eco, ect, jazz, jqtpl, JUST, liquor, QEJS, 
   // swig, templayed, toffee, walrus, & whiskers
 
-  engine: 'ejs',
+  engine: 'jade',
 
 
 

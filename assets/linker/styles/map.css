@@ -1,0 +1,87 @@
+#map-widget {
+	position: absolute;
+	right: 8px;
+	top: 52px;
+	width: 28px;
+	height: auto;
+	z-index: 1;
+}
+#map-widget-zoom {
+	margin-top: 6px;
+	height: 55px;
+}
+.btn-map {
+	display: block;
+	width: 28px;
+	height: 28px;
+	background-color: #FFF;
+  background-image: none;
+	border-width: 0px;
+	border-radius: 2px;
+	padding: 0px;
+}
+.btn-map:hover,
+.btn-map:focus,
+.btn-map:active,
+.btn-map.active,
+.btn-map.disabled,
+.btn-map[disabled] {
+  background-color: #FFF;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.btn-map-ic {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  width: 19px;
+  height: 19px;
+}
+#btn-map-ic-current-location {
+  background:url('/images/current_location_ic.png');
+  background-repeat: no-repeat;
+}
+#btn-current-location:hover #btn-map-ic-current-location,
+#btn-current-location:focus #btn-map-ic-current-location,
+#btn-current-location:active #btn-map-ic-current-location,
+#btn-current-location.active #btn-map-ic-current-location,
+#btn-current-location.disabled #btn-map-ic-current-location,
+#btn-current-location[disabled] #btn-map-ic-current-location {
+  background:url('/images/current_location_ic_clicked.png');
+  background-repeat: no-repeat;
+}
+#btn-zoom-in {
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+#btn-map-ic-zoom-in {
+  background:url('/images/plus_ic.png');
+  background-repeat: no-repeat;
+}
+#btn-zoom-in:hover #btn-map-ic-zoom-in,
+#btn-zoom-in:focus #btn-map-ic-zoom-in,
+#btn-zoom-in:active #btn-map-ic-zoom-in,
+#btn-zoom-in.active #btn-map-ic-zoom-in,
+#btn-zoom-in.disabled #btn-map-ic-zoom-in,
+#btn-zoom-in[disabled] #btn-map-ic-zoom-in {
+  background:url('/images/plus_ic_clicked.png');
+  background-repeat: no-repeat;
+}
+#btn-zoom-out {
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+#btn-map-ic-zoom-out {
+  background:url('/images/minus_ic.png');
+  background-repeat: no-repeat;
+}
+#btn-zoom-out:hover #btn-map-ic-zoom-out,
+#btn-zoom-out:focus #btn-map-ic-zoom-out,
+#btn-zoom-out:active #btn-map-ic-zoom-out,
+#btn-zoom-out.active #btn-map-ic-zoom-out,
+#btn-zoom-out.disabled #btn-map-ic-zoom-out,
+#btn-zoom-out[disabled] #btn-map-ic-zoom-out {
+  background:url('/images/minus_ic_clicked.png');
+  background-repeat: no-repeat;
+}

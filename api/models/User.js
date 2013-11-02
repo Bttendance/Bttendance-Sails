@@ -6,6 +6,8 @@
  *
  */
 
+var passwordHash = require('password-hash');
+
 module.exports = {
 
   attributes: {
@@ -15,32 +17,37 @@ module.exports = {
     },
 
     username: {
-        type: 'string',
-        required: true,
-        unique: true,
-        maxLength: 20,
-        minLength: 5
+      type: 'string',
+      required: true,
+      unique: true,
+      maxLength: 20,
+      minLength: 5
     },
 
     email: {
-        type: 'email',
-        required: true,
-        unique: true
+      type: 'email',
+      required: true,
+      unique: true
     },
 
     password: {
-        type: 'string',
-        required: true,
-        minLength: '6',
-        columnName: 'encrypted_password'
+      type: 'string',
+      required: true,
+      minLength: '6',
+      columnName: 'encrypted_password'
     },
 
-    watchoutToken: {
-        type: 'string'
+    // Prof, TA, Std, Admin
+    userType: {
+      type: 'string'
+    },
+
+    bttendanceToken: {
+      type: 'string'
     },
 
     facebookToken: {
-        type: 'string'
+      type: 'string'
     },
 
     facebookTokenExpire: {
@@ -51,19 +58,14 @@ module.exports = {
       type: 'string'
     },
 
-    isAdmin: {
-      type: 'boolean',
-      defaultsTo: false
-    },
-
     toJSON: function() {
       var obj = this.toObject();
       // delete obj.password;
-      // delete obj.watchoutToken;
+      // delete obj.bttendanceToken;
       // delete obj.email;
       return obj;
     }
-  }
+  },
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
