@@ -1,5 +1,5 @@
 /**
- * User
+ * Student
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
@@ -13,7 +13,8 @@ module.exports = {
   attributes: {
 
     _id: {
-      type: 'string'
+      type: 'string',
+      unique: true
     },
 
     username: {
@@ -37,14 +38,30 @@ module.exports = {
       columnName: 'encrypted_password'
     },
 
-    macAddress: {
+    firstName: {
       type: 'string',
-      required: true,
+      required: true
     },
 
-    // Prof, TA, Std, Admin
-    userType: {
-      type: 'string'
+    lastName: {
+      type: 'string',
+      required: true
+    },
+
+    profileImage: {
+      type: 'url'
+    },
+
+    // iPhone, Android, Window, Blackberry
+    deviceType: {
+    	type: 'string',
+    	required: true
+    },
+
+    // UUID
+    deviceUUID: {
+    	type: 'string',
+    	required: true
     },
 
     bttendanceToken: {
@@ -74,8 +91,8 @@ module.exports = {
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-    values.password = User.hashPass(values.password);
-    User.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
+    values.password = Student.hashPass(values.password);
+    Student.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
       if (err) return next(err);
 
       var seqNo;
