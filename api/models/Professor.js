@@ -52,6 +52,18 @@ module.exports = {
       type: 'url'
     },
 
+    // iPhone, Android, Window, Blackberry
+    deviceType: {
+      type: 'string',
+      required: true
+    },
+
+    // UUID
+    deviceUUID: {
+      type: 'uuid',
+      required: true,
+    },
+
     bttendanceToken: {
       type: 'string'
     },

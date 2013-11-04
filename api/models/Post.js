@@ -15,12 +15,12 @@ module.exports = {
   		unique: true
   	},
 
-  	postTitle: {
+  	title: {
   		type: 'string',
   		required: true
   	},
 
-  	postMessage: {
+  	message: {
   		type: 'string',
   		required: true
   	},

@@ -15,16 +15,16 @@ module.exports = {
       unique: true
     },
 
-    schoolName: {
+    name: {
     	type: 'string',
     	required: true
     },
 
-    schoolLogo: {
+    logoImage: {
     	type: 'url'
     },
 
-    schoolWebsite: {
+    website: {
     	type: 'url'
     }
     

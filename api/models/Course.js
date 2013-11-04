@@ -10,7 +10,7 @@ module.exports = {
 
   attributes: {
 
-  	courseName: {
+  	name: {
   		type: 'string',
   		required: true
   	},

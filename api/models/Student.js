@@ -60,8 +60,12 @@ module.exports = {
 
     // UUID
     deviceUUID: {
-    	type: 'string',
-    	required: true
+    	type: 'uuid',
+    	required: true,
+    },
+
+    Course: {
+      name: 'string'
     },
 
     bttendanceToken: {
