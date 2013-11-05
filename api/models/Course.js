@@ -23,12 +23,39 @@ module.exports = {
   		type: 'boolean',
   		defaultsTo: true,
   		required: true
-  	}
+  	},
+
+    // has one School
+    school: {
+      type: 'integer',
+      required: true
+    },
+
+    // has one School
+    professor: {
+      type: 'integer',
+      required: true
+    },
+
+    // has many Posts
+    posts: {
+      type: 'array'
+    },
+    
+    // has many Students
+    students: {
+      type: 'array'
+    }
     
   },
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
+    // Instantly add or modify attributes
+    values.posts = new Array();
+    values.students = new Array();
+
+    // Dealing with MongoDB '_id'
     Course.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
       if (err) return next(err);
 

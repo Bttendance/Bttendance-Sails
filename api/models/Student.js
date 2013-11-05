@@ -48,6 +48,10 @@ module.exports = {
       required: true
     },
 
+    fullName: {
+      type: 'string'
+    },
+
     profileImage: {
       type: 'url'
     },
@@ -64,8 +68,14 @@ module.exports = {
     	required: true,
     },
 
-    Course: {
-      name: 'string'
+    // has many Courses
+    courses: {
+      type: 'array'
+    },
+
+    // has many memberships = 1 School + n Departments
+    memberships: {
+      type: 'array'
     },
 
     bttendanceToken: {
@@ -87,17 +97,21 @@ module.exports = {
     toJSON: function() {
       var obj = this.toObject();
       // delete obj.password;
-      // delete obj.bttendanceToken;
-      // delete obj.email;
       return obj;
     }
   },
 
   // Lifecycle Callbacks
-  beforeCreate: function(values, next) {
+  beforeCreate: function(values, callback) {
+    // Instantly add or modify attributes
     values.password = Student.hashPass(values.password);
+    values.fullName = values.firstName + " " + values.lastName;
+    values.courses = new Array();
+    values.memberships = new Array();
+
+    // Dealing with MongoDB '_id'
     Student.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
-      if (err) return next(err);
+      if (err) return callback(err);
 
       var seqNo;
       if (collections.length == 0)
@@ -106,7 +120,7 @@ module.exports = {
         seqNo = parseInt(collections[0].id)+ 1;
       values._id = seqNo.toString();
 
-      next();
+      callback();
     });
   }
 

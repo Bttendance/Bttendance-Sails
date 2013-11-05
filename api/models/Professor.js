@@ -48,6 +48,10 @@ module.exports = {
       required: true
     },
 
+    fullName: {
+      type: 'string'
+    },
+
     profileImage: {
       type: 'url'
     },
@@ -62,6 +66,16 @@ module.exports = {
     deviceUUID: {
       type: 'uuid',
       required: true,
+    },
+
+    // has many Courses
+    courses: {
+      type: 'array'
+    },
+
+    // has many memberships = 1 School + n Departments
+    memberships: {
+      type: 'array'
     },
 
     bttendanceToken: {
@@ -91,7 +105,13 @@ module.exports = {
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-    values.password = Professor.hashPass(values.password);
+    // Instantly add or modify attributes
+    values.password = Student.hashPass(values.password);
+    values.fullName = values.firstName + " " + values.lastName;
+    values.courses = new Array();
+    values.memberships = new Array();
+
+    // Dealing with MongoDB '_id'
     Professor.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
       if (err) return next(err);
 
