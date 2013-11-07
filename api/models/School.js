@@ -25,7 +25,8 @@ module.exports = {
     },
 
     website: {
-    	type: 'url'
+    	type: 'url',
+      required: true
     },
 
     // has many Courses
