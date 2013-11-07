@@ -5,6 +5,8 @@
  * @description	:: Contains logic for handling requests.
  */
 
+var passwordHash = require('password-hash');
+
 module.exports = {
 
 	signin: function(req, res) {
@@ -25,8 +27,7 @@ module.exports = {
 
 		if (username) {
 			Student.find({
-	  		username: username,
-	  		password: password
+	  		username: username
 			}).limit(10).sort('username ASC').done(function(err, std) {
 
 	  		// Error handling
@@ -43,15 +44,18 @@ module.exports = {
 			  	// Found one student!
 			    } else {
 			    	console.log("Student found:", std[0]);
-						var stdJSON = JSON.stringify(std[0]);
-						res.send(stdJSON);
+			    	if (!passwordHash.verify(password, std[0].password)) {
+			    		return res.send(400, { error: "Password doesn't match Error" });
+			    	} else {
+							var stdJSON = JSON.stringify(std[0]);
+							res.send(stdJSON);
+						}
 			    }
 			  }
 			});
 		} else {
 			Student.find({
-	  		email: email,
-	  		password: password
+	  		email: email
 			}).limit(10).sort('email ASC').done(function(err, std) {
 
 	  		// Error handling
@@ -68,8 +72,12 @@ module.exports = {
 			  	// Found one student!
 			    } else {
 			    	console.log("Student found:", std[0]);
-						var stdJSON = JSON.stringify(std[0]);
-						res.send(stdJSON);
+			    	if (!passwordHash.verify(password, std[0].password)) {
+			    		return res.send(400, { error: "Password doesn't match Error" });
+			    	} else {
+							var stdJSON = JSON.stringify(std[0]);
+							res.send(stdJSON);
+						}
 			    }
 			  }
 			});

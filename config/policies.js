@@ -30,7 +30,11 @@ module.exports.policies = {
   	update: false
   },
 
-  CourseContoller: {
+  CourseController: {
+  	create: 'isProfessor'
+  },
+
+  PostController: {
   	create: 'isProfessor'
   }
 

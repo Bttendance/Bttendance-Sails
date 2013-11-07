@@ -106,7 +106,7 @@ module.exports = {
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
     // Instantly add or modify attributes
-    values.password = Student.hashPass(values.password);
+    values.password = passwordHash.generate(values.password);
     values.fullName = values.firstName + " " + values.lastName;
     values.courses = new Array();
     values.memberships = new Array();
@@ -125,15 +125,4 @@ module.exports = {
       next();
     });
   }
-
 };
-
-module.exports.hashPass = function(pass)
-{
-  return passwordHash.generate(pass);
-}
-
-module.exports.checkPass = function(pass, stored)
-{
-  return passwordHash.verify(pass, stored);
-}
