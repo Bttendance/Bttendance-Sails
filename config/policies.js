@@ -16,7 +16,23 @@ module.exports.policies = {
 
   // Default policy for all controllers and actions
   // (`true` allows public access) 
-  '*': true
+  '*': true,
+
+  SchoolController: {
+  	'*': false
+  },
+
+  ProfessorController: {
+  	update: false
+  },
+
+  StudentController: {
+  	update: false
+  },
+
+  CourseContoller: {
+  	create: 'isProfessor'
+  }
 
   /*
 	// Here's an example of adding some policies to a controller

@@ -15,14 +15,12 @@ module.exports = {
 
 		if (!username && !email) {
 			console.log("ProfessorController : signin : Username or Email is required");
-			res.send(400, { error: "Username or Email is required"});
-			return;
+			return res.send(400, { error: "Username or Email is required"});
 		}
 
 		if (!password) {
 			console.log("ProfessorController : signin : Password is required");
-			res.send(400, { error: "Password is required"});
-			return;
+			return res.send(400, { error: "Password is required"});
 		}
 
 		if (username) {
@@ -33,23 +31,20 @@ module.exports = {
 
 	  		// Error handling
 	  		if (err) {
-					res.send(500, { error: "Professor Find Error" });
-			    return console.log(err);
+			    console.log(err);
+			    return res.send(500, { error: "Professor Find Error" });
 
 			  // Found multiple Professors!
 			  } else {
 			    if (prof.length == 0) {
-						res.send(500, { error: "No Professor Found Error" });
-			    	return;
+			    	return res.send(500, { error: "No Professor Found Error" });
 			    } else if (prof.length > 1) {
-						res.send(500, { error: "Multiple Professor Found Error" });
-			    	return;
+			    	return res.send(500, { error: "Multiple Professor Found Error" });
 			  	// Found one Professor!
 			    } else {
 			    	console.log("Professor found:", prof[0]);
 						var profJSON = JSON.stringify(prof[0]);
 						res.send(profJSON);
-						return;
 			    }
 			  }
 			});
@@ -61,28 +56,24 @@ module.exports = {
 
 	  		// Error handling
 	  		if (err) {
-					res.send(500, { error: "Professor Find Error" });
-			    return console.log(err);
+			    console.log(err);
+			    return res.send(500, { error: "Professor Find Error" });
 
 			  // Found multiple Professors!
 			  } else {
 			    if (prof.length == 0) {
-						res.send(500, { error: "No Professor Found Error" });
-			    	return;
+			    	return res.send(500, { error: "No Professor Found Error" });
 			    } else if (prof.length > 1) {
-						res.send(500, { error: "Multiple Professor Found Error" });
-			    	return;
+			    	return res.send(500, { error: "Multiple Professor Found Error" });
 			  	// Found one Professor!
 			    } else {
 			    	console.log("Professor found:", prof[0]);
 						var profJSON = JSON.stringify(prof[0]);
 						res.send(profJSON);
-						return;
 			    }
 			  }
 			});
 		}
-		return;
 	},
 
 	destroy: function(req, res) {
@@ -93,22 +84,19 @@ module.exports = {
 
 			if (err) {
 				console.log(err);
-				res.send(500, { error: "Professor Find Error" });
-				return;
+				return res.send(500, { error: "Professor Find Error" });
 			} 
 
 			if (!prof) {
 				console.log('No Professor Found (id : ' + id + ')');
-				res.send(404, { error: "No Professor Found Error" });
-				return;
+				return res.send(404, { error: "No Professor Found Error" });
 			}
 
 			prof.destroy(function(err) {
 
 				if (err) {
 					console.log(err);
-					res.send(500, { error: "Professor Destroy Error" });
-					return;
+					return res.send(500, { error: "Professor Destroy Error" });
 				}
 
 				console.log("Professor has been destroyed (id : " + id + ')');
@@ -116,7 +104,6 @@ module.exports = {
 				res.send(profJSON);
 				
 			});
-			return;
 		});
 	}
 

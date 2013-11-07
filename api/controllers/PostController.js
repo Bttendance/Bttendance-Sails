@@ -15,22 +15,19 @@ module.exports = {
 
 			if (err) {
 				console.log(err);
-				res.send(500, { error: "Post Find Error" });
-				return;
+				return res.send(500, { error: "Post Find Error" });
 			} 
 
 			if (!post) {
 				console.log('No Post Found (id : ' + id + ')');
-				res.send(404, { error: "No Post Found Error" });
-				return;
+				return res.send(404, { error: "No Post Found Error" });
 			}
 
 			post.destroy(function(err) {
 
 				if (err) {
 					console.log(err);
-					res.send(500, { error: "Post Destroy Error" });
-					return;
+					return res.send(500, { error: "Post Destroy Error" });
 				}
 
 				console.log("Post has been destroyed (id : " + id + ')');
@@ -38,7 +35,6 @@ module.exports = {
 				res.send(postJSON);
 				
 			});
-			return;
 		});
 	}
 

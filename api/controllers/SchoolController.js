@@ -15,22 +15,19 @@ module.exports = {
 
 			if (err) {
 				console.log(err);
-				res.send(500, { error: "School Find Error" });
-				return;
+				return res.send(500, { error: "School Find Error" });
 			} 
 
 			if (!sch) {
 				console.log('No School Found (id : ' + id + ')');
-				res.send(404, { error: "No School Found Error" });
-				return;
+				return res.send(404, { error: "No School Found Error" });
 			}
 
 			sch.destroy(function(err) {
 
 				if (err) {
 					console.log(err);
-					res.send(500, { error: "School Destroy Error" });
-					return;
+					return res.send(500, { error: "School Destroy Error" });
 				}
 
 				console.log("School has been destroyed (id : " + id + ')');
@@ -38,7 +35,6 @@ module.exports = {
 				res.send(schJSON);
 				
 			});
-			return;
 		});
 	}
   

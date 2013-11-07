@@ -15,22 +15,19 @@ module.exports = {
 
 			if (err) {
 				console.log(err);
-				res.send(500, { error: "Course Find Error" });
-				return;
+				return res.send(500, { error: "Course Find Error" });
 			} 
 
 			if (!cos) {
 				console.log('No Course Found (id : ' + id + ')');
-				res.send(404, { error: "No Course Found Error" });
-				return;
+				return res.send(404, { error: "No Course Found Error" });
 			}
 
 			cos.destroy(function(err) {
 
 				if (err) {
 					console.log(err);
-					res.send(500, { error: "Course Destroy Error" });
-					return;
+					return res.send(500, { error: "Course Destroy Error" });
 				}
 
 				console.log("Course has been destroyed (id : " + id + ')');
@@ -38,7 +35,6 @@ module.exports = {
 				res.send(cosJSON);
 				
 			});
-			return;
 		});
 	}
 

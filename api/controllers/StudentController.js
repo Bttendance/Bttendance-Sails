@@ -15,14 +15,12 @@ module.exports = {
 
 		if (!username && !email) {
 			console.log("StudentController : signin : Username or Email is required");
-			res.send(400, { error: "Username or Email is required"});
-			return;
+			return res.send(400, { error: "Username or Email is required"});
 		}
 
 		if (!password) {
 			console.log("StudentController : signin : Password is required");
-			res.send(400, { error: "Password is required"});
-			return;
+			return res.send(400, { error: "Password is required"});
 		}
 
 		if (username) {
@@ -33,23 +31,20 @@ module.exports = {
 
 	  		// Error handling
 	  		if (err) {
-					res.send(500, { error: "Student Find Error" });
-			    return console.log(err);
+	  			console.log(err)
+			    return res.send(500, { error: "Student Find Error" });;
 
 			  // Found multiple students!
 			  } else {
 			    if (std.length == 0) {
-						res.send(500, { error: "No Student Found Error" });
-			    	return;
+			    	return res.send(500, { error: "No Student Found Error" });
 			    } else if (std.length > 1) {
-						res.send(500, { error: "Multiple Student Found Error" });
-			    	return;
+			    	return res.send(500, { error: "Multiple Student Found Error" });
 			  	// Found one student!
 			    } else {
 			    	console.log("Student found:", std[0]);
 						var stdJSON = JSON.stringify(std[0]);
 						res.send(stdJSON);
-						return;
 			    }
 			  }
 			});
@@ -61,28 +56,24 @@ module.exports = {
 
 	  		// Error handling
 	  		if (err) {
-					res.send(500, { error: "Student Find Error" });
-			    return console.log(err);
+					console.log(err);
+			    return res.send(500, { error: "Student Find Error" });
 
 			  // Found multiple students!
 			  } else {
 			    if (std.length == 0) {
-						res.send(500, { error: "No Student Found Error" });
-			    	return;
+			    	return res.send(500, { error: "No Student Found Error" });
 			    } else if (std.length > 1) {
-						res.send(500, { error: "Multiple Student Found Error" });
-			    	return;
+			    	return res.send(500, { error: "Multiple Student Found Error" });
 			  	// Found one student!
 			    } else {
 			    	console.log("Student found:", std[0]);
 						var stdJSON = JSON.stringify(std[0]);
 						res.send(stdJSON);
-						return;
 			    }
 			  }
 			});
 		}
-		return;
 	},
 
 	destroy: function(req, res) {
@@ -93,22 +84,19 @@ module.exports = {
 
 			if (err) {
 				console.log(err);
-				res.send(500, { error: "Student Find Error" });
-				return;
+				return res.send(500, { error: "Student Find Error" });
 			} 
 
 			if (!std) {
 				console.log('No Student Found (id : ' + id + ')');
-				res.send(404, { error: "No Student Found Error" });
-				return;
+				return res.send(404, { error: "No Student Found Error" });
 			}
 
 			std.destroy(function(err) {
 
 				if (err) {
 					console.log(err);
-					res.send(500, { error: "Student Destroy Error" });
-					return;
+					return res.send(500, { error: "Student Destroy Error" });
 				}
 
 				console.log("Student has been destroyed (id : " + id + ')');
@@ -116,7 +104,6 @@ module.exports = {
 				res.send(stdJSON);
 				
 			});
-			return;
 		});
 	}
 
