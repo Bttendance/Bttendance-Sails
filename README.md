@@ -1,7 +1,11 @@
-<<<<<<< HEAD
-Bttendance-NodeJs
+Bttendance
 =================
-=======
-# Bttendance
-### a Sails application
->>>>>>> First Commit
+### Bluetooth based attedance check application
+
+####The Finest Artist
+
+####Samchon
+
+#####Copyright 2013 Utopia Corporation
+
+
