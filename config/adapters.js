@@ -47,7 +47,7 @@ module.exports.adapters = {
     module   : 'sails-mongo',
     host     : 'ds053858.mongolab.com',
     port     : 53858,
-    user     : 'bttendance',
+    user     : 'utopia',
     password : 'dsa372je382k8sgqa4hadm2g6g',
     database : 'heroku_app18988288'
   }

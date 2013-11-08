@@ -26,93 +26,56 @@ module.exports = {
 		}
 
 		if (username) {
-			Professor.find({
+			Professor.findOne({
 	  		username: username
-			}).limit(10).sort('username ASC').done(function(err, prof) {
+			}).done(function(err, prof) {
 
 	  		// Error handling
 	  		if (err) {
 			    console.log(err);
 			    return res.send(500, { error: "Professor Find Error" });
 
-			  // Found multiple Professors!
+			  // No Professor found
+			  } else if (!prof) {
+			    return res.send(404, { error: "No Professor Found Error" });
+
+			  // Found Professor!
 			  } else {
-			    if (prof.length == 0) {
-			    	return res.send(500, { error: "No Professor Found Error" });
-			    } else if (prof.length > 1) {
-			    	return res.send(500, { error: "Multiple Professor Found Error" });
-			  	// Found one Professor!
-			    } else {
-			    	console.log("Professor found:", prof[0]);
-			    	if (!passwordHash.verify(password, prof[0].password)) {
-			    		return res.send(400, { error: "Password doesn't match Error" });
-			    	} else {
-							var stdJSON = JSON.stringify(prof[0]);
-							res.send(stdJSON);
-						}
-			    }
+		    	console.log("Professor found:", prof);
+		    	if (!passwordHash.verify(password, prof.password)) {
+		    		return res.send(400, { error: "Password doesn't match Error" });
+		    	} else {
+						var profJSON = JSON.stringify(prof);
+						res.send(profJSON);
+					}
 			  }
 			});
 		} else {
-			Professor.find({
+			Professor.findOne({
 	  		email: email
-			}).limit(10).sort('email ASC').done(function(err, prof) {
+			}).done(function(err, prof) {
 
 	  		// Error handling
 	  		if (err) {
 			    console.log(err);
 			    return res.send(500, { error: "Professor Find Error" });
 
-			  // Found multiple Professors!
+			  // No Professor found
+			  } else if (!prof) {
+			    return res.send(404, { error: "No Professor Found Error" });
+
+			  // Found Professor!
 			  } else {
-			    if (prof.length == 0) {
-			    	return res.send(500, { error: "No Professor Found Error" });
-			    } else if (prof.length > 1) {
-			    	return res.send(500, { error: "Multiple Professor Found Error" });
-			  	// Found one Professor!
-			    } else {
-			    	console.log("Professor found:", prof[0]);
-			    	if (!passwordHash.verify(password, prof[0].password)) {
-			    		return res.send(400, { error: "Password doesn't match Error" });
-			    	} else {
-							var stdJSON = JSON.stringify(prof[0]);
-							res.send(stdJSON);
-						}
-			    }
+		    	console.log("Professor found:", prof);
+		    	if (!passwordHash.verify(password, prof.password)) {
+		    		return res.send(400, { error: "Password doesn't match Error" });
+		    	} else {
+						var profJSON = JSON.stringify(prof);
+						res.send(profJSON);
+					}
 			  }
 			});
 		}
-	},
-
-	destroy: function(req, res) {
-		res.contentType('application/json');
-		var id = req.param('id');
-
-		Professor.findOneById(id).done(function(err, prof) {
-
-			if (err) {
-				console.log(err);
-				return res.send(500, { error: "Professor Find Error" });
-			} 
-
-			if (!prof) {
-				console.log('No Professor Found (id : ' + id + ')');
-				return res.send(404, { error: "No Professor Found Error" });
-			}
-
-			prof.destroy(function(err) {
-
-				if (err) {
-					console.log(err);
-					return res.send(500, { error: "Professor Destroy Error" });
-				}
-
-				console.log("Professor has been destroyed (id : " + id + ')');
-				var profJSON = JSON.stringify(prof);
-				res.send(profJSON);
-				
-			});
-		});
 	}
 
 };

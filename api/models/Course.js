@@ -10,6 +10,11 @@ module.exports = {
 
   attributes: {
 
+    id_: {
+      type: 'string',
+      unique: true
+    },
+
   	name: {
   		type: 'string',
   		required: true
@@ -55,7 +60,7 @@ module.exports = {
     values.posts = new Array();
     values.students = new Array();
 
-    // Dealing with MongoDB '_id'
+    // Dealing with 'id_'
     Course.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
       if (err) return next(err);
 
@@ -63,8 +68,8 @@ module.exports = {
       if (collections.length == 0)
         seqNo = 1;
       else
-        seqNo = parseInt(collections[0].id)+ 1;
-      values._id = seqNo.toString();
+        seqNo = parseInt(collections[0].id_)+ 1;
+      values.id_ = seqNo.toString();
 
       next();
     });

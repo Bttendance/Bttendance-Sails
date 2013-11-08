@@ -26,93 +26,56 @@ module.exports = {
 		}
 
 		if (username) {
-			Student.find({
+			Student.findOne({
 	  		username: username
-			}).limit(10).sort('username ASC').done(function(err, std) {
+			}).done(function(err, std) {
 
 	  		// Error handling
 	  		if (err) {
 	  			console.log(err)
 			    return res.send(500, { error: "Student Find Error" });;
 
-			  // Found multiple students!
+			  // No Student found
+			  } else if (!std) {
+			    return res.send(404, { error: "No Student Found Error" });
+
+			  // Found student!
 			  } else {
-			    if (std.length == 0) {
-			    	return res.send(500, { error: "No Student Found Error" });
-			    } else if (std.length > 1) {
-			    	return res.send(500, { error: "Multiple Student Found Error" });
-			  	// Found one student!
-			    } else {
-			    	console.log("Student found:", std[0]);
-			    	if (!passwordHash.verify(password, std[0].password)) {
-			    		return res.send(400, { error: "Password doesn't match Error" });
-			    	} else {
-							var stdJSON = JSON.stringify(std[0]);
-							res.send(stdJSON);
-						}
-			    }
+		    	console.log("Student found:", std);
+		    	if (!passwordHash.verify(password, std.password)) {
+		    		return res.send(400, { error: "Password doesn't match Error" });
+		    	} else {
+						var stdJSON = JSON.stringify(std);
+						res.send(stdJSON);
+					}
 			  }
 			});
 		} else {
-			Student.find({
+			Student.findOne({
 	  		email: email
-			}).limit(10).sort('email ASC').done(function(err, std) {
+			}).done(function(err, std) {
 
 	  		// Error handling
 	  		if (err) {
 					console.log(err);
 			    return res.send(500, { error: "Student Find Error" });
 
-			  // Found multiple students!
+			  // No Student found
+			  } else if (!std) {
+			    return res.send(404, { error: "No Student Found Error" });
+
+			  // Found student!
 			  } else {
-			    if (std.length == 0) {
-			    	return res.send(500, { error: "No Student Found Error" });
-			    } else if (std.length > 1) {
-			    	return res.send(500, { error: "Multiple Student Found Error" });
-			  	// Found one student!
-			    } else {
-			    	console.log("Student found:", std[0]);
-			    	if (!passwordHash.verify(password, std[0].password)) {
-			    		return res.send(400, { error: "Password doesn't match Error" });
-			    	} else {
-							var stdJSON = JSON.stringify(std[0]);
-							res.send(stdJSON);
-						}
-			    }
+		    	console.log("Student found:", std);
+		    	if (!passwordHash.verify(password, std.password)) {
+		    		return res.send(400, { error: "Password doesn't match Error" });
+		    	} else {
+						var stdJSON = JSON.stringify(std);
+						res.send(stdJSON);
+					}
 			  }
 			});
 		}
-	},
-
-	destroy: function(req, res) {
-		res.contentType('application/json');
-		var id = req.param('id');
-
-		Student.findOneById(id).done(function(err, std) {
-
-			if (err) {
-				console.log(err);
-				return res.send(500, { error: "Student Find Error" });
-			} 
-
-			if (!std) {
-				console.log('No Student Found (id : ' + id + ')');
-				return res.send(404, { error: "No Student Found Error" });
-			}
-
-			std.destroy(function(err) {
-
-				if (err) {
-					console.log(err);
-					return res.send(500, { error: "Student Destroy Error" });
-				}
-
-				console.log("Student has been destroyed (id : " + id + ')');
-				var stdJSON = JSON.stringify(std);
-				res.send(stdJSON);
-				
-			});
-		});
 	}
 
 };
