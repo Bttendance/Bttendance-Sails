@@ -10,7 +10,7 @@ module.exports = {
 
   attributes: {
 
-    userId: {
+    user_id: {
       type: 'integer',
       unique: true
     },
@@ -81,7 +81,7 @@ module.exports = {
       delete values['username'];
       delete values['email'];
       delete values['password'];
-      values.userId = user.id_;
+      values.user_id = user.id_;
       values.fullName = values.firstName + " " + values.lastName;
       values.courses = new Array();
       values.memberships = new Array();
@@ -96,7 +96,7 @@ module.exports = {
       if (err) { return next(err); }
 
       User.findOne({
-        id_: prof.userId
+        id_: prof.user_id
       }).done(function(err, user) {
         // An database error occurred
         if (err) { return next(err); }
