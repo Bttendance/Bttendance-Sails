@@ -64,10 +64,13 @@ module.exports = {
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
 
+    console.log(values);
+
     User.create({
       username: values.username,
       email:    values.email,
-      password: values.password
+      password: values.password,
+      userType: 'student'
     }, function (err, user) {
 
       // An database error occurred
@@ -77,14 +80,38 @@ module.exports = {
       if (!user) { return next({ error: "User creation Error"}); }
 
       // Instantly add or modify attributes
-      values.username = undefined;
-      values.email = undefined;
-      values.password = undefined;
+      delete values['username'];
+      delete values['email'];
+      delete values['password'];
       values.userId = user.id_;
       values.fullName = values.firstName + " " + values.lastName;
       values.courses = new Array();
       values.memberships = new Array();
       next();
+    });
+  },
+
+  beforeDestroy: function(criteria, next) {
+
+    Student.findOne(criteria).done(function(err, std) {
+      // An database error occurred
+      if (err) { return next(err); }
+
+      User.findOne({
+        id_: std.userId
+      }).done(function(err, user) {
+        // An database error occurred
+        if (err) { return next(err); }
+        // Use couldn't found for some weird reason
+        if (!user) { return next({ error: "User found Error"}); }
+        // destroy the record
+        user.destroy(function(err) {
+          // An database error occurred
+          if (err) { return next(err); }
+          // record has been removed
+          next();
+        });
+      });
     });
   }
 };

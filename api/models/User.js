@@ -38,6 +38,12 @@ module.exports = {
       columnName: 'encrypted_password'
     },
 
+    // professor, student
+    userType: {
+    	type: 'string',
+    	required: true
+    },
+
     accessToken: {
       type: 'string'
     },
