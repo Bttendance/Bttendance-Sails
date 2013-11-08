@@ -2,7 +2,7 @@
     "name": "Bttendance",
     "private": true,
     "version": "0.0.1",
-    "description": "WatchOut Web Application",
+    "description": "Bttendance Serverside Application",
     "dependencies": {
         "sails": "0.9.7",
         "grunt": "0.4.1",
@@ -10,7 +10,9 @@
         "sails-mongo": "0.9.4",
         "jade": "0.35.0",
         "optimist": "0.3.4",
-        "password-hash": "1.2.1"
+        "password-hash": "1.2.1",
+        "passport": "0.1.17",
+        "passport-http-bearer": "1.0.1"
     },
     "scripts": {
         "start": "node app.js",

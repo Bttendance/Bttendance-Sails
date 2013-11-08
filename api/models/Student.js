@@ -6,8 +6,6 @@
  *
  */
 
-var passwordHash = require('password-hash');
-
 module.exports = {
 
   attributes: {
@@ -15,27 +13,6 @@ module.exports = {
     id_: {
       type: 'string',
       unique: true
-    },
-
-    username: {
-      type: 'string',
-      required: true,
-      unique: true,
-      maxLength: 20,
-      minLength: 5
-    },
-
-    email: {
-      type: 'email',
-      required: true,
-      unique: true
-    },
-
-    password: {
-      type: 'string',
-      required: true,
-      minLength: '6',
-      columnName: 'encrypted_password'
     },
 
     firstName: {
@@ -78,25 +55,8 @@ module.exports = {
       type: 'array'
     },
 
-    bttendanceToken: {
-      type: 'string'
-    },
-
-    facebookToken: {
-      type: 'string'
-    },
-
-    facebookTokenExpire: {
-      type: 'date'
-    },
-
-    googleplusToken: {
-      type: 'string'
-    },
-
     toJSON: function() {
       var obj = this.toObject();
-      // delete obj.password;
       return obj;
     }
   },
@@ -104,7 +64,6 @@ module.exports = {
   // Lifecycle Callbacks
   beforeCreate: function(values, callback) {
     // Instantly add or modify attributes
-    values.password = passwordHash.generate(values.password);
     values.fullName = values.firstName + " " + values.lastName;
     values.courses = new Array();
     values.memberships = new Array();

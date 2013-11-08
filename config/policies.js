@@ -18,7 +18,7 @@ module.exports.policies = {
   // (`true` allows public access) 
   '*': true,
 
-  SchoolController: {
+  UserController: {
   	'*': false
   },
 
@@ -28,6 +28,10 @@ module.exports.policies = {
 
   StudentController: {
   	update: false
+  },
+
+  SchoolController: {
+  	'*': false
   },
 
   CourseController: {
