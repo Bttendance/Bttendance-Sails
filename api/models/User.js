@@ -60,13 +60,13 @@ module.exports = {
   },
 
   // Lifecycle Callbacks
-  beforeCreate: function(values, callback) {
+  beforeCreate: function(values, next) {
     // Instantly add or modify attributes
     values.password = passwordHash.generate(values.password);
 
     // Dealing with 'id_'
     User.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
-      if (err) return callback(err);
+      if (err) return next(err);
 
       var seqNo;
       if (collections.length == 0)
@@ -75,7 +75,7 @@ module.exports = {
         seqNo = parseInt(collections[0].id_)+ 1;
       values.id_ = seqNo.toString();
 
-      callback();
+      next();
     });
   }
 

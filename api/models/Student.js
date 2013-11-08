@@ -10,8 +10,8 @@ module.exports = {
 
   attributes: {
 
-    id_: {
-      type: 'string',
+    userId: {
+      type: 'integer',
       unique: true
     },
 
@@ -62,24 +62,29 @@ module.exports = {
   },
 
   // Lifecycle Callbacks
-  beforeCreate: function(values, callback) {
-    // Instantly add or modify attributes
-    values.fullName = values.firstName + " " + values.lastName;
-    values.courses = new Array();
-    values.memberships = new Array();
+  beforeCreate: function(values, next) {
 
-    // Dealing with 'id_'
-    Student.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
-      if (err) return callback(err);
+    User.create({
+      username: values.username,
+      email:    values.email,
+      password: values.password
+    }, function (err, user) {
 
-      var seqNo;
-      if (collections.length == 0)
-        seqNo = 1;
-      else
-        seqNo = parseInt(collections[0].id_)+ 1;
-      values.id_ = seqNo.toString();
+      // An database error occurred
+      if (err) { return next(err); }
 
-      callback();
+      // Use wasn't created for some weird reason
+      if (!user) { return next({ error: "User creation Error"}); }
+
+      // Instantly add or modify attributes
+      values.username = undefined;
+      values.email = undefined;
+      values.password = undefined;
+      values.userId = user.id_;
+      values.fullName = values.firstName + " " + values.lastName;
+      values.courses = new Array();
+      values.memberships = new Array();
+      next();
     });
   }
 };
