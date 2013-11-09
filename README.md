@@ -2,6 +2,7 @@ Bttendance
 =================
 ### Bluetooth based attedance check application
 First Started at 2013/11/01
+
 This app is based on "Sails.js" Framework and "Java Script" Language.
 
 =================
