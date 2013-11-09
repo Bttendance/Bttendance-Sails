@@ -18,6 +18,10 @@ First Started at 2013/11/01
 2. Attribute uses '_' as space between words.
 3. Attribute overwrite object_id into _id which is integer and increases by 1 from 1.
 
+####API
+1. CRUD API is only approved for admin security string (currently admin_access : 'asdf1234')
+
+
 =================
 ####The Finest Artist
 Email : contact@thefinestartist.com
