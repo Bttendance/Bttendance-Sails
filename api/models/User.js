@@ -7,6 +7,7 @@
  */
 
 var passwordHash = require('password-hash');
+var passport = require('passport');
 
 module.exports = {
 
@@ -38,29 +39,13 @@ module.exports = {
       columnName: 'encrypted_password'
     },
 
-    // professor, student
-    userType: {
+    // professor, student, assistant
+    type: {
     	type: 'string',
     	required: true
     },
 
-    accessToken: {
-      type: 'string'
-    },
-
-    facebookToken: {
-      type: 'string'
-    },
-
-    facebookTokenExpire: {
-      type: 'date'
-    },
-
-    twitterToken: {
-    	type: 'string'
-    },
-
-    googleplusToken: {
+    access_token: {
       type: 'string'
     }
   },

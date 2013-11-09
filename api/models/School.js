@@ -20,7 +20,7 @@ module.exports = {
     	required: true
     },
 
-    logoImage: {
+    logo_image: {
     	type: 'url'
     },
 

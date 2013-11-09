@@ -25,7 +25,7 @@ module.exports = {
   		required: true
   	},
 
-  	onGoing: {
+  	on_going: {
   		type: 'boolean',
   		defaultsTo: true,
   		required: true
@@ -38,7 +38,7 @@ module.exports = {
     },
 
     // has one studentCheck = 1 Student + 1 Check
-    studentCheck: {
+    student_check: {
       type: 'array'
     }
 

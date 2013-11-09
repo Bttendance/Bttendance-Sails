@@ -15,34 +15,22 @@ module.exports = {
       unique: true
     },
 
-    firstName: {
+    first_name: {
       type: 'string',
       required: true
     },
 
-    lastName: {
+    last_name: {
       type: 'string',
       required: true
     },
 
-    fullName: {
+    full_name: {
       type: 'string'
     },
 
-    profileImage: {
+    profile_image: {
       type: 'url'
-    },
-
-    // iPhone, Android, Window, Blackberry
-    deviceType: {
-    	type: 'string',
-    	required: true
-    },
-
-    // UUID
-    deviceUUID: {
-    	type: 'uuid',
-    	required: true,
     },
 
     // has many Courses
@@ -84,7 +72,7 @@ module.exports = {
       delete values['email'];
       delete values['password'];
       values.user_id = user.id_;
-      values.fullName = values.firstName + " " + values.lastName;
+      values.full_name = values.first_name + " " + values.last_name;
       values.courses = new Array();
       values.memberships = new Array();
       next();
