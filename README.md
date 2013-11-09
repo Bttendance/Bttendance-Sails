@@ -19,6 +19,8 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - Attribute doen't contain Capital Letter.
 - Attribute uses '_' as space between words.
 - Model overwrite 'MongoDB' object_id as integer which starts from 1.
+- User Model is for Access (which includes username, email, password, access_token, etc)
+- Professor & Student's 'id' is same as User 'id'.
 
 ####API
 - CRUD API is only approved for admin security string (currently admin_access : 'asdf1234')
