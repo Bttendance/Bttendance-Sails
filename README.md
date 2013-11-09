@@ -2,6 +2,7 @@ Bttendance
 =================
 ### Bluetooth based attedance check application
 First Started at 2013/11/01
+This app is based on "Sails.js" Framework and "Java Script" Language.
 
 =================
 ###Guide Line
@@ -20,6 +21,10 @@ First Started at 2013/11/01
 
 ####API
 1. CRUD API is only approved for admin security string (currently admin_access : 'asdf1234')
+
+####View
+1. View uses 'jade' template.
+2. View uses 'bootstrap' from Twitter.
 
 
 =================
