@@ -12,9 +12,14 @@ Bttendance
 
 
 ####The Finest Artist
+Email : contact@thefinestartist.com
+Phone : +82-10-7755-4400
 
 ####Samchon
+Email : ysgenius88@gmail.com
+Phone : +82-10-8831-0006
 
-#####Copyright 2013 Utopia Corporation
+####Copyright 2013 Utopia Corporation
+Email : utopia.cooperation@gmail.com
 
 
