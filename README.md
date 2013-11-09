@@ -1,47 +1,42 @@
 Bttendance
 =================
-### Bluetooth based attedance check application
-First Started at 2013/11/01
+Bttendance is bluetooth based attedance check application. 
 
-This app is based on "Sails.js" Framework and "Java Script" Language.
+We've started this service from 2013/11/01. 
 
-=================
-###Guide Line
+This app uses "Sails.js" as framework and "Java Script" as language.
 
-###Install & Run
-1. git clone git@github.com:utopia-corperation/Bttendance-NodeJS.git
-2. sudo npm install
-2. sudo npm install -g sails
-3. sails lift
+##Guide Line
+
+####Install & Run
+    $ git clone git@github.com:utopia-corperation/Bttendance-NodeJS.git
+    $ sudo npm install
+    $ sudo npm install -g sails
+    $ sails lift
 
 ####Model
 
-1. Attribute doen't contain Capital Letter.
-2. Attribute uses '_' as space between words.
-3. Attribute overwrite object_id into _id which is integer and increases by 1 from 1.
+- Attribute doen't contain Capital Letter.
+- Attribute uses '_' as space between words.
+- Model overwrite 'MongoDB' object_id as integer which starts from 1.
 
 ####API
-1. CRUD API is only approved for admin security string (currently admin_access : 'asdf1234')
+- CRUD API is only approved for admin security string (currently admin_access : 'asdf1234')
 
 ####View
-1. View uses 'jade' template.
-2. View uses 'bootstrap' from Twitter.
+- View uses 'jade' template.
+- View uses 'bootstrap' from Twitter.
 
+##Developer
 
-=================
 ####The Finest Artist
-Email : contact@thefinestartist.com
+- Email : contact@thefinestartist.com
+- Phone : +82-10-7755-4400
 
-Phone : +82-10-7755-4400
-
-=================
 ####Samchon
-Email : ysgenius88@gmail.com
+- Email : ysgenius88@gmail.com
+- Phone : +82-10-8831-0006
 
-Phone : +82-10-8831-0006
-
-=================
-####Copyright 2013 Utopia Corporation
-Email : utopia.cooperation@gmail.com
+####Copyright 2013 @Utopia Corporation
 
 
