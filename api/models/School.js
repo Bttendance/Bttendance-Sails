@@ -10,7 +10,7 @@ module.exports = {
 
   attributes: {
 
-    id_: {
+    _id: {
       type: 'string',
       unique: true
     },
@@ -41,16 +41,16 @@ module.exports = {
     // Instantly add or modify attributes
     values.courses = new Array();
 
-    // Dealing with 'id_'
-    School.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
+    // Dealing with MongoDB '_id'
+    School.find().limit(1).sort('createdAt DESC').done(function(err, objs) {
       if (err) return next(err);
 
       var seqNo;
-      if (collections.length == 0)
+      if (objs.length == 0)
         seqNo = 1;
       else
-        seqNo = parseInt(collections[0].id_)+ 1;
-      values.id_ = seqNo.toString();
+        seqNo = parseInt(objs[0].id) + 1;
+      values._id = seqNo.toString();
 
       next();
     });

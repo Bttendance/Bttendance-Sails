@@ -13,7 +13,7 @@ module.exports = {
 
   attributes: {
 
-    id_: {
+    _id: {
       type: 'string',
       unique: true
     },
@@ -21,7 +21,7 @@ module.exports = {
     username: {
       type: 'string',
       required: true,
-      unique: true,
+      // unique: true,
       maxLength: 20,
       minLength: 5
     },
@@ -29,7 +29,7 @@ module.exports = {
     email: {
       type: 'email',
       required: true,
-      unique: true
+      // unique: true
     },
 
     password: {
@@ -40,13 +40,55 @@ module.exports = {
     },
 
     // professor, student, assistant
-    type: {
-    	type: 'string',
-    	required: true
+    // type: {
+    // 	type: 'string',
+    // 	required: true
+    // },
+
+    // iPhone, Android, Window, Blackberry, etc
+    // device_type: {
+    //   type: 'string',
+    //   required: true
+    // },
+
+    // // UUID
+    // device_uuid: {
+    //   type: 'uuid',
+    //   required: true,
+    //   // unique: true
+    // },
+
+    // first_name: {
+    //   type: 'string',
+    //   required: true
+    // },
+
+    // last_name: {
+    //   type: 'string',
+    //   required: true
+    // },
+
+    full_name: {
+      type: 'string'
     },
 
-    access_token: {
-      type: 'string'
+    profile_image: {
+      type: 'url'
+    },
+
+    // has many Courses
+    courses: {
+      type: 'array'
+    },
+
+    // has many memberships = 1 School + n Departments
+    memberships: {
+      type: 'array'
+    },
+
+    toJSON: function() {
+      var obj = this.toObject();
+      return obj;
     }
   },
 
@@ -54,17 +96,20 @@ module.exports = {
   beforeCreate: function(values, next) {
     // Instantly add or modify attributes
     values.password = passwordHash.generate(values.password);
+    // values.full_name = values.first_name + " " + values.last_name;
+    // values.courses = new Array();
+    // values.memberships = new Array();
 
-    // Dealing with 'id_'
-    User.find().limit(1).sort('createdAt DESC').done(function(err, collections) {
+    // Dealing with MongoDB '_id'
+    User.find().limit(1).sort('createdAt DESC').done(function(err, objs) {
       if (err) return next(err);
 
       var seqNo;
-      if (collections.length == 0)
+      if (objs.length == 0)
         seqNo = 1;
       else
-        seqNo = parseInt(collections[0].id_)+ 1;
-      values.id_ = seqNo.toString();
+        seqNo = parseInt(objs[0].id) + 1;
+      values._id = seqNo.toString();
 
       next();
     });

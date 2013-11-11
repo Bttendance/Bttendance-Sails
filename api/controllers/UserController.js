@@ -15,6 +15,8 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var passwordHash = require('password-hash');
+
 module.exports = {
     
   
@@ -24,7 +26,97 @@ module.exports = {
    * Overrides for the settings in `config/controllers.js`
    * (specific to UserController)
    */
-  _config: {}
+  _config: {},
 
-  
+	signin: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var email = req.param('email');
+		var password = req.param('password');
+
+		if (!username && !email) {
+			console.log("UserController : signin : Username or Email is required");
+			return res.send(400, { error: "Username or Email is required"});
+		}
+
+		if (!password) {
+			console.log("UserController : signin : Password is required");
+			return res.send(400, { error: "Password is required"});
+		}
+
+		if (username) {
+			User.findOne({
+	  		username: username
+			}).done(function(err, user) {
+				return handleUser(res, err, user, password);
+			});
+		} else {
+			User.findOne({
+	  		email: email
+			}).done(function(err, user) {
+				return handleUser(res, err, user, password);
+			});
+		}
+	}
 };
+
+var handleUser = function(res, err, user, password) {
+
+	// Error handling
+	if (err) {
+		console.log(err)
+    return res.send(500, { error: "User Find Error" });;
+
+  // No User found
+  } else if (!user) {
+    return res.send(404, { error: "No User Found Error" });
+
+  // Found User!
+  } else {
+  	console.log("User found:", user);
+  	if (!passwordHash.verify(password, user.password)) {
+  		return res.send(400, { error: "Password doesn't match Error" });
+  	} else {
+  		if (user.type == 'professor') {
+		    Professor.findOneById(user.id).done(function(err, obj) {
+
+		      if (err) {
+		        console.log(err);
+		        res.send(500, { error: "Object Find Error" });
+		        return;
+		      } 
+
+		      if (!obj) {
+		        console.log('No Object Found (id : ' + user.id + ')');
+		        res.send(404, { error: "No Object Found Error" });
+		        return;
+		      }
+
+	        console.log("Object Found (id : " + user.id + ')');
+	        var objJSON = JSON.stringify(obj);
+	        return res.send(objJSON);
+    		});
+  		} else {
+		    Student.findOneById(user.id).done(function(err, obj) {
+
+		      if (err) {
+		        console.log(err);
+		        res.send(500, { error: "Object Find Error" });
+		        return;
+		      } 
+
+		      if (!obj) {
+		        console.log('No Object Found (id : ' + user.id + ')');
+		        res.send(404, { error: "No Object Found Error" });
+		        return;
+		      }
+
+	        console.log("Object Found (id : " +user.id + ')');
+	        var objJSON = JSON.stringify(obj);
+	        return res.send(objJSON);
+    		});
+  		}
+		}
+  }
+}
+

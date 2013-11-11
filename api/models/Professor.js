@@ -10,8 +10,8 @@ module.exports = {
 
   attributes: {
 
-    user_id: {
-      type: 'integer',
+    _id: {
+      type: 'string',
       unique: true
     },
 
@@ -56,7 +56,7 @@ module.exports = {
       username: values.username,
       email:    values.email,
       password: values.password,
-      userType: 'professor'
+      type: 'professor'
     }, function (err, user) {
 
       // An database error occurred
@@ -69,7 +69,7 @@ module.exports = {
       delete values['username'];
       delete values['email'];
       delete values['password'];
-      values.user_id = user.id_;
+      values._id = user.id;
       values.full_name = values.first_name + " " + values.last_name;
       values.courses = new Array();
       values.memberships = new Array();
@@ -83,9 +83,7 @@ module.exports = {
       // An database error occurred
       if (err) { return next(err); }
 
-      User.findOne({
-        id_: prof.user_id
-      }).done(function(err, user) {
+      User.findOneById(prof.id).done(function(err, user) {
         // An database error occurred
         if (err) { return next(err); }
         // Use couldn't found for some weird reason

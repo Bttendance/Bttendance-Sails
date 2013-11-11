@@ -34,15 +34,16 @@ module.exports.adapters = {
   mysql: {
 
     module: 'sails-mysql',
-    host: 'YOUR_MYSQL_SERVER_HOSTNAME_OR_IP_ADDRESS',
-    user: 'YOUR_MYSQL_USER',
+    host: 'us-cdbr-east-04.cleardb.com',
+    user: 'b103f3b96d3f8c',
     // Psst.. You can put your password in config/local.js instead
     // so you don't inadvertently push it up if you're using version control
-    password: 'YOUR_MYSQL_PASSWORD', 
-    database: 'YOUR_MYSQL_DB'
+    password: 'e0cca0b9', 
+    database: 'heroku_041cfbc7e4fa742'
   },
 
   // MONGOLAB_URI: mongodb://<dbuser>:<dbpassword>@ds053858.mongolab.com:53858/heroku_app18988288
+  // mongo heroku_app18988288 --host ds053858.mongolab.com --port 53858 --username bttendance --password dsa372je382k8sgqa4hadm2g6g
   mongo: {
     module   : 'sails-mongo',
     host     : 'ds053858.mongolab.com',
@@ -50,8 +51,26 @@ module.exports.adapters = {
     user     : 'utopia',
     password : 'dsa372je382k8sgqa4hadm2g6g',
     database : 'heroku_app18988288'
-  }
+  },
 
-  // Shell Command
-  // mongo heroku_app18988288 --host ds053858.mongolab.com --port 53858 --username bttendance --password dsa372je382k8sgqa4hadm2g6g
+  // mongo paulo.mongohq.com:10041/app18988288 -u utopia -p dsa372je382k8sgqa4hadm2g6g
+  mongo2: {
+    module   : 'sails-mongo',
+    host     : 'paulo.mongohq.com',
+    port     : 10041,
+    user     : 'utopia',
+    password : 'dsa372je382k8sgqa4hadm2g6g',
+    database : 'app18988288'
+  },
+
+  // psql "dbname=d3f5bptpql8lqm host=ec2-107-22-190-179.compute-1.amazonaws.com user=mmynrzfrioignx password=panCrKVx8RcM-yz6lJDw9NghNl port=5432 sslmode=require"
+  postgresql: {
+    module   : 'sails-postgresql',
+    host     : 'ec2-107-22-190-179.compute-1.amazonaws.com',
+    port     : 5432,
+    user     : 'mmynrzfrioignx',
+    password : 'panCrKVx8RcM-yz6lJDw9NghNl',
+    database : 'd3f5bptpql8lqm'
+  },
+
 };

@@ -10,37 +10,9 @@ module.exports = {
 
   attributes: {
 
-    user_id: {
-      type: 'integer',
+    _id: {
+      type: 'string',
       unique: true
-    },
-
-    first_name: {
-      type: 'string',
-      required: true
-    },
-
-    last_name: {
-      type: 'string',
-      required: true
-    },
-
-    full_name: {
-      type: 'string'
-    },
-
-    profile_image: {
-      type: 'url'
-    },
-
-    // has many Courses
-    courses: {
-      type: 'array'
-    },
-
-    // has many memberships = 1 School + n Departments
-    memberships: {
-      type: 'array'
     },
 
     toJSON: function() {
@@ -58,7 +30,7 @@ module.exports = {
       username: values.username,
       email:    values.email,
       password: values.password,
-      userType: 'student'
+      type: 'student'
     }, function (err, user) {
 
       // An database error occurred
@@ -71,7 +43,7 @@ module.exports = {
       delete values['username'];
       delete values['email'];
       delete values['password'];
-      values.user_id = user.id_;
+      values._id = user.id;
       values.full_name = values.first_name + " " + values.last_name;
       values.courses = new Array();
       values.memberships = new Array();
@@ -85,9 +57,7 @@ module.exports = {
       // An database error occurred
       if (err) { return next(err); }
 
-      User.findOne({
-        id_: std.user_id
-      }).done(function(err, user) {
+      User.findOne(std.id).done(function(err, user) {
         // An database error occurred
         if (err) { return next(err); }
         // Use couldn't found for some weird reason
