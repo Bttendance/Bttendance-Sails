@@ -13,6 +13,19 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ sudo npm install
     $ sudo npm install -g sails
     $ sails lift
+    
+####Install Postgres
+    $ brew update
+    $ brew doctor
+    $ brew install postgresql
+    $ initdb /usr/local/var/postgres -E utf8
+    
+    $ cd ~/
+    $ touch .bash_profile
+    $ vi .bash_profile
+    add folowing lines to .bash_profile
+    alias pgs='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+    pgq='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
 
 ####Model
 
