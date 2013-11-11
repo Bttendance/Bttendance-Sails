@@ -20,9 +20,8 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ brew install postgresql
     $ initdb /usr/local/var/postgres -E utf8
     
-    $ cd ~/
-    $ touch .bash_profile
-    $ vi .bash_profile
+    $ touch ~/.bash_profile
+    $ vi ~/.bash_profile
     add folowing lines to .bash_profile
     alias pgs='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
     pgq='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
