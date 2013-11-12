@@ -16,7 +16,7 @@ module.exports.adapters = {
 
   // If you leave the adapter config unspecified 
   // in a model definition, 'default' will be used.
-  'default': 'mongo',
+  'default': 'mongolab',
 
   // In-memory adapter for DEVELOPMENT ONLY
   memory: {
@@ -44,7 +44,7 @@ module.exports.adapters = {
 
   // MONGOLAB_URI: mongodb://<dbuser>:<dbpassword>@ds053858.mongolab.com:53858/heroku_app18988288
   // mongo heroku_app18988288 --host ds053858.mongolab.com --port 53858 --username bttendance --password dsa372je382k8sgqa4hadm2g6g
-  mongo: {
+  mongolab: {
     module   : 'sails-mongo',
     host     : 'ds053858.mongolab.com',
     port     : 53858,
@@ -54,7 +54,7 @@ module.exports.adapters = {
   },
 
   // mongo paulo.mongohq.com:10041/app18988288 -u utopia -p dsa372je382k8sgqa4hadm2g6g
-  mongo2: {
+  mongohq: {
     module   : 'sails-mongo',
     host     : 'paulo.mongohq.com',
     port     : 10041,
@@ -64,13 +64,14 @@ module.exports.adapters = {
   },
 
   // psql "dbname=d3f5bptpql8lqm host=ec2-107-22-190-179.compute-1.amazonaws.com user=mmynrzfrioignx password=panCrKVx8RcM-yz6lJDw9NghNl port=5432 sslmode=require"
-  postgresql: {
+  herokupostgresql: {
     module   : 'sails-postgresql',
     host     : 'ec2-107-22-190-179.compute-1.amazonaws.com',
     port     : 5432,
     user     : 'mmynrzfrioignx',
     password : 'panCrKVx8RcM-yz6lJDw9NghNl',
-    database : 'd3f5bptpql8lqm'
-  },
+    database : 'd3f5bptpql8lqm',
+    ssl      : true
+  }
 
 };
