@@ -14,12 +14,13 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ sudo npm install -g sails
     $ sails lift
     
-####Install Postgres (We are currently using mongo, so this is unnecessary)
+####Install Postgres
     $ brew update
     $ brew doctor
     $ brew install postgresql
     $ initdb /usr/local/var/postgres -E utf8
     
+####Setting Postgres
     $ touch ~/.bash_profile
     $ vi ~/.bash_profile
     add folowing lines to .bash_profile
@@ -27,6 +28,9 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     pgq='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
     
     $ initdb /usr/local/var/postgres
+    
+####Connect to Postgres DB
+    $ psql "dbname=d3f5bptpql8lqm host=ec2-107-22-190-179.compute-1.amazonaws.com user=mmynrzfrioignx password=panCrKVx8RcM-yz6lJDw9NghNl port=5432 sslmode=require"
 
 ####Model
 
