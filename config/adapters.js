@@ -29,20 +29,6 @@ module.exports.adapters = {
     module: 'sails-disk'
   },
 
-  // Clear DB MySQL haven't done connecting to database yet.
-  // MySQL is the world's most popular relational database.
-  // Learn more: http://en.wikipedia.org/wiki/MySQL
-  cleardbmysql: {
-
-    module: 'sails-mysql',
-    host: 'us-cdbr-east-04.cleardb.com',
-    user: 'b103f3b96d3f8c',
-    // Psst.. You can put your password in config/local.js instead
-    // so you don't inadvertently push it up if you're using version control
-    password: 'e0cca0b9', 
-    database: 'heroku_041cfbc7e4fa742'
-  },
-
   // MongoLab has lots of options and stable and we are using it.
   // MONGOLAB_URI: mongodb://<dbuser>:<dbpassword>@ds053858.mongolab.com:53858/heroku_app18988288
   // mongo heroku_app18988288 --host ds053858.mongolab.com --port 53858 --username bttendance --password dsa372je382k8sgqa4hadm2g6g
@@ -53,17 +39,6 @@ module.exports.adapters = {
     user     : 'utopia',
     password : 'dsa372je382k8sgqa4hadm2g6g',
     database : 'heroku_app18988288'
-  },
-
-  // MongoHQ is little bit slower than MongoLab and also little more unstable
-  // mongo paulo.mongohq.com:10041/app18988288 -u utopia -p dsa372je382k8sgqa4hadm2g6g
-  mongohq: {
-    module   : 'sails-mongo',
-    host     : 'paulo.mongohq.com',
-    port     : 10041,
-    user     : 'utopia',
-    password : 'dsa372je382k8sgqa4hadm2g6g',
-    database : 'app18988288'
   },
 
   // Heroku Postgre SQL has connection limit up to 500
