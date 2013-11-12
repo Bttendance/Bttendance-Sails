@@ -13,6 +13,20 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ sudo npm install
     $ sudo npm install -g sails
     $ sails lift
+    
+####Install Postgres (We are currently using mongo, so this is unnecessary)
+    $ brew update
+    $ brew doctor
+    $ brew install postgresql
+    $ initdb /usr/local/var/postgres -E utf8
+    
+    $ touch ~/.bash_profile
+    $ vi ~/.bash_profile
+    add folowing lines to .bash_profile
+    alias pgs='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+    pgq='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
+    
+    $ initdb /usr/local/var/postgres
 
 ####Model
 
@@ -42,21 +56,9 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 ####Copyright 2013 @Utopia Corporation
 
 
-
-
 =================
-####Install Postgres (We are currently using mongo, so this is unnecessary)
-    $ brew update
-    $ brew doctor
-    $ brew install postgresql
-    $ initdb /usr/local/var/postgres -E utf8
-    
-    $ touch ~/.bash_profile
-    $ vi ~/.bash_profile
-    add folowing lines to .bash_profile
-    alias pgs='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
-    pgq='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
-    
-    $ initdb /usr/local/var/postgres
+####We Need Chached DB : http://aws.amazon.com/elasticache/
+####Vingle is using Heroku Postgres & Memcached
+
 
 
