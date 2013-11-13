@@ -11,23 +11,23 @@ module.exports = function isProfessor (req, res, ok) {
 		return res.send(400, { error: "Username and Password is required"});
 	}
 
-	Professor.findOne({
+	User.findOne({
 		username: username,
 		password: password
-	}).done(function(err, prof) {
+	}).done(function(err, user) {
 
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, { error: "Professor Find Error" });
+	    return res.send(500, { error: "User Find Error" });
 
-	  // No Professor found
-	  } else if (!prof) {
-	    return res.send(404, { error: "No Professor Found Error" });
+	  // No User found
+	  } else if (!user) {
+	    return res.send(404, { error: "No User Found Error" });
 
 	  // Found multiple Professors!
 	  } else {
-    	console.log("Professor found:", prof);
+    	console.log("User found:", user);
     	return ok();
 	  }
 	});

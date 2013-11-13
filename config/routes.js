@@ -36,13 +36,8 @@ module.exports.routes = {
     view: 'home/index'
   },
 
-  'post /api/student/signup': {
-    controller: 'student',
-    action: 'create'
-  },
-
-  'post /api/professor/signup': {
-    controller: 'professor',
+  'post /api/user/signup': {
+    controller: 'user',
     action: 'create'
   }
 

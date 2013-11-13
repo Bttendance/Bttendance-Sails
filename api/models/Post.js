@@ -10,11 +10,6 @@ module.exports = {
 
   attributes: {
 
-  	_id: {
-  		type: 'string',
-  		unique: true
-  	},
-
   	title: {
   		type: 'string',
   		required: true
@@ -46,20 +41,8 @@ module.exports = {
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-
-    // Dealing with MongoDB '_id'
-    Post.find().limit(1).sort('createdAt DESC').done(function(err, objs) {
-      if (err) return next(err);
-
-      var seqNo;
-      if (objs.length == 0)
-        seqNo = 1;
-      else
-        seqNo = parseInt(objs[0].id) + 1;
-      values._id = seqNo.toString();
-
-      next();
-    });
+    values.course = '';
+    next();
   }
 
 };

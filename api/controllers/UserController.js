@@ -18,9 +18,6 @@
 var passwordHash = require('password-hash');
 
 module.exports = {
-    
-  
-
 
   /**
    * Overrides for the settings in `config/controllers.js`
@@ -64,8 +61,8 @@ var handleUser = function(res, err, user, password) {
 
 	// Error handling
 	if (err) {
-		console.log(err)
-    return res.send(500, { error: "User Find Error" });;
+		console.log(err);
+    return res.send(500, { error: "User Find Error" });
 
   // No User found
   } else if (!user) {
@@ -74,49 +71,8 @@ var handleUser = function(res, err, user, password) {
   // Found User!
   } else {
   	console.log("User found:", user);
-  	if (!passwordHash.verify(password, user.password)) {
-  		return res.send(400, { error: "Password doesn't match Error" });
-  	} else {
-  		if (user.type == 'professor') {
-		    Professor.findOneById(user.id).done(function(err, obj) {
-
-		      if (err) {
-		        console.log(err);
-		        res.send(500, { error: "Object Find Error" });
-		        return;
-		      } 
-
-		      if (!obj) {
-		        console.log('No Object Found (id : ' + user.id + ')');
-		        res.send(404, { error: "No Object Found Error" });
-		        return;
-		      }
-
-	        console.log("Object Found (id : " + user.id + ')');
-	        var objJSON = JSON.stringify(obj);
-	        return res.send(objJSON);
-    		});
-  		} else {
-		    Student.findOneById(user.id).done(function(err, obj) {
-
-		      if (err) {
-		        console.log(err);
-		        res.send(500, { error: "Object Find Error" });
-		        return;
-		      } 
-
-		      if (!obj) {
-		        console.log('No Object Found (id : ' + user.id + ')');
-		        res.send(404, { error: "No Object Found Error" });
-		        return;
-		      }
-
-	        console.log("Object Found (id : " +user.id + ')');
-	        var objJSON = JSON.stringify(obj);
-	        return res.send(objJSON);
-    		});
-  		}
-		}
+		var userJSON = JSON.stringify(user);
+  	return res.send(userJSON);
   }
 }
 
