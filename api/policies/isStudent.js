@@ -1,13 +1,13 @@
 /**
  * Allow any authenticated user.
  */
-module.exports = function isProfessor (req, res, ok) {
+module.exports = function isStudent (req, res, ok) {
 
 	var username = req.param('username');
 	var password = req.param('password');
 
 	if (!username || !password) {
-		console.log("isProfessor : Username and Password is required");
+		console.log("isStudent : Username and Password is required");
 		return res.send(400, { error: "Username and Password is required"});
 	}
 
@@ -25,12 +25,12 @@ module.exports = function isProfessor (req, res, ok) {
 	  } else if (!user) {
 	    return res.send(404, { error: "No User Found Error" });
 
-	  // Found multiple Professors!
+	  // Found multiple Students!
 	  } else {
     	console.log("User found : " + user);
-    	if (user.type != 'professor') {
+    	if (user.type != 'student') {
     		console.log("User type : " + user.type);
-	    	return res.send(401, { error: "User Type is not Professor Error" });
+	    	return res.send(401, { error: "User Type is not student Error" });
     	} else {
     		return ok();
     	}

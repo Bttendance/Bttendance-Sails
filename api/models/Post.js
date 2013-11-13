@@ -26,9 +26,15 @@ module.exports = {
   		required: true
   	},
 
+    // has one professor
+    professor: {
+      type: 'string',
+      required: true
+    },
+
     // has one Course
     course: {
-      type: 'json',
+      type: 'integer',
       required: true
     },
 
@@ -39,9 +45,15 @@ module.exports = {
 
   },
 
+  beforeValidation: function(values, next) {
+    values.professor = values.username;
+    values.course = values.course_id;
+    next();
+  },
+
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-    values.course = '';
+    values.student_check = new Array();
     next();
   }
 

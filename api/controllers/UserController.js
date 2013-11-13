@@ -72,6 +72,12 @@ var handleUser = function(res, err, user, password) {
   } else {
   	console.log("User found:", user);
 		var userJSON = JSON.stringify(user);
+
+		// Add Password
+		// var userObj = JSON.parse(userJSON);
+		// userObj.password = user.password;
+		// userJSON = JSON.stringify(userObj);
+
   	return res.send(userJSON);
   }
 }

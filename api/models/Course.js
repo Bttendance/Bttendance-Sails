@@ -31,9 +31,9 @@ module.exports = {
       required: true
     },
 
-    // has one School
+    // has one Professor
     professor: {
-      type: 'integer',
+      type: 'string',
       required: true
     },
     
@@ -49,12 +49,17 @@ module.exports = {
     
   },
 
+  beforeValidation: function(values, next) {
+    values.professor = values.username;
+    values.school = values.school_id;
+    next();
+  },
+
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
     // Instantly add or modify attributes
     values.posts = new Array();
     values.students = new Array();
-
     next();
   }
 

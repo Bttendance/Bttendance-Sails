@@ -19,27 +19,31 @@ module.exports.policies = {
   '*': true,
 
   UserController: {
-  	'*': true
-  },
-
-  ProfessorController: {
-  	update: false
-  },
-
-  StudentController: {
-  	update: false
-  },
-
-  SchoolController: {
-  	'*': false
+  	'*' : false,
+  	create : true,
+  	find : false,
+  	update : 'isUser',
+  	destroy : 'isUser',
+  	signin : true,
+  	signup : true
   },
 
   CourseController: {
-  	create: 'isProfessor'
+  	create : ['isProfessor', 'isSchool'],
+  	update : ['isProfessor', 'hasCourse'],
+  	destroy : ['isProfessor', 'hasCourse']
   },
 
   PostController: {
-  	create: 'isProfessor'
+  	create : ['isProfessor', 'hasCourse'],
+  	update : ['isProfessor', 'hasPost'],
+  	destroy : ['isProfessor', 'hasPost']
+  },
+
+  SchoolController: {
+  	create : 'isProfessor',
+  	update : false,
+  	destroy : false
   }
 
   /*
