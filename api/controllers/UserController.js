@@ -45,19 +45,19 @@ module.exports = {
 			User.findOne({
 	  		username: username
 			}).done(function(err, user) {
-				return handleUser(res, err, user, password);
+				return checkPass(res, err, user, password);
 			});
 		} else {
 			User.findOne({
 	  		email: email
 			}).done(function(err, user) {
-				return handleUser(res, err, user, password);
+				return checkPass(res, err, user, password);
 			});
 		}
 	}
 };
 
-var handleUser = function(res, err, user, password) {
+var checkPass = function(res, err, user, password) {
 
 	// Error handling
 	if (err) {
@@ -69,15 +69,14 @@ var handleUser = function(res, err, user, password) {
     return res.send(404, { error: "No User Found Error" });
 
   // Found User!
+  } else if (!passwordHash.verify(password, user.password)) {
+	    return res.send(404, { error: "Password doesn't match Error" });
   } else {
-  	console.log("User found:", user);
 		var userJSON = JSON.stringify(user);
-
 		// Add Password
 		// var userObj = JSON.parse(userJSON);
 		// userObj.password = user.password;
 		// userJSON = JSON.stringify(userObj);
-
   	return res.send(userJSON);
   }
 }

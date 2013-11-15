@@ -76,6 +76,7 @@ module.exports = {
       type: 'array'
     },
 
+    // has many Schools
     schools: {
       type: 'array'
     },
@@ -87,13 +88,16 @@ module.exports = {
     }
   },
 
-  // Lifecycle Callbacks
-  beforeCreate: function(values, next) {
-    // Instantly add or modify attributes
+  beforeValidation: function(values, next) {
     values.password = passwordHash.generate(values.password);
+    next();
+  },
+
+  beforeCreate: function(values, next) {
     values.full_name = values.first_name + " " + values.last_name;
     values.courses = new Array();
     values.memberships = new Array();
+    values.schools = new Array();
     next();
   }
 

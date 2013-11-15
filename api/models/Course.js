@@ -55,9 +55,7 @@ module.exports = {
     next();
   },
 
-  // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-    // Instantly add or modify attributes
     values.posts = new Array();
     values.students = new Array();
     next();

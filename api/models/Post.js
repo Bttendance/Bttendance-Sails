@@ -26,8 +26,8 @@ module.exports = {
   		required: true
   	},
 
-    // has one professor
-    professor: {
+    // has one author
+    author: {
       type: 'string',
       required: true
     },
@@ -46,7 +46,7 @@ module.exports = {
   },
 
   beforeValidation: function(values, next) {
-    values.professor = values.username;
+    values.author = values.username;
     values.course = values.course_id;
     next();
   },
