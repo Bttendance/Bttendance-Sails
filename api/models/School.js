@@ -38,7 +38,8 @@ module.exports = {
   },
 
   beforeValidation: function(values, next) {
-    values.creator = values.username;
+    if (values.username)
+      values.creator = values.username;
     next();
   },
 
@@ -49,7 +50,6 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
-
     User.findOne({
       username: values.creator
     }).done(function(err, user) {

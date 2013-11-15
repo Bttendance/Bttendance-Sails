@@ -88,12 +88,8 @@ module.exports = {
     }
   },
 
-  beforeValidation: function(values, next) {
-    values.password = passwordHash.generate(values.password);
-    next();
-  },
-
   beforeCreate: function(values, next) {
+    values.password = passwordHash.generate(values.password);
     values.full_name = values.first_name + " " + values.last_name;
     values.courses = new Array();
     values.memberships = new Array();

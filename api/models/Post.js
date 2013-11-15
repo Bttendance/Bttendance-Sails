@@ -46,8 +46,10 @@ module.exports = {
   },
 
   beforeValidation: function(values, next) {
-    values.author = values.username;
-    values.course = values.course_id;
+    if (values.username)
+      values.author = values.username;
+    if (values.course_id)
+      values.course = values.course_id;
     next();
   },
 

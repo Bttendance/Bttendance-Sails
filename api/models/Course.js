@@ -50,8 +50,10 @@ module.exports = {
   },
 
   beforeValidation: function(values, next) {
-    values.professor = values.username;
-    values.school = values.school_id;
+    if (values.username)
+      values.professor = values.username;
+    if (values.school_id)
+      values.school = values.school_id;
     next();
   },
 
@@ -59,6 +61,36 @@ module.exports = {
     values.posts = new Array();
     values.students = new Array();
     next();
-  }
+  },
+
+  afterCreate: function(values, next) {
+    User.findOne({
+      username: values.professor
+    }).done(function(err, user) {
+      // return err
+      if (err) return next(err);
+      // make new array
+      if (!user.courses) user.courses = new Array();
+      // add course to user who created this course
+      user.courses.push(values.id);
+      // save new values
+      user.save(function(err){
+        if (err) return next(err);
+        School.findOne(values.school).done(function(err, school) {
+          // return err
+          if (err) return next(err);
+          // make new array
+          if (!school.courses) school.courses = new Array();
+          
+          if (user.schools.indexOf(school) != -1) {
+            // return UserJSON
+            var userJSON = JSON.stringify(user);
+            return res.send(userJSON);
+          } else {
+
+          next();
+        });
+      })
+    });
 
 };

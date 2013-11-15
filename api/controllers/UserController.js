@@ -57,9 +57,50 @@ module.exports = {
 	},
 
 	join_school: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var school_id = req.param('school_id');
 		
-	}
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { error: "User Find Error" });
 
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { error: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+		  	if (!user.schools) user.schools = new Array();
+
+		  	var school = parseInt(school_id);
+		  	if (isNaN(school)) return res.send(500, { error: "School id is NaN Error" });
+
+		  	if (user.schools.indexOf(school) != -1) {
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+		  	} else {
+			  	user.schools.push(school);
+		      user.save(function(err) {
+						// Error handling
+						if (err) {
+							console.log(err);
+					    return res.send(500, { error: "User Save Error" });
+					  }
+
+				  	// return UserJSON
+						var userJSON = JSON.stringify(user);
+				  	return res.send(userJSON);
+		      })
+		    }
+		  }
+		});
+	}
 };
 
 // Function for signin API
@@ -76,7 +117,7 @@ var checkPass = function(res, err, user, password) {
 
   // Found User!
   } else if (!passwordHash.verify(password, user.password)) {
-	    return res.send(404, { error: "Password doesn't match Error" });
+	  return res.send(404, { error: "Password doesn't match Error" });
   } else {
 		var userJSON = JSON.stringify(user);
 		// Add Password
