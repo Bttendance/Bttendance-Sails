@@ -27,7 +27,7 @@ module.exports = function isStudent (req, res, ok) {
 
 	  // Found multiple Students!
 	  } else {
-    	console.log("User found : " + user);
+    	console.log("User found : " + user[0]);
     	if (user.type != 'student') {
     		console.log("User type : " + user.type);
 	    	return res.send(401, { error: "User Type is not student Error" });

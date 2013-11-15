@@ -54,9 +54,15 @@ module.exports = {
 				return checkPass(res, err, user, password);
 			});
 		}
+	},
+
+	join_school: function(req, res) {
+		
 	}
+
 };
 
+// Function for signin API
 var checkPass = function(res, err, user, password) {
 
 	// Error handling

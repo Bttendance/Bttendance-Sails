@@ -27,7 +27,7 @@ module.exports = function isUser (req, res, ok) {
 
 	  // Found multiple Professors!
 	  } else {
-    	console.log("User found : " + user);
+    	console.log("User found : " + user[0]);
     	return ok();
 	  }
 	});

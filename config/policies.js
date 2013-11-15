@@ -25,7 +25,8 @@ module.exports.policies = {
   	update : 'isUser',
   	destroy : 'isUser',
   	signin : true,
-  	signup : true
+  	signup : true,
+  	join_school : 'isUser'
   },
 
   CourseController: {
