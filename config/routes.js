@@ -44,6 +44,11 @@ module.exports.routes = {
   'put /api/user/join/school': {
     controller: 'user',
     action: 'join_school'
+  },
+
+  'put /api/user/join/course': {
+    controller: 'user',
+    action: 'join_course'
   }
 
 

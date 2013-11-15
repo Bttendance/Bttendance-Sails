@@ -80,24 +80,62 @@ module.exports = {
 		  	var school = parseInt(school_id);
 		  	if (isNaN(school)) return res.send(500, { error: "School id is NaN Error" });
 
-		  	if (user.schools.indexOf(school) != -1) {
+      	// add school if user doesn't have school
+		  	if (user.schools.indexOf(school) == -1)
+			  	user.schools.push(school);
+      	// save new values
+	      user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { error: "User Save Error" });
+				  }
 			  	// return UserJSON
 					var userJSON = JSON.stringify(user);
 			  	return res.send(userJSON);
-		  	} else {
-			  	user.schools.push(school);
-		      user.save(function(err) {
-						// Error handling
-						if (err) {
-							console.log(err);
-					    return res.send(500, { error: "User Save Error" });
-					  }
+	      });
+		  }
+		});
+	},
 
-				  	// return UserJSON
-						var userJSON = JSON.stringify(user);
-				  	return res.send(userJSON);
-		      })
-		    }
+	join_course: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var course_id = req.param('course_id');
+		
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { error: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { error: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+		  	if (!user.courses) user.courses = new Array();
+
+		  	var course = parseInt(course_id);
+		  	if (isNaN(course)) return res.send(500, { error: "Course id is NaN Error" });
+
+      	// add course if user doesn't have course
+		  	if (user.courses.indexOf(course) == -1)
+			  	user.courses.push(course);
+      	// save new values
+	      user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { error: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+	      });
 		  }
 		});
 	}

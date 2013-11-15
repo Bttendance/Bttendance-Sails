@@ -64,6 +64,7 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
+    // add new courses to user
     User.findOne({
       username: values.professor
     }).done(function(err, user) {
@@ -72,25 +73,28 @@ module.exports = {
       // make new array
       if (!user.courses) user.courses = new Array();
       // add course to user who created this course
-      user.courses.push(values.id);
+      if (user.courses.indexOf(values.id) == -1)
+        user.courses.push(values.id);
       // save new values
-      user.save(function(err){
+      user.save(function(err) {
         if (err) return next(err);
-        School.findOne(values.school).done(function(err, school) {
-          // return err
-          if (err) return next(err);
-          // make new array
-          if (!school.courses) school.courses = new Array();
-          
-          if (user.schools.indexOf(school) != -1) {
-            // return UserJSON
-            var userJSON = JSON.stringify(user);
-            return res.send(userJSON);
-          } else {
+      });
+    });
+    // add new courses to school
+    School.findOne(values.school).done(function(err, school) {
+      // return err
+      if (err) return next(err);
+      // make new array
+      if (!school.courses) school.courses = new Array();
 
-          next();
-        });
-      })
+      if (school.courses.indexOf(school) == -1)
+        school.courses.push(values.id);
+      // save new values
+      school.save(function(err) {
+        if (err) return next(err);
+      });
     });
 
+    next();
+  }
 };

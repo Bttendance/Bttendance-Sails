@@ -27,7 +27,7 @@ module.exports = function isProfessor (req, res, ok) {
 
 	  // Found multiple Professors!
 	  } else {
-    	console.log("User found : " + user[0]);
+    	console.log("User found : " + user);
     	if (user.type != 'professor') {
     		console.log("User type : " + user.type);
 	    	return res.send(401, { error: "User Type is not Professor Error" });
