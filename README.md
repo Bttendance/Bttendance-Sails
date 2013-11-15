@@ -41,7 +41,10 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - Professor & Student's 'id' is same as User 'id'.
 
 ####API
-- CRUD API is only approved for admin security string (currently admin_access : 'asdf1234')
+- API Schema : 'api/:controller/:action/:model' (ex : 'api/user/join/school')
+- Controller Action : ':action_:model' (ex : join_school)
+- Route : 'api/:controller/:action/:model' to ':action_:model'
+- CRUD API is only approved for admin security string (currently admin_access : '' <= not yet determined)
 
 ####View
 - View uses 'jade' template.
