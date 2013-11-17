@@ -2,14 +2,19 @@ API
 =================
 API Schema for Bttendance
 ###User
-####api/user/signin
+####api/user/signup (post)
     username
     email
     password
-    type
     device_type
-    first_name
-    last_name
+    full_name
+####api/user/signin (get)
+    username or email
+    password
+####api/user/update/type (put)
+    username
+    password
+    type
 ###Course
 ###Post
 ###School
