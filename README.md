@@ -10,8 +10,8 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 
 ####Install & Run
     $ git clone git@github.com:utopia-corperation/Bttendance-NodeJS.git
-    $ sudo npm install
     $ sudo npm install -g sails
+    $ sudo npm install
     $ sails lift
     
 ####Install Postgres

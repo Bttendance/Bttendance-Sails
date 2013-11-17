@@ -26,6 +26,7 @@ module.exports.policies = {
   	destroy : 'isUser',
   	signin : true,
   	signup : true,
+  	update_type : ['isUser'],
   	join_school : ['isUser', 'isSchool'],
   	join_course : ['isUser', 'isCourse']
   },

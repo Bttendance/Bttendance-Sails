@@ -56,6 +56,70 @@ module.exports = {
 		}
 	},
 
+	update_type: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var type = req.param('type');
+
+		if (!type) {
+			console.log("UserController : update_type : Type is required");
+			return res.send(400, { error: "Type is required"});
+		}
+
+		// Type Validation
+		if (type != 'professor' && type != 'student') {
+			console.log("UserController : update_type : Wrong Type : " + type);
+			return res.send(400, { error: "Wrong Type"});
+		}
+
+		// Serial Validation
+		if (type == 'professor') {
+			var serial = req.param('serial');
+			if (!serial) {
+				console.log("UserController : update_type : Serial is required");
+				return res.send(400, { error: "Serial is required"});
+			}
+
+			if (serial != 'utopia' && serial != 'Utopia') {
+				console.log("UserController : update_type : Wrong Serial : " + serial);
+				return res.send(400, { error: "Wrong Serial"});
+			}
+		}
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { error: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { error: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+		  	// Type is Already Exist!
+		  	if (user.type != null)
+			    return res.send(401, { error: "User already has type Error" });
+			  // Update User
+		  	user.type = type;
+		  	user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { error: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+		  	});
+		  }
+		});
+
+	},
+
 	join_school: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');

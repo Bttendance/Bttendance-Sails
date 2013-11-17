@@ -36,8 +36,7 @@ module.exports = {
 
     //professor, student, assistant
     type: {
-    	type: 'string',
-    	required: true
+    	type: 'string'
     },
 
     //iPhone, Android, Window, Blackberry, etc
@@ -53,18 +52,9 @@ module.exports = {
       unique: true
     },
 
-    first_name: {
-      type: 'string',
-      required: true
-    },
-
-    last_name: {
-      type: 'string',
-      required: true
-    },
-
     full_name: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
 
     profile_image: {
@@ -90,7 +80,7 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     values.password = passwordHash.generate(values.password);
-    values.full_name = values.first_name + " " + values.last_name;
+    values.type = null;
     values.courses = new Array();
     values.memberships = new Array();
     values.schools = new Array();
