@@ -21,7 +21,7 @@ module.exports.policies = {
   UserController: {
   	'*' : false,
   	create : true,
-  	find : false,
+  	find : 'isAdmin',
   	update : 'isUser',
   	destroy : 'isUser',
   	signin : true,
