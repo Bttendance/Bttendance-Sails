@@ -45,6 +45,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - Controller Action : ':action_:model' (ex : join_school)
 - Route : 'api/:controller/:action/:model' to ':action_:model'
 - CRUD API is only approved for admin security string (currently admin_access : '' <= not yet determined)
+- API Error json Format : { error : "Error Message" } (ex : res.send(400, { error: "Password is required"}); )
 
 ####View
 - View uses 'jade' template.
