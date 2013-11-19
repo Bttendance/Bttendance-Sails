@@ -65,7 +65,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 
 
 =================
-####We Need Chached DB : http://aws.amazon.com/elasticache/
+####We Need MemChached DB : http://aws.amazon.com/elasticache/
 ####Vingle is using Heroku Postgres & Memcached
 ####We Need to monitor our app : https://newrelic.com
 
