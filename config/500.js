@@ -6,6 +6,7 @@
  * For more information on error handling in Sails/Express, check out:
  * http://expressjs.com/guide.html#error-handling
  */
+durableJsonLint = require('durable-json-lint');
 
 module.exports[500] = function serverErrorOccurred(errors, req, res, expressErrorHandler) {
 
@@ -45,7 +46,11 @@ module.exports[500] = function serverErrorOccurred(errors, req, res, expressErro
   // If the user-agent wants a JSON response,
   // respond with a JSON-readable version of errors
   if (req.wantsJSON) {
-    return res.json({error : response.errors[0].message}, response.status);
+    var message = response.errors[0].message;
+    if (!durableJsonLint(message).json)
+      return res.json({error : message}, response.status);
+    else
+      return res.json({error : durableJsonLint(message).json}, response.status);
   }
 
   // Otherwise, if it can be rendered, the `views/500.*` page is rendered
