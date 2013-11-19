@@ -28,10 +28,9 @@ module.exports = {
 	signin: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
-		var email = req.param('email');
 		var password = req.param('password');
 
-		if (!username && !email) {
+		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
 			return res.send(400, { error: "Username or Email is required"});
 		}
@@ -41,19 +40,19 @@ module.exports = {
 			return res.send(400, { error: "Password is required"});
 		}
 
-		if (username) {
-			User.findOne({
-	  		username: username
-			}).done(function(err, user) {
+		User.findOne({
+  		username: username
+		}).done(function(err, user) {
+			if (user)
 				return checkPass(res, err, user, password);
-			});
-		} else {
-			User.findOne({
-	  		email: email
-			}).done(function(err, user) {
-				return checkPass(res, err, user, password);
-			});
-		}
+			else {
+				User.findOne({
+		  		email: username
+				}).done(function(err, user) {
+					return checkPass(res, err, user, password);
+				});
+			}
+		});
 	},
 
 	update_type: function(req, res) {
@@ -80,7 +79,7 @@ module.exports = {
 				return res.send(400, { error: "Serial is required"});
 			}
 
-			if (serial != 'utopia' && serial != 'Utopia') {
+			if (serial != 'welcome' && serial != 'Welcome') {
 				console.log("UserController : update_type : Wrong Serial : " + serial);
 				return res.send(400, { error: "Wrong Serial"});
 			}
