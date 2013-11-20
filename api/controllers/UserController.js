@@ -29,6 +29,7 @@ module.exports = {
 		res.contentType('application/json');
 		var username = req.param('username');
 		var password = req.param('password');
+		var uuid = req.param('device_uuid');
 
 		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
@@ -40,16 +41,21 @@ module.exports = {
 			return res.send(400, { error: "Password is required"});
 		}
 
+		if (!uuid) {
+			console.log("UserController : signin : UUID is required");
+			return res.send(400, { error: "UUID is required"});
+		}
+
 		User.findOne({
   		username: username
 		}).done(function(err, user) {
 			if (user)
-				return checkPass(res, err, user, password);
+				return checkPass(res, err, user, password, uuid);
 			else {
 				User.findOne({
 		  		email: username
 				}).done(function(err, user) {
-					return checkPass(res, err, user, password);
+					return checkPass(res, err, user, password, uuid);
 				});
 			}
 		});
@@ -205,7 +211,7 @@ module.exports = {
 };
 
 // Function for signin API
-var checkPass = function(res, err, user, password) {
+var checkPass = function(res, err, user, password, uuid) {
 
 	// Error handling
 	if (err) {
@@ -219,6 +225,8 @@ var checkPass = function(res, err, user, password) {
   // Found User!
   } else if (!passwordHash.verify(password, user.password)) {
 	  return res.send(404, { error: "Password doesn't match Error" });
+  } else if (user.device_uuid != uuid) {
+	  return res.send(406, { error: "UUID doesn't match Error" });
   } else {
 		var userJSON = JSON.stringify(user);
 		// Add Password
