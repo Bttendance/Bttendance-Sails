@@ -48,8 +48,11 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - API Error json Format : { error : "Error Message" } (ex : res.send(400, { error: "Password is required"}); )
 
 ####Error Json
-- Format
-    { error : "error message", alert : "alert message", toast : "toast message" }
+    { 
+        "error": "error message", 
+        "alert": "alert message", 
+        "toast": "toast message" 
+    }
 
 
 ####View
