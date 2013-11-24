@@ -47,6 +47,11 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - CRUD API is only approved for admin security string (currently admin_access : '' <= not yet determined)
 - API Error json Format : { error : "Error Message" } (ex : res.send(400, { error: "Password is required"}); )
 
+####Error Json
+- Format
+    { error : "error message", alert : "alert message", toast : "toast message" }
+
+
 ####View
 - View uses 'jade' template.
 - View uses 'bootstrap' from Twitter.
