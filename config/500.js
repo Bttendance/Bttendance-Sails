@@ -28,6 +28,8 @@ module.exports[500] = function serverErrorOccurred(errors, req, res) {
     status: statusCode
   };
 
+  durableJsonLint = require('durable-json-lint');
+
   // Normalize a {String|Object|Error} or array of {String|Object|Error} 
   // into an array of proper, readable {Error}
   var errorsToDisplay = sails.util.normalizeErrors(errors);
@@ -57,7 +59,69 @@ module.exports[500] = function serverErrorOccurred(errors, req, res) {
 
   // If the user-agent wants JSON, respond with JSON
   if (req.wantsJSON) {
-    return res.json(result, result.status);
+    var AlertMessage, ToastMessage, UUIDMessage;
+    var durable_result;
+    if(durableJsonLint(JSON.stringify(result)).json){
+      durable_result= durableJsonLint(JSON.stringify(result)).json;
+    }
+    else{
+      durable_result = result;
+    }
+    console.log(durable_result);
+
+    if(JSON.parse(durable_result).errors){
+      if(JSON.parse(durable_result).errors[0].ValidationError){
+        console.log("ValidationError");
+        var ValidationError = JSON.parse(durable_result).errors[0].ValidationError;
+        var ValidationAttribute = Object.keys(ValidationError)[0];
+
+        switch(JSON.stringify(ValidationAttribute)){
+          case '"username"':
+            console.log(ValidationError.username[0].rule);
+            AlertMessage = ValidationError.username[0].rule;
+            break;
+          case '"password"':
+            console.log(ValidationError.password[0].rule);
+            ToastMessage = ValidationError.password[0].rule;
+            break;
+          case '"device_uuid"':
+            console.log(ValidationError.device_uuid[0].rule);
+            ToastMessage = ValidationError.device_uuid[0].rule;
+            break;
+          default:
+            break;
+        }
+        return res.json({message : result.errors, alert : AlertMessage, toast : ToastMessage, uuid : UUIDMessage}, result.status);
+      }
+      else{
+        console.log("DuplicationError");
+        var errorforparse = JSON.parse(durable_result).errors[0];
+        var pasred_error = errorforparse.split(' ');
+        var errforswitch = pasred_error[pasred_error.length - 1];
+
+        switch (errforswitch) {
+          case '"user_username_key"':
+            AlertMessage = "Username";
+            break;
+          case '"user_email_key"':
+            ToastMessage = "Email";
+            break;
+          case '"user_device_uuid_key"':
+            UUIDMessage = "UUID";
+            break;
+          default:
+            break;
+        }
+        console.log(AlertMessage);
+        console.log(ToastMessage);
+        console.log(UUIDMessage);
+        return res.json({message : result.errors, alert : AlertMessage, toast : ToastMessage, uuid : UUIDMessage}, result.status);
+      }
+    }
+    else{
+      return res.json(result, result.status);
+    }
+    // return res.json(result, result.status);
   }
 
   // Set status code and view locals
