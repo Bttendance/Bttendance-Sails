@@ -75,3 +75,42 @@ module.exports[500] = function serverErrorOccurred(errors, req, res) {
   });
 
 };
+
+// if (req.wantsJSON) {
+ //    console.log("json");
+ //    console.log(response);
+ //    var message = response.errors[0].message;
+ //    if (!durableJsonLint(message).json)
+ //      return res.json({error : message}, response.status);
+ //    else {
+ //      var messageJson = JSON.parse(durableJsonLint(message).json);
+ //      if (messageJson.ValidationError) {
+ //        var ValidationError = messageJson.ValidationError;
+ //        var ValidationAttribute = Object.keys(ValidationError)[0];
+
+ //        if (!ValidationAttribute)
+ //          return res.json({error : errorMessage}, response.status);
+ //        else {
+ //          var AlertMessage, ToastMessage, UUIDMessage;
+ //          switch (ValidationAttribute) {
+ //            case username:
+ //              ToastMessage = "Username "
+ //              break;
+ //            case password:
+ //              ToastMessage = "Password "
+ //              break;
+ //            case device_uuid:
+ //              UUIDMessage = "Username "
+ //              break;
+ //            default:
+ //              break;
+ //          }
+ //          return res.json({error : errorMessage, alert : AlertMessage, toast : ToastMessage, uuid : UUIDMessage}, response.status);
+ //        }
+ //      } else {
+ //        return res.json({error : durableJsonLint(message).json}, response.status);
+ //      }
+ //    }
+ //  }
+
+ 

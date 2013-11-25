@@ -15,8 +15,7 @@
         "password-hash": "1.2.1",
         "passport": "0.1.17",
         "passport-http-bearer": "1.0.1",
-        "waterline-criteria": "0.9.6",
-        "durable-json-lint": "0.0.1"
+        "waterline-criteria": "0.9.6"
     },
     "scripts": {
         "start": "sails lift",

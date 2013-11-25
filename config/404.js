@@ -36,3 +36,15 @@ module.exports[404] = function pageNotFound(req, res) {
   });
 
 };
+
+// if (req.wantsJSON) {
+ //    var message = response.errors[0].message;
+ //    if (!durableJsonLint(message).json)
+ //      return res.json({error : message}, response.status);
+ //    else {
+ //      var messageJson = durableJsonLint(message).json;
+ //      console.log("message");
+ //      console.log(messageJson);
+ //      return res.json({error : durableJsonLint(message).json}, response.status);
+ //    }
+ //  }
