@@ -36,6 +36,18 @@ module.exports.routes = {
     view: 'home/index'
   },
 
+  '/terms': {
+    view: 'home/terms'
+  },
+
+  '/user/password/forgot': {
+    view: 'user/password/forgot'
+  },
+
+  '/serial/request': {
+    view: 'serial/request'
+  },
+
   'post /api/user/signup': {
     controller: 'user',
     action: 'create'

@@ -23,7 +23,6 @@ module.exports[404] = function pageNotFound(req, res) {
 
   // If the user-agent wants a JSON response, send json
   if (req.wantsJSON) {
-    console.log(result);
     return res.json(result, result.status);
   }
 
