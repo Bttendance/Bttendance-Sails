@@ -9,15 +9,14 @@ API Schema for Bttendance
     password
     device_type
     device_uuid
+    type
 ####api/user/signin (get)
     username or email
     password
     device_uuid
-####api/user/update/type (put)
-    username
-    password
-    device_uuid
-    type
+###Serial
+####api/serial/validate (get)
+    serial
 ###Course
 ###Post
 ###School
