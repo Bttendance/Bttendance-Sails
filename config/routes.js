@@ -41,10 +41,10 @@ module.exports.routes = {
     action: 'create'
   },
 
-  'put /api/user/update/type': {
-    controller: 'user',
-    action: 'update_type'
-  },
+  // 'put /api/user/update/type': {
+  //   controller: 'user',
+  //   action: 'update_type'
+  // },
 
   'put /api/user/join/school': {
     controller: 'user',
