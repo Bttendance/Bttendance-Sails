@@ -36,7 +36,8 @@ module.exports = {
 
     //professor, student, assistant
     type: {
-    	type: 'string'
+    	type: 'string',
+      required: true
     },
 
     //iPhone, Android, Window, Blackberry, etc
