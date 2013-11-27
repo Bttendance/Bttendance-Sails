@@ -18,6 +18,11 @@ module.exports.policies = {
   // (`true` allows public access) 
   '*': true,
 
+  SerialController: {
+  	'*' : true,
+  	validate : true
+  },
+
   UserController: {
   	'*' : false,
   	create : true,
