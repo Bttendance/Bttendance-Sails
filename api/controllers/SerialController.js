@@ -30,13 +30,12 @@ module.exports = {
 
 		if (serial != 'welcome' && serial != 'Welcome') {
 			console.log("UserController : Wrong Serial : " + serial);
-			return res.send(401, { error: "Wrong Serial"});
+			return res.send(401, { error: "Wrong Serial", toast: "Wrong Serial"});
 		} else {
 			console.log("UserController : Serial Confirmed : " + serial);
 			return res.send(202, { validate: true });
 		}
 
 	},
-
   
 };
