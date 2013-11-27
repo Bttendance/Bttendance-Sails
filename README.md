@@ -55,6 +55,10 @@ This app uses "Sails.js" as framework and "Java Script" as language.
         "uuid": "uuid message"
     }
 
+####Validation Json
+    { 
+        "validate": boolean
+    }
 
 ####View
 - View uses 'jade' template.
