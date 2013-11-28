@@ -33,7 +33,8 @@ module.exports.policies = {
   	signup : true,
   	update_type : ['isUser'],
   	join_school : ['isUser', 'isSchool'],
-  	join_course : ['isUser', 'isCourse']
+  	join_course : ['isUser', 'isCourse'],
+    courses : ['isUser']
   },
 
   CourseController: {

@@ -167,7 +167,7 @@ module.exports = {
 		});
 	},
 
-	course_list: function(req, res) {
+	courses: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
 
@@ -185,7 +185,9 @@ module.exports = {
 
 		  // Found User!
 		  } else {
-
+		  	var courseListJSON;
+		  	courseListJSON.data = new Array();
+		  	console.log(courseListJSON);
 		  }
 		});
 	},
