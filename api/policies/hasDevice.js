@@ -1,17 +1,14 @@
 /**
  * Allow any authenticated user.
  */
-
-var passwordHash = require('password-hash');
-
-module.exports = function isUser (req, res, ok) {
+module.exports = function hasDevice (req, res, ok) {
 
 	var username = req.param('username');
-	var password = req.param('password');
+	var device_uuid = req.param('device_uuid');
 
-	if (!username || !password) {
-		console.log("isUser : Username and Password is required");
-		return res.send(400, { message: "Username and Password is required"});
+	if (!username || !device_uuid) {
+		console.log("hasDevice : Username and Password and Device UUID is required");
+		return res.send(400, { message: "Username and Password and Device UUID  is required"});
 	}
 
 	User.findOne({
@@ -27,9 +24,9 @@ module.exports = function isUser (req, res, ok) {
 	  } else if (!user) {
 	    return res.send(404, { message: "No User Found Error" });
 
-	  // Password Doesn't Match
-	  } else if (!passwordHash.verify(password, user.password)) {
-		  return res.send(404, { message: "Password doesn't match Error" });
+	  // User Device Doesn't Match
+	  } else if (user.device_uuid != device_uuid) {
+	    return res.send(401, { message: "Device UUID doesn't match Error" });
 
 		// Found User
 	  } else {
