@@ -30,6 +30,3 @@ API Schema for Bttendance
 ###Serial
 ####api/serial/validate (get)
     serial
-###Course
-###Post
-###School
