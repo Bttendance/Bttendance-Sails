@@ -33,17 +33,17 @@ module.exports = {
 
 		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
-			return res.send(400, { error: "Username or Email is required"});
+			return res.send(400, { message: "Username or Email is required"});
 		}
 
 		if (!password) {
 			console.log("UserController : signin : Password is required");
-			return res.send(400, { error: "Password is required"});
+			return res.send(400, { message: "Password is required"});
 		}
 
 		if (!uuid) {
 			console.log("UserController : signin : UUID is required");
-			return res.send(400, { error: "UUID is required"});
+			return res.send(400, { message: "UUID is required"});
 		}
 
 		User.findOne({
@@ -68,13 +68,13 @@ module.exports = {
 
 	// 	if (!type) {
 	// 		console.log("UserController : update_type : Type is required");
-	// 		return res.send(400, { error: "Type is required"});
+	// 		return res.send(400, { message: "Type is required"});
 	// 	}
 
 	// 	// Type Validation
 	// 	if (type != 'professor' && type != 'student') {
 	// 		console.log("UserController : update_type : Wrong Type : " + type);
-	// 		return res.send(400, { error: "Wrong Type"});
+	// 		return res.send(400, { message: "Wrong Type"});
 	// 	}
 
 	// 	// Serial Validation
@@ -82,39 +82,39 @@ module.exports = {
 	// 		var serial = req.param('serial');
 	// 		if (!serial) {
 	// 			console.log("UserController : update_type : Serial is required");
-	// 			return res.send(400, { error: "Serial is required"});
+	// 			return res.send(400, { message: "Serial is required"});
 	// 		}
 
 	// 		if (serial != 'welcome' && serial != 'Welcome') {
 	// 			console.log("UserController : update_type : Wrong Serial : " + serial);
-	// 			return res.send(400, { error: "Wrong Serial"});
+	// 			return res.send(400, { message: "Wrong Serial"});
 	// 		}
 	// 	}
 
 	// 	User.findOne({
 	// 		username: username
 	// 	}).done(function(err, user) {
-	// 		// Error handling
+	// 		// error handling
 	// 		if (err) {
 	// 			console.log(err);
-	// 	    return res.send(500, { error: "User Find Error" });
+	// 	    return res.send(500, { message: "User Find Error" });
 
 	// 	  // No User found
 	// 	  } else if (!user) {
-	// 	    return res.send(404, { error: "No User Found Error" });
+	// 	    return res.send(404, { message: "No User Found Error" });
 
 	// 	  // Found User!
 	// 	  } else {
 	// 	  	// Type is Already Exist!
 	// 	  	if (user.type != null)
-	// 		    return res.send(401, { error: "User already has type Error" });
+	// 		    return res.send(401, { message: "User already has type Error" });
 	// 		  // Update User
 	// 	  	user.type = type;
 	// 	  	user.save(function(err) {
 	// 				// Error handling
 	// 				if (err) {
 	// 					console.log(err);
-	// 			    return res.send(500, { error: "User Save Error" });
+	// 			    return res.send(500, { message: "User Save Error" });
 	// 			  }
 	// 		  	// return UserJSON
 	// 				var userJSON = JSON.stringify(user);
@@ -136,18 +136,18 @@ module.exports = {
 			// Error handling
 			if (err) {
 				console.log(err);
-		    return res.send(500, { error: "User Find Error" });
+		    return res.send(500, { message: "User Find Error" });
 
 		  // No User found
 		  } else if (!user) {
-		    return res.send(404, { error: "No User Found Error" });
+		    return res.send(404, { message: "No User Found Error" });
 
 		  // Found User!
 		  } else {
 		  	if (!user.schools) user.schools = new Array();
 
 		  	var school = parseInt(school_id);
-		  	if (isNaN(school)) return res.send(500, { error: "School id is NaN Error" });
+		  	if (isNaN(school)) return res.send(500, { message: "School id is NaN Error" });
 
       	// add school if user doesn't have school
 		  	if (user.schools.indexOf(school) == -1)
@@ -157,12 +157,35 @@ module.exports = {
 					// Error handling
 					if (err) {
 						console.log(err);
-				    return res.send(500, { error: "User Save Error" });
+				    return res.send(500, { message: "User Save Error" });
 				  }
 			  	// return UserJSON
 					var userJSON = JSON.stringify(user);
 			  	return res.send(userJSON);
 	      });
+		  }
+		});
+	},
+
+	course_list: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+
 		  }
 		});
 	},
@@ -178,18 +201,18 @@ module.exports = {
 			// Error handling
 			if (err) {
 				console.log(err);
-		    return res.send(500, { error: "User Find Error" });
+		    return res.send(500, { message: "User Find Error" });
 
 		  // No User found
 		  } else if (!user) {
-		    return res.send(404, { error: "No User Found Error" });
+		    return res.send(404, { message: "No User Found Error" });
 
 		  // Found User!
 		  } else {
 		  	if (!user.courses) user.courses = new Array();
 
 		  	var course = parseInt(course_id);
-		  	if (isNaN(course)) return res.send(500, { error: "Course id is NaN Error" });
+		  	if (isNaN(course)) return res.send(500, { message: "Course id is NaN Error" });
 
       	// add course if user doesn't have course
 		  	if (user.courses.indexOf(course) == -1)
@@ -199,7 +222,7 @@ module.exports = {
 					// Error handling
 					if (err) {
 						console.log(err);
-				    return res.send(500, { error: "User Save Error" });
+				    return res.send(500, { message: "User Save Error" });
 				  }
 			  	// return UserJSON
 					var userJSON = JSON.stringify(user);
@@ -216,17 +239,17 @@ var checkPass = function(res, err, user, password, uuid) {
 	// Error handling
 	if (err) {
 		console.log(err);
-    return res.send(500, { error: "User Find Error" });
+    return res.send(500, { message: "User Find Error" });
 
   // No User found
   } else if (!user) {
-    return res.send(404, { error: "No User Found Error" });
+    return res.send(404, { message: "No User Found Error" });
 
   // Found User!
   } else if (!passwordHash.verify(password, user.password)) {
-	  return res.send(404, { error: "Password doesn't match Error" });
+	  return res.send(404, { message: "Password doesn't match Error" });
   } else if (user.device_uuid != uuid) {
-	  return res.send(406, { error: "UUID doesn't match Error" });
+	  return res.send(406, { message: "UUID doesn't match Error" });
   } else {
 		var userJSON = JSON.stringify(user);
 		// Add Password

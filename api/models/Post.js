@@ -57,6 +57,11 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.student_check = new Array();
     next();
+  },
+
+  // Lifecycle Callbacks
+  afterCreate: function(values, next) {
+    
   }
 
 };
