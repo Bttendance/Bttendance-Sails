@@ -14,6 +14,12 @@ API Schema for Bttendance
     username or email
     password
     device_uuid
+####api/user/schools (get)
+    username
+    password
+####api/user/courses (get)
+    username
+    password
 ###Course
 ####api/course/create (post)
     username
