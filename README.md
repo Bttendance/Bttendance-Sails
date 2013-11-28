@@ -52,7 +52,8 @@ This app uses "Sails.js" as framework and "Java Script" as language.
         "message": "error message", 
         "alert": "alert message", 
         "toast": "toast message",
-        "uuid": "uuid message"
+        "uuid": "uuid message",
+        "update": "update message"
     }
 
 ####Validation Json
