@@ -29,6 +29,14 @@ API Schema for Bttendance
     password
     device_uuid
     full_name
+####put : api/user/join/school => UserJSON
+    username
+    password
+    school_id
+####put : api/user/join/course => UserJSON
+    username
+    password
+    course_id
 ####get : api/user/schools => SchoolJSON LIST
     username
     password
