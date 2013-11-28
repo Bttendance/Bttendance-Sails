@@ -14,6 +14,21 @@ API Schema for Bttendance
     username or email
     password
     device_uuid
+####api/user/update/profile_image (put)
+    username
+    password
+    device_uuid
+    profile_image
+####api/user/update/email (put)
+    username
+    password
+    device_uuid
+    email
+####api/user/update/full_name (put)
+    username
+    password
+    device_uuid
+    full_name
 ####api/user/schools (get)
     username
     password
