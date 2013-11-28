@@ -35,7 +35,8 @@ module.exports.policies = {
   	join_school : ['isUser', 'isSchool'],
   	join_course : ['isUser', 'isCourse'],
     courses : ['isUser'],
-    schools : ['isUser']
+    schools : ['isUser'],
+    joinableCourses : ['isUser']
   },
 
   CourseController: {

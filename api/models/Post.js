@@ -61,7 +61,22 @@ module.exports = {
 
   // Lifecycle Callbacks
   afterCreate: function(values, next) {
+    // add new post to course
+    Course.findOne(values.course).done(function(err, course) {
+      // return err
+      if (err) return next(err);
+      // make new array
+      if (!course.posts) course.posts = new Array();
+
+      if (course.posts.indexOf(course) == -1)
+        course.posts.push(values.id);
+      // save new values
+      course.save(function(err) {
+        if (err) return next(err);
+      });
+    });
     
+    next();
   }
 
 };

@@ -64,7 +64,7 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
-    // add new courses to user
+    // add new course to user
     User.findOne({
       username: values.professor
     }).done(function(err, user) {
@@ -80,7 +80,8 @@ module.exports = {
         if (err) return next(err);
       });
     });
-    // add new courses to school
+
+    // add new course to school
     School.findOne(values.school).done(function(err, school) {
       // return err
       if (err) return next(err);
