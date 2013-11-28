@@ -12,8 +12,7 @@ module.exports = function isStudent (req, res, ok) {
 	}
 
 	User.findOne({
-		username: username,
-		password: password
+		username: username
 	}).done(function(err, user) {
 
 		// Error handling
@@ -25,14 +24,16 @@ module.exports = function isStudent (req, res, ok) {
 	  } else if (!user) {
 	    return res.send(404, { message: "No User Found Error" });
 
-	  // Found multiple Students!
-	  } else {
-    	if (user.type != 'student') {
-    		console.log("User type : " + user.type);
-	    	return res.send(401, { message: "User Type is not student Error" });
-    	} else {
-    		return ok();
-    	}
+	  // Password Doesn't Match
+	  } else if (user.password != password) {
+		  return res.send(404, { message: "Password doesn't match Error" });
+
+	  // Found Student!
+	  } else if (user.type != 'student') {
+  		console.log("User type : " + user.type);
+    	return res.send(401, { message: "User Type is not student Error" });
+  	} else {
+  		return ok();
 	  }
 	});
 };

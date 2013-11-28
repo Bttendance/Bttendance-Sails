@@ -7,8 +7,8 @@ module.exports = function hasDevice (req, res, ok) {
 	var device_uuid = req.param('device_uuid');
 
 	if (!username || !device_uuid) {
-		console.log("hasDevice : Username and Password and Device UUID is required");
-		return res.send(400, { message: "Username and Password and Device UUID  is required"});
+		console.log("hasDevice : Username and Device UUID is required");
+		return res.send(400, { message: "Username and Device UUID  is required"});
 	}
 
 	User.findOne({

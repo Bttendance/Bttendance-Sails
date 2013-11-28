@@ -245,48 +245,6 @@ module.exports = {
 		});
 	},
 
-	join_school: function(req, res) {
-		res.contentType('application/json');
-		var username = req.param('username');
-		var school_id = req.param('school_id');
-		
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-
-		  // No User found
-		  } else if (!user) {
-		    return res.send(404, { message: "No User Found Error" });
-
-		  // Found User!
-		  } else {
-		  	if (!user.schools) user.schools = new Array();
-
-		  	var school = parseInt(school_id);
-		  	if (isNaN(school)) return res.send(500, { message: "School id is NaN Error" });
-
-      	// add school if user doesn't have school
-		  	if (user.schools.indexOf(school) == -1)
-			  	user.schools.push(school);
-      	// save new values
-	      user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-	      });
-		  }
-		});
-	},
-
 	courses: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
@@ -403,6 +361,48 @@ module.exports = {
 		});
 	},
 
+	join_school: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var school_id = req.param('school_id');
+		
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+		  	if (!user.schools) user.schools = new Array();
+
+		  	var school = parseInt(school_id);
+		  	if (isNaN(school)) return res.send(500, { message: "School id is NaN Error" });
+
+      	// add school if user doesn't have school
+		  	if (user.schools.indexOf(school) == -1)
+			  	user.schools.push(school);
+      	// save new values
+	      user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { message: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+	      });
+		  }
+		});
+	},
+
 	join_course: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
@@ -440,6 +440,13 @@ module.exports = {
 	      });
 		  }
 		});
+	},
+
+	feed: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var page = req.param('page');
+
 	}
 };
 

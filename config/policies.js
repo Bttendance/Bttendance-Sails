@@ -39,11 +39,12 @@ module.exports.policies = {
     joinableCourses : ['isUser'],
     update_profile_image : ['isUser', 'hasDevice'],
     update_full_name : ['isUser', 'hasDevice'],
-    update_email : ['isUser', 'hasDevice']
+    update_email : ['isUser', 'hasDevice'],
+    feed : 'isStudent'
   },
 
   CourseController: {
-  	create : ['isProfessor', 'isSchool'],
+  	create : ['isProfessor', 'hasSchool'],
   	update : ['isProfessor', 'hasCourse'],
   	destroy : ['isProfessor', 'hasCourse']
   },

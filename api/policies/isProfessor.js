@@ -12,8 +12,7 @@ module.exports = function isProfessor (req, res, ok) {
 	}
 
 	User.findOne({
-		username: username,
-		password: password
+		username: username
 	}).done(function(err, user) {
 
 		// Error handling
@@ -25,14 +24,16 @@ module.exports = function isProfessor (req, res, ok) {
 	  } else if (!user) {
 	    return res.send(404, { message: "No User Found Error" });
 
+	  // Password Doesn't Match
+	  } else if (user.password != password) {
+		  return res.send(404, { message: "Password doesn't match Error" });
+
 	  // Found multiple Professors!
-	  } else {
-    	if (user.type != 'professor') {
-    		console.log("User type : " + user.type);
-	    	return res.send(401, { message: "User Type is not Professor Error" });
-    	} else {
-    		return ok();
-    	}
-	  }
+	  } else if (user.type != 'professor') {
+  		console.log("User type : " + user.type);
+    	return res.send(401, { message: "User Type is not Professor Error" });
+  	} else {
+  		return ok();
+  	}
 	});
 };

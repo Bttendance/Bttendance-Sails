@@ -7,8 +7,8 @@ module.exports = function hasPost (req, res, ok) {
 	var post_id = req.param('post_id');
 
 	if (!username || !post_id) {
-		console.log("haspost : Username and Password and post is required");
-		return res.send(400, { message: "Username and Password and post is required"});
+		console.log("haspost : Username and post is required");
+		return res.send(400, { message: "Username and post is required"});
 	}
 
 	Post.findOne(post_id).done(function(err, post) {

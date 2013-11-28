@@ -7,8 +7,8 @@ module.exports = function hasCourse (req, res, ok) {
 	var course_id = req.param('course_id');
 
 	if (!username || !course_id) {
-		console.log("hasCourse : Username and Password and Course is required");
-		return res.send(400, { message: "Username and Password and Course is required"});
+		console.log("hasCourse : Username and Course is required");
+		return res.send(400, { message: "Username and Course is required"});
 	}
 
 	Course.findOne(course_id).done(function(err, course) {
