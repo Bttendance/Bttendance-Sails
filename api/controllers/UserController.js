@@ -165,6 +165,86 @@ module.exports = {
 		});
 	},
 
+	update_full_name: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var full_name = req.param('full_name');
+
+		if (!full_name) {
+			console.log("UserController : update_full_name : Full Name is required");
+			return res.send(400, { message: "Full Name is required"});
+		}
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+			  // Update User
+		  	user.full_name = full_name;
+		  	user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { message: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+		  	});
+		  }
+		});
+	},
+
+	update_email: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var email = req.param('email');
+
+		if (!email) {
+			console.log("UserController : update_email : Email is required");
+			return res.send(400, { message: "Email is required"});
+		}
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+			  // Update User
+		  	user.email = email;
+		  	user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { message: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+		  	});
+		  }
+		});
+	},
+
 	join_school: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
