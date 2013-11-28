@@ -28,7 +28,7 @@ module.exports.policies = {
   	create : true,
   	find : false,
   	update : ['isUser', 'hasDevice'],
-  	destroy : ['isUser', 'hasDevice'],
+  	destroy : false,
   	signin : true,
   	signup : true,
   	update_type : ['isUser'],
@@ -36,7 +36,10 @@ module.exports.policies = {
   	join_course : ['isUser', 'isCourse'],
     courses : ['isUser'],
     schools : ['isUser'],
-    joinableCourses : ['isUser']
+    joinableCourses : ['isUser'],
+    update_profile_image : ['isUser', 'hasDevice'],
+    update_full_name : ['isUser', 'hasDevice'],
+    update_email : ['isUser', 'hasDevice']
   },
 
   CourseController: {

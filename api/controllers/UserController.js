@@ -125,6 +125,46 @@ module.exports = {
 
 	// },
 
+	update_profile_image: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var profile_image = req.param('profile_image');
+
+		if (!profile_image) {
+			console.log("UserController : update_profile_image : Profile Image url is required");
+			return res.send(400, { message: "Profile Image url is required"});
+		}
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+			  // Update User
+		  	user.profile_image = profile_image;
+		  	user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { message: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+		  	});
+		  }
+		});
+	},
+
 	join_school: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');

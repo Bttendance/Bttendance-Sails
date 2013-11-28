@@ -58,6 +58,21 @@ module.exports.routes = {
   //   action: 'update_type'
   // },
 
+  'put /api/user/update/profile_image': {
+    controller: 'user',
+    action: 'update_profile_image'
+  },
+
+  'put /api/user/update/full_name': {
+    controller: 'user',
+    action: 'update_full_name'
+  },
+
+  'put /api/user/update/email': {
+    controller: 'user',
+    action: 'update_email'
+  },
+
   'put /api/user/join/school': {
     controller: 'user',
     action: 'join_school'
