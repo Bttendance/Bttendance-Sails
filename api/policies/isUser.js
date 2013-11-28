@@ -2,8 +2,6 @@
  * Allow any authenticated user.
  */
 
-var passwordHash = require('password-hash');
-
 module.exports = function isUser (req, res, ok) {
 
 	var username = req.param('username');
@@ -28,12 +26,11 @@ module.exports = function isUser (req, res, ok) {
 	    return res.send(404, { message: "No User Found Error" });
 
 	  // Password Doesn't Match
-	  } else if (!passwordHash.verify(password, user.password)) {
+	  } else if (user.password != password) {
 		  return res.send(404, { message: "Password doesn't match Error" });
 
 		// Found User
 	  } else {
-    	console.log("User found : " + user);
 	  	ok();
 	  }
 	});

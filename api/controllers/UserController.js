@@ -183,8 +183,7 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 		  // Found User!
 		  } else {
-		  	var coursesObject = {};
-		  	coursesObject["data"] = new Array();
+		  	var coursesObject = new Array();
 	  		Course.find({
 	  			where: {
 	  				or: getConditionFromIDs(user.courses)
@@ -192,7 +191,7 @@ module.exports = {
 	  		}).done(function(err, courses) {
 	  			if (!err && courses) {
 	  				for (var index in courses)
-	  					coursesObject["data"].push(courses[index]);
+	  					coursesObject.push(courses[index]);
 						var coursesJSON = JSON.stringify(coursesObject);
 				  	return res.send(coursesJSON);
 	  			} else
@@ -228,8 +227,7 @@ module.exports = {
 	  				for (var index in schools)
 	  					coursesArray = coursesArray.concat(schools[index].courses);
 
-				  	var coursesObject = {};
-				  	coursesObject["data"] = new Array();
+				  	var coursesObject = new Array();
 			  		Course.find({
 			  			where: {
 			  				or: getConditionFromIDs(coursesArray)
@@ -237,7 +235,7 @@ module.exports = {
 			  		}).done(function(err, courses) {
 			  			if (!err && courses) {
 			  				for (var index in courses)
-			  					coursesObject["data"].push(courses[index]);
+			  					coursesObject.push(courses[index]);
 								var coursesJSON = JSON.stringify(coursesObject);
 						  	return res.send(coursesJSON);
 			  			} else
@@ -267,8 +265,7 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 		  // Found User!
 		  } else {
-		  	var schoolsObject = {};
-		  	schoolsObject["data"] = new Array();
+		  	var schoolsObject = new Array();
 	  		Course.find({
 	  			where: {
 	  				or: getConditionFromIDs(user.schools)
@@ -276,7 +273,7 @@ module.exports = {
 	  		}).done(function(err, schools) {
 	  			if (!err && schools) {
 	  				for (var index in schools)
-	  					schoolsObject["data"].push(schools[index]);
+	  					schoolsObject.push(schools[index]);
 						var schoolsJSON = JSON.stringify(schoolsObject);
 				  	return res.send(schoolsJSON);
 	  			} else

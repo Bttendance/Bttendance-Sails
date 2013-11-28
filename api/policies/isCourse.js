@@ -23,7 +23,6 @@ module.exports = function isCourse (req, res, ok) {
 
 	  // Found multiple Professors!
 	  } else {
-    	console.log("Course found:", course);
     	return ok();
 	  }
 	});
