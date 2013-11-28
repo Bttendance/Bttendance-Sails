@@ -7,8 +7,8 @@ module.exports = function hasSchool (req, res, ok) {
 	var school_id = req.param('school_id');
 
 	if (!username || !school_id) {
-		console.log("hasSchool : Username and School and Course is required");
-		return res.send(400, { message: "Username and Password and Course is required"});
+		console.log("hasSchool : Username and School is required");
+		return res.send(400, { message: "Username and Password is required"});
 	}
 
 	User.findOne({
@@ -25,7 +25,7 @@ module.exports = function hasSchool (req, res, ok) {
 	    return res.send(404, { message: "No User Found Error" });
 
 	  // School doesn't found
-	  } else if (!user.schools || user.schools.indexOf(parseInt(school_id), -1) == -1) {
+	  } else if (!user.schools || user.schools.indexOf(Number(school_id)) == -1) {
 	    return res.send(401, { message: "School doesn't found Error" });
 
 		// Found School
