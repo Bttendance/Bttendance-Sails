@@ -25,7 +25,7 @@ module.exports = function hasSchool (req, res, ok) {
 	    return res.send(404, { message: "No User Found Error" });
 
 	  // School doesn't found
-	  } else if (!user.schools || user.schools.indexOf(school_id) == -1) {
+	  } else if (!user.schools || user.schools.indexOf(parseInt(school_id), -1) == -1) {
 	    return res.send(401, { message: "School doesn't found Error" });
 
 		// Found School
