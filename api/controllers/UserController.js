@@ -202,6 +202,41 @@ module.exports = {
 		});
 	},
 
+	schools: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+		  // Found User!
+		  } else {
+		  	var schoolsObject = {};
+		  	schoolsObject["data"] = new Array();
+	  		Course.find({
+	  			where: {
+	  				or: getConditionFromIDs(user.schools)
+	  			}
+	  		}).done(function(err, schools) {
+	  			if (!err && schools) {
+	  				for (var index in schools)
+	  					schoolsObject["data"].push(schools[index]);
+						var schoolsJSON = JSON.stringify(schoolsObject);
+				  	return res.send(schoolsJSON);
+	  			} else
+		    		return res.send(404, { message: "No School Found Error" });
+	  		});
+		  }
+		});
+	},
+
 	join_course: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
