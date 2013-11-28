@@ -8,7 +8,7 @@ module.exports = function hasCourse (req, res, ok) {
 
 	if (!username || !course_id) {
 		console.log("hasCourse : Username and Password and Course is required");
-		return res.send(400, { error: "Username and Password and Course is required"});
+		return res.send(400, { message: "Username and Password and Course is required"});
 	}
 
 	Course.findOne(course_id).done(function(err, course) {
@@ -16,15 +16,15 @@ module.exports = function hasCourse (req, res, ok) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, { error: "Course Find Error" });
+	    return res.send(500, { message: "Course Find Error" });
 
 	  // No User found
 	  } else if (!course) {
-	    return res.send(404, { error: "No Course Found Error" });
+	    return res.send(404, { message: "No Course Found Error" });
 	  } else {
     	console.log("Course found : " + course);
     	if (course.professor != 'username') {
-	    	return res.send(401, { error: "This Course doesn't belong to current professor Error" });
+	    	return res.send(401, { message: "This Course doesn't belong to current professor Error" });
     	} else {
     		ok();
     	}

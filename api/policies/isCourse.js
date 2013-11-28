@@ -7,7 +7,7 @@ module.exports = function isCourse (req, res, ok) {
 
 	if (!course_id) {
 		console.log("isCourse : Course is required");
-		return res.send(400, { error: "Course is required"});
+		return res.send(400, { message: "Course is required"});
 	}
 
 	Course.findOne(course_id).done(function(err, course) {
@@ -15,11 +15,11 @@ module.exports = function isCourse (req, res, ok) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, { error: "Course Find Error" });
+	    return res.send(500, { message: "Course Find Error" });
 
 	  // No Course found
 	  } else if (!course) {
-	    return res.send(404, { error: "No Course Found Error" });
+	    return res.send(404, { message: "No Course Found Error" });
 
 	  // Found multiple Professors!
 	  } else {

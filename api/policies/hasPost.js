@@ -8,7 +8,7 @@ module.exports = function hasPost (req, res, ok) {
 
 	if (!username || !post_id) {
 		console.log("haspost : Username and Password and post is required");
-		return res.send(400, { error: "Username and Password and post is required"});
+		return res.send(400, { message: "Username and Password and post is required"});
 	}
 
 	Post.findOne(post_id).done(function(err, post) {
@@ -16,15 +16,15 @@ module.exports = function hasPost (req, res, ok) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, { error: "Post Find Error" });
+	    return res.send(500, { message: "Post Find Error" });
 
 	  // No User found
 	  } else if (!post) {
-	    return res.send(404, { error: "No Post Found Error" });
+	    return res.send(404, { message: "No Post Found Error" });
 	  } else {
     	console.log("Post found : " + post);
     	if (post.professor != 'username') {
-	    	return res.send(401, { error: "This post doesn't belong to current professor Error" });
+	    	return res.send(401, { message: "This post doesn't belong to current professor Error" });
     	} else {
     		ok();
     	}

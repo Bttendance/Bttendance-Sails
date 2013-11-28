@@ -81,7 +81,6 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     values.password = passwordHash.generate(values.password);
-    values.type = null;
     values.courses = new Array();
     values.memberships = new Array();
     values.schools = new Array();

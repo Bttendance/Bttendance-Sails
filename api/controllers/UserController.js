@@ -178,16 +178,26 @@ module.exports = {
 			if (err) {
 				console.log(err);
 		    return res.send(500, { message: "User Find Error" });
-
 		  // No User found
 		  } else if (!user) {
 		    return res.send(404, { message: "No User Found Error" });
-
 		  // Found User!
 		  } else {
-		  	var courseListJSON;
-		  	courseListJSON.data = new Array();
-		  	console.log(courseListJSON);
+		  	var coursesObject = {};
+		  	coursesObject["data"] = new Array();
+	  		Course.find({
+	  			where: {
+	  				or: getConditionFromIDs(user.courses)
+	  			}
+	  		}).done(function(err, courses) {
+	  			if (!err && courses) {
+	  				for (var index in courses)
+	  					coursesObject["data"].push(courses[index]);
+						var coursesJSON = JSON.stringify(coursesObject);
+				  	return res.send(coursesJSON);
+	  			} else
+		    		return res.send(404, { message: "No Course Found Error" });
+	  		});
 		  }
 		});
 	},
@@ -204,18 +214,15 @@ module.exports = {
 			if (err) {
 				console.log(err);
 		    return res.send(500, { message: "User Find Error" });
-
 		  // No User found
 		  } else if (!user) {
 		    return res.send(404, { message: "No User Found Error" });
-
 		  // Found User!
 		  } else {
 		  	if (!user.courses) user.courses = new Array();
 
 		  	var course = parseInt(course_id);
 		  	if (isNaN(course)) return res.send(500, { message: "Course id is NaN Error" });
-
       	// add course if user doesn't have course
 		  	if (user.courses.indexOf(course) == -1)
 			  	user.courses.push(course);
@@ -234,6 +241,17 @@ module.exports = {
 		});
 	}
 };
+
+// Function to get id list
+var getConditionFromIDs = function(array) {
+	var returnArray = new Array();
+	for (var index in array) {
+		var idObject = [];
+		idObject["id"] = array[index];
+		returnArray.push(idObject);
+	}
+	return returnArray;
+}
 
 // Function for signin API
 var checkPass = function(res, err, user, password, uuid) {
