@@ -2,7 +2,7 @@ API
 =================
 API Schema for Bttendance
 ###User
-####api/user/signup (post)
+####post : api/user/signup => UserJSON
     full_name
     username
     email
@@ -10,44 +10,44 @@ API Schema for Bttendance
     device_type
     device_uuid
     type
-####api/user/signin (get)
+####get : api/user/signin => UserJSON
     username or email
     password
     device_uuid
-####api/user/update/profile_image (put)
+####put : api/user/update/profile_image => UserJSON
     username
     password
     device_uuid
     profile_image
-####api/user/update/email (put)
+####put : api/user/update/email => UserJSON
     username
     password
     device_uuid
     email
-####api/user/update/full_name (put)
+####put : api/user/update/full_name => UserJSON
     username
     password
     device_uuid
     full_name
-####api/user/schools (get)
+####get : api/user/schools => SchoolJSON LIST
     username
     password
-####api/user/courses (get)
+####get : api/user/courses => CourseJSON LIST
     username
     password
 ###Course
-####api/course/create (post)
+####post : api/course/create => CourseJSON
     username
     password
     name
     school_id
 ###Post
-####api/post/create (post)
+####post : api/post/create => PostJSON
     username
     password
     title
     message
     course_id
 ###Serial
-####api/serial/validate (get)
+####get : api/serial/validate => ValidateJSON
     serial
