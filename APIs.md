@@ -47,6 +47,12 @@ API Schema for Bttendance
     username
     password
     page
+###School
+####post : api/school/create => SchoolJSON
+    username
+    password
+    name
+    website
 ###Course
 ####post : api/course/create => CourseJSON
     username
