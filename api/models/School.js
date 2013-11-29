@@ -31,15 +31,23 @@ module.exports = {
 
     // user who created this school
     creator: {
-      type: 'string',
+      type: 'integer',
       required: true
     }
     
   },
 
   beforeValidation: function(values, next) {
-    if (values.username)
-      values.creator = values.username;
+    if (values.username) {
+      User.findOne({
+        username: values.username
+      }).done(function(err, user) {
+        if (!err && user) {
+          values.creator = user.id;
+        } else
+          return next(err);
+      });
+    }
     next();
   },
 
@@ -50,9 +58,7 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
-    User.findOne({
-      username: values.creator
-    }).done(function(err, user) {
+    User.findOne(values.creator).done(function(err, user) {
       // return err
       if (err) return next(err);
       // make new array

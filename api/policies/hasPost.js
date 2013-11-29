@@ -23,11 +23,19 @@ module.exports = function hasPost (req, res, ok) {
 	    return res.send(404, { message: "No Post Found Error" });
 	  } else {
     	console.log("Post found : " + post);
-    	if (post.professor != 'username') {
-	    	return res.send(401, { message: "This post doesn't belong to current professor Error" });
-    	} else {
-    		ok();
-    	}
+    	Course.findOne(post.course).done(function(err, course) {
+    		if (!err && course) {
+    			User.findOne({
+    				username : username
+    			}).done(function(err, user) {
+		    		if (!err && user) {
+		    			if (course.students.indexOf(user.id) == -1 || course.)
+						} else 
+	    				return res.send(404, { message: "No User Found Error" });
+    			});
+    		} else 
+	    		return res.send(404, { message: "No Course Found Error" });
+    	});
 	  }
 	});
 };

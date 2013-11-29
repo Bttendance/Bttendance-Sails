@@ -28,7 +28,7 @@ module.exports = {
 
     // has one author
     author: {
-      type: 'string',
+      type: 'integer',
       required: true
     },
 
@@ -38,24 +38,34 @@ module.exports = {
       required: true
     },
 
-    // has one studentCheck = 1 Student + 1 Check
-    student_check: {
+    // has many students (checked)
+    checks: {
       type: 'array'
     }
 
   },
 
   beforeValidation: function(values, next) {
-    if (values.username)
-      values.author = values.username;
+
     if (values.course_id)
-      values.course = values.course_id;
+        values.course = values.course_id;
+
+    if (values.username) {
+      User.findOne({
+        username: values.username
+      }).done(function(err, user) {
+        if (!err && user) {
+          values.author = user.id;
+        } else
+          return next(err);
+      });
+    }
     next();
   },
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-    values.student_check = new Array();
+    values.checks = new Array();
     next();
   },
 

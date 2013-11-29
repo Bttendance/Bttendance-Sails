@@ -53,7 +53,8 @@ module.exports.policies = {
   PostController: {
   	create : ['isProfessor', 'hasCourse'],
   	update : ['isProfessor', 'hasPost'],
-  	destroy : ['isProfessor', 'hasPost']
+  	destroy : ['isProfessor', 'hasPost'],
+    checks : ['isUser', 'hasPost']
   },
 
   SchoolController: {

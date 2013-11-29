@@ -33,7 +33,7 @@ module.exports = {
 
     // has one Professor
     professor: {
-      type: 'string',
+      type: 'integer',
       required: true
     },
     
@@ -50,10 +50,20 @@ module.exports = {
   },
 
   beforeValidation: function(values, next) {
-    if (values.username)
-      values.professor = values.username;
+
     if (values.school_id)
       values.school = values.school_id;
+
+    if (values.username) {
+      User.findOne({
+        username: values.username
+      }).done(function(err, user) {
+        if (!err && user) {
+          values.professor = user.id;
+        } else
+          return next(err);
+      });
+    } 
     next();
   },
 
@@ -65,9 +75,7 @@ module.exports = {
 
   afterCreate: function(values, next) {
     // add new course to user
-    User.findOne({
-      username: values.professor
-    }).done(function(err, user) {
+    User.findOne(values.professor).done(function(err, user) {
       // return err
       if (err) return next(err);
       // make new array
