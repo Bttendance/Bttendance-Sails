@@ -43,7 +43,7 @@ API Schema for Bttendance
 ####get : api/user/courses => CourseJSON LIST
     username
     password
-####get : api/user/feed => PoseJSON LIST
+####get : api/user/feed => PostJSON LIST
     username
     password
     page
@@ -53,7 +53,7 @@ API Schema for Bttendance
     password
     name
     school_id
-####get : api/course/feed => PoseJSON LIST
+####get : api/course/feed => PostJSON LIST
     username
     password
     course_id
