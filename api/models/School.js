@@ -44,11 +44,12 @@ module.exports = {
       }).done(function(err, user) {
         if (!err && user) {
           values.creator = user.id;
+          next();
         } else
           return next(err);
       });
-    }
-    next();
+    } else
+      next();
   },
 
   // Lifecycle Callbacks

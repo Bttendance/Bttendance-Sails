@@ -60,11 +60,12 @@ module.exports = {
       }).done(function(err, user) {
         if (!err && user) {
           values.professor = user.id;
+          next();
         } else
           return next(err);
       });
-    } 
-    next();
+    } else
+      next();
   },
 
   beforeCreate: function(values, next) {
