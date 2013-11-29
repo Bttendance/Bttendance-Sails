@@ -29,7 +29,10 @@ module.exports = function hasPost (req, res, ok) {
     				username : username
     			}).done(function(err, user) {
 		    		if (!err && user) {
-		    			if (course.students.indexOf(user.id) == -1 || course.)
+		    			if (course.students.indexOf(user.id) == -1 && course.professor != user.id)
+	    					return res.send(404, { message: "User doesn't have Post Error" });
+		    			else
+		    				ok();
 						} else 
 	    				return res.send(404, { message: "No User Found Error" });
     			});
