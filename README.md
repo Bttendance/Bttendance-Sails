@@ -39,6 +39,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - Model overwrite 'MongoDB' object_id as integer which starts from 1.
 - User Model is for Access (which includes username, email, password, access_token, etc)
 - Professor & Student's 'id' is same as User 'id'.
+- Every Model can associated with each other only by using other's 'id'
 
 ####API
 - API Schema : 'api/:controller/:action/:model' (ex : 'api/user/join/school')
