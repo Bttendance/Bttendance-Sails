@@ -40,13 +40,14 @@ module.exports.policies = {
     update_profile_image : ['isUser', 'hasDevice'],
     update_full_name : ['isUser', 'hasDevice'],
     update_email : ['isUser', 'hasDevice'],
-    feed : 'isStudent'
+    feed : 'isUser'
   },
 
   CourseController: {
   	create : ['isProfessor', 'hasSchool'],
   	update : ['isProfessor', 'hasCourse'],
-  	destroy : ['isProfessor', 'hasCourse']
+  	destroy : ['isProfessor', 'hasCourse'],
+    feed : ['isUser', 'hasCourse']
   },
 
   PostController: {

@@ -61,70 +61,6 @@ module.exports = {
 		});
 	},
 
-	// update_type: function(req, res) {
-	// 	res.contentType('application/json');
-	// 	var username = req.param('username');
-	// 	var type = req.param('type');
-
-	// 	if (!type) {
-	// 		console.log("UserController : update_type : Type is required");
-	// 		return res.send(400, { message: "Type is required"});
-	// 	}
-
-	// 	// Type Validation
-	// 	if (type != 'professor' && type != 'student') {
-	// 		console.log("UserController : update_type : Wrong Type : " + type);
-	// 		return res.send(400, { message: "Wrong Type"});
-	// 	}
-
-	// 	// Serial Validation
-	// 	if (type == 'professor') {
-	// 		var serial = req.param('serial');
-	// 		if (!serial) {
-	// 			console.log("UserController : update_type : Serial is required");
-	// 			return res.send(400, { message: "Serial is required"});
-	// 		}
-
-	// 		if (serial != 'welcome' && serial != 'Welcome') {
-	// 			console.log("UserController : update_type : Wrong Serial : " + serial);
-	// 			return res.send(400, { message: "Wrong Serial"});
-	// 		}
-	// 	}
-
-	// 	User.findOne({
-	// 		username: username
-	// 	}).done(function(err, user) {
-	// 		// error handling
-	// 		if (err) {
-	// 			console.log(err);
-	// 	    return res.send(500, { message: "User Find Error" });
-
-	// 	  // No User found
-	// 	  } else if (!user) {
-	// 	    return res.send(404, { message: "No User Found Error" });
-
-	// 	  // Found User!
-	// 	  } else {
-	// 	  	// Type is Already Exist!
-	// 	  	if (user.type != null)
-	// 		    return res.send(401, { message: "User already has type Error" });
-	// 		  // Update User
-	// 	  	user.type = type;
-	// 	  	user.save(function(err) {
-	// 				// Error handling
-	// 				if (err) {
-	// 					console.log(err);
-	// 			    return res.send(500, { message: "User Save Error" });
-	// 			  }
-	// 		  	// return UserJSON
-	// 				var userJSON = JSON.stringify(user);
-	// 		  	return res.send(userJSON);
-	// 	  	});
-	// 	  }
-	// 	});
-
-	// },
-
 	update_profile_image: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
@@ -446,7 +382,49 @@ module.exports = {
 		res.contentType('application/json');
 		var username = req.param('username');
 		var page = req.param('page');
+		
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+		  // Found User!
+		  } else {
+	  		Course.find({
+	  			where: {
+	  				or: getConditionFromIDs(user.courses)
+	  			}
+	  		}).done(function(err, courses) {
+	  			if (!err && courses) {
+	  				var postsArray = new Array();
+	  				for (var index in courses)
+	  					postsArray = postsArray.concat(courses[index].posts);
 
+				  	var postsObject = new Array();
+			  		Post.find({
+			  			where: {
+			  				or: getConditionFromIDs(postsArray)
+			  			}
+			  		}).sort('id DESC').done(function(err, posts) {
+			  			if (!err && posts) {
+			  				for (var index in posts)
+			  					postsObject.push(posts[index]);
+								var postsJSON = JSON.stringify(postsObject);
+						  	return res.send(postsJSON);
+			  			} else
+				    		return res.send(404, { message: "No Course Found Error" });
+			  		});
+
+	  			} else
+		    		return res.send(404, { message: "No School Found Error" });
+	  		});
+		  }
+		});
 	}
 };
 
