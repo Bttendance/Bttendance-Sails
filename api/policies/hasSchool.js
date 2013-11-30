@@ -8,7 +8,7 @@ module.exports = function hasSchool (req, res, ok) {
 
 	if (!username || !school_id) {
 		console.log("hasSchool : Username and School is required");
-		return res.send(400, { message: "Username and Password is required"});
+		return res.send(400, { message: "Username and School is required"});
 	}
 
 	User.findOne({
