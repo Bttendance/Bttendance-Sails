@@ -28,7 +28,7 @@ module.exports.policies = {
   	create : true,
   	find : false,
   	update : ['isUser', 'hasDevice'],
-  	destroy : false,
+  	destroy : true,
   	signin : true,
   	signup : true,
   	update_type : ['isUser'],

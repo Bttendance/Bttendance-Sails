@@ -22,7 +22,6 @@ module.exports = function hasPost (req, res, ok) {
 	  } else if (!post) {
 	    return res.send(404, { message: "No Post Found Error" });
 	  } else {
-    	console.log("Post found : " + post);
     	Course.findOne(post.course).done(function(err, course) {
     		if (!err && course) {
     			User.findOne({

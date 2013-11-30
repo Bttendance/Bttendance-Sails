@@ -358,11 +358,9 @@ module.exports = {
 		  } else {
 		  	if (!user.courses) user.courses = new Array();
 
-		  	var course = parseInt(course_id);
-		  	if (isNaN(course)) return res.send(500, { message: "Course id is NaN Error" });
       	// add course if user doesn't have course
-		  	if (user.courses.indexOf(course) == -1)
-			  	user.courses.push(course);
+		  	if (user.courses.indexOf(Number(course_id)) == -1)
+			  	user.courses.push(Number(course_id));
       	// save new values
 	      user.save(function(err) {
 					// Error handling
@@ -373,6 +371,16 @@ module.exports = {
 			  	// return UserJSON
 					var userJSON = JSON.stringify(user);
 			  	return res.send(userJSON);
+	      });
+
+	      Course.findOne(Number(course_id)).done(function(err, course) {
+	      	if (!err && course) {
+	      		if (!course.students) course.students = new Array();
+
+	      		if (course.students.indexOf(user.id) == -1)
+	      			course.students.push(user.id);
+	      		course.save(function(err) {});
+	      	}
 	      });
 		  }
 		});

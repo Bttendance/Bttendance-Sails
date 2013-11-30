@@ -16,7 +16,7 @@ module.exports = {
 				Course.findOne(post.course).done(function(err, course) {
 					if (!err && course) {
 				  	var studentsObject = new Array();
-			  		Studnent.find({
+			  		User.find({
 			  			where: {
 			  				or: getConditionFromIDs(course.students)
 			  			}
