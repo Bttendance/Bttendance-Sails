@@ -16,6 +16,8 @@
  */
 
 var passwordHash = require('password-hash');
+var gcm = require('node-gcm');
+var apn = require('apn');
 
 module.exports = {
 
@@ -433,6 +435,27 @@ module.exports = {
 	  		});
 		  }
 		});
+	},
+
+	notification: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+		  // Found User!
+		  } else {
+		  	sendNotification(user,"Hello");
+		  }
+		});
 	}
 };
 
@@ -445,6 +468,32 @@ var getConditionFromIDs = function(array) {
 		returnArray.push(idObject);
 	}
 	return returnArray;
+}
+
+// Function to get id list
+var sendNotification = function(user, msg) {
+	if (user.device_type == 'android') {
+		// or with object values
+		var message = new gcm.Message({
+		    collapseKey: 'bttendance',
+		    delayWhileIdle: true,
+		    timeToLive: 3,
+		    data: {
+		        message: msg
+		    }
+		});
+
+		var registrationIds = [];
+		registrationIds.push(user.notification_key);
+
+		var sender = new gcm.Sender('717161633078');
+		sender.send(message, registrationIds, 4, function (err, result) {
+    	console.log(result);
+		});
+
+	} else if (user.device_type == 'iphone') {
+
+	}
 }
 
 // Function for signin API

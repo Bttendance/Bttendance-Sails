@@ -40,17 +40,22 @@ module.exports = {
       required: true
     },
 
-    //iPhone, Android, Window, Blackberry, etc
+    //iphone, android, window, blackberry, etc
     device_type: {
       type: 'string',
       required: true
     },
 
-    // UUID
+    // uuid
     device_uuid: {
       type: 'uuid',
       required: true,
       unique: true
+    },
+
+    notification_key: {
+      type: 'string',
+      required: true
     },
 
     full_name: {

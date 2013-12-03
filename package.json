@@ -16,8 +16,9 @@
         "passport": "0.1.17",
         "passport-http-bearer": "1.0.1",
         "waterline-criteria": "0.9.6",
-        "durable-json-lint": "0.0.1"
-
+        "durable-json-lint": "0.0.1",
+        "apn": "1.4.3",
+        "node-gcm": "0.9.7"
     },
     "scripts": {
         "start": "sails lift",
