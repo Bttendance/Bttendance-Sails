@@ -14,7 +14,7 @@ API Schema for Bttendance
     username or email
     password
     device_uuid
-####put : api/user/update/notificationKey => UserJSON
+####put : api/user/update/notification_key => UserJSON
     username
     password
     device_uuid
