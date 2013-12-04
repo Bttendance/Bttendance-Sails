@@ -530,7 +530,7 @@ var sendNotification = function(user, msg) {
 		registrationIds.push(user.notification_key);
 
    	console.log('sending');
-		var sender = new gcm.Sender('717161633078');
+		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
 		sender.send(message, registrationIds, 4, function (err, result) {
 			if (err)
 				console.log(err);
