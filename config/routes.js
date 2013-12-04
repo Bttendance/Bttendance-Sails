@@ -58,6 +58,11 @@ module.exports.routes = {
   //   action: 'update_type'
   // },
 
+  'put /api/user/update/notification_key': {
+    controller: 'user',
+    action: 'update_notification_key'
+  },
+
   'put /api/user/update/profile_image': {
     controller: 'user',
     action: 'update_profile_image'

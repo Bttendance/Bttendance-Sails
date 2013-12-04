@@ -63,6 +63,46 @@ module.exports = {
 		});
 	},
 
+	update_notification_key: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var notification_key = req.param('notification_key');
+
+		if (!notification_key) {
+			console.log("UserController : update_notification_key : Notification Key is required");
+			return res.send(400, { message: "Notification Key is required"});
+		}
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+
+		  // Found User!
+		  } else {
+			  // Update User
+		  	user.notification_key = notification_key;
+		  	user.save(function(err) {
+					// Error handling
+					if (err) {
+						console.log(err);
+				    return res.send(500, { message: "User Save Error" });
+				  }
+			  	// return UserJSON
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+		  	});
+		  }
+		});
+	},
+
 	update_profile_image: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
@@ -472,6 +512,9 @@ var getConditionFromIDs = function(array) {
 
 // Function to get id list
 var sendNotification = function(user, msg) {
+	if (!user.notification_key)
+		return;
+
 	if (user.device_type == 'android') {
 		// or with object values
 		var message = new gcm.Message({

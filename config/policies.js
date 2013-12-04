@@ -37,6 +37,7 @@ module.exports.policies = {
     courses : ['isUser'],
     schools : ['isUser'],
     joinableCourses : ['isUser'],
+    update_notification_key : ['isUser', 'hasDevice'],
     update_profile_image : ['isUser', 'hasDevice'],
     update_full_name : ['isUser', 'hasDevice'],
     update_email : ['isUser', 'hasDevice'],

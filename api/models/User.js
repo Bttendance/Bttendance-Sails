@@ -54,8 +54,7 @@ module.exports = {
     },
 
     notification_key: {
-      type: 'string',
-      required: true
+      type: 'string'
     },
 
     full_name: {
