@@ -14,16 +14,16 @@ API Schema for Bttendance
     username or email
     password
     device_uuid
-####put : api/user/update/profile_image => UserJSON
-    username
-    password
-    device_uuid
-    profile_image
 ####put : api/user/update/notificationKey => UserJSON
     username
     password
     device_uuid
     notification_key
+####put : api/user/update/profile_image => UserJSON
+    username
+    password
+    device_uuid
+    profile_image
 ####put : api/user/update/email => UserJSON
     username
     password
