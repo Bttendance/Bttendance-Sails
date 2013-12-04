@@ -529,9 +529,13 @@ var sendNotification = function(user, msg) {
 		var registrationIds = [];
 		registrationIds.push(user.notification_key);
 
+   	console.log('sending');
 		var sender = new gcm.Sender('717161633078');
 		sender.send(message, registrationIds, 4, function (err, result) {
-    	console.log(result);
+			if (err)
+				console.log(err);
+			else
+    		console.log(result);
 		});
 
 	} else if (user.device_type == 'iphone') {

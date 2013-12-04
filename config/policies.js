@@ -41,7 +41,8 @@ module.exports.policies = {
     update_profile_image : ['isUser', 'hasDevice'],
     update_full_name : ['isUser', 'hasDevice'],
     update_email : ['isUser', 'hasDevice'],
-    feed : 'isUser'
+    feed : 'isUser',
+    notification : true
   },
 
   CourseController: {
