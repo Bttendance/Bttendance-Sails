@@ -9,7 +9,6 @@ API Schema for Bttendance
     password
     device_type
     device_uuid
-    notification_key
     type
 ####get : api/user/signin => UserJSON
     username or email
@@ -20,6 +19,11 @@ API Schema for Bttendance
     password
     device_uuid
     profile_image
+####put : api/user/update/notificationKey => UserJSON
+    username
+    password
+    device_uuid
+    notification_key
 ####put : api/user/update/email => UserJSON
     username
     password
