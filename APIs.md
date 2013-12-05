@@ -78,7 +78,11 @@ API Schema for Bttendance
     title
     message
     course_id
-####get : api/post/checks => UserJSON LIST
+####post : api/post/check => PostJSON
+    username
+    password
+    course_id
+####get : api/post/student/list => UserJSON LIST
     username
     password
     post_id
