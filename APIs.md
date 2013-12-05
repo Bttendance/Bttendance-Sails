@@ -63,6 +63,7 @@ API Schema for Bttendance
     username
     password
     name
+    number
     school_id
 ####get : api/course/feed => PostJSON LIST
     username
@@ -73,6 +74,7 @@ API Schema for Bttendance
 ####post : api/post/create => PostJSON
     username
     password
+    type
     title
     message
     course_id
