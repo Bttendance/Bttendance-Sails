@@ -56,7 +56,8 @@ module.exports.policies = {
   	create : ['isProfessor', 'hasCourse'],
   	update : ['isProfessor', 'hasPost'],
   	destroy : ['isProfessor', 'hasPost'],
-    check : ['isProfessor', 'hasCourse'],
+    attendance_start : ['isProfessor', 'hasCourse'],
+    attendance_check : ['isUser', 'hasCourse'],
     student_list : ['isUser', 'hasPost']
   },
 
