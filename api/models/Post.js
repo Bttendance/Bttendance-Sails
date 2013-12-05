@@ -41,7 +41,12 @@ module.exports = {
     // has many students (checked)
     checks: {
       type: 'array'
-    }
+    },
+
+    author_name: 'string',
+    course_name: 'string',
+    course_number: 'string',
+    school_name: 'string'
 
   },
 
@@ -56,6 +61,7 @@ module.exports = {
       }).done(function(err, user) {
         if (!err && user) {
           values.author = user.id;
+          values.author_name = user.full_name;
           next();
         } else
           return next(err);
@@ -67,7 +73,21 @@ module.exports = {
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
     values.checks = new Array();
-    next();
+    Course.findOne(values.course).done(function(err, course) {
+      if (!err && course) {
+        values.course_name = course.name;
+        values.course_number = course.number;
+
+        School.findOne(course.school).done(function(err, school) {
+          if (!err && school) {
+            values.school_name = school.name;
+            next();
+          } else
+            return next(err);
+        });
+      } else
+        return next(err);
+    });
   },
 
   // Lifecycle Callbacks
@@ -79,8 +99,9 @@ module.exports = {
       // make new array
       if (!course.posts) course.posts = new Array();
 
-      if (course.posts.indexOf(course) == -1)
+      if (course.posts.indexOf(course) == -1) 
         course.posts.push(values.id);
+
       // save new values
       course.save(function(err) {
         if (err) return next(err);

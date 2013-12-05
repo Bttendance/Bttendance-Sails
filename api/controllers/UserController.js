@@ -493,7 +493,7 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 		  // Found User!
 		  } else {
-		  	sendNotification(user,"Hello");
+		  	sendNotification(user, "Hello", "World");
 		  }
 		});
 	}
@@ -511,7 +511,7 @@ var getConditionFromIDs = function(array) {
 }
 
 // Function to get id list
-var sendNotification = function(user, msg) {
+var sendNotification = function(user, title, message) {
 	if (!user.notification_key)
 		return;
 
@@ -522,14 +522,14 @@ var sendNotification = function(user, msg) {
 		    delayWhileIdle: true,
 		    timeToLive: 3,
 		    data: {
-		        message: msg
+		    	title: title,
+		      message: message
 		    }
 		});
 
 		var registrationIds = [];
 		registrationIds.push(user.notification_key);
 
-   	console.log('sending');
 		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
 		sender.send(message, registrationIds, 4, function (err, result) {
 			if (err)
@@ -539,7 +539,18 @@ var sendNotification = function(user, msg) {
 		});
 
 	} else if (user.device_type == 'iphone') {
+		var options = { "gateway": "gateway.sandbox.push.apple.com" };
+    var apnConnection = new apn.Connection(options);
+		var myDevice = new apn.Device(token);
+		var note = new apn.Notification();
 
+		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+		note.badge = 1;
+		note.sound = "ping.aiff";
+		note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+		note.payload = {'messageFrom': 'Caroline'};
+
+		apnConnection.pushNotification(note, myDevice);
 	}
 }
 

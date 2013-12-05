@@ -15,9 +15,10 @@ module.exports = {
   		required: true
   	},
 
-  	section: {
-  		type: 'string'
-  	},
+    number: {
+      type: 'string',
+      required: true
+    },
 
   	onGoing: {
   		type: 'boolean',
@@ -45,14 +46,17 @@ module.exports = {
     // has many Posts
     posts: {
       type: 'array'
-    }
+    },
+
+    professor_name: 'string',
+    school_name: 'string'
     
   },
 
   beforeValidation: function(values, next) {
-
-    if (values.school_id)
+    if (values.school_id) {
       values.school = values.school_id;
+    }
 
     if (values.username) {
       User.findOne({
@@ -60,6 +64,7 @@ module.exports = {
       }).done(function(err, user) {
         if (!err && user) {
           values.professor = user.id;
+          values.professor_name = user.full_name;
           next();
         } else
           return next(err);
@@ -71,7 +76,14 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.posts = new Array();
     values.students = new Array();
-    next();
+
+    School.findOne(values.school).done(function(err, school) {
+      if (!err && school) {
+        values.school_name = school.name;
+        next();
+      } else
+        return next(err);
+    });
   },
 
   afterCreate: function(values, next) {
