@@ -10,14 +10,18 @@ module.exports = {
 
   attributes: {
 
+    // attendance, notice
+    type: {
+      type: 'string',
+      required: true
+    },
+
   	title: {
-  		type: 'string',
-  		required: true
+  		type: 'string'
   	},
 
   	message: {
-  		type: 'string',
-  		required: true
+  		type: 'string'
   	},
 
   	on_going: {
@@ -81,6 +85,10 @@ module.exports = {
         School.findOne(course.school).done(function(err, school) {
           if (!err && school) {
             values.school_name = school.name;
+            if (values.type == 'attendance') {
+              values.title = 'Attendance Check';
+              values.message = course.number + " " + course.name + " at " + school.name;
+            }
             next();
           } else
             return next(err);

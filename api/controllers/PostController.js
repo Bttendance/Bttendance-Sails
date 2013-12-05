@@ -7,7 +7,38 @@
 
 module.exports = {
 
-	checks: function(req, res) {
+	check: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var course_id = req.param('course_id');
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			if (!err && user) {
+				Post.create({
+				  author: user.id,
+				  author_name: user.full_name,
+				  course: course_id,
+				  type: 'attendance'
+				}).done(function(err, post) {
+				  // Error handling
+				  if (err) {
+				  	console.log(err);
+		    		return res.send(404, { message: "Post Create Error" });
+				  // The User was created successfully!
+				  } else {
+						var postJSON = JSON.stringify(post);
+				  	return res.send(postJSON);
+				  }
+				});
+			} else
+    		return res.send(404, { message: "No User Found Error" });
+		});
+
+	},
+
+	student_list: function(req, res) {
 		res.contentType('application/json');
 		var post_id = req.param('post_id');
 
