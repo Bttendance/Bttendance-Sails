@@ -48,7 +48,7 @@ module.exports = {
 
     // uuid
     device_uuid: {
-      type: 'uuid',
+      type: 'string',
       required: true,
       unique: true
     },
