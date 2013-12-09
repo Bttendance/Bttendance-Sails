@@ -85,7 +85,7 @@ API Schema for Bttendance
 ####put : api/post/attendance/check => PostJSON
     username
     password
-    course_id
+    post_id
     longitude
     latitude
     uuid[]
