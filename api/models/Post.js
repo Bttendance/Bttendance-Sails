@@ -47,6 +47,10 @@ module.exports = {
       type: 'array'
     },
 
+    clusters: {
+      type: 'array'
+    },
+
     author_name: 'string',
     course_name: 'string',
     course_number: 'string',
@@ -76,7 +80,17 @@ module.exports = {
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
-    values.checks = new Array();
+
+    var checks = new Array();
+    checks.push(values.author);
+    values.checks = new checks;
+
+    var clusters = new Array();
+    var prof = new Array();
+    prof.push(values.author);
+    clusters.push(prof);
+    values.clusters = new clusters;
+    
     Course.findOne(values.course).done(function(err, course) {
       if (!err && course) {
         values.course_name = course.name;
