@@ -48,6 +48,9 @@ API Schema for Bttendance
 ####get : api/user/courses => CourseJSON LIST
     username
     password
+####get : api/user/joinable/courses => CourseJSON LIST
+    username
+    password
 ####get : api/user/feed => PostJSON LIST
     username
     password
