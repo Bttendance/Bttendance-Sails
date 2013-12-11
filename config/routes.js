@@ -88,6 +88,11 @@ module.exports.routes = {
     action: 'join_course'
   },
 
+  'get /api/user/joinable/courses': {
+    controller: 'user',
+    action: 'joinable_courses'
+  },
+
   'post /api/post/attendance/start': {
     controller: 'post',
     action: 'attendance_start'

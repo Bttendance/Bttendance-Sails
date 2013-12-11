@@ -257,7 +257,7 @@ module.exports = {
 		});
 	},
 
-	joinableCourses: function(req, res) {
+	joinable_courses: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
 
