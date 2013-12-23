@@ -47,23 +47,20 @@ module.exports = {
 		var post_id = req.param('post_id');
 		var longitude = req.param('longitude');
 		var latitude = req.param('latitude');
-		var uuid = req.param('uuid_list');
+		var uuid = req.param('uuid');
 
-		User.find({
-			where: {
-				or: getConditionFromUUIDs(uuid)
-			}
-		}).sort('id DESC').done(function(err, users_uuid) {
-			if (!err && users_uuid) {
+		User.findOne({
+			device_uuid: uuid
+		}).done(function(err, user_uuid) {
+			if (!err && user_uuid) {
 				User.findOne({
 					username: username
 				}).done(function(err, user_api) {
-					if (!err && users_uuid) {
+					if (!err && user_uuid) {
 
 						var userids = new Array();
 						userids.push(user_api.id);
-						for (var usr in users_uuid)
-							userids.push(usr.id);
+						userids.push(user_uuid.id);
 
 						Post.findOne(post_id).done(function(err, post) {
 							if (!err && post) {
