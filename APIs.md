@@ -91,7 +91,7 @@ API Schema for Bttendance
     post_id
     longitude
     latitude
-    uuid_list
+    uuid
 ####get : api/post/student/list => UserJSON LIST
     username
     password
