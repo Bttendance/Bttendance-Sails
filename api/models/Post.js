@@ -83,13 +83,13 @@ module.exports = {
 
     var checks = new Array();
     checks.push(values.author);
-    values.checks = new checks;
+    values.checks = checks;
 
     var clusters = new Array();
     var prof = new Array();
     prof.push(values.author);
     clusters.push(prof);
-    values.clusters = new clusters;
+    values.clusters = clusters;
     
     Course.findOne(values.course).done(function(err, course) {
       if (!err && course) {
