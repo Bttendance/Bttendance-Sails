@@ -155,7 +155,7 @@ module.exports = {
     				return res.send(404, { message: "No User Found Error" });
 				})
 			} else
-    		return res.send(404, { message: "No User Found Error" });
+    		return res.send(404, { message: "No UUID User Found Error" });
 		});
 
 	},
