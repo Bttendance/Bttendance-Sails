@@ -49,6 +49,8 @@ module.exports = {
 		var latitude = req.param('latitude');
 		var uuid = req.param('uuid');
 
+		console.log("UUID : " + uuid);
+
 		User.findOne({
 			device_uuid: uuid
 		}).done(function(err, user_uuid) {
@@ -155,7 +157,7 @@ module.exports = {
     				return res.send(404, { message: "No User Found Error" });
 				})
 			} else
-    		return res.send(404, { message: "No UUID User Found Error" });
+    		return res.send(404, { message: "No User Found Error" });
 		});
 
 	},
