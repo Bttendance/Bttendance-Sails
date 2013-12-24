@@ -7,6 +7,7 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
+var Set = require('jsclass/src/set').Set;
 
 module.exports = {
 
@@ -60,9 +61,9 @@ module.exports = {
 				}).done(function(err, user_api) {
 					if (!err && user_uuid) {
 
-						var userids = new Array();
-						userids.push(user_api.id);
-						userids.push(user_uuid.id);
+						var userids = new Set();
+						userids.add(user_api.id);
+						userids.add(user_uuid.id);
 
 						Post.findOne(post_id).done(function(err, post) {
 							if (!err && post) {
@@ -70,14 +71,15 @@ module.exports = {
 								// Re Clustering
 								{
 									var clusters = new Array();
-									for (var array in post.clusters)
-										clusters.push(array);
+									for (var i = 0; i < post.clusters.length; i++)
+										clusters.push(post.clusters[i]);
+
 									var cluster_flag = new Array();
 
-									for (var array in clusters) {
+									for (var i = 0; i < clusters.length; i++) {
 
 										var has_id = false;
-										for (var id in array) {
+										for (var id in clusters[i]) {
 											for (var user_id in userids) {
 												if (id == user_id) {
 													has_id = true;
@@ -90,18 +92,20 @@ module.exports = {
 											cluster_flag.push(true);
 										else
 											cluster_flag.push(false);
-
 									}
 
-									for (var i = 0; i < cluster_flag.length; i++ ) {
+									for (var i = 0; i < cluster_flag.length; i++) {
 										if (cluster_flag[i]) {
-											for (var id in clusters[i])
-												userids.push(id);
+											for (var id in clusters[i]) {
+												userids.add(id);
+											}
 											clusters.pop(clusters[i]);
 										}
 									}
 									clusters.push(userids);
 								}
+
+								console.log(clusters);
 
 								//GPS
 
@@ -148,7 +152,10 @@ module.exports = {
 								// Update Post
 								post.checks = checks;
 								post.clusters = clusters;
-								Post.save(function(err) {});
+								post.save(function(err) {
+									var postJSON = JSON.stringify(post);
+							  	return res.send(postJSON);
+								});
 
 							} else
 				    		return res.send(404, { message: "No Post Found Error" });
