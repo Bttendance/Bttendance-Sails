@@ -39,7 +39,8 @@ module.exports = {
 
 				Course.findOne(course_id).done(function(err, course) {
 					if(!err && course) {
-						course.attdCheckedAt = "";
+						course.attdCheckedAt = moment().utc().format('YYYY-MM-DD[T]HH:mm:ss[.000Z]');
+						console.log(course.attdCheckedAt);
 						course.save(function(err){});
 					}
 				});
