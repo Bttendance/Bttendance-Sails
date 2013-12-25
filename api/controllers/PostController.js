@@ -47,7 +47,7 @@ module.exports = {
 							  			}
 							  		}).sort('id DESC').done(function(err, users) {
 							  			for (var j = 0; j < users.length; j++)
-							  				sendNotification(users[j], course.name, "Attendance has been started", "attendance", post.id);
+							  				sendNotification(users[j], course.name, "Attendance has been started", "attendance_started", post.id);
 							  		});
 
 										var courseJSON = JSON.stringify(course);
@@ -157,7 +157,7 @@ module.exports = {
 
 												if (noti) {
 													User.findOne(notiable[j]).done(function(err, user) {
-														sendNotification(user, post.course_name, "Attendance has been checked", "attendance", post.id);
+														sendNotification(user, post.course_name, "Attendance has been checked", "attendance_check", post.id);
 													});
 												}
 											}
