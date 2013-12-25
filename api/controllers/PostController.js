@@ -47,7 +47,7 @@ module.exports = {
 							  			}
 							  		}).sort('id DESC').done(function(err, users) {
 							  			for (var j = 0; j < users.length; j++)
-							  				sendNotification(users[j], course.name, "Attendance has been started");
+							  				sendNotification(users[j], course.name, "Attendance has been started", "attendance");
 							  		});
 
 										var courseJSON = JSON.stringify(course);
@@ -157,7 +157,7 @@ module.exports = {
 
 												if (noti) {
 													User.findOne(notiable[j]).done(function(err, user) {
-														sendNotification(user, "Hello", "Noti");
+														sendNotification(user, "Hello", "Noti", "notification");
 													});
 												}
 											}
@@ -228,7 +228,7 @@ module.exports = {
 };
 
 // Function to get id list
-var sendNotification = function(user, title, message) {
+var sendNotification = function(user, title, message, type) {
 	if (!user.notification_key)
 		return;
 
@@ -240,7 +240,8 @@ var sendNotification = function(user, title, message) {
 		    timeToLive: 3,
 		    data: {
 		    	title: title,
-		      message: message
+		      message: message,
+		      type: type
 		    }
 		});
 
