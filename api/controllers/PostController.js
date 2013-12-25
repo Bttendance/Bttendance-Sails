@@ -26,26 +26,34 @@ module.exports = {
 				  course: course_id,
 				  type: 'attendance'
 				}).done(function(err, post) {
-				  // Error handling
-				  if (err) {
-				  	console.log(err);
-		    		return res.send(404, { message: "Post Create Error" });
-				  // The User was created successfully!
-				  } else {
-				  	// Send notification about post to Prof & Std
-				  }
-				});
+					if (!err && post) {
+						Course.findOne(course_id).done(function(err, course) {
+							if(!err && course) {
+								course.attdCheckedAt = moment().utc().format('YYYY-MM-DD[T]HH:mm:ss[.000Z]');
+								course.save(function(err) {
+									if (err) {
+								  	console.log(err);
+						    		return res.send(404, { message: "Course Save Error" });
+									} else {
+								  	// Send notification about post to Prof & Std
+								  	var notiUsers = new Array();
+								  	for (var i = 0; i < course.students.length; i++)
+								  		notiUsers.push(course.students[i]);
+								  	notiUsers.push(course.professor);
+								  	
+							  		User.find({
+							  			where: {
+							  				or: getConditionFromIDs(notiUsers)
+							  			}
+							  		}).sort('id DESC').done(function(err, users) {
+							  			for (var j = 0; j < users.length; j++)
+							  				sendNotification(users[j], course.name, "Attendance has been started");
+							  		});
 
-				Course.findOne(course_id).done(function(err, course) {
-					if(!err && course) {
-						course.attdCheckedAt = moment().utc().format('YYYY-MM-DD[T]HH:mm:ss[.000Z]');
-						course.save(function(err){
-							if (err) {
-						  	console.log(err);
-				    		return res.send(404, { message: "Course Save Error" });
-							} else {
-								var courseJSON = JSON.stringify(course);
-						  	return res.send(courseJSON);
+										var courseJSON = JSON.stringify(course);
+								  	return res.send(courseJSON);
+									}
+								});
 							}
 						});
 					}
