@@ -157,7 +157,7 @@ module.exports = {
 
 												if (noti) {
 													User.findOne(notiable[j]).done(function(err, user) {
-														sendNotification(user, post.course_name, "Attendance has been checked", "attendance_check", post.id);
+														sendNotification(user, post.course_name, "Attendance has been checked", "attendance_checked", post.id);
 													});
 												}
 											}
