@@ -81,7 +81,7 @@ API Schema for Bttendance
     title
     message
     course_id
-####post : api/post/attendance/start => PostJSON
+####post : api/post/attendance/start => CourseJSON
     username
     password
     course_id
