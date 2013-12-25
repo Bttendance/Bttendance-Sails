@@ -47,7 +47,7 @@ module.exports = {
 							  			}
 							  		}).sort('id DESC').done(function(err, users) {
 							  			for (var j = 0; j < users.length; j++)
-							  				sendNotification(users[j], course.name, "Attendance has been started", "attendance");
+							  				sendNotification(users[j], course.name, "Attendance has been started", "attendance", post.id);
 							  		});
 
 										var courseJSON = JSON.stringify(course);
@@ -157,7 +157,7 @@ module.exports = {
 
 												if (noti) {
 													User.findOne(notiable[j]).done(function(err, user) {
-														sendNotification(user, "Hello", "Noti", "notification");
+														sendNotification(user, post.course_name, "Attendance has been checked", "attendance", post.id);
 													});
 												}
 											}
@@ -228,7 +228,7 @@ module.exports = {
 };
 
 // Function to get id list
-var sendNotification = function(user, title, message, type) {
+var sendNotification = function(user, title, message, type, post_id) {
 	if (!user.notification_key)
 		return;
 
@@ -241,7 +241,8 @@ var sendNotification = function(user, title, message, type) {
 		    data: {
 		    	title: title,
 		      message: message,
-		      type: type
+		      type: type,
+		      post_id: post_id
 		    }
 		});
 
