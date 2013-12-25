@@ -7,7 +7,7 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
-var Set = require('jsclass/src/set').Set;
+var moment = require('moment');
 
 module.exports = {
 
@@ -36,6 +36,13 @@ module.exports = {
 				  	return res.send(postJSON);
 				  }
 				});
+
+				Course.findOne(course_id).done(function(err, course) {
+					if(!err && course) {
+						course.attdCheckedAt = "";
+						course.save(function(err){});
+					}
+				});
 			} else
     		return res.send(404, { message: "No User Found Error" });
 		});
@@ -50,8 +57,6 @@ module.exports = {
 		var latitude = req.param('latitude');
 		var uuid = req.param('uuid');
 
-		console.log("UUID : " + uuid);
-
 		User.findOne({
 			device_uuid: uuid
 		}).done(function(err, user_uuid) {
@@ -61,9 +66,9 @@ module.exports = {
 				}).done(function(err, user_api) {
 					if (!err && user_uuid) {
 
-						var userids = new Set();
-						userids.add(user_api.id);
-						userids.add(user_uuid.id);
+						var userids = new Array();
+						userids.push(user_api.id);
+						userids.push(user_uuid.id);
 
 						Post.findOne(post_id).done(function(err, post) {
 							if (!err && post) {
@@ -73,20 +78,19 @@ module.exports = {
 									var clusters = new Array();
 									for (var i = 0; i < post.clusters.length; i++)
 										clusters.push(post.clusters[i]);
-
 									var cluster_flag = new Array();
 
 									for (var i = 0; i < clusters.length; i++) {
 
 										var has_id = false;
-										for (var id in clusters[i]) {
-											for (var user_id in userids) {
-												if (id == user_id) {
+										for (var j = 0; j < clusters[i].length; j++) {
+											for (var k = 0; k < userids.length; k++) {
+												if (clusters[i][j] == userids[k]) {
 													has_id = true;
 													break;
 												}
 											}
-	 									}
+										}
 
 										if (has_id)
 											cluster_flag.push(true);
@@ -96,8 +100,9 @@ module.exports = {
 
 									for (var i = 0; i < cluster_flag.length; i++) {
 										if (cluster_flag[i]) {
-											for (var id in clusters[i]) {
-												userids.add(id);
+											for (var j = 0; j < clusters[i].length; j++) {
+												if (userids.indexOf(clusters[i][j]) == -1)
+													userids.push(clusters[i][j]);
 											}
 											clusters.pop(clusters[i]);
 										}
@@ -105,42 +110,40 @@ module.exports = {
 									clusters.push(userids);
 								}
 
-								console.log(clusters);
-
-								//GPS
+								// GPS
 
 								// Send Notification
 								{
 									var checks = new Array();
-									for (var id in post.checks)
-										checks.push(id);
+									for (var i = 0; i < post.checks.length; i++)
+										checks.push(post.checks[i]);
 
-									for (var array in clusters) {
+									for (var i = 0; i < clusters.length; i++) {
+
 										var has_prof = false;
-										for (var id in array) {
-											if (id == post.author) {
+										for (var j = 0; j < clusters[i].length; j++) {
+											if (clusters[i][j] == post.author) {
 												has_prof = true;
 												break;
 											}
 										}
+
 										if (has_prof) {
-
 											var notiable = new Array();
-											for (var id in array)
-												notiable.push(id);
+											for (var j = 0; j < clusters[i].length; j++)
+												notiable.push(clusters[i][j]);
 
-											for (var id_n in notiable) {
+											for (var j = 0; j < notiable.length; j++) {
 
 												var noti = true;
-												for (var id_c in checks) {
-													if (id_n == id_c)
+												for (var k = 0; k < checks.length; k++)
+													if (notiable[j] == checks[k])
 														noti = false;
-												}
 
 												if (noti) {
-													User.findOne(id_n).done(function(err, user) {
+													User.findOne(notiable[j]).done(function(err, user) {
 														sendNotification(user, "Hello", "Noti");
-													})
+													});
 												}
 											}
 
@@ -149,6 +152,8 @@ module.exports = {
 									}
 								}
 
+								checks = notiable;
+								
 								// Update Post
 								post.checks = checks;
 								post.clusters = clusters;

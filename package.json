@@ -19,7 +19,8 @@
         "durable-json-lint": "0.0.1",
         "apn": "1.4.3",
         "node-gcm": "0.9.7",
-        "jsclass": "4.0.4"
+        "jsclass": "4.0.4",
+        "moment": "2.5.0"
     },
     "scripts": {
         "start": "sails lift",

@@ -20,6 +20,7 @@ module.exports = {
       required: true
     },
 
+    // whether this course is onGoing
   	onGoing: {
   		type: 'boolean',
   		defaultsTo: true,
@@ -49,7 +50,8 @@ module.exports = {
     },
 
     professor_name: 'string',
-    school_name: 'string'
+    school_name: 'string',
+    attdCheckedAt: 'string'
     
   },
 

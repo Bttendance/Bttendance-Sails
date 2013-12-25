@@ -5,7 +5,6 @@
  * @description :: A short summary of how this model works and what it represents.
  *
  */
-var Set = require('jsclass/src/set').Set;
 
 module.exports = {
 
@@ -82,13 +81,13 @@ module.exports = {
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
 
-    var checks = new Set();
-    checks.add(values.author);
+    var checks = new Array();
+    checks.push(values.author);
     values.checks = checks;
 
     var clusters = new Array();
-    var prof = new Set();
-    prof.add(values.author);
+    var prof = new Array();
+    prof.push(values.author);
     clusters.push(prof);
     values.clusters = clusters;
     
