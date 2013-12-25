@@ -32,16 +32,22 @@ module.exports = {
 		    		return res.send(404, { message: "Post Create Error" });
 				  // The User was created successfully!
 				  } else {
-						var postJSON = JSON.stringify(post);
-				  	return res.send(postJSON);
+				  	// Send notification about post to Prof & Std
 				  }
 				});
 
 				Course.findOne(course_id).done(function(err, course) {
 					if(!err && course) {
 						course.attdCheckedAt = moment().utc().format('YYYY-MM-DD[T]HH:mm:ss[.000Z]');
-						console.log(course.attdCheckedAt);
-						course.save(function(err){});
+						course.save(function(err){
+							if (err) {
+						  	console.log(err);
+				    		return res.send(404, { message: "Course Save Error" });
+							} else {
+								var courseJSON = JSON.stringify(course);
+						  	return res.send(courseJSON);
+							}
+						});
 					}
 				});
 			} else
