@@ -64,7 +64,8 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 
 ####Notification Json
     { 
-        "message": "notification message",
+        "title" : "title",
+        "message": "message",
         "type": "notification" or "attendance"
     }
 
