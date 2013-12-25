@@ -66,7 +66,8 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     { 
         "title" : "title",
         "message": "message",
-        "type": "notification" or "attendance"
+        "type": "notification" or "attendance",
+        "post_id": post_id
     }
 
 ####View
