@@ -62,6 +62,12 @@ This app uses "Sails.js" as framework and "Java Script" as language.
         "validate": boolean
     }
 
+####Notification Json
+    { 
+        "message": "notification message",
+        "type": "notification" or "attendance"
+    }
+
 ####View
 - View uses 'jade' template.
 - View uses 'bootstrap' from Twitter.
