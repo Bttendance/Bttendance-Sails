@@ -127,6 +127,7 @@ module.exports = {
       // save new values
       course.save(function(err) {
         if (err) return next(err);
+        else next();
       });
     });
     
