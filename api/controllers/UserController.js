@@ -480,6 +480,8 @@ module.exports = {
 	notification: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
+
+		console.log("notification");
 		
 		User.findOne({
 			username: username
@@ -515,6 +517,7 @@ var sendNotification = function(user, title, message) {
 	if (!user.notification_key)
 		return;
 
+	console.log("start notification");
 	if (user.device_type == 'android') {
 		// or with object values
 		var message = new gcm.Message({
@@ -539,18 +542,36 @@ var sendNotification = function(user, title, message) {
 		});
 
 	} else if (user.device_type == 'iphone') {
-		var options = { "gateway": "gateway.sandbox.push.apple.com" };
-    var apnConnection = new apn.Connection(options);
-		var myDevice = new apn.Device(token);
-		var note = new apn.Notification();
+		var apns = require('apn');
+
+		var options = { cert: "./Certification/aps_development.pem",
+										certData: null,
+										key: "./Certification/APN_Key.pem",
+										keyData: null,
+										passphrase: "bttendanceutopia",
+										ca: null,
+										gateway: "gateway.sandbox.push.apple.com",
+										port: 2195,
+										enhanced: true,
+										errorCallback: undefined,
+										cacheLength: 100 };
+
+    var apnConnection = new apns.Connection(options);
+		var myDevice = new apns.Device(user.notification_key); //for token
+		var note = new apns.Notification();
+
+		console.log("iPhone notification start");
 
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
 		note.badge = 1;
 		note.sound = "ping.aiff";
 		note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
 		note.payload = {'messageFrom': 'Caroline'};
+		note.device = myDevice;
 
-		apnConnection.pushNotification(note, myDevice);
+		// apnConnection.pushNotification(note, myDevice);
+		apnConnection.sendNotification(note);
+		console.log("iphone notification finished");
 	}
 }
 
