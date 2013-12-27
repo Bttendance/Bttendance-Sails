@@ -460,7 +460,7 @@ module.exports = {
 			  			where: {
 			  				or: getConditionFromIDs(postsArray)
 			  			}
-			  		}).sort('id DESC').done(function(err, posts) {
+			  		}).sort('id ASC').done(function(err, posts) {
 			  			if (!err && posts) {
 			  				for (var index in posts)
 			  					postsObject.push(posts[index]);
