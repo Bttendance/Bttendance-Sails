@@ -460,14 +460,14 @@ module.exports = {
 			  			where: {
 			  				or: getConditionFromIDs(postsArray)
 			  			}
-			  		}).sort('id ASC').done(function(err, posts) {
+			  		}).sort('id DESC').done(function(err, posts) {
 			  			if (!err && posts) {
 			  				for (var index in posts)
 			  					postsObject.push(posts[index]);
 								var postsJSON = JSON.stringify(postsObject);
 						  	return res.send(postsJSON);
 			  			} else
-				    		return res.send(404, { message: "No Course Found Error" });
+				    		return res.send(404, { message: "No Post Found Error" });
 			  		});
 
 	  			} else
