@@ -296,7 +296,8 @@ module.exports = {
 								var coursesJSON = JSON.stringify(coursesObject);
 						  	return res.send(coursesJSON);
 			  			} else
-				    		return res.send(404, { message: "No Course Found Error" });
+				    		// return res.send(404, { message: "No Course Found Error" });
+				    		return res.send(JSON.stringify(new Array()));
 			  		});
 
 	  			} else
