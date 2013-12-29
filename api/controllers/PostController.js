@@ -76,7 +76,7 @@ module.exports = {
 			device_uuid: uuid
 		}).done(function(err, user_uuid) {
 			if (err || !user_uuid)
-    		return res.send(204, { message: "Found wrong device" });
+    		return res.send(202, { message: "Found wrong device" });
 
 			User.findOne({
 				username: username
@@ -98,7 +98,7 @@ module.exports = {
 		    	// Check whether users are in same courses(post)
 		    	if (user_api.courses.indexOf(post.course) == -1
 		    		|| user_uuid.courses.indexOf(post.course) == -1)
-		    		return res.send(404, { message: "No Post Found Error" });
+		    		return res.send(404, { message: "User is not attending current course" });
 
 					// 1. Re Clustering - user_api : A, user_uuid : B
 					//          Find Cluster Number which User A, B included (say it's a,b)
@@ -114,7 +114,7 @@ module.exports = {
 						// Find Cluster Number a, b
 						var a = -1;
 						var b = -1;
-						for (var i = 0; i < cluster.length; i++) {
+						for (var i = 0; i < clusters.length; i++) {
 							for (var j = 0; j < clusters[i].length; j++) {
 								if (clusters[i][j] == user_api.id)
 									a = i;
@@ -196,10 +196,9 @@ module.exports = {
 							}
 						}
 					}
-
 					checks = notiable;
 					
-					// Update Post
+					// Update Checks & Clusters
 					post.checks = checks;
 					post.clusters = clusters;
 					post.save(function(err) {
@@ -282,7 +281,7 @@ var sendNotification = function(user, title, message, type) {
 	} else if (user.device_type == 'iphone') {
 		var options = { "gateway": "gateway.sandbox.push.apple.com" };
     var apnConnection = new apn.Connection(options);
-		var myDevice = new apn.Device(token);
+		var myDevice = new apn.Device(user.notification_key);
 		var note = new apn.Notification();
 
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
