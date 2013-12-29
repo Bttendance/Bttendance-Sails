@@ -482,8 +482,6 @@ module.exports = {
 	notification: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
-
-		console.log("notification");
 		
 		User.findOne({
 			username: username

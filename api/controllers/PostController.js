@@ -75,116 +75,139 @@ module.exports = {
 		User.findOne({
 			device_uuid: uuid
 		}).done(function(err, user_uuid) {
-			if (!err && user_uuid) {
-				User.findOne({
-					username: username
-				}).done(function(err, user_api) {
-					if (!err && user_uuid) {
+			if (err || !user_uuid)
+    		return res.send(204, { message: "Found wrong device" });
 
-						var userids = new Array();
-						userids.push(user_api.id);
-						userids.push(user_uuid.id);
+			User.findOne({
+				username: username
+			}).done(function(err, user_api) {
+				if (err || !user_api)
+    			return res.send(404, { message: "No User Found Error" });
 
-						Post.findOne(post_id).done(function(err, post) {
-							if (!err && post) {
+    		if (user_uuid.id == user_api.id)
+    			return res.send(400, { message: "User has found his own device somehow" });
 
-								// Re Clustering
-								{
-									var clusters = new Array();
-									for (var i = 0; i < post.clusters.length; i++)
-										clusters.push(post.clusters[i]);
-									var cluster_flag = new Array();
+				var userids = new Array();
+				userids.push(user_api.id);
+				userids.push(user_uuid.id);
 
-									for (var i = 0; i < clusters.length; i++) {
+				Post.findOne(post_id).done(function(err, post) {
+					if (err || !post)
+		    		return res.send(404, { message: "No Post Found Error" });
 
-										var has_id = false;
-										for (var j = 0; j < clusters[i].length; j++) {
-											for (var k = 0; k < userids.length; k++) {
-												if (clusters[i][j] == userids[k]) {
-													has_id = true;
-													break;
-												}
-											}
-										}
+		    	// Check whether users are in same courses(post)
+		    	if (user_api.courses.indexOf(post.course) == -1
+		    		|| user_uuid.courses.indexOf(post.course) == -1)
+		    		return res.send(404, { message: "No Post Found Error" });
 
-										if (has_id)
-											cluster_flag.push(true);
-										else
-											cluster_flag.push(false);
+					// 1. Re Clustering - user_api : A, user_uuid : B
+					//          Find Cluster Number which User A, B included (say it's a,b)
+					// Case 1 : None included => Make new cluster and add
+					// Case 2 : One included => Add other to the cluster
+					// Case 3 : Both included Same => Do nothing
+					// Case 4 : Both included Diff => Merge two cluster
+					{
+						var clusters = new Array();
+						for (var i = 0; i < post.clusters.length; i++)
+							clusters.push(post.clusters[i]);
+
+						// Find Cluster Number a, b
+						var a = -1;
+						var b = -1;
+						for (var i = 0; i < cluster.length; i++) {
+							for (var j = 0; j < clusters[i].length; j++) {
+								if (clusters[i][j] == user_api.id)
+									a = i;
+								if (clusters[i][j] == user_uuid.id)
+									b = i;
+							}
+						}
+
+						// Case 3
+						if (a == b && a != -1)
+		    			return res.send(202, { message: "Users are already accepted" });
+
+		    		// Case 1
+		    		else if (a == b && a == -1)
+		    			clusters.push(userids);
+
+		    		// Case 2
+		    		else if (a != -1 && b == -1)
+		    			clusters[a].push(user_uuid.id);
+
+		    		// Case 2
+		    		else if (a == -1 && b != -1)
+		    			clusters[b].push(user_api.id);
+
+		    		// Case 4
+		    		else {
+		    			var new_cluster = new Array();
+		    			for (var i = 0; i < clusters.length; i++) {
+		    				if (i != a && i != b)
+		    					new_cluster.push(clusters[i]);
+		    			}
+
+		    			var merged_array = clusters[a].concat(clusters[b]);
+		    			new_cluster.push(merged_array);
+
+		    			clusters = new_cluster;
+		    		}
+					}
+					
+
+					// 2. GPS Tacking Check
+
+					// Send Notification
+					{
+						var checks = new Array();
+						for (var i = 0; i < post.checks.length; i++)
+							checks.push(post.checks[i]);
+
+						for (var i = 0; i < clusters.length; i++) {
+
+							var has_prof = false;
+							for (var j = 0; j < clusters[i].length; j++) {
+								if (clusters[i][j] == post.author) {
+									has_prof = true;
+									break;
+								}
+							}
+
+							if (has_prof) {
+								var notiable = new Array();
+								for (var j = 0; j < clusters[i].length; j++)
+									notiable.push(clusters[i][j]);
+
+								for (var j = 0; j < notiable.length; j++) {
+
+									var noti = true;
+									for (var k = 0; k < checks.length; k++)
+										if (notiable[j] == checks[k])
+											noti = false;
+
+									if (noti) {
+										User.findOne(notiable[j]).done(function(err, user) {
+											sendNotification(user, post.course_name, "Attendance has been checked", "attendance_checked");
+										});
 									}
-
-									for (var i = 0; i < cluster_flag.length; i++) {
-										if (cluster_flag[i]) {
-											for (var j = 0; j < clusters[i].length; j++) {
-												if (userids.indexOf(clusters[i][j]) == -1)
-													userids.push(clusters[i][j]);
-											}
-											clusters.pop(clusters[i]);
-										}
-									}
-									clusters.push(userids);
 								}
 
-								// GPS
+								break;
+							}
+						}
+					}
 
-								// Send Notification
-								{
-									var checks = new Array();
-									for (var i = 0; i < post.checks.length; i++)
-										checks.push(post.checks[i]);
-
-									for (var i = 0; i < clusters.length; i++) {
-
-										var has_prof = false;
-										for (var j = 0; j < clusters[i].length; j++) {
-											if (clusters[i][j] == post.author) {
-												has_prof = true;
-												break;
-											}
-										}
-
-										if (has_prof) {
-											var notiable = new Array();
-											for (var j = 0; j < clusters[i].length; j++)
-												notiable.push(clusters[i][j]);
-
-											for (var j = 0; j < notiable.length; j++) {
-
-												var noti = true;
-												for (var k = 0; k < checks.length; k++)
-													if (notiable[j] == checks[k])
-														noti = false;
-
-												if (noti) {
-													User.findOne(notiable[j]).done(function(err, user) {
-														sendNotification(user, post.course_name, "Attendance has been checked", "attendance_checked");
-													});
-												}
-											}
-
-											break;
-										}
-									}
-								}
-
-								checks = notiable;
-								
-								// Update Post
-								post.checks = checks;
-								post.clusters = clusters;
-								post.save(function(err) {
-									var postJSON = JSON.stringify(post);
-							  	return res.send(postJSON);
-								});
-
-							} else
-				    		return res.send(404, { message: "No Post Found Error" });
-						});
-					} else
-    				return res.send(404, { message: "No User Found Error" });
-				})
-			} else
-    		return res.send(404, { message: "No User Found Error" });
+					checks = notiable;
+					
+					// Update Post
+					post.checks = checks;
+					post.clusters = clusters;
+					post.save(function(err) {
+						var postJSON = JSON.stringify(post);
+				  	return res.send(postJSON);
+					});
+				});
+			})
 		});
 
 	},
