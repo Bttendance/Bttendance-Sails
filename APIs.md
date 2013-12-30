@@ -73,6 +73,10 @@ API Schema for Bttendance
     password
     course_id
     page
+####get : api/course/students => UserJSON LIST
+    username
+    password
+    course_id
 ###Post
 ####post : api/post/create => PostJSON
     username
@@ -96,10 +100,6 @@ API Schema for Bttendance
     post_id
     latitude
     longitude
-####get : api/post/student/list => UserJSON LIST
-    username
-    password
-    post_id
 ###Serial
 ####get : api/serial/validate => ValidateJSON
     serial
