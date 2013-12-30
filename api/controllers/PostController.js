@@ -153,7 +153,6 @@ module.exports = {
 		    			clusters = new_cluster;
 		    		}
 					}
-					
 
 					// 2. GPS Tacking Check
 
