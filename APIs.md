@@ -100,6 +100,11 @@ API Schema for Bttendance
     post_id
     latitude
     longitude
+####put : api/post/attendance/check/manually => PostJSON
+    username
+    password
+    post_id
+    user_id
 ###Serial
 ####get : api/serial/validate => ValidateJSON
     serial
