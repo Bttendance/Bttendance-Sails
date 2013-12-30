@@ -84,6 +84,7 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    values.username = values.username.toLowerCase();
     values.password = passwordHash.generate(values.password);
     values.courses = new Array();
     values.memberships = new Array();
