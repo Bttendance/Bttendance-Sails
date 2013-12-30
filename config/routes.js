@@ -106,6 +106,11 @@ module.exports.routes = {
   'put /api/post/attendance/current/location': {
     controller: 'post',
     action: 'attendance_current_location'
+  },
+
+  'put /api/post/attendance/check/manually': {
+    controller: 'post',
+    action: 'attendance_check_manually'
   }
 
 

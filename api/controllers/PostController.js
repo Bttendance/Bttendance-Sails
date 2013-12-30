@@ -213,6 +213,45 @@ module.exports = {
 		var latitude = req.param('latitude');
 		var longitude = req.param('longitude');
 
+	},
+
+	attendance_check_manually: function(req, res) {
+		res.contentType('application/json');
+		var user_id = req.param('user_id');
+		var post_id = req.param('post_id');
+
+		User.findOne(user_id).done(function(err, user) {
+			if (err || !user)
+  			return res.send(404, { message: "No User Found Error" });
+
+  		Post.findOne(post_id).done(function(err, post) {
+				if (err || !post)
+	  			return res.send(404, { message: "No Post Found Error" });
+
+				var checks = new Array();
+				var has_user = false;
+				for (var i = 0; i < post.checks.length; i++) {
+					var id = post.checks[i];
+					checks.push(id);
+					if (id == user.id)
+						has_user = true;
+				}
+
+				if (!has_user) {
+					sendNotification(user, post.course_name, "Attendance has been checked manually", "attendance_checked");
+					checks.push(user.id);
+					post.checks = checks;
+					post.save(function(err) {
+						var postJSON = JSON.stringify(post);
+				  	return res.send(postJSON);
+					});
+				} else {
+					var postJSON = JSON.stringify(post);
+			  	return res.send(postJSON);
+				}
+
+  		})
+		})
 	}
 	
 };

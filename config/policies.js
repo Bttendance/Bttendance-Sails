@@ -59,7 +59,8 @@ module.exports.policies = {
   	destroy : ['isProfessor', 'hasPost'],
     attendance_start : ['isProfessor', 'hasCourse'],
     attendance_found_device : ['isUser', 'hasPost'],
-    attendance_current_location : ['isUser', 'hasPost']
+    attendance_current_location : ['isUser', 'hasPost'],
+    attendance_check_manually : ['isProfessor', 'hasPost']
   },
 
   SchoolController: {
