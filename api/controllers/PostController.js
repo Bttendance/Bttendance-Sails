@@ -64,12 +64,10 @@ module.exports = {
 
 	},
 
-	attendance_check: function(req, res) {
+	attendance_found_device: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
 		var post_id = req.param('post_id');
-		var longitude = req.param('longitude');
-		var latitude = req.param('latitude');
 		var uuid = req.param('uuid');
 
 		User.findOne({
@@ -100,7 +98,7 @@ module.exports = {
 		    		|| user_uuid.courses.indexOf(post.course) == -1)
 		    		return res.send(404, { message: "User is not attending current course" });
 
-					// 1. Re Clustering - user_api : A, user_uuid : B
+					// Re Clustering - user_api : A, user_uuid : B
 					//          Find Cluster Number which User A, B included (say it's a,b)
 					// Case 1 : None included => Make new cluster and add
 					// Case 2 : One included => Add other to the cluster
@@ -154,8 +152,6 @@ module.exports = {
 		    		}
 					}
 
-					// 2. GPS Tacking Check
-
 					// Send Notification
 					{
 						var checks = new Array();
@@ -207,6 +203,15 @@ module.exports = {
 				});
 			})
 		});
+
+	},
+
+	attendance_found_device: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var post_id = req.param('post_id');
+		var latitude = req.param('latitude');
+		var longitude = req.param('longitude');
 
 	},
 

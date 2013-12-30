@@ -32,31 +32,6 @@ module.exports = {
 			} else
     		return res.send(404, { message: "No Course Found Error" });
 		});
-	},
-
-	students: function(req, res) {
-		res.contentType('application/json');
-		var course_id = req.param('course_id');
-		
-		Course.findOne(Number(course_id)).done(function(err, course) {
-			if (err || !course)
-				return res.send(404, { message: "No Course Found Error" });
-
-			User.find({
-				where: {
-					or: getConditionFromIDs(course.students)
-				}
-			}).sort('full_name DESC').done(function(err, users) {
-				if (err || !users)
-					return res.send(404, { message: "No User Found Error" });
-
-		  	var usersObject = new Array();
-				for (var index in users)
-					usersObject.push(users[index]);
-				var usersJSON = JSON.stringify(usersObject);
-		  	return res.send(usersJSON);
-			});
-		});
 	}
 };
 

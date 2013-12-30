@@ -57,7 +57,8 @@ module.exports.policies = {
   	update : ['isProfessor', 'hasPost'],
   	destroy : ['isProfessor', 'hasPost'],
     attendance_start : ['isProfessor', 'hasCourse'],
-    attendance_check : ['isUser', 'hasPost'],
+    attendance_found_device : ['isUser', 'hasPost'],
+    attendance_current_location : ['isUser', 'hasPost'],
     student_list : ['isUser', 'hasPost']
   },
 

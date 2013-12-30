@@ -98,9 +98,14 @@ module.exports.routes = {
     action: 'attendance_start'
   },
 
-  'put /api/post/attendance/check': {
+  'put /api/post/attendance/found/device': {
     controller: 'post',
-    action: 'attendance_check'
+    action: 'attendance_found_device'
+  },
+
+  'put /api/post/attendance/current/location': {
+    controller: 'post',
+    action: 'attendance_current_location'
   },
 
   'get /api/post/student/list': {
