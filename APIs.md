@@ -89,13 +89,17 @@ API Schema for Bttendance
     username
     password
     course_id
-####put : api/post/attendance/check => PostJSON
+####put : api/post/attendance/found/device => PostJSON
     username
     password
     post_id
-    longitude
-    latitude
     uuid
+####put : api/post/attendance/current/location => PostJSON
+    username
+    password
+    post_id
+    latitude
+    longitude
 ####get : api/post/student/list => UserJSON LIST
     username
     password
