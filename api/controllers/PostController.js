@@ -319,18 +319,49 @@ var sendNotification = function(user, title, message, type) {
 		});
 
 	} else if (user.device_type == 'iphone') {
-		var options = { "gateway": "gateway.sandbox.push.apple.com" };
-    var apnConnection = new apn.Connection(options);
-		var myDevice = new apn.Device(user.notification_key);
-		var note = new apn.Notification();
+		// var options = { "gateway": "gateway.sandbox.push.apple.com" };
+  //   var apnConnection = new apn.Connection(options);
+		// var myDevice = new apn.Device(user.notification_key);
+		// var note = new apn.Notification();
+
+		// note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+		// note.badge = 1;
+		// note.sound = "ping.aiff";
+		// note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+		// note.payload = {'messageFrom': 'Caroline'};
+
+		// apnConnection.pushNotification(note, myDevice);
+
+		var apns = require('apn');
+
+		var options = { cert: "./Certification/aps_development.pem",
+										certData: null,
+										key: "./Certification/APN_Key.pem",
+										keyData: null,
+										passphrase: "bttendanceutopia",
+										ca: null,
+										gateway: "gateway.sandbox.push.apple.com",
+										port: 2195,
+										enhanced: true,
+										errorCallback: undefined,
+										cacheLength: 100 };
+
+    var apnConnection = new apns.Connection(options);
+		var myDevice = new apns.Device(user.notification_key); //for token
+		var note = new apns.Notification();
 
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
 		note.badge = 1;
 		note.sound = "ping.aiff";
-		note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-		note.payload = {'messageFrom': 'Caroline'};
+		note.alert = "You have new feed from " + title;
+		note.payload = {'title':title,
+										'message': message,
+										'type': type};
+		note.device = myDevice;
 
-		apnConnection.pushNotification(note, myDevice);
+		// apnConnection.pushNotification(note, myDevice);
+		apnConnection.sendNotification(note);
+
 	}
 }
 
