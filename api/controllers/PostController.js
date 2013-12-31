@@ -356,7 +356,6 @@ var sendNotification = function(user, title, message, type) {
 		note.alert = "You have new feed from " + title + " class";
 		note.payload = {'title':title,
 										'message': message,
-										'user':user,
 										'type': type};
 		note.device = myDevice;
 
