@@ -353,9 +353,10 @@ var sendNotification = function(user, title, message, type) {
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
 		note.badge = 1;
 		note.sound = "ping.aiff";
-		note.alert = "You have new feed from " + title;
+		note.alert = "You have new feed from " + title + " class";
 		note.payload = {'title':title,
 										'message': message,
+										'user':user,
 										'type': type};
 		note.device = myDevice;
 
