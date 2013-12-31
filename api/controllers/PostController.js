@@ -7,7 +7,6 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
-var moment = require('moment');
 
 module.exports = {
 
@@ -29,7 +28,7 @@ module.exports = {
 					if (!err && post) {
 						Course.findOne(course_id).done(function(err, course) {
 							if(!err && course) {
-								course.attdCheckedAt = moment().utc().format('YYYY-MM-DD[T]HH:mm:ss[.000Z]');
+								course.attdCheckedAt = post.createdAt;
 								course.save(function(err) {
 									if (err) {
 								  	console.log(err);
@@ -213,6 +212,40 @@ module.exports = {
 		var latitude = req.param('latitude');
 		var longitude = req.param('longitude');
 
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			if (err || !user)
+    		return res.send(404, { message: "No User Found Error" });
+
+    	Post.findOne(post_id).done(function(err, post) {
+    		if (err || !post)
+    			return res.send(404, { message: "No Post Found Error" });
+
+    		// Update user location
+    		var user_location = new Array();
+    		user_location.push(user.id);
+    		user_location.push(latitude);
+    		user_location.push(longitude);
+
+    		var locations = new Array();
+    		locations.push(user_location);
+
+    		for (var i = 0; i < post.locations.length; i++) {
+    			if (post.locations[i][0] != user.id)
+    				locations.push(post.locations[i]);
+    		}
+
+    		var clusters = new Array();
+
+    		post.locations = locations;
+    		post.save(function(err) {
+					var postJSON = JSON.stringify(post);
+			  	return res.send(postJSON);
+				});
+    	});
+		});
+
 	},
 
 	attendance_check_manually: function(req, res) {
@@ -321,4 +354,13 @@ var getConditionFromUUIDs = function(array) {
 		returnArray.push(idObject);
 	}
 	return returnArray;
+}
+
+// Function to get median location of a cluster
+var getMedian = function(cluster, locations) {
+	var medianLocation = new Array();
+	for (var i in array) {
+
+	}
+	return medianLocation;
 }
