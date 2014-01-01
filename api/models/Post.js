@@ -55,10 +55,6 @@ module.exports = {
       type: 'array'
     },
 
-    medians: {
-      type: 'array'
-    },
-
     author_name: 'string',
     course_name: 'string',
     course_number: 'string',
@@ -100,7 +96,6 @@ module.exports = {
     values.clusters = clusters;
 
     values.locations = new Array();
-    values.medians = new Array();
     
     Course.findOne(values.course).done(function(err, course) {
       if (!err && course) {

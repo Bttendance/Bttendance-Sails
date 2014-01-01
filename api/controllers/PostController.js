@@ -206,45 +206,89 @@ module.exports = {
 	},
 
 	attendance_current_location: function(req, res) {
-		res.contentType('application/json');
-		var username = req.param('username');
-		var post_id = req.param('post_id');
-		var latitude = req.param('latitude');
-		var longitude = req.param('longitude');
+		// res.contentType('application/json');
+		// var username = req.param('username');
+		// var post_id = req.param('post_id');
+		// var latitude = req.param('latitude');
+		// var longitude = req.param('longitude');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			if (err || !user)
-    		return res.send(404, { message: "No User Found Error" });
+		// User.findOne({
+		// 	username: username
+		// }).done(function(err, user) {
+		// 	if (err || !user)
+  //   		return res.send(404, { message: "No User Found Error" });
 
-    	Post.findOne(post_id).done(function(err, post) {
-    		if (err || !post)
-    			return res.send(404, { message: "No Post Found Error" });
+  //   	Post.findOne(post_id).done(function(err, post) {
+  //   		if (err || !post)
+  //   			return res.send(404, { message: "No Post Found Error" });
 
-    		// Update user location
-    		var user_location = new Array();
-    		user_location.push(user.id);
-    		user_location.push(latitude);
-    		user_location.push(longitude);
+  //   		// Update user location
+  //   		var user_location = new Array();
+  //   		user_location.push(user.id);
+  //   		user_location.push(latitude);
+  //   		user_location.push(longitude);
 
-    		var locations = new Array();
-    		locations.push(user_location);
+  //   		var locations = new Array();
+  //   		locations.push(user_location);
 
-    		for (var i = 0; i < post.locations.length; i++) {
-    			if (post.locations[i][0] != user.id)
-    				locations.push(post.locations[i]);
-    		}
+  //   		for (var i = 0; i < post.locations.length; i++)
+  //   			if (post.locations[i][0] != user.id)
+  //   				locations.push(post.locations[i]);
 
-    		var clusters = new Array();
+  //   		var clusters = new Array();
+  //   		for (var i = 0; i < post.clusters.length; i++) 
+  //   			clusters.push(post.clusters[i]);
 
-    		post.locations = locations;
-    		post.save(function(err) {
-					var postJSON = JSON.stringify(post);
-			  	return res.send(postJSON);
-				});
-    	});
-		});
+  //   		// Find location of all cluster
+  //   		var cluster_locations = new Array();
+  //   		for (var i = 0; i < post.clusters.length; i++) {
+  //   			cluster_locations.push(getMedianLocation(post.clusters[i]));
+  //   		}
+
+  //   		// Find cluster which user is included
+  //   		var a = -1;
+  //   		for (var i = 0; i < clusters.length; i++)
+  //   			for (var j = 0; j < clusters.length; j++)
+  //   				if (user.id == clusters[i][j])
+  //   					a = i;
+
+  //   		if (a == -1)
+		//     	return res.send(202, { message: "User is included no cluster" });
+
+		//     // Find close clusters
+		//     var merge_indexs = new Array();
+		//     for (var i = 0; i < cluster_locations.length; i++) {
+		//     	if (isClose(cluster_locations[a], cluster_locations[i]))
+		//     		merge_indexs.push(i);
+		//     }
+
+		//     // Merge index
+		//     var new_cluster = new Array();
+		//     for (var i = 0; i < clusters.length; i++) {
+		//     	var included = false;
+		//     	for (var j = 0; j < merge_indexs.length; j++)
+		//     		if (i == merge_indexs[j])
+		//     			included = true;
+		//     	if (!included)
+		//     		new_cluster.push(clusters[i]);
+		//     }
+
+		//     var merges = new Array();
+		//     for (var i = 0; i < clusters.length; i++) {
+		//     	for (var j = 0; j < merge_indexs.length; j++)
+		//     		merges = merges.concat(clusters[merge_indexs[j]]);
+		//     }
+		//     new_cluster.push(merges);
+
+		//     // Save post
+  //   		post.locations = locations;
+  //   		post.clusters = new_cluster;
+  //   		post.save(function(err) {
+		// 			var postJSON = JSON.stringify(post);
+		// 	  	return res.send(postJSON);
+		// 		});
+  //   	});
+		// });
 
 	},
 
@@ -387,11 +431,54 @@ var getConditionFromUUIDs = function(array) {
 	return returnArray;
 }
 
-// Function to get median location of a cluster
-var getMedian = function(cluster, locations) {
-	var medianLocation = new Array();
-	for (var i in array) {
+var isClose = function(location_a, location_b) {
+	var lat_a = parseFloat(location_a[0]);
+	var lgn_a = parseFloat(location_a[1]);
+	var lat_b = parseFloat(location_b[0]);
+	var lgn_b = parseFloat(location_b[1]);
 
+	if (isNaN(lat_a) || isNaN(lgn_a) || isNaN(lat_b) || isNaN(lgn_b)
+		|| lat_a == 0 || lgn_a == 0 || lat_b == 0 || lgn_b == 0)
+		return false;
+
+	if (((lat_a - lat_b) * (lat_a - lat_b) + (lgn_a - lgn_b) * (lgn_a - lgn_b)) > 0.01)
+		return false;
+
+	return true;
+}
+
+// Function to get median location of a cluster
+var getMedianLocation = function(cluster, locations) {
+	var medianLocation = new Array();
+	var latitudeArray = new Array();
+	var longitudeArray = new Array();
+	for (var i in cluster) {
+		for (var j in locations)
+			if (locations[j][0] == cluster[i]) {
+				latitudeArray.push(locations[j][1]);
+				longitudeArray.push(locations[j][2]);
+			}
 	}
+
+	medianLocation.push(getMedian(latitudeArray));
+	medianLocation.push(getMedian(longitudeArray));
+
 	return medianLocation;
+}
+
+// Get Median of an array
+var getMedian = function(array) {
+	if (array.length < 3)
+		return 0;
+
+	for (var i = 0; i < array.length; i++) {
+		for (var j = i; j < array.length; j++) {
+			if (array[i] > array[j]) {
+				var k = array[i];
+				array[i] = array[j];
+				array[j] = k;
+			}
+		}
+	}
+	return array[Math.floor(array.length/2)];
 }
