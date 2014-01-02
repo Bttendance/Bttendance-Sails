@@ -91,7 +91,7 @@ module.exports = {
 		    	// Check whether users are in same courses(post)
 		    	if (user_api.courses.indexOf(post.course) == -1
 		    		|| user_uuid.courses.indexOf(post.course) == -1)
-		    		return res.send(404, { message: "User is not attending current course" });
+		    		return res.send(204, { message: "User is not attending current course" });
 
 					var userids = new Array();
 					userids.push(user_api.id);
