@@ -84,10 +84,6 @@ module.exports = {
     		if (user_uuid.id == user_api.id)
     			return res.send(400, { message: "User has found his own device somehow" });
 
-				var userids = new Array();
-				userids.push(user_api.id);
-				userids.push(user_uuid.id);
-
 				Post.findOne(post_id).done(function(err, post) {
 					if (err || !post)
 		    		return res.send(404, { message: "No Post Found Error" });
@@ -96,6 +92,10 @@ module.exports = {
 		    	if (user_api.courses.indexOf(post.course) == -1
 		    		|| user_uuid.courses.indexOf(post.course) == -1)
 		    		return res.send(404, { message: "User is not attending current course" });
+
+					var userids = new Array();
+					userids.push(user_api.id);
+					userids.push(user_uuid.id);
 
 					// Re Clustering - user_api : A, user_uuid : B
 					//          Find Cluster Number which User A, B included (say it's a,b)
