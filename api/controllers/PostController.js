@@ -212,83 +212,83 @@ module.exports = {
 		var latitude = req.param('latitude');
 		var longitude = req.param('longitude');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			if (err || !user)
-    		return res.send(404, { message: "No User Found Error" });
+		// User.findOne({
+		// 	username: username
+		// }).done(function(err, user) {
+		// 	if (err || !user)
+  //   		return res.send(404, { message: "No User Found Error" });
 
-    	Post.findOne(post_id).done(function(err, post) {
-    		if (err || !post)
-    			return res.send(404, { message: "No Post Found Error" });
+  //   	Post.findOne(post_id).done(function(err, post) {
+  //   		if (err || !post)
+  //   			return res.send(404, { message: "No Post Found Error" });
 
-    		// Update user location
-    		var user_location = new Array();
-    		user_location.push(user.id);
-    		user_location.push(latitude);
-    		user_location.push(longitude);
+  //   		// Update user location
+  //   		var user_location = new Array();
+  //   		user_location.push(user.id);
+  //   		user_location.push(latitude);
+  //   		user_location.push(longitude);
 
-    		var locations = new Array();
-    		locations.push(user_location);
+  //   		var locations = new Array();
+  //   		locations.push(user_location);
 
-    		for (var i = 0; i < post.locations.length; i++)
-    			if (post.locations[i][0] != user.id)
-    				locations.push(post.locations[i]);
+  //   		for (var i = 0; i < post.locations.length; i++)
+  //   			if (post.locations[i][0] != user.id)
+  //   				locations.push(post.locations[i]);
 
-    		var clusters = new Array();
-    		for (var i = 0; i < post.clusters.length; i++) 
-    			clusters.push(post.clusters[i]);
+  //   		var clusters = new Array();
+  //   		for (var i = 0; i < post.clusters.length; i++) 
+  //   			clusters.push(post.clusters[i]);
 
-    		// Find location of all cluster
-    		var cluster_locations = new Array();
-    		for (var i = 0; i < post.clusters.length; i++) {
-    			cluster_locations.push(getMedianLocation(post.clusters[i]));
-    		}
+  //   		// Find location of all cluster
+  //   		var cluster_locations = new Array();
+  //   		for (var i = 0; i < post.clusters.length; i++) {
+  //   			cluster_locations.push(getMedianLocation(post.clusters[i]));
+  //   		}
 
-    		// Find cluster which user is included
-    		var a = -1;
-    		for (var i = 0; i < clusters.length; i++)
-    			for (var j = 0; j < clusters.length; j++)
-    				if (user.id == clusters[i][j])
-    					a = i;
+  //   		// Find cluster which user is included
+  //   		var a = -1;
+  //   		for (var i = 0; i < clusters.length; i++)
+  //   			for (var j = 0; j < clusters.length; j++)
+  //   				if (user.id == clusters[i][j])
+  //   					a = i;
 
-    		if (a == -1)
-		    	return res.send(202, { message: "User is included no cluster" });
+  //   		if (a == -1)
+		//     	return res.send(202, { message: "User is included no cluster" });
 
-		    // Find close clusters
-		    var merge_indexs = new Array();
-		    for (var i = 0; i < cluster_locations.length; i++) {
-		    	if (isClose(cluster_locations[a], cluster_locations[i]))
-		    		merge_indexs.push(i);
-		    }
+		//     // Find close clusters
+		//     var merge_indexs = new Array();
+		//     for (var i = 0; i < cluster_locations.length; i++) {
+		//     	if (isClose(cluster_locations[a], cluster_locations[i]))
+		//     		merge_indexs.push(i);
+		//     }
 
-		    // Merge index
-		    var new_cluster = new Array();
-		    for (var i = 0; i < clusters.length; i++) {
-		    	var included = false;
-		    	for (var j = 0; j < merge_indexs.length; j++)
-		    		if (i == merge_indexs[j])
-		    			included = true;
-		    	if (!included)
-		    		new_cluster.push(clusters[i]);
-		    }
+		//     // Merge index
+		//     var new_cluster = new Array();
+		//     for (var i = 0; i < clusters.length; i++) {
+		//     	var included = false;
+		//     	for (var j = 0; j < merge_indexs.length; j++)
+		//     		if (i == merge_indexs[j])
+		//     			included = true;
+		//     	if (!included)
+		//     		new_cluster.push(clusters[i]);
+		//     }
 
-		    var merges = new Array();
-		    for (var i = 0; i < clusters.length; i++) {
-		    	for (var j = 0; j < merge_indexs.length; j++)
-		    		merges = merges.concat(clusters[merge_indexs[j]]);
-		    }
-		    new_cluster.push(merges);
+		//     var merges = new Array();
+		//     for (var i = 0; i < clusters.length; i++) {
+		//     	for (var j = 0; j < merge_indexs.length; j++)
+		//     		merges = merges.concat(clusters[merge_indexs[j]]);
+		//     }
+		//     new_cluster.push(merges);
 
-		    // Save post
-    		post.locations = locations;
-    		post.clusters = new_cluster;
-    		post.save(function(err) {
-					var postJSON = JSON.stringify(post);
-			  	return res.send(postJSON);
-				});
-    	});
-		});
+		//     // Save post
+  //   		post.locations = locations;
+  //   		post.clusters = new_cluster;
+  //   		post.save(function(err) {
+		// 			var postJSON = JSON.stringify(post);
+		// 	  	return res.send(postJSON);
+		// 		});
+  //   	});
+		// });
 
 	},
 
