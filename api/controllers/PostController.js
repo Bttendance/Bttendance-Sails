@@ -344,7 +344,7 @@ var sendNotification = function(user, title, message, type) {
 		// or with object values
 		var message = new gcm.Message({
 		    collapseKey: 'bttendance',
-		    delayWhileIdle: true,
+		    delayWhileIdle: false,
 		    timeToLive: 3,
 		    data: {
 		    	title: title,
