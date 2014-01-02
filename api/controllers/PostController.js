@@ -212,6 +212,8 @@ module.exports = {
 		var latitude = req.param('latitude');
 		var longitude = req.param('longitude');
 
+		return res.send(200, { message: "Found wrong device" });
+
 		// User.findOne({
 		// 	username: username
 		// }).done(function(err, user) {
