@@ -46,7 +46,7 @@ module.exports = {
 							  			}
 							  		}).sort('id DESC').done(function(err, users) {
 							  			for (var j = 0; j < users.length; j++)
-							  				sendNotification(users[j], course.name, "Attendance has been started", "attendance_started");
+							  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
 							  		});
 
 										var courseJSON = JSON.stringify(course);
@@ -173,7 +173,7 @@ module.exports = {
 
 							var merged_array = clusters[a].concat(clusters[b]);
 		    			new_cluster.push(merged_array);
-		    			
+
 		    			clusters = new_cluster;
 						}
 					}
@@ -208,7 +208,7 @@ module.exports = {
 
 									if (noti) {
 										User.findOne(notiable[j]).done(function(err, user) {
-											sendNotification(user, post.course_name, "Attendance has been checked", "attendance_checked");
+											sendNotification(user, null, post, "Attendance has been checked", "attendance_checked");
 										});
 									}
 								}
@@ -344,7 +344,7 @@ module.exports = {
 				}
 
 				if (!has_user) {
-					sendNotification(user, post.course_name, "Attendance has been checked manually", "attendance_checked");
+					sendNotification(user, null, post, "Attendance has been checked manually", "attendance_checked");
 					checks.push(user.id);
 					post.checks = checks;
 					post.save(function(err) {
@@ -363,7 +363,7 @@ module.exports = {
 };
 
 // Function to get id list
-var sendNotification = function(user, title, message, type) {
+var sendNotification = function(user, course, post, message, type) {
 	if (!user.notification_key)
 		return;
 
@@ -374,7 +374,7 @@ var sendNotification = function(user, title, message, type) {
 		    delayWhileIdle: false,
 		    timeToLive: 4,
 		    data: {
-		    	title: title,
+		    	title: post.course_name,
 		      message: message,
 		      type: type
 		    }
@@ -423,13 +423,22 @@ var sendNotification = function(user, title, message, type) {
 		var myDevice = new apns.Device(user.notification_key); //for token
 		var note = new apns.Notification();
 
+		var alert = "";
+		if (type == "attendance_started") {
+			alert = post.course_name + " attendance has been started."
+		} else if (type = "attendance_checked") {
+			alert = post.course_name + " attendance has been chekced."
+		}
+
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
 		note.badge = 1;
 		note.sound = "ping.aiff";
-		note.alert = "You have new feed from " + title + " class";
-		note.payload = {'title':title,
-										'message': message,
-										'type': type};
+		note.alert = alert;
+		note.payload = {
+			'title' 	: post.course_name,
+			'message' : message,
+			'type' 		: type 
+		};
 		note.device = myDevice;
 
 		// apnConnection.pushNotification(note, myDevice);
