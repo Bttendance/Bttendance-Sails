@@ -208,7 +208,8 @@ module.exports = {
 
 									if (noti) {
 										User.findOne(notiable[j]).done(function(err, user) {
-											sendNotification(user, null, post, "Attendance has been checked", "attendance_checked");
+											if (user)
+												sendNotification(user, null, post, "Attendance has been checked", "attendance_checked");
 										});
 									}
 								}
