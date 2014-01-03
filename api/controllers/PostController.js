@@ -151,6 +151,33 @@ module.exports = {
 		    		}
 					}
 
+					// Found if any cluster has more than 4 users
+					{
+						var a = -1;	// cluster which has more than 4 users
+						var b = -1; // cluster which prof is included
+						for (var i = 0; i < clusters.length; i++)
+							for (var j = 0; j < clusters.length; j++)
+								if (clusters[i][j] == post.author)
+									b = i;
+
+						for (var i = 0; i < clusters.length; i++)
+							if (i != b && clusters[i].length > 3)
+								a = i;
+
+						if (a != -1) {
+		    			var new_cluster = new Array();
+		    			for (var i = 0; i < clusters.length; i++) {
+		    				if (i != a && i != b)
+		    					new_cluster.push(clusters[i]);
+		    			}
+
+							var merged_array = clusters[a].concat(clusters[b]);
+		    			new_cluster.push(merged_array);
+		    			
+		    			clusters = new_cluster;
+						}
+					}
+
 					// Send Notification
 					{
 						var checks = new Array();
@@ -345,7 +372,7 @@ var sendNotification = function(user, title, message, type) {
 		var message = new gcm.Message({
 		    collapseKey: 'bttendance',
 		    delayWhileIdle: false,
-		    timeToLive: 3,
+		    timeToLive: 4,
 		    data: {
 		    	title: title,
 		      message: message,
