@@ -376,7 +376,9 @@ var sendNotification = function(user, course, post, message, type) {
 		    data: {
 		    	title: post.course_name,
 		      message: message,
-		      type: type
+		      type: type,
+		      post: JSON.stringify(post),
+		      course: JSON.stringify(course)
 		    }
 		});
 
