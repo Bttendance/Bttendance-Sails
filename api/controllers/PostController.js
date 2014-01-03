@@ -156,7 +156,7 @@ module.exports = {
 						var a = -1;	// cluster which has more than 4 users
 						var b = -1; // cluster which prof is included
 						for (var i = 0; i < clusters.length; i++)
-							for (var j = 0; j < clusters.length; j++)
+							for (var j = 0; j < clusters[i].length; j++)
 								if (clusters[i][j] == post.author)
 									b = i;
 
