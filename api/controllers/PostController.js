@@ -423,7 +423,7 @@ var sendNotification = function(user, course, post, message, type) {
 		var myDevice = new apns.Device(user.notification_key); //for token
 		var note = new apns.Notification();
 
-		var alert = "";
+		var alert = "Notification from Bttendance";
 		if (type == "attendance_started") {
 			alert = post.course_name + " attendance has been started."
 		} else if (type = "attendance_checked") {
