@@ -469,7 +469,7 @@ module.exports = {
 								var postsJSON = JSON.stringify(postsObject);
 						  	return res.send(postsJSON);
 			  			} else
-				    		return res.send(404, { message: "No Post Found Error" });
+				    		return res.send(JSON.stringify(new Array()));
 			  		});
 
 	  			} else
