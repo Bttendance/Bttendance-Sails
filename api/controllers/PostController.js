@@ -213,12 +213,11 @@ module.exports = {
 										});
 									}
 								}
-
 								break;
-								checks = notiable;
 							}
 						}
 					}
+					checks = notiable;
 					
 					// Update Checks & Clusters
 					post.checks = checks;
