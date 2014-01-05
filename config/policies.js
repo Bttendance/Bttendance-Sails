@@ -26,9 +26,9 @@ module.exports.policies = {
   UserController: {
   	'*' : false,
   	create : true,
-  	find : true,
+  	find : false,
   	update : ['isUser', 'hasDevice'],
-  	destroy : true,
+  	destroy : false,
   	signin : true,
   	signup : true,
   	update_type : ['isUser'],

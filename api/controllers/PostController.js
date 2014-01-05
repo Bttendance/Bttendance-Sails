@@ -161,7 +161,7 @@ module.exports = {
 									b = i;
 
 						for (var i = 0; i < clusters.length; i++)
-							if (i != b && clusters[i].length > 2)
+							if (i != b && clusters[i].length > 3)
 								a = i;
 
 						if (a != -1) {
