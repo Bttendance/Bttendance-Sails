@@ -498,6 +498,32 @@ module.exports = {
 		  	sendNotification(user, "Hello", "World");
 		  }
 		});
+	},
+
+	emails: function(req, res) {
+		res.contentType('application/json');
+
+		User.find().sort('id ASC').done(function(err, users) {
+
+	  	var postsObject = new Array();
+			for (var index in users) {
+				delete users[index]["password"];
+				delete users[index]["createdAt"];
+				delete users[index]["updatedAt"];
+				delete users[index]["id"];
+				delete users[index]["courses"];
+				delete users[index]["schools"];
+				delete users[index]["profile_image"];
+				delete users[index]["notification_key"];
+				delete users[index]["device_uuid"];
+				delete users[index]["device_type"];
+				delete users[index]["type"];
+				delete users[index]["username"];
+				postsObject.push(users[index]);
+			}
+			var postsJSON = JSON.stringify(postsObject);
+	  	return res.send(postsJSON);
+		});
 	}
 };
 
