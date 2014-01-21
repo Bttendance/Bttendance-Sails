@@ -324,7 +324,7 @@ module.exports = {
 		  // Found User!
 		  } else {
 		  	var schoolsObject = new Array();
-	  		Course.find({
+	  		School.find({
 	  			where: {
 	  				or: getConditionFromIDs(user.schools)
 	  			}
