@@ -52,7 +52,7 @@ module.exports.policies = {
   	destroy : ['isProfessor', 'hasCourse'],
     feed : ['isUser', 'hasCourse'],
     students : ['isUser', 'hasCourse'],
-    grades : ['isProfessor']
+    grades : ['isUser']
   },
 
   PostController: {
