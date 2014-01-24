@@ -48,7 +48,7 @@ module.exports = {
 
     // uuid
     device_uuid: {
-      type: 'string', // Android UUID doesn't satisify uuid validation 
+      type: 'string', // Android UUID doesn't satisify uuid validation
       required: true,
       unique: true
     },

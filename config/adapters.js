@@ -29,18 +29,6 @@ module.exports.adapters = {
     module: 'sails-disk'
   },
 
-  // MongoLab has lots of options and stable and we are using it.
-  // MONGOLAB_URI: mongodb://<dbuser>:<dbpassword>@ds053858.mongolab.com:53858/heroku_app18988288
-  // mongo heroku_app18988288 --host ds053858.mongolab.com --port 53858 --username bttendance --password dsa372je382k8sgqa4hadm2g6g
-  mongolab: {
-    module   : 'sails-mongo',
-    host     : 'ds053858.mongolab.com',
-    port     : 53858,
-    user     : 'utopia',
-    password : 'dsa372je382k8sgqa4hadm2g6g',
-    database : 'heroku_app18988288'
-  },
-
   // Heroku Postgre SQL has connection limit up to 500
   // psql "dbname=d8n4i2f6q5clp2 host=ec2-54-225-88-13.compute-1.amazonaws.com user=u7nsa3j4q3ng05 password=pf3koh48m9br384km90u7kng962 port=5642 sslmode=require"
   herokupostgresql: {

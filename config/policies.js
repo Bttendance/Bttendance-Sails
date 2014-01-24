@@ -51,7 +51,8 @@ module.exports.policies = {
   	update : ['isProfessor', 'hasCourse'],
   	destroy : ['isProfessor', 'hasCourse'],
     feed : ['isUser', 'hasCourse'],
-    students : ['isUser', 'hasCourse']
+    students : ['isUser', 'hasCourse'],
+    grades : ['isProfessor']
   },
 
   PostController: {

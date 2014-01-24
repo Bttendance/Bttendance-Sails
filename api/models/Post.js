@@ -24,12 +24,6 @@ module.exports = {
   		type: 'string'
   	},
 
-  	on_going: {
-  		type: 'boolean',
-  		defaultsTo: true,
-  		required: true
-  	},
-
     // has one author
     author: {
       type: 'integer',
