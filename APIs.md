@@ -109,6 +109,11 @@ API Schema for Bttendance
     password
     post_id
     user_id
+####post : api/post/notice => PostJSON
+    username
+    password
+    course_id
+    message
 ###Serial
 ####get : api/serial/validate => ValidateJSON
     serial
