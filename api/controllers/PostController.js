@@ -358,8 +358,57 @@ module.exports = {
 
   		})
 		})
+	},
+
+	notice: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var course_id = req.param('course_id');
+		var message = req.param('message');
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			if (err || !user)
+    		return res.send(404, { message: "No User Found Error" });
+
+			Course.findOne(course_id).done(function(err, course) {
+				if(err || !course)
+	    		return res.send(404, { message: "No Course Found Error" });
+
+				Post.create({
+				  author: user.id,
+				  author_name: user.full_name,
+				  course: course_id,
+				  title: course.name + ' Notice',
+				  message: message,
+				  type: 'notice'
+				}).done(function(err, post) {
+					if (err || !post)
+	    			return res.send(404, { message: "No Post Found Error" });
+
+			  	// Send notification about post to Prof & Std
+			  	var notiUsers = new Array();
+			  	for (var i = 0; i < course.students.length; i++)
+			  		notiUsers.push(course.students[i]);
+			  	notiUsers.push(course.professor);
+			  	
+		  		User.find()
+		  		.where({ or: getConditionFromIDs(notiUsers) })
+		  		.sort('id DESC')
+		  		.done(function(err, users) {
+		  			for (var j = 0; j < users.length; j++)
+		  				sendNotification(users[j], course, post, message, "notification");
+		  		});
+
+					var postJSON = JSON.stringify(post);
+			  	return res.send(postJSON);
+	    	});
+			});
+		});
+
 	}
-	
+
 };
 
 // Function to get id list
@@ -368,7 +417,7 @@ var sendNotification = function(user, course, post, message, type) {
 		return;
 
 	if (user.device_type == 'android') {
-		// or with object values
+
 		var message = new gcm.Message({
 		    collapseKey: 'bttendance',
 		    delayWhileIdle: false,
@@ -394,21 +443,8 @@ var sendNotification = function(user, course, post, message, type) {
 		});
 
 	} else if (user.device_type == 'iphone') {
-		// var options = { "gateway": "gateway.sandbox.push.apple.com" };
-  //   var apnConnection = new apn.Connection(options);
-		// var myDevice = new apn.Device(user.notification_key);
-		// var note = new apn.Notification();
-
-		// note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-		// note.badge = 1;
-		// note.sound = "ping.aiff";
-		// note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-		// note.payload = {'messageFrom': 'Caroline'};
-
-		// apnConnection.pushNotification(note, myDevice);
 
 		var apns = require('apn');
-
 		var options = { cert: "./Certification/aps_development.pem",
 										certData: null,
 										key: "./Certification/APN_Key.pem",
@@ -427,9 +463,11 @@ var sendNotification = function(user, course, post, message, type) {
 
 		var alert = "Notification from Bttendance";
 		if (type == "attendance_started") {
-			alert = post.course_name + " attendance has been started."
+			alert = post.course_name + " attendance has been started.";
 		} else if (type = "attendance_checked") {
-			alert = post.course_name + " attendance has been chekced."
+			alert = post.course_name + " attendance has been chekced.";
+		} else if (type = "notification") {
+			alert = post.course_name + " : " + message;
 		}
 
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.

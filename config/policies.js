@@ -52,7 +52,7 @@ module.exports.policies = {
   	destroy : ['isProfessor', 'hasCourse'],
     feed : ['isUser', 'hasCourse'],
     students : ['isUser', 'hasCourse'],
-    grades : ['isUser']
+    grades : ['isProfessor']
   },
 
   PostController: {
@@ -62,7 +62,8 @@ module.exports.policies = {
     attendance_start : ['isProfessor', 'hasCourse'],
     attendance_found_device : ['isUser', 'hasPost'],
     attendance_current_location : ['isUser', 'hasPost'],
-    attendance_check_manually : ['isProfessor', 'hasPost']
+    attendance_check_manually : ['isProfessor', 'hasPost'],
+    notice : ['isProfessor', 'hasCourse']
   },
 
   SchoolController: {
