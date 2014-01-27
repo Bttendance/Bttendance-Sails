@@ -109,7 +109,7 @@ API Schema for Bttendance
     password
     post_id
     user_id
-####post : api/post/notice => PostJSON
+####post : api/post/create/notice => PostJSON
     username
     password
     course_id

@@ -63,7 +63,7 @@ module.exports.policies = {
     attendance_found_device : ['isUser', 'hasPost'],
     attendance_current_location : ['isUser', 'hasPost'],
     attendance_check_manually : ['isProfessor', 'hasPost'],
-    notice : ['isProfessor', 'hasCourse']
+    create_notice : ['isProfessor', 'hasCourse']
   },
 
   SchoolController: {

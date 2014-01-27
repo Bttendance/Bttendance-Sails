@@ -360,7 +360,7 @@ module.exports = {
 		})
 	},
 
-	notice: function(req, res) {
+	create_notice: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
