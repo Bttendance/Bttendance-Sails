@@ -464,9 +464,9 @@ var sendNotification = function(user, course, post, message, type) {
 		var alert = "Notification from Bttendance";
 		if (type == "attendance_started") {
 			alert = post.course_name + " attendance has been started.";
-		} else if (type = "attendance_checked") {
+		} else if (type == "attendance_checked") {
 			alert = post.course_name + " attendance has been chekced.";
-		} else if (type = "notification") {
+		} else if (type == "notification") {
 			alert = post.course_name + " : " + message;
 		}
 
