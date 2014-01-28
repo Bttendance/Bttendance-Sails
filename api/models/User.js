@@ -34,12 +34,6 @@ module.exports = {
       columnName: 'encrypted_password'
     },
 
-    //professor, student, assistant
-    type: {
-    	type: 'string',
-      required: true
-    },
-
     //iphone, android, window, blackberry, etc
     device_type: {
       type: 'string',

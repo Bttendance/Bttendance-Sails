@@ -517,7 +517,6 @@ module.exports = {
 				delete users[index]["notification_key"];
 				delete users[index]["device_uuid"];
 				delete users[index]["device_type"];
-				delete users[index]["type"];
 				delete users[index]["username"];
 				postsObject.push(users[index]);
 			}

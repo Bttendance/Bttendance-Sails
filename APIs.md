@@ -77,7 +77,7 @@ API Schema for Bttendance
     username
     password
     course_id
-####get : api/course/grade => List of { User_id + grade (ex "a/b") }
+####get : api/course/grades => List of { User_id + grade (ex "a/b") }
     username
     password
     course_id
