@@ -518,6 +518,7 @@ module.exports = {
 				delete users[index]["device_uuid"];
 				delete users[index]["device_type"];
 				delete users[index]["username"];
+				delete users[index]["type"];
 				postsObject.push(users[index]);
 			}
 			var postsJSON = JSON.stringify(postsObject);
