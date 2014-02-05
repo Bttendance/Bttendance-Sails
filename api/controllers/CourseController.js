@@ -7,6 +7,10 @@
 
 module.exports = {
   
+  var Memjs = require("memjs").Client
+
+	memjs = Memjs.create();
+
 	feed: function(req, res) {
 		res.contentType('application/json');
 		var course_id = req.param('course_id');
@@ -25,6 +29,21 @@ module.exports = {
   			if (err || !posts) {
   				return res.send(404, { message: "No Post Found Error" });
   			}
+
+  			memjs.get("lastestfeeds", fucntion(err, feeds){//feed cached
+  				if(feeds){//if there is cached feed data, return cached data
+  					return res.send(posts);
+  				}
+  				else{
+  				//else, no data set yet
+  				//set data in cache
+  				var postsObject = new Array();
+  				for(var index in posts)
+  					postsObject.push(posts[index]);
+  				var postsJSON = JSON.stringify(postsObject);
+  				memjs.set("lastestfeeds",postsJSON);
+  				return res.send(postsJSON);
+  			})
 
 		  	var postsObject = new Array();
 				for (var index in posts)
