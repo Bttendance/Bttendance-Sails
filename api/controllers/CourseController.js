@@ -4,10 +4,6 @@
  * @module		:: Controller
  * @description	:: Contains logic for handling requests.
  */
-var MemJS = require("memjs").Client
-
-memjs = MemJS.create();
-
 module.exports = {
 
 	feed: function(req, res) {
@@ -15,6 +11,10 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 		
+		var MemJS = require("memjs").Client
+
+		var memjs = MemJS.create();
+
 		console.log("i'm here");
 
 		Course.findOne(Number(course_id)).done(function(err, course) {
