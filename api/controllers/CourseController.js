@@ -4,6 +4,7 @@
  * @module		:: Controller
  * @description	:: Contains logic for handling requests.
  */
+
 module.exports = {
 
 	feed: function(req, res) {
@@ -11,9 +12,9 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 		
-		// var MemJS = require("memjs").Client
+		var MemJS = require("memjs").Client
 
-		// var memjs = MemJS.create();
+		var memjs = MemJS.create();
 
 		Course.findOne(Number(course_id)).done(function(err, course) {
 			if (err || !course) {
@@ -29,24 +30,24 @@ module.exports = {
   				return res.send(404, { message: "No Post Found Error" });
   			}
 
-  		// 	memjs.get("lastestfeeds", function(err, feeds) {//feed cached
-				// 	if(feeds){//if there is cached feed data, return cached data
-				// 		console.log("hit cache");
-				// 		return res.send(posts);
-				// 	}
-				// 	else{
-				// 		//else, no data set yet
-				// 		console.log("miss!!");
-				// 		var postsObject = new Array();
-				// 		for (var index in posts)
-				// 			postsObject.push(posts[index]);
-				// 		var postsJSON = JSON.stringify(postsObject);
-				// 		console.log("set data in cache");
-				// 		memjs.set("lastestfeeds",postsJSON);
-				// 		console.log(postsJSON);
-				//   	return res.send(postsJSON);
-				// 	}
-				// })
+  			memjs.get("lastestfeeds", function(err, feeds) {//feed cached
+					if(feeds){//if there is cached feed data, return cached data
+						console.log("hit cache");
+						return res.send(posts);
+					}
+					else{
+						//else, no data set yet
+						console.log("miss!!");
+						var postsObject = new Array();
+						for (var index in posts)
+							postsObject.push(posts[index]);
+						var postsJSON = JSON.stringify(postsObject);
+						console.log("set data in cache");
+						memjs.set("lastestfeeds",postsJSON);
+						console.log(postsJSON);
+				  	return res.send(postsJSON);
+					}
+				})
 
 		  	var postsObject = new Array();
 				for (var index in posts)
