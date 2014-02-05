@@ -15,6 +15,8 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 		
+		console.log("i'm here");
+
 		Course.findOne(Number(course_id)).done(function(err, course) {
 			if (err || !course) {
     		return res.send(404, { message: "No Course Found Error" });
@@ -28,7 +30,7 @@ module.exports = {
   			if (err || !posts) {
   				return res.send(404, { message: "No Post Found Error" });
   			}
-
+  			console.log("cache check start");
   			memjs.get("lastestfeeds", function(err, feeds) {//feed cached
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
