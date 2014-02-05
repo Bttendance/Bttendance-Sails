@@ -12,7 +12,7 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 		
-		var MemJS = require("memjs").Client
+		var MemJS = require('memjs').Client
 
 		var memjs = MemJS.create();
 
