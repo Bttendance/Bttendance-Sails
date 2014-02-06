@@ -40,7 +40,7 @@ module.exports = {
   			}
 
   			memjs.get(cache_flag, function(err, feeds) {//feed cached
-					if(false && feeds){//if there is cached feed data, return cached data
+					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
 						console.log(feeds);
 						var postsJSON = JSON.stringify(feeds);
@@ -59,12 +59,7 @@ module.exports = {
 				  	return res.send(postsJSON);
 					}
 				});
-  			console.log('AIWFJOWIFJWOEIFJWEIOFJES');
-		  	//var postsObject = new Array();
-				//for (var index in posts)
-				//	postsObject.push(posts[index]);
-				//var postsJSON = JSON.stringify(postsObject);
-		  	//return res.send(postsJSON);
+
   		});
 		});
 	},
