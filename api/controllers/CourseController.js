@@ -43,7 +43,8 @@ module.exports = {
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
 						console.log(feeds);
-						return res.send(feeds);
+						var postsJSON = JSON.stringify(feeds);
+						return res.send(postsJSON);
 					}
 					else{
 						//else, no data set yet
@@ -53,7 +54,7 @@ module.exports = {
 							postsObject.push(posts[index]);
 						var postsJSON = JSON.stringify(postsObject);
 						console.log("set data in cache");
-						memjs.set(cache_flag,postsJSON);
+						memjs.set(cache_flag,postsObject);
 						console.log(postsJSON);
 				  	return res.send(postsJSON);
 					}
