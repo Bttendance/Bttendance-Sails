@@ -14,8 +14,6 @@ var MemJS = require('memjs').Client
 //   console.log("Listening on " + port);
 // });
 
-var port = process.env.PORT || 5000;
-
 module.exports = {
 
 	feed: function(req, res) {
@@ -44,6 +42,7 @@ module.exports = {
   			memjs.get(cache_flag, function(err, feeds) {//feed cached
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
+						console.log(feeds);
 						return res.send(feeds);
 					}
 					else{
