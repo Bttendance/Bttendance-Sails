@@ -42,7 +42,7 @@ module.exports = {
   			memjs.get(cache_flag, function(err, feeds) {//feed cached
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
-						console.log(feeds);
+						console.log(feeds.length);
 						// var postsJSON = JSON.stringify(feeds);
 						return res.send(feeds);
 					}
