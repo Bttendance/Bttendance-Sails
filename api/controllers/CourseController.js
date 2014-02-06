@@ -14,7 +14,7 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
-		var cache_flag = lastestfeeds + "" + course_id
+		var cache_flag = "lastestfeeds_" + course_id
 
 		var memjs = MemJS.create();
 
