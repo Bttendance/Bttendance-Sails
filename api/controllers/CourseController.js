@@ -58,13 +58,13 @@ module.exports = {
 						console.log(postsJSON);
 				  	return res.send(postsJSON);
 					}
-				})
-
-		  	var postsObject = new Array();
-				for (var index in posts)
-					postsObject.push(posts[index]);
-				var postsJSON = JSON.stringify(postsObject);
-		  	return res.send(postsJSON);
+				});
+  			console.log('AIWFJOWIFJWOEIFJWEIOFJES');
+		  	//var postsObject = new Array();
+				//for (var index in posts)
+				//	postsObject.push(posts[index]);
+				//var postsJSON = JSON.stringify(postsObject);
+		  	//return res.send(postsJSON);
   		});
 		});
 	},
