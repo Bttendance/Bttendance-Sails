@@ -5,14 +5,14 @@
  * @description	:: Contains logic for handling requests.
  */
 
+var MemJS = require('memjs').Client
+
 module.exports = {
 
 	feed: function(req, res) {
 		res.contentType('application/json');
 		var course_id = req.param('course_id');
 		var page = req.param('page');
-		
-		var MemJS = require('memjs').Client
 
 		var memjs = MemJS.create();
 
@@ -33,7 +33,7 @@ module.exports = {
   			memjs.get("lastestfeeds", function(err, feeds) {//feed cached
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
-						return res.send(posts);
+						return res.send(feeds);
 					}
 					else{
 						//else, no data set yet
