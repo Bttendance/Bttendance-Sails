@@ -14,9 +14,9 @@ var MemJS = require('memjs').Client
 //   console.log("Listening on " + port);
 // });
 
-module.exports = {
+var port = process.env.PORT || 5000;
 
-	port = process.env.PORT || 5000,
+module.exports = {
 
 	feed: function(req, res) {
 		res.contentType('application/json');
