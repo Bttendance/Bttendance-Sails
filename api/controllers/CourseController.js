@@ -43,7 +43,8 @@ module.exports = {
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
 						console.log(feeds.length);
-						console.log(posts.toString.length);
+						var temp = posts.toString;
+						console.log(temp.length);
 						// var postsJSON = JSON.stringify(feeds);
 						return res.send(feeds);
 					}
