@@ -16,6 +16,8 @@ var MemJS = require('memjs').Client
 
 module.exports = {
 
+	port = process.env.PORT || 5000,
+
 	feed: function(req, res) {
 		res.contentType('application/json');
 		var course_id = req.param('course_id');
