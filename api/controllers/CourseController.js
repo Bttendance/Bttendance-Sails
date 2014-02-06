@@ -14,6 +14,8 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
+		var cache_flag = lastestfeeds + "" + course_id
+
 		var memjs = MemJS.create();
 
 		Course.findOne(Number(course_id)).done(function(err, course) {
@@ -30,7 +32,7 @@ module.exports = {
   				return res.send(404, { message: "No Post Found Error" });
   			}
 
-  			memjs.get("lastestfeeds", function(err, feeds) {//feed cached
+  			memjs.get(cache_flag, function(err, feeds) {//feed cached
 					if(feeds){//if there is cached feed data, return cached data
 						console.log("hit cache");
 						return res.send(feeds);
@@ -43,7 +45,7 @@ module.exports = {
 							postsObject.push(posts[index]);
 						var postsJSON = JSON.stringify(postsObject);
 						console.log("set data in cache");
-						memjs.set("lastestfeeds",postsJSON);
+						memjs.set(cache_flag,postsJSON);
 						console.log(postsJSON);
 				  	return res.send(postsJSON);
 					}
