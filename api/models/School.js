@@ -29,50 +29,28 @@ module.exports = {
       type: 'array'
     },
 
-    // user who created this school
-    creator: {
-      type: 'integer',
-      required: true
+    // has many Professors
+    professors: {
+      type: 'array'
+    },
+
+    // has many Students
+    students: {
+      type: 'array'
+    },
+
+    // has many Serials
+    serials: {
+      type: 'array'
     }
     
-  },
-
-  beforeValidation: function(values, next) {
-    if (values.username) {
-      User.findOne({
-        username: values.username
-      }).done(function(err, user) {
-        if (!err && user) {
-          values.creator = user.id;
-          next();
-        } else
-          return next(err);
-      });
-    } else
-      next();
   },
 
   // Lifecycle Callbacks
   beforeCreate: function(values, next) {
     values.courses = new Array();
+    values.serials = new Array();
     next();
-  },
-
-  afterCreate: function(values, next) {
-    User.findOne(values.creator).done(function(err, user) {
-      // return err
-      if (err) return next(err);
-      // make new array
-      if (!user.schools) user.schools = new Array();
-      // add school to user who created this school
-      user.schools.push(values.id);
-      // save new values
-      user.save(function(err){
-        if (err) return next(err);
-        next();
-      })
-    });
-
   }
 
 };

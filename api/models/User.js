@@ -34,12 +34,6 @@ module.exports = {
       columnName: 'encrypted_password'
     },
 
-    //professor, student, assistant
-    type: {
-      type: 'string',
-      required: true
-    },
-
     //iphone, android, window, blackberry, etc
     device_type: {
       type: 'string',
@@ -66,13 +60,23 @@ module.exports = {
       type: 'url'
     },
 
-    // has many Courses
-    courses: {
+    // has many Supervising Courses
+    supervising_courses: {
       type: 'array'
     },
 
-    // has many Schools
-    schools: {
+    // has many Attending Courses
+    attending_courses: {
+      type: 'array'
+    },
+
+    // has many Employed Schools (id, latest_serial)
+    employed_schools: {
+      type: 'array'
+    },
+
+    // has many Enrolled Schools (id, student_id or phone_number)
+    enrolled_schools: {
       type: 'array'
     },
 
@@ -86,9 +90,10 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.username = values.username.toLowerCase();
     values.password = passwordHash.generate(values.password);
-    values.courses = new Array();
-    values.memberships = new Array();
-    values.schools = new Array();
+    values.supervising_courses = new Array();
+    values.attending_courses = new Array();
+    values.employed_schools = new Array();
+    values.enrolled_schools = new Array();
     next();
   }
 

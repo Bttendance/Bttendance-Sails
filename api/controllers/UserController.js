@@ -239,13 +239,19 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 		  // Found User!
 		  } else {
-		  	var coursesObject = new Array();
+		  	var total_courses = new Array();
+		  	for (int i = 0; i < user.lecturing_courses.length; i++)
+		  		total_courses.push(user.lecturing_courses[i]);
+		  	for (int i = 0; i < user.attending_courses.length; i++)
+		  		total_courses.push(user.attending_courses[i]);
+
 	  		Course.find({
 	  			where: {
-	  				or: getConditionFromIDs(user.courses)
+	  				or: getConditionFromIDs(total_courses)
 	  			}
 	  		}).done(function(err, courses) {
 	  			if (!err && courses) {
+		  			var coursesObject = new Array();
 	  				for (var index in courses)
 	  					coursesObject.push(courses[index]);
 						var coursesJSON = JSON.stringify(coursesObject);
@@ -253,55 +259,6 @@ module.exports = {
 	  			} else
 		    		// return res.send(404, { message: "No Course Found Error" });
 		    		return res.send(JSON.stringify(new Array()));
-	  		});
-		  }
-		});
-	},
-
-	joinable_courses: function(req, res) {
-		res.contentType('application/json');
-		var username = req.param('username');
-
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
-		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-	  		School.find({
-	  			where: {
-	  				or: getConditionFromIDs(user.schools)
-	  			}
-	  		}).done(function(err, schools) {
-	  			if (!err && schools) {
-	  				var coursesArray = new Array();
-	  				for (var index in schools)
-	  					coursesArray = coursesArray.concat(schools[index].courses);
-
-				  	var coursesObject = new Array();
-			  		Course.find({
-			  			where: {
-			  				or: getConditionFromIDs(coursesArray)
-			  			}
-			  		}).done(function(err, courses) {
-			  			if (!err && courses) {
-			  				for (var index in courses)
-			  					coursesObject.push(courses[index]);
-								var coursesJSON = JSON.stringify(coursesObject);
-						  	return res.send(coursesJSON);
-			  			} else
-				    		// return res.send(404, { message: "No Course Found Error" });
-				    		return res.send(JSON.stringify(new Array()));
-			  		});
-
-	  			} else
-		    		return res.send(404, { message: "No School Found Error" });
 	  		});
 		  }
 		});
@@ -323,13 +280,19 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 		  // Found User!
 		  } else {
-		  	var schoolsObject = new Array();
+		  	var total_schools = new Array();
+		  	for (int i = 0; i < user.employed_schools.length; i++)
+		  		total_schools.push(user.employed_schools[i]);
+		  	for (int i = 0; i < user.enrolled_schools.length; i++)
+		  		total_schools.push(user.enrolled_schools[i]);
+
 	  		School.find({
 	  			where: {
-	  				or: getConditionFromIDs(user.schools)
+	  				or: getConditionFromIDs(total_schools)
 	  			}
 	  		}).done(function(err, schools) {
 	  			if (!err && schools) {
+		  			var schoolsObject = new Array();
 	  				for (var index in schools)
 	  					schoolsObject.push(schools[index]);
 						var schoolsJSON = JSON.stringify(schoolsObject);
@@ -341,49 +304,7 @@ module.exports = {
 		});
 	},
 
-	join_school: function(req, res) {
-		res.contentType('application/json');
-		var username = req.param('username');
-		var school_id = req.param('school_id');
-		
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-
-		  // No User found
-		  } else if (!user) {
-		    return res.send(404, { message: "No User Found Error" });
-
-		  // Found User!
-		  } else {
-		  	if (!user.schools) user.schools = new Array();
-
-		  	var school = parseInt(school_id);
-		  	if (isNaN(school)) return res.send(500, { message: "School id is NaN Error" });
-
-      	// add school if user doesn't have school
-		  	if (user.schools.indexOf(school) == -1)
-			  	user.schools.push(school);
-      	// save new values
-	      user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-	      });
-		  }
-		});
-	},
-
-	join_course: function(req, res) {
+	attend_course: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
@@ -430,101 +351,192 @@ module.exports = {
 		});
 	},
 
-	feed: function(req, res) {
-		res.contentType('application/json');
-		var username = req.param('username');
-		var page = req.param('page');
+	// joinable_courses: function(req, res) {
+	// 	res.contentType('application/json');
+	// 	var username = req.param('username');
+
+	// 	User.findOne({
+	// 		username: username
+	// 	}).done(function(err, user) {
+	// 		// Error handling
+	// 		if (err) {
+	// 			console.log(err);
+	// 	    return res.send(500, { message: "User Find Error" });
+	// 	  // No User found
+	// 	  } else if (!user) {
+	// 	    return res.send(404, { message: "No User Found Error" });
+	// 	  // Found User!
+	// 	  } else {
+	//   		School.find({
+	//   			where: {
+	//   				or: getConditionFromIDs(user.schools)
+	//   			}
+	//   		}).done(function(err, schools) {
+	//   			if (!err && schools) {
+	//   				var coursesArray = new Array();
+	//   				for (var index in schools)
+	//   					coursesArray = coursesArray.concat(schools[index].courses);
+
+	// 			  	var coursesObject = new Array();
+	// 		  		Course.find({
+	// 		  			where: {
+	// 		  				or: getConditionFromIDs(coursesArray)
+	// 		  			}
+	// 		  		}).done(function(err, courses) {
+	// 		  			if (!err && courses) {
+	// 		  				for (var index in courses)
+	// 		  					coursesObject.push(courses[index]);
+	// 							var coursesJSON = JSON.stringify(coursesObject);
+	// 					  	return res.send(coursesJSON);
+	// 		  			} else
+	// 			    		// return res.send(404, { message: "No Course Found Error" });
+	// 			    		return res.send(JSON.stringify(new Array()));
+	// 		  		});
+
+	//   			} else
+	// 	    		return res.send(404, { message: "No School Found Error" });
+	//   		});
+	// 	  }
+	// 	});
+	// },
+
+	// join_school: function(req, res) {
+	// 	res.contentType('application/json');
+	// 	var username = req.param('username');
+	// 	var school_id = req.param('school_id');
 		
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
-		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-	  		Course.find({
-	  			where: {
-	  				or: getConditionFromIDs(user.courses)
-	  			}
-	  		}).done(function(err, courses) {
-	  			if (!err && courses) {
-	  				var postsArray = new Array();
-	  				for (var index in courses)
-	  					postsArray = postsArray.concat(courses[index].posts);
+	// 	User.findOne({
+	// 		username: username
+	// 	}).done(function(err, user) {
+	// 		// Error handling
+	// 		if (err) {
+	// 			console.log(err);
+	// 	    return res.send(500, { message: "User Find Error" });
 
-				  	var postsObject = new Array();
-			  		Post.find({
-			  			where: {
-			  				or: getConditionFromIDs(postsArray)
-			  			}
-			  		}).sort('id DESC').done(function(err, posts) {
-			  			if (!err && posts) {
-			  				for (var index in posts)
-			  					postsObject.push(posts[index]);
-								var postsJSON = JSON.stringify(postsObject);
-						  	return res.send(postsJSON);
-			  			} else
-				    		return res.send(JSON.stringify(new Array()));
-			  		});
+	// 	  // No User found
+	// 	  } else if (!user) {
+	// 	    return res.send(404, { message: "No User Found Error" });
 
-	  			} else
-		    		return res.send(404, { message: "No School Found Error" });
-	  		});
-		  }
-		});
-	},
+	// 	  // Found User!
+	// 	  } else {
+	// 	  	if (!user.schools) user.schools = new Array();
 
-	notification: function(req, res) {
-		res.contentType('application/json');
-		var username = req.param('username');
+	// 	  	var school = parseInt(school_id);
+	// 	  	if (isNaN(school)) return res.send(500, { message: "School id is NaN Error" });
+
+ //      	// add school if user doesn't have school
+	// 	  	if (user.schools.indexOf(school) == -1)
+	// 		  	user.schools.push(school);
+ //      	// save new values
+	//       user.save(function(err) {
+	// 				// Error handling
+	// 				if (err) {
+	// 					console.log(err);
+	// 			    return res.send(500, { message: "User Save Error" });
+	// 			  }
+	// 		  	// return UserJSON
+	// 				var userJSON = JSON.stringify(user);
+	// 		  	return res.send(userJSON);
+	//       });
+	// 	  }
+	// 	});
+	// },
+
+	// feed: function(req, res) {
+	// 	res.contentType('application/json');
+	// 	var username = req.param('username');
+	// 	var page = req.param('page');
 		
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
-		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-		  	sendNotification(user, "Hello", "World");
-		  }
-		});
-	},
+	// 	User.findOne({
+	// 		username: username
+	// 	}).done(function(err, user) {
+	// 		// Error handling
+	// 		if (err) {
+	// 			console.log(err);
+	// 	    return res.send(500, { message: "User Find Error" });
+	// 	  // No User found
+	// 	  } else if (!user) {
+	// 	    return res.send(404, { message: "No User Found Error" });
+	// 	  // Found User!
+	// 	  } else {
+	//   		Course.find({
+	//   			where: {
+	//   				or: getConditionFromIDs(user.courses)
+	//   			}
+	//   		}).done(function(err, courses) {
+	//   			if (!err && courses) {
+	//   				var postsArray = new Array();
+	//   				for (var index in courses)
+	//   					postsArray = postsArray.concat(courses[index].posts);
 
-	emails: function(req, res) {
-		res.contentType('application/json');
+	// 			  	var postsObject = new Array();
+	// 		  		Post.find({
+	// 		  			where: {
+	// 		  				or: getConditionFromIDs(postsArray)
+	// 		  			}
+	// 		  		}).sort('id DESC').done(function(err, posts) {
+	// 		  			if (!err && posts) {
+	// 		  				for (var index in posts)
+	// 		  					postsObject.push(posts[index]);
+	// 							var postsJSON = JSON.stringify(postsObject);
+	// 					  	return res.send(postsJSON);
+	// 		  			} else
+	// 			    		return res.send(JSON.stringify(new Array()));
+	// 		  		});
 
-		User.find().sort('id ASC').done(function(err, users) {
+	//   			} else
+	// 	    		return res.send(404, { message: "No School Found Error" });
+	//   		});
+	// 	  }
+	// 	});
+	// },
 
-	  	var postsObject = new Array();
-			for (var index in users) {
-				delete users[index]["password"];
-				delete users[index]["createdAt"];
-				delete users[index]["updatedAt"];
-				delete users[index]["id"];
-				delete users[index]["courses"];
-				delete users[index]["schools"];
-				delete users[index]["profile_image"];
-				delete users[index]["notification_key"];
-				delete users[index]["device_uuid"];
-				delete users[index]["device_type"];
-				delete users[index]["username"];
-				delete users[index]["type"];
-				postsObject.push(users[index]);
-			}
-			var postsJSON = JSON.stringify(postsObject);
-	  	return res.send(postsJSON);
-		});
-	}
+	// notification: function(req, res) {
+	// 	res.contentType('application/json');
+	// 	var username = req.param('username');
+		
+	// 	User.findOne({
+	// 		username: username
+	// 	}).done(function(err, user) {
+	// 		// Error handling
+	// 		if (err) {
+	// 			console.log(err);
+	// 	    return res.send(500, { message: "User Find Error" });
+	// 	  // No User found
+	// 	  } else if (!user) {
+	// 	    return res.send(404, { message: "No User Found Error" });
+	// 	  // Found User!
+	// 	  } else {
+	// 	  	sendNotification(user, "Hello", "World");
+	// 	  }
+	// 	});
+	// },
+
+	// emails: function(req, res) {
+	// 	res.contentType('application/json');
+
+	// 	User.find().sort('id ASC').done(function(err, users) {
+
+	//   	var postsObject = new Array();
+	// 		for (var index in users) {
+	// 			delete users[index]["password"];
+	// 			delete users[index]["createdAt"];
+	// 			delete users[index]["updatedAt"];
+	// 			delete users[index]["id"];
+	// 			delete users[index]["courses"];
+	// 			delete users[index]["schools"];
+	// 			delete users[index]["profile_image"];
+	// 			delete users[index]["notification_key"];
+	// 			delete users[index]["device_uuid"];
+	// 			delete users[index]["device_type"];
+	// 			delete users[index]["username"];
+	// 			delete users[index]["type"];
+	// 			postsObject.push(users[index]);
+	// 		}
+	// 		var postsJSON = JSON.stringify(postsObject);
+	//   	return res.send(postsJSON);
+	// 	});
+	// }
 };
 
 // Function to get id list
@@ -538,68 +550,67 @@ var getConditionFromIDs = function(array) {
 	return returnArray;
 }
 
-// Function to get id list
-var sendNotification = function(user, title, message) {
-	if (!user.notification_key)
-		return;
+// var sendNotification = function(user, title, message) {
+// 	if (!user.notification_key)
+// 		return;
 
-	console.log("start notification");
-	if (user.device_type == 'android') {
-		// or with object values
-		var message = new gcm.Message({
-		    collapseKey: 'bttendance',
-		    delayWhileIdle: true,
-		    timeToLive: 3,
-		    data: {
-		    	title: title,
-		      message: message
-		    }
-		});
+// 	console.log("start notification");
+// 	if (user.device_type == 'android') {
+// 		// or with object values
+// 		var message = new gcm.Message({
+// 		    collapseKey: 'bttendance',
+// 		    delayWhileIdle: true,
+// 		    timeToLive: 3,
+// 		    data: {
+// 		    	title: title,
+// 		      message: message
+// 		    }
+// 		});
 
-		var registrationIds = [];
-		registrationIds.push(user.notification_key);
+// 		var registrationIds = [];
+// 		registrationIds.push(user.notification_key);
 
-		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
-		sender.send(message, registrationIds, 4, function (err, result) {
-			if (err)
-				console.log(err);
-			else
-    		console.log(result);
-		});
+// 		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
+// 		sender.send(message, registrationIds, 4, function (err, result) {
+// 			if (err)
+// 				console.log(err);
+// 			else
+//     		console.log(result);
+// 		});
 
-	} else if (user.device_type == 'iphone') {
-		var apns = require('apn');
+// 	} else if (user.device_type == 'iphone') {
+// 		var apns = require('apn');
 
-		var options = { cert: "./Certification/aps_development.pem",
-										certData: null,
-										key: "./Certification/APN_Key.pem",
-										keyData: null,
-										passphrase: "bttendanceutopia",
-										ca: null,
-										gateway: "gateway.sandbox.push.apple.com",
-										port: 2195,
-										enhanced: true,
-										errorCallback: undefined,
-										cacheLength: 100 };
+// 		var options = { cert: "./Certification/aps_development.pem",
+// 										certData: null,
+// 										key: "./Certification/APN_Key.pem",
+// 										keyData: null,
+// 										passphrase: "bttendanceutopia",
+// 										ca: null,
+// 										gateway: "gateway.sandbox.push.apple.com",
+// 										port: 2195,
+// 										enhanced: true,
+// 										errorCallback: undefined,
+// 										cacheLength: 100 };
 
-    var apnConnection = new apns.Connection(options);
-		var myDevice = new apns.Device(user.notification_key); //for token
-		var note = new apns.Notification();
+//     var apnConnection = new apns.Connection(options);
+// 		var myDevice = new apns.Device(user.notification_key); //for token
+// 		var note = new apns.Notification();
 
-		console.log("iPhone notification start");
+// 		console.log("iPhone notification start");
 
-		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-		note.badge = 1;
-		note.sound = "ping.aiff";
-		note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-		note.payload = {'messageFrom': 'Caroline'};
-		note.device = myDevice;
+// 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+// 		note.badge = 1;
+// 		note.sound = "ping.aiff";
+// 		note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+// 		note.payload = {'messageFrom': 'Caroline'};
+// 		note.device = myDevice;
 
-		// apnConnection.pushNotification(note, myDevice);
-		apnConnection.sendNotification(note);
-		console.log("iphone notification finished");
-	}
-}
+// 		// apnConnection.pushNotification(note, myDevice);
+// 		apnConnection.sendNotification(note);
+// 		console.log("iphone notification finished");
+// 	}
+// }
 
 // Function for signin API
 var checkPass = function(res, err, user, password, uuid) {

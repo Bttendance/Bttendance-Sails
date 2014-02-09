@@ -27,6 +27,7 @@ module.exports = {
 	validate: function(req, res) {
 		res.contentType('application/json');
 		var serial = req.param('serial');
+		var school_id = req.param('school_id');
 
 		if (serial != 'welcome' && serial != 'Welcome') {
 			console.log("UserController : Wrong Serial : " + serial);
@@ -37,5 +38,10 @@ module.exports = {
 		}
 
 	},
+
+	request: function(req, res) {
+		res.contentType('application/json');
+		var email = req.param('email');
+	}
   
 };

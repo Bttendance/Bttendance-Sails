@@ -20,22 +20,15 @@ module.exports = {
       required: true
     },
 
-    // whether this course is onGoing
-  	onGoing: {
-  		type: 'boolean',
-  		defaultsTo: true,
-  		required: true
-  	},
-
     // has one School
     school: {
       type: 'integer',
       required: true
     },
 
-    // has one Professor
-    professor: {
-      type: 'integer',
+    // has many Professor
+    professors: {
+      type: 'array',
       required: true
     },
     
@@ -49,8 +42,11 @@ module.exports = {
       type: 'array'
     },
 
-    professor_name: 'string',
+    // has many Professor Names
+    professor_names: 'array',
+
     school_name: 'string',
+
     attdCheckedAt: 'string'
     
   },
@@ -65,8 +61,10 @@ module.exports = {
         username: values.username
       }).done(function(err, user) {
         if (!err && user) {
-          values.professor = user.id;
-          values.professor_name = user.full_name;
+          values.professors = new Array();
+          values.professor_names = new Array();
+          values.professor.push(user.id);
+          values.professor_names.push(user.full_name);
           next();
         } else
           return next(err);
@@ -89,15 +87,16 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
+    
     // add new course to user
-    User.findOne(values.professor).done(function(err, user) {
+    User.findOne(values.professors[0]).done(function(err, user) {
       // return err
       if (err) return next(err);
       // make new array
-      if (!user.courses) user.courses = new Array();
+      if (!user.supervising_courses) user.supervising_courses = new Array();
       // add course to user who created this course
-      if (user.courses.indexOf(values.id) == -1)
-        user.courses.push(values.id);
+      if (user.supervising_courses.indexOf(values.id) == -1)
+        user.supervising_courses.push(values.id);
       // save new values
       user.save(function(err) {
         if (err) return next(err);

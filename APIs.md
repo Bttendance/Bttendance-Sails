@@ -1,6 +1,5 @@
 API
 =================
-API Schema for Bttendance
 ###User
 ####post : api/user/signup => UserJSON
     full_name
@@ -9,7 +8,6 @@ API Schema for Bttendance
     password
     device_type
     device_uuid
-    type
 ####get : api/user/signin => UserJSON
     username or email
     password
@@ -34,33 +32,16 @@ API Schema for Bttendance
     password
     device_uuid
     full_name
-####put : api/user/join/school => UserJSON
-    username
-    password
-    school_id
-####put : api/user/join/course => UserJSON
-    username
-    password
-    course_id
 ####get : api/user/schools => SchoolJSON LIST
     username
     password
 ####get : api/user/courses => CourseJSON LIST
     username
     password
-####get : api/user/joinable/courses => CourseJSON LIST
+####put : api/user/attend/course => UserJSON
     username
     password
-####get : api/user/feed => PostJSON LIST
-    username
-    password
-    page
-###School
-####post : api/school/create => SchoolJSON
-    username
-    password
-    name
-    website
+    course_id
 ###Course
 ####post : api/course/create => CourseJSON
     username
@@ -98,12 +79,6 @@ API Schema for Bttendance
     password
     post_id
     uuid
-####put : api/post/attendance/current/location => PostJSON
-    username
-    password
-    post_id
-    latitude
-    longitude
 ####put : api/post/attendance/check/manually => PostJSON
     username
     password
@@ -117,3 +92,6 @@ API Schema for Bttendance
 ###Serial
 ####get : api/serial/validate => ValidateJSON
     serial
+    school_id
+####post : api/serial/request => ValidateJSON
+    email

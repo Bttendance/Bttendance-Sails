@@ -93,20 +93,11 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 ##Developer
 
 ####The Finest Artist
-- Email : contact@thefinestartist.com
+- Email : thefinestartist@bttendance.com
 - Phone : +82-10-7755-4400
 
 ####Samchon
-- Email : ysgenius88@gmail.com
+- Email : samchon@bttendance.com
 - Phone : +82-10-8831-0006
 
-####Copyright 2013 @Utopia Corporation
-
-
-=================
-####We Need MemChached DB : http://aws.amazon.com/elasticache/
-####Vingle is using Heroku Postgres & Memcached
-####We Need to monitor our app : https://newrelic.com
-
-
-
+####Copyright 2014 @Bttendnace Corporation

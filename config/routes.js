@@ -53,11 +53,6 @@ module.exports.routes = {
     action: 'create'
   },
 
-  // 'put /api/user/update/type': {
-  //   controller: 'user',
-  //   action: 'update_type'
-  // },
-
   'put /api/user/update/notification_key': {
     controller: 'user',
     action: 'update_notification_key'
@@ -78,19 +73,9 @@ module.exports.routes = {
     action: 'update_email'
   },
 
-  'put /api/user/join/school': {
+  'put /api/user/attend/course': {
     controller: 'user',
-    action: 'join_school'
-  },
-
-  'put /api/user/join/course': {
-    controller: 'user',
-    action: 'join_course'
-  },
-
-  'get /api/user/joinable/courses': {
-    controller: 'user',
-    action: 'joinable_courses'
+    action: 'attend_course'
   },
 
   'post /api/post/attendance/start': {
@@ -101,11 +86,6 @@ module.exports.routes = {
   'put /api/post/attendance/found/device': {
     controller: 'post',
     action: 'attendance_found_device'
-  },
-
-  'put /api/post/attendance/current/location': {
-    controller: 'post',
-    action: 'attendance_current_location'
   },
 
   'put /api/post/attendance/check/manually': {
