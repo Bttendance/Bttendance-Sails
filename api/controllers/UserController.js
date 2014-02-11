@@ -21,12 +21,6 @@ var apn = require('apn');
 
 module.exports = {
 
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to UserController)
-   */
-  _config: {},
-
 	signin: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
@@ -223,6 +217,61 @@ module.exports = {
 		});
 	},
 
+	feed: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var page = req.param('page');
+		
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			// Error handling
+			if (err) {
+				console.log(err);
+		    return res.send(500, { message: "User Find Error" });
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
+		  // Found User!
+		  } else {
+		  	var total_courses = new Array();
+		  	for (var i = 0; i < user.lecturing_courses.length; i++)
+		  		total_courses.push(user.lecturing_courses[i]);
+		  	for (var i = 0; i < user.attending_courses.length; i++)
+		  		total_courses.push(user.attending_courses[i]);
+
+	  		Course.find({
+	  			where: {
+	  				or: getConditionFromIDs(total_courses)
+	  			}
+	  		}).done(function(err, courses) {
+	  			if (!err && courses) {
+	  				var postsArray = new Array();
+	  				for (var index in courses)
+	  					postsArray = postsArray.concat(courses[index].posts);
+
+				  	var postsObject = new Array();
+			  		Post.find({
+			  			where: {
+			  				or: getConditionFromIDs(postsArray)
+			  			}
+			  		}).sort('id DESC').done(function(err, posts) {
+			  			if (!err && posts) {
+			  				for (var index in posts)
+			  					postsObject.push(posts[index]);
+								var postsJSON = JSON.stringify(postsObject);
+						  	return res.send(postsJSON);
+			  			} else
+				    		return res.send(JSON.stringify(new Array()));
+			  		});
+
+	  			} else
+		    		return res.send(404, { message: "No School Found Error" });
+	  		});
+		  }
+		});
+	},
+
 	courses: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
@@ -240,9 +289,9 @@ module.exports = {
 		  // Found User!
 		  } else {
 		  	var total_courses = new Array();
-		  	for (int i = 0; i < user.lecturing_courses.length; i++)
+		  	for (var i = 0; i < user.lecturing_courses.length; i++)
 		  		total_courses.push(user.lecturing_courses[i]);
-		  	for (int i = 0; i < user.attending_courses.length; i++)
+		  	for (var i = 0; i < user.attending_courses.length; i++)
 		  		total_courses.push(user.attending_courses[i]);
 
 	  		Course.find({
@@ -257,7 +306,6 @@ module.exports = {
 						var coursesJSON = JSON.stringify(coursesObject);
 				  	return res.send(coursesJSON);
 	  			} else
-		    		// return res.send(404, { message: "No Course Found Error" });
 		    		return res.send(JSON.stringify(new Array()));
 	  		});
 		  }
@@ -281,9 +329,9 @@ module.exports = {
 		  // Found User!
 		  } else {
 		  	var total_schools = new Array();
-		  	for (int i = 0; i < user.employed_schools.length; i++)
+		  	for (var i = 0; i < user.employed_schools.length; i++)
 		  		total_schools.push(user.employed_schools[i]);
-		  	for (int i = 0; i < user.enrolled_schools.length; i++)
+		  	for (var i = 0; i < user.enrolled_schools.length; i++)
 		  		total_schools.push(user.enrolled_schools[i]);
 
 	  		School.find({
@@ -298,7 +346,7 @@ module.exports = {
 						var schoolsJSON = JSON.stringify(schoolsObject);
 				  	return res.send(schoolsJSON);
 	  			} else
-		    		return res.send(404, { message: "No School Found Error" });
+		    		return res.send(JSON.stringify(new Array()));
 	  		});
 		  }
 		});
@@ -321,22 +369,11 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 		  // Found User!
 		  } else {
-		  	if (!user.courses) user.courses = new Array();
+		  	if (!user.attending_courses) user.attending_courses = new Array();
 
       	// add course if user doesn't have course
-		  	if (user.courses.indexOf(Number(course_id)) == -1)
-			  	user.courses.push(Number(course_id));
-      	// save new values
-	      user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-	      });
+		  	if (user.attending_courses.indexOf(Number(course_id)) == -1)
+			  	user.attending_courses.push(Number(course_id));
 
 	      Course.findOne(Number(course_id)).done(function(err, course) {
 	      	if (!err && course) {
@@ -345,6 +382,21 @@ module.exports = {
 	      		if (course.students.indexOf(user.id) == -1)
 	      			course.students.push(user.id);
 	      		course.save(function(err) {});
+
+	      		if (user.enrolled_schools.indexOf(Number(course.school)) == -1)
+	      			user.enrolled_schools.push(Number(course.school));
+	      		
+		      	// save new values
+			      user.save(function(err) {
+							// Error handling
+							if (err) {
+								console.log(err);
+						    return res.send(500, { message: "User Save Error" });
+						  }
+					  	// return UserJSON
+							var userJSON = JSON.stringify(user);
+					  	return res.send(userJSON);
+			      });
 	      	}
 	      });
 		  }
@@ -438,55 +490,6 @@ module.exports = {
 	// 				var userJSON = JSON.stringify(user);
 	// 		  	return res.send(userJSON);
 	//       });
-	// 	  }
-	// 	});
-	// },
-
-	// feed: function(req, res) {
-	// 	res.contentType('application/json');
-	// 	var username = req.param('username');
-	// 	var page = req.param('page');
-		
-	// 	User.findOne({
-	// 		username: username
-	// 	}).done(function(err, user) {
-	// 		// Error handling
-	// 		if (err) {
-	// 			console.log(err);
-	// 	    return res.send(500, { message: "User Find Error" });
-	// 	  // No User found
-	// 	  } else if (!user) {
-	// 	    return res.send(404, { message: "No User Found Error" });
-	// 	  // Found User!
-	// 	  } else {
-	//   		Course.find({
-	//   			where: {
-	//   				or: getConditionFromIDs(user.courses)
-	//   			}
-	//   		}).done(function(err, courses) {
-	//   			if (!err && courses) {
-	//   				var postsArray = new Array();
-	//   				for (var index in courses)
-	//   					postsArray = postsArray.concat(courses[index].posts);
-
-	// 			  	var postsObject = new Array();
-	// 		  		Post.find({
-	// 		  			where: {
-	// 		  				or: getConditionFromIDs(postsArray)
-	// 		  			}
-	// 		  		}).sort('id DESC').done(function(err, posts) {
-	// 		  			if (!err && posts) {
-	// 		  				for (var index in posts)
-	// 		  					postsObject.push(posts[index]);
-	// 							var postsJSON = JSON.stringify(postsObject);
-	// 					  	return res.send(postsJSON);
-	// 		  			} else
-	// 			    		return res.send(JSON.stringify(new Array()));
-	// 		  		});
-
-	//   			} else
-	// 	    		return res.send(404, { message: "No School Found Error" });
-	//   		});
 	// 	  }
 	// 	});
 	// },

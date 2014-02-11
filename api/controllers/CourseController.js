@@ -21,59 +21,23 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
-		var cache_flag = "lastestfeeds_" + course_id
-
-		var memjs = MemJS.create();
-
 		Course.findOne(Number(course_id)).done(function(err, course) {
-			if (err || !course) {
+			if (err || !course)
     		return res.send(404, { message: "No Course Found Error" });
-			}
 
   		Post.find({
   			where: {
   				or: getConditionFromIDs(course.posts)
   			}
   		}).sort('id DESC').done(function(err, posts) {
-  			if (err || !posts) {
+  			if (err || !posts)
   				return res.send(404, { message: "No Post Found Error" });
-  			}
 
-  			memjs.get(cache_flag, function(err, feeds) {//feed cached
-					if(feeds){//if there is cached feed data, return cached data
-						console.log(feeds.length);
-						var temp = JSON.stringify(posts);
-						console.log(temp.length);
-						if(temp.length == feeds.length){
-							console.log("hit cache");
-							return res.send(feeds);
-						}
-						else{
-							console.log("hit but data has been changed");
-							console.log("set data in cache");
-							var postsObject = new Array();
-							for (var index in posts)
-								postsObject.push(posts[index]);
-							var postsJSON = JSON.stringify(postsObject);
-							console.log("set data in cache");
-							memjs.set(cache_flag,postsJSON);
-							console.log(postsJSON);
-					  	return res.send(postsJSON);
-						}
-					}
-					else{
-						//else, no data set yet
-						console.log("miss!!");
-						var postsObject = new Array();
-						for (var index in posts)
-							postsObject.push(posts[index]);
-						var postsJSON = JSON.stringify(postsObject);
-						console.log("set data in cache");
-						memjs.set(cache_flag,postsJSON);
-						console.log(postsJSON);
-				  	return res.send(postsJSON);
-					}
-				});
+		  	var postsObject = new Array();
+				for (var index in posts)
+					postsObject.push(posts[index]);
+				var postsJSON = JSON.stringify(postsObject);
+		  	return res.send(postsJSON);
 
   		});
 		});

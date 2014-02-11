@@ -16,7 +16,7 @@ module.exports.adapters = {
 
   // If you leave the adapter config unspecified 
   // in a model definition, 'default' will be used.
-  'default': 'herokupostgresql',
+  'default': process.env.NODE_ENV || 'development',
 
   // In-memory adapter for DEVELOPMENT ONLY
   memory: {
@@ -31,13 +31,25 @@ module.exports.adapters = {
 
   // Heroku Postgre SQL has connection limit up to 500
   // psql "dbname=d8n4i2f6q5clp2 host=ec2-54-225-88-13.compute-1.amazonaws.com user=u7nsa3j4q3ng05 password=pf3koh48m9br384km90u7kng962 port=5642 sslmode=require"
-  herokupostgresql: {
+  production: {
     module   : 'sails-postgresql',
     host     : 'ec2-54-225-88-13.compute-1.amazonaws.com',
     port     : 5642,
     user     : 'u7nsa3j4q3ng05',
     password : 'pf3koh48m9br384km90u7kng962',
     database : 'd8n4i2f6q5clp2',
+    ssl      : true
+  },
+
+  // Heroku Postgre SQL has connection limit up to 500
+  // psql "dbname=dc7df0gak3bkvh host=ec2-54-197-241-97.compute-1.amazonaws.com user=mpurikshxalrea password=8n2N7DlIeC5CaZyQMHuk4C8f1s port=5432 sslmode=require"
+  development: {
+    module   : 'sails-postgresql',
+    host     : 'ec2-54-197-241-97.compute-1.amazonaws.com',
+    port     : 5432,
+    user     : 'mpurikshxalrea',
+    password : '8n2N7DlIeC5CaZyQMHuk4C8f1s',
+    database : 'dc7df0gak3bkvh',
     ssl      : true
   }
 

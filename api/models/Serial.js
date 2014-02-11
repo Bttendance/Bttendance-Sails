@@ -9,12 +9,10 @@
 module.exports = {
 
   attributes: {
-  	
-  	/* e.g.
-  	nickname: 'string'
-  	*/
+
     school: 'integer',
     key: 'string'
+
   }
 
 };

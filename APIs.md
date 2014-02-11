@@ -32,16 +32,21 @@ API
     password
     device_uuid
     full_name
-####get : api/user/schools => SchoolJSON LIST
+####get : api/user/feed => PostJSON LIST
     username
     password
+    page
 ####get : api/user/courses => CourseJSON LIST
+    username
+    password
+####get : api/user/schools => SchoolJSON LIST
     username
     password
 ####put : api/user/attend/course => UserJSON
     username
     password
     course_id
+
 ###Course
 ####post : api/course/create => CourseJSON
     username
@@ -62,6 +67,7 @@ API
     username
     password
     course_id
+
 ###Post
 ####post : api/post/create => PostJSON
     username
@@ -89,9 +95,9 @@ API
     password
     course_id
     message
+
 ###Serial
 ####get : api/serial/validate => ValidateJSON
-    serial
-    school_id
+    serials
 ####post : api/serial/request => ValidateJSON
     email
