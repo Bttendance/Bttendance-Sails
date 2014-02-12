@@ -225,50 +225,42 @@ module.exports = {
 		User.findOne({
 			username: username
 		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
+			if (err || !user) 
 		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-		  	var total_courses = new Array();
-		  	for (var i = 0; i < user.lecturing_courses.length; i++)
-		  		total_courses.push(user.lecturing_courses[i]);
-		  	for (var i = 0; i < user.attending_courses.length; i++)
-		  		total_courses.push(user.attending_courses[i]);
 
-	  		Course.find({
+	  	var total_courses = new Array();
+	  	for (var i = 0; i < user.supervising_courses.length; i++)
+	  		total_courses.push(user.supervising_courses[i]);
+	  	for (var i = 0; i < user.attending_courses.length; i++)
+	  		total_courses.push(user.attending_courses[i]);
+
+  		Course.find({
+  			where: {
+  				or: getConditionFromIDs(total_courses)
+  			}
+  		}).done(function(err, courses) {
+  			if (err || !courses)
+	    		return res.send(404, { message: "No Course Found Error" });
+
+				var postsArray = new Array();
+				for (var index in courses)
+					postsArray = postsArray.concat(courses[index].posts);
+
+		  	var postsObject = new Array();
+	  		Post.find({
 	  			where: {
-	  				or: getConditionFromIDs(total_courses)
+	  				or: getConditionFromIDs(postsArray)
 	  			}
-	  		}).done(function(err, courses) {
-	  			if (!err && courses) {
-	  				var postsArray = new Array();
-	  				for (var index in courses)
-	  					postsArray = postsArray.concat(courses[index].posts);
-
-				  	var postsObject = new Array();
-			  		Post.find({
-			  			where: {
-			  				or: getConditionFromIDs(postsArray)
-			  			}
-			  		}).sort('id DESC').done(function(err, posts) {
-			  			if (!err && posts) {
-			  				for (var index in posts)
-			  					postsObject.push(posts[index]);
-								var postsJSON = JSON.stringify(postsObject);
-						  	return res.send(postsJSON);
-			  			} else
-				    		return res.send(JSON.stringify(new Array()));
-			  		});
-
+	  		}).sort('id DESC').done(function(err, posts) {
+	  			if (!err && posts) {
+	  				for (var index in posts)
+	  					postsObject.push(posts[index]);
+						var postsJSON = JSON.stringify(postsObject);
+				  	return res.send(postsJSON);
 	  			} else
-		    		return res.send(404, { message: "No School Found Error" });
+		    		return res.send(JSON.stringify(new Array()));
 	  		});
-		  }
+  		});
 		});
 	},
 
@@ -289,8 +281,8 @@ module.exports = {
 		  // Found User!
 		  } else {
 		  	var total_courses = new Array();
-		  	for (var i = 0; i < user.lecturing_courses.length; i++)
-		  		total_courses.push(user.lecturing_courses[i]);
+		  	for (var i = 0; i < user.supervising_courses.length; i++)
+		  		total_courses.push(user.supervising_courses[i]);
 		  	for (var i = 0; i < user.attending_courses.length; i++)
 		  		total_courses.push(user.attending_courses[i]);
 
@@ -385,7 +377,7 @@ module.exports = {
 
 	      		if (user.enrolled_schools.indexOf(Number(course.school)) == -1)
 	      			user.enrolled_schools.push(Number(course.school));
-	      		
+
 		      	// save new values
 			      user.save(function(err) {
 							// Error handling
