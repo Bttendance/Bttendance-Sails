@@ -50,6 +50,8 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.courses = new Array();
     values.serials = new Array();
+    values.professors = new Array();
+    values.students = new Array();
     next();
   }
 

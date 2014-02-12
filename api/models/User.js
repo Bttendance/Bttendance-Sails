@@ -7,7 +7,6 @@
  */
 
 var passwordHash = require('password-hash');
-var passport = require('passport');
 
 module.exports = {
 
