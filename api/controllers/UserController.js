@@ -413,7 +413,7 @@ module.exports = {
 
 	    	var school_serial = new Array();
 	    	school_serial.push(Number(school_id));
-	    	school_serial.push(serial);
+	    	school_serial.push(serial.key);
 			  user.employed_schools.push(school_serial);
 
       	// save new values
