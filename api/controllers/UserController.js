@@ -375,17 +375,10 @@ module.exports = {
 	      			course.students.push(user.id);
 	      		course.save(function(err) {});
 
-	      		if (user.enrolled_schools.indexOf(Number(course.school)) == -1)
-	      			user.enrolled_schools.push(Number(course.school));
-
-		      	// save new values
 			      user.save(function(err) {
-							// Error handling
-							if (err) {
-								console.log(err);
+							if (err)
 						    return res.send(500, { message: "User Save Error" });
-						  }
-					  	// return UserJSON
+
 							var userJSON = JSON.stringify(user);
 					  	return res.send(userJSON);
 			      });
@@ -418,9 +411,10 @@ module.exports = {
 
 		  	if (!user.employed_schools) user.employed_schools = new Array();
 
-	    	// add course if user doesn't have course
-		  	if (user.employed_schools.indexOf(Number(school_id)) == -1)
-			  	user.employed_schools.push(Number(school_id));
+	    	var school_serial = new Array();
+	    	school_serial.push(Number(school_id));
+	    	school_serial.push(serial);
+			  user.employed_schools.push(school_serial);
 
       	// save new values
 	      user.save(function(err) {
@@ -431,6 +425,36 @@ module.exports = {
 			  	return res.send(userJSON);
 	      });
 	  	});
+		});
+	},
+	
+	enroll_school: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var school_id = req.param('school_id');
+		var identity = req.param('identity');
+
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
+
+	  	if (!user.enrolled_schools) user.enrolled_schools = new Array();
+
+    	var school_identity = new Array();
+    	school_identity.push(Number(school_id));
+    	school_identity.push(identity);
+		  user.enrolled_schools.push(school_identity);
+
+    	// save new values
+      user.save(function(err) {
+				if (err)
+			    return res.send(500, { message: "User Save Error" });
+
+				var userJSON = JSON.stringify(user);
+		  	return res.send(userJSON);
+      });
 		});
 	}
 };

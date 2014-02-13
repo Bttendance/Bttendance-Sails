@@ -42,7 +42,8 @@ module.exports.policies = {
     update_full_name : ['isUser', 'hasDevice'],
     update_email : ['isUser', 'hasDevice'],
     feed : 'isUser',
-    employ_school : 'isUser'
+    employ_school : 'isUser',
+    enroll_school : 'isUser'
   },
 
   CourseController: {
