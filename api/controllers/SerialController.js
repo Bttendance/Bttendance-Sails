@@ -89,8 +89,8 @@ module.exports = {
 		  	if (!school.serials) user.serials = new Array();
 
 	    	// add course if user doesn't have course
-		  	if (user.serials.indexOf(Number(serial.id)) == -1)
-			  	user.serials.push(Number(serial.id));
+		  	if (school.serials.indexOf(Number(serial.id)) == -1)
+			  	school.serials.push(Number(serial.id));
 
 	      school.save(function(err) {
 					if (err)
