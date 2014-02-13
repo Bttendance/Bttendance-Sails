@@ -394,144 +394,45 @@ module.exports = {
 		  }
 		});
 	},
+	
+	employ_school: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+		var school_id = req.param('school_id');
+		var serial = req.param('serial');
 
-	// joinable_courses: function(req, res) {
-	// 	res.contentType('application/json');
-	// 	var username = req.param('username');
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
 
-	// 	User.findOne({
-	// 		username: username
-	// 	}).done(function(err, user) {
-	// 		// Error handling
-	// 		if (err) {
-	// 			console.log(err);
-	// 	    return res.send(500, { message: "User Find Error" });
-	// 	  // No User found
-	// 	  } else if (!user) {
-	// 	    return res.send(404, { message: "No User Found Error" });
-	// 	  // Found User!
-	// 	  } else {
-	//   		School.find({
-	//   			where: {
-	//   				or: getConditionFromIDs(user.schools)
-	//   			}
-	//   		}).done(function(err, schools) {
-	//   			if (!err && schools) {
-	//   				var coursesArray = new Array();
-	//   				for (var index in schools)
-	//   					coursesArray = coursesArray.concat(schools[index].courses);
+	  	if (!user.employed_schools) user.employed_schools = new Array();
 
-	// 			  	var coursesObject = new Array();
-	// 		  		Course.find({
-	// 		  			where: {
-	// 		  				or: getConditionFromIDs(coursesArray)
-	// 		  			}
-	// 		  		}).done(function(err, courses) {
-	// 		  			if (!err && courses) {
-	// 		  				for (var index in courses)
-	// 		  					coursesObject.push(courses[index]);
-	// 							var coursesJSON = JSON.stringify(coursesObject);
-	// 					  	return res.send(coursesJSON);
-	// 		  			} else
-	// 			    		// return res.send(404, { message: "No Course Found Error" });
-	// 			    		return res.send(JSON.stringify(new Array()));
-	// 		  		});
+	  	Serial.findOne({
+	  		key: serial
+	  	}).done(function(err, serial) {
+	  		if (err || !serial)
+		    	return res.send(500, { message: "Serial Find Error" });
 
-	//   			} else
-	// 	    		return res.send(404, { message: "No School Found Error" });
-	//   		});
-	// 	  }
-	// 	});
-	// },
+		    if (serial.school != school_id)
+		    	return res.send(500, { message: "School doesn't match Error" });
 
-	// join_school: function(req, res) {
-	// 	res.contentType('application/json');
-	// 	var username = req.param('username');
-	// 	var school_id = req.param('school_id');
-		
-	// 	User.findOne({
-	// 		username: username
-	// 	}).done(function(err, user) {
-	// 		// Error handling
-	// 		if (err) {
-	// 			console.log(err);
-	// 	    return res.send(500, { message: "User Find Error" });
+	    	// add course if user doesn't have course
+		  	if (user.employed_schools.indexOf(Number(school_id)) == -1)
+			  	user.employed_schools.push(Number(school_id));
 
-	// 	  // No User found
-	// 	  } else if (!user) {
-	// 	    return res.send(404, { message: "No User Found Error" });
+      	// save new values
+	      user.save(function(err) {
+					if (err)
+				    return res.send(500, { message: "User Save Error" });
 
-	// 	  // Found User!
-	// 	  } else {
-	// 	  	if (!user.schools) user.schools = new Array();
-
-	// 	  	var school = parseInt(school_id);
-	// 	  	if (isNaN(school)) return res.send(500, { message: "School id is NaN Error" });
-
- //      	// add school if user doesn't have school
-	// 	  	if (user.schools.indexOf(school) == -1)
-	// 		  	user.schools.push(school);
- //      	// save new values
-	//       user.save(function(err) {
-	// 				// Error handling
-	// 				if (err) {
-	// 					console.log(err);
-	// 			    return res.send(500, { message: "User Save Error" });
-	// 			  }
-	// 		  	// return UserJSON
-	// 				var userJSON = JSON.stringify(user);
-	// 		  	return res.send(userJSON);
-	//       });
-	// 	  }
-	// 	});
-	// },
-
-	// notification: function(req, res) {
-	// 	res.contentType('application/json');
-	// 	var username = req.param('username');
-		
-	// 	User.findOne({
-	// 		username: username
-	// 	}).done(function(err, user) {
-	// 		// Error handling
-	// 		if (err) {
-	// 			console.log(err);
-	// 	    return res.send(500, { message: "User Find Error" });
-	// 	  // No User found
-	// 	  } else if (!user) {
-	// 	    return res.send(404, { message: "No User Found Error" });
-	// 	  // Found User!
-	// 	  } else {
-	// 	  	sendNotification(user, "Hello", "World");
-	// 	  }
-	// 	});
-	// },
-
-	// emails: function(req, res) {
-	// 	res.contentType('application/json');
-
-	// 	User.find().sort('id ASC').done(function(err, users) {
-
-	//   	var postsObject = new Array();
-	// 		for (var index in users) {
-	// 			delete users[index]["password"];
-	// 			delete users[index]["createdAt"];
-	// 			delete users[index]["updatedAt"];
-	// 			delete users[index]["id"];
-	// 			delete users[index]["courses"];
-	// 			delete users[index]["schools"];
-	// 			delete users[index]["profile_image"];
-	// 			delete users[index]["notification_key"];
-	// 			delete users[index]["device_uuid"];
-	// 			delete users[index]["device_type"];
-	// 			delete users[index]["username"];
-	// 			delete users[index]["type"];
-	// 			postsObject.push(users[index]);
-	// 		}
-	// 		var postsJSON = JSON.stringify(postsObject);
-	//   	return res.send(postsJSON);
-	// 	});
-	// }
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+	      });
+	  	});
+		});
+	}
 };
 
 // Function to get id list
@@ -544,68 +445,6 @@ var getConditionFromIDs = function(array) {
 	}
 	return returnArray;
 }
-
-// var sendNotification = function(user, title, message) {
-// 	if (!user.notification_key)
-// 		return;
-
-// 	console.log("start notification");
-// 	if (user.device_type == 'android') {
-// 		// or with object values
-// 		var message = new gcm.Message({
-// 		    collapseKey: 'bttendance',
-// 		    delayWhileIdle: true,
-// 		    timeToLive: 3,
-// 		    data: {
-// 		    	title: title,
-// 		      message: message
-// 		    }
-// 		});
-
-// 		var registrationIds = [];
-// 		registrationIds.push(user.notification_key);
-
-// 		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
-// 		sender.send(message, registrationIds, 4, function (err, result) {
-// 			if (err)
-// 				console.log(err);
-// 			else
-//     		console.log(result);
-// 		});
-
-// 	} else if (user.device_type == 'iphone') {
-// 		var apns = require('apn');
-
-// 		var options = { cert: "./Certification/aps_development.pem",
-// 										certData: null,
-// 										key: "./Certification/APN_Key.pem",
-// 										keyData: null,
-// 										passphrase: "bttendanceutopia",
-// 										ca: null,
-// 										gateway: "gateway.sandbox.push.apple.com",
-// 										port: 2195,
-// 										enhanced: true,
-// 										errorCallback: undefined,
-// 										cacheLength: 100 };
-
-//     var apnConnection = new apns.Connection(options);
-// 		var myDevice = new apns.Device(user.notification_key); //for token
-// 		var note = new apns.Notification();
-
-// 		console.log("iPhone notification start");
-
-// 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-// 		note.badge = 1;
-// 		note.sound = "ping.aiff";
-// 		note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-// 		note.payload = {'messageFrom': 'Caroline'};
-// 		note.device = myDevice;
-
-// 		// apnConnection.pushNotification(note, myDevice);
-// 		apnConnection.sendNotification(note);
-// 		console.log("iphone notification finished");
-// 	}
-// }
 
 // Function for signin API
 var checkPass = function(res, err, user, password, uuid) {
@@ -626,10 +465,6 @@ var checkPass = function(res, err, user, password, uuid) {
 	  return res.send(406, { message: "UUID doesn't match Error" });
   } else {
 		var userJSON = JSON.stringify(user);
-		// Add Password
-		// var userObj = JSON.parse(userJSON);
-		// userObj.password = user.password;
-		// userJSON = JSON.stringify(userObj);
   	return res.send(userJSON);
   }
 }

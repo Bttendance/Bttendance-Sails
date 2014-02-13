@@ -78,6 +78,11 @@ module.exports.routes = {
     action: 'attend_course'
   },
 
+  'put /api/user/employ/school': {
+    controller: 'user',
+    action: 'employ_school'
+  },
+
   'post /api/post/attendance/start': {
     controller: 'post',
     action: 'attendance_start'

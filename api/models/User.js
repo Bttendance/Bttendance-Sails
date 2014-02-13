@@ -77,12 +77,6 @@ module.exports = {
     // has many Enrolled Schools (id, student_id or phone_number)
     enrolled_schools: {
       type: 'array'
-    },
-
-    toJSON: function() {
-      var obj = this.toObject();
-      // delete obj.password;
-      return obj;
     }
   },
 

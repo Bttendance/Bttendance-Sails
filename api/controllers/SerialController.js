@@ -72,7 +72,7 @@ module.exports = {
 			// setup e-mail data with unicode symbols
 			var mailOptions = {
 			    from: "Bttendance<no-reply@bttendance.com>", // sender address
-			    to: "thefinestartist@bttendance.com, heehwan.park@bttendance.com, " + email, // list of receivers
+			    to: email, // list of receivers
 			    subject: "Welcome to Bttendance", // Subject line
 			    text: "Your serial code is " + serial.key, // plaintext body
 			}
