@@ -57,11 +57,6 @@ This app uses "Sails.js" as framework and "Java Script" as language.
         "update": "update message"
     }
 
-####Validation Json
-    { 
-        "validate": boolean
-    }
-
 ####Notification Json
     { 
         "title" : "title",

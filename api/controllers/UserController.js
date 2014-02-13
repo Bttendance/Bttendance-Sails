@@ -407,8 +407,6 @@ module.exports = {
 			if (err || !user)
 		    return res.send(500, { message: "User Find Error" });
 
-	  	if (!user.employed_schools) user.employed_schools = new Array();
-
 	  	Serial.findOne({
 	  		key: serial
 	  	}).done(function(err, serial) {
@@ -417,6 +415,8 @@ module.exports = {
 
 		    if (serial.school != school_id)
 		    	return res.send(500, { message: "School doesn't match Error" });
+
+		  	if (!user.employed_schools) user.employed_schools = new Array();
 
 	    	// add course if user doesn't have course
 		  	if (user.employed_schools.indexOf(Number(school_id)) == -1)

@@ -85,10 +85,22 @@ module.exports = {
 			    console.log("Message sent: " + response.message);
 			});
 
-	  	// return SerialJSON
-			var serialJSON = JSON.stringify(serial);
-	  	return res.send(serialJSON);
+			School.findOne(serial.school).done(function(err, school) {
+		  	if (!school.serials) user.serials = new Array();
 
+	    	// add course if user doesn't have course
+		  	if (user.serials.indexOf(Number(serial.id)) == -1)
+			  	user.serials.push(Number(serial.id));
+
+	      school.save(function(err) {
+					if (err)
+				    return res.send(500, { message: "School Save Error" });
+
+			  	// return SerialJSON
+					var serialJSON = JSON.stringify(serial);
+			  	return res.send(serialJSON);
+	      });
+			})
 		});
 	}
   
