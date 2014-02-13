@@ -45,3 +45,14 @@ module.exports = {
 		});
 	}
 };
+
+// Function to get id list
+var getConditionFromIDs = function(array) {
+	var returnArray = new Array();
+	for (var index in array) {
+		var idObject = [];
+		idObject["id"] = array[index];
+		returnArray.push(idObject);
+	}
+	return returnArray;
+}
