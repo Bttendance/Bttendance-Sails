@@ -7,7 +7,7 @@
         "sails": "0.9.8",
         "grunt": "0.4.1",
         "sails-disk": "0.9.3",
-        "sails-postgresql" : "0.9.6",
+        "sails-postgresql" : "0.9.7",
         "jade": "0.35.0",
         "optimist": "0.3.4",
         "password-hash": "1.2.1",
