@@ -78,7 +78,7 @@ module.exports = {
 			}
 
 			// send mail with defined transport object
-			smtpTransport.sendMail(mailOptions, function(error, response){
+			smtpTransport.sendMail(mailOptions, function(error, response) {
 			    if(error || !response)
 			      console.log(error);
 

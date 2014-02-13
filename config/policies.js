@@ -68,7 +68,9 @@ module.exports.policies = {
   SchoolController: {
   	create : true,
   	update : false,
-  	destroy : false
+  	destroy : false,
+    find : true,
+    all : ['isUser']
   }
 
   /*
