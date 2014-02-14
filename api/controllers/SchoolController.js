@@ -7,18 +7,6 @@
 
 module.exports = {
 
-	all: function(req, res) {
-		res.contentType('application/json');		
-
-		School.find().done(function(err, schools) {
-  			var schoolsObject = new Array();
-				for (var index in schools)
-					schoolsObject.push(schools[index]);
-				var schoolsJSON = JSON.stringify(schoolsObject);
-		  	return res.send(schoolsJSON);
-		});
-	},
-
 	courses: function(req, res) {
 		res.contentType('application/json');
 		var school_id = req.param('school_id');
