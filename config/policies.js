@@ -69,7 +69,8 @@ module.exports.policies = {
   	create : true,
   	update : false,
   	destroy : false,
-    find : true
+    find : true,
+    all : 'isUser'
   }
 
   /*
