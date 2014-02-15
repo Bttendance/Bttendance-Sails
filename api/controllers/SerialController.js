@@ -53,7 +53,7 @@ module.exports = {
 		var email = req.param('email');
 
 		Serial.create({
-		  school: 1
+		  school: 3
 		}).done(function(err, serial) {
 
 		  // Error handling
