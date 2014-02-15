@@ -47,7 +47,7 @@ module.exports.policies = {
   },
 
   CourseController: {
-  	create : ['isUser', 'hasSchool'],
+  	create : ['isUser'],
   	update : ['isProfessor', 'hasCourse'],
   	destroy : ['isProfessor', 'hasCourse'],
     feed : ['isUser', 'hasCourse'],
