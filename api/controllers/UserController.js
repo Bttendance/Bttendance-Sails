@@ -414,6 +414,13 @@ module.exports = {
 	    	var school_serial = new Array();
 	    	school_serial.push(Number(school_id));
 	    	school_serial.push(serial.key);
+
+	    	for (var i = 0; i < user.employed_schools.length; i++)
+	    		if (Number(school_id) == user.employed_schools[i][0]) {
+	    			user.employed_schools.splice(i, 1);
+	    			break;
+	    		}
+
 			  user.employed_schools.push(school_serial);
 
       	// save new values
