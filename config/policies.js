@@ -30,6 +30,7 @@ module.exports.policies = {
   	update : ['isUser', 'hasDevice'],
   	destroy : false,
   	signin : true,
+    auto_signin : ['isUser', 'hasDevice'],
   	signup : true,
   	update_type : ['isUser'],
   	join_school : ['isUser', 'isSchool'],

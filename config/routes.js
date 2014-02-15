@@ -48,6 +48,11 @@ module.exports.routes = {
     view: 'serial/request'
   },
 
+  'get /api/user/auto/signin': {
+    controller: 'user',
+    action: 'auto_signin'
+  },
+
   'post /api/user/signup': {
     controller: 'user',
     action: 'create'

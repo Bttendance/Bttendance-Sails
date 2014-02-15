@@ -21,6 +21,21 @@ var apn = require('apn');
 
 module.exports = {
 
+	auto_signin: function(req, res) {
+		res.contentType('application/json');
+		var username = req.param('username');
+
+		User.findOne({
+  		username: username
+		}).done(function(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
+		  
+			var userJSON = JSON.stringify(user);
+	  	return res.send(userJSON);
+		});
+	},
+
 	signin: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
