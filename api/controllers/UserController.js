@@ -322,9 +322,9 @@ module.exports = {
 		  } else {
 		  	var total_schools = new Array();
 		  	for (var i = 0; i < user.employed_schools.length; i++)
-		  		total_schools.push(user.employed_schools[i]);
+		  		total_schools.push(user.employed_schools[i][0]);
 		  	for (var i = 0; i < user.enrolled_schools.length; i++)
-		  		total_schools.push(user.enrolled_schools[i]);
+		  		total_schools.push(user.enrolled_schools[i][0]);
 
 	  		School.find({
 	  			where: {
