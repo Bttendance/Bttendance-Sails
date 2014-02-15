@@ -36,7 +36,7 @@ module.exports.policies = {
   	join_course : ['isUser', 'isCourse'],
     courses : ['isUser'],
     schools : ['isUser'],
-    joinable_courses : ['isStudent'],
+    joinable_courses : ['isUser'],
     update_notification_key : ['isUser', 'hasDevice'],
     update_profile_image : ['isUser', 'hasDevice'],
     update_full_name : ['isUser', 'hasDevice'],
@@ -48,21 +48,21 @@ module.exports.policies = {
 
   CourseController: {
   	create : ['isUser'],
-  	update : ['isProfessor', 'hasCourse'],
-  	destroy : ['isProfessor', 'hasCourse'],
-    feed : ['isUser', 'hasCourse'],
-    students : ['isUser', 'hasCourse'],
-    grades : ['isProfessor']
+  	update : ['isUser'],
+  	destroy : ['isUser'],
+    feed : ['isUser'],
+    students : ['isUser'],
+    grades : ['isUser']
   },
 
   PostController: {
-  	create : ['isProfessor', 'hasCourse'],
-  	update : ['isProfessor', 'hasPost'],
-  	destroy : ['isProfessor', 'hasPost'],
-    attendance_start : ['isProfessor', 'hasCourse'],
+  	create : ['isUser'],
+  	update : ['isUser', 'hasPost'],
+  	destroy : ['isUser', 'hasPost'],
+    attendance_start : ['isUser', 'hasCourse'],
     attendance_found_device : ['isUser', 'hasPost'],
-    attendance_check_manually : ['isProfessor', 'hasPost'],
-    create_notice : ['isProfessor', 'hasCourse']
+    attendance_check_manually : ['isUser', 'hasPost'],
+    create_notice : ['isUser', 'hasCourse']
   },
 
   SchoolController: {

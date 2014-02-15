@@ -63,7 +63,7 @@ module.exports = {
         if (!err && user) {
           values.professors = new Array();
           values.professor_names = new Array();
-          values.professor.push(user.id);
+          values.professors.push(user.id);
           values.professor_names.push(user.full_name);
           next();
         } else
