@@ -64,9 +64,8 @@ module.exports = {
         username: values.username
       }).done(function(err, user) {
         if (!err && user) {
-          values.professors = new Array();
-          values.professor_names = new Array();
-          values.professors.push(user.id);
+          values.managers = new Array();
+          values.managers.push(user.id);
           next();
         } else
           return next(err);
@@ -91,7 +90,7 @@ module.exports = {
   afterCreate: function(values, next) {
     
     // add new course to user
-    User.findOne(values.professors[0]).done(function(err, user) {
+    User.findOne(values.managers[0]).done(function(err, user) {
       // return err
       if (err) return next(err);
       // make new array
