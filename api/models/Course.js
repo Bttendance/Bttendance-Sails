@@ -34,7 +34,7 @@ module.exports = {
 
     // has many Professor Name
     professor_name: {
-      'String',
+      type: 'string',
       required: true
     },
     
@@ -47,7 +47,7 @@ module.exports = {
     posts: {
       type: 'array'
     },
-    
+
     school_name: 'string',
 
     attdCheckedAt: 'string'
