@@ -26,9 +26,15 @@ module.exports = {
       required: true
     },
 
-    // has many Professor
-    professors: {
+    // has many Managers
+    managers: {
       type: 'array',
+      required: true
+    },
+
+    // has many Professor Name
+    professor_name: {
+      'String',
       required: true
     },
     
@@ -41,10 +47,7 @@ module.exports = {
     posts: {
       type: 'array'
     },
-
-    // has many Professor Names
-    professor_names: 'array',
-
+    
     school_name: 'string',
 
     attdCheckedAt: 'string'
@@ -64,7 +67,6 @@ module.exports = {
           values.professors = new Array();
           values.professor_names = new Array();
           values.professors.push(user.id);
-          values.professor_names.push(user.full_name);
           next();
         } else
           return next(err);
