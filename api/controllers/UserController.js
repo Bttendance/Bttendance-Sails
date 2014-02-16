@@ -16,8 +16,7 @@
  */
 
 var passwordHash = require('password-hash');
-var gcm = require('node-gcm');
-var apn = require('apn');
+var nodemailer = require("nodemailer");
 
 module.exports = {
 
@@ -30,7 +29,7 @@ module.exports = {
 		}).done(function(err, user) {
 			if (err || !user)
 		    return res.send(500, { message: "User Find Error" });
-		  
+
 			var userJSON = JSON.stringify(user);
 	  	return res.send(userJSON);
 		});
@@ -69,6 +68,58 @@ module.exports = {
 					return checkPass(res, err, user, password, uuid);
 				});
 			}
+		});
+	},
+
+	forgot_password: function(req, res) {
+		res.contentType('application/json');
+		var email = req.param('email');
+
+		User.findOne({
+  		email: email
+		}).done(function(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
+
+		  var password = randomKey();
+		  user.password = passwordHash.generate(password);
+
+			// create reusable transport method (opens pool of SMTP connections)
+			var smtpTransport = nodemailer.createTransport("SMTP",{
+			    service: "Gmail",
+			    auth: {
+			        user: "no-reply@bttendance.com",
+			        pass: "N0n0r2ply"
+			    }
+			});
+
+			// setup e-mail data with unicode symbols
+			var mailOptions = {
+			    from: "Bttendance<no-reply@bttendance.com>", // sender address
+			    to: email, // list of receivers
+			    subject: "Bttendance Password Recovery", // Subject line
+			    text: "Your new password is " + password, // plaintext body
+			}
+
+			// send mail with defined transport object
+			smtpTransport.sendMail(mailOptions, function(error, response) {
+			    if(error || !response)
+			      console.log(error);
+
+			    console.log("Message sent: " + response.message);
+			});
+
+	  	user.save(function(err) {
+				// Error handling
+				if (err) {
+					console.log(err);
+			    return res.send(500, { message: "User Save Error" });
+			  }
+			  console.log("new password is : " + password);
+		  	// return UserJSON
+				var userJSON = JSON.stringify(user);
+		  	return res.send(userJSON);
+	  	});
 		});
 	},
 
@@ -513,5 +564,15 @@ var checkPass = function(res, err, user, password, uuid) {
 		var userJSON = JSON.stringify(user);
   	return res.send(userJSON);
   }
+}
+
+function randomKey() {
+    var text = "";
+    var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    for(var i=0; i < 7; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
 }
 

@@ -36,21 +36,14 @@ module.exports.routes = {
     view: 'home/index'
   },
 
-  '/terms': {
-    view: 'home/terms'
-  },
-
-  '/user/password/forgot': {
-    view: 'user/password/forgot'
-  },
-
-  '/serial/request': {
-    view: 'serial/request'
-  },
-
   'get /api/user/auto/signin': {
     controller: 'user',
     action: 'auto_signin'
+  },
+
+  'put /api/user/forgot/password': {
+    controller: 'user',
+    action: 'forgot_password'
   },
 
   'post /api/user/signup': {
