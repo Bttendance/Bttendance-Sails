@@ -357,14 +357,53 @@ module.exports = {
 	  				or: getConditionFromIDs(total_courses)
 	  			}
 	  		}).done(function(err, courses) {
-	  			if (!err && courses) {
+	  			if (err || !courses) 
+		    		return res.send(JSON.stringify(new Array()));
+
+		    	var post_ids = new Array();
+		    	for (var index in courses) 
+		    		for (var i = 0; i < courses[index].posts.length; i++)
+		    			if (post_ids.indexOf(courses[index].posts[i]) == -1)
+		    				post_ids.push(courses[index].posts[i]);
+
+		    	Post.find()
+		  		.where({ or: getConditionFromIDs(post_ids) })
+		  		.sort('id DESC')
+		  		.done(function(err, posts) {
+		  			if (err)
+		    			return res.send(JSON.stringify(new Array()));
+
+				  	var postsObject = new Array();
+						for (var index in posts) {
+							if (posts[index].type == "attendance")
+								postsObject.push(posts[index]);
+						}
+
 		  			var coursesObject = new Array();
-	  				for (var index in courses)
+	  				for (var index in courses) {
+	  					var grade = 0;
+
+	  					if (courses[index].attd_check_count <= 0
+	  						|| courses[index].students.length <= 0)
+	  						grade = 0;
+	  					else if (user.supervising_courses.indexOf(courses[index].id) != -1) {
+	  						for (var i = 0; i < postsObject.length; i++) 
+	  							if (postsObject[i].course == course[index].id)
+	  								grade += postsObject[i].checks.length;
+	  						grade = Number((grade/courses[index].attd_check_count/courses[index].students.length * 100).toFixed());
+	  					} else {
+	  						for (var i = 0; i < postsObject.length; i++) 
+	  							if (postsObject[i].checks.indexOf(user.id) != -1)
+	  								grade++;
+	  						grade = Number((grade/courses[index].attd_check_count * 100).toFixed());
+	  					}
+	  					courses[index].grade = grade;
 	  					coursesObject.push(courses[index]);
+	  				}
+
 						var coursesJSON = JSON.stringify(coursesObject);
 				  	return res.send(coursesJSON);
-	  			} else
-		    		return res.send(JSON.stringify(new Array()));
+		  		});
 	  		});
 		  }
 		});
@@ -540,6 +579,13 @@ var getConditionFromIDs = function(array) {
 		idObject["id"] = array[index];
 		returnArray.push(idObject);
 	}
+
+	if (array.length == 0) {
+		var idObject = [];
+		idObject["id"] = 0;
+		returnArray.push(idObject);
+	}
+	
 	return returnArray;
 }
 

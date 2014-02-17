@@ -81,7 +81,7 @@ module.exports = {
       .sort('full_name DESC')
       .done(function(err, users) {
         if (err || !users)
-          return res.send(404, { message: "No User Found Error" }); 
+          return res.send(404, { message: "No User Found Error" });
 
 	  		Post.find()
 	  		.where({ or: getConditionFromIDs(course.posts) })

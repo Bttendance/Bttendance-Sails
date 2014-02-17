@@ -29,6 +29,8 @@ module.exports = {
 						Course.findOne(course_id).done(function(err, course) {
 							if(!err && course) {
 								course.attdCheckedAt = JSON.parse(JSON.stringify(post)).createdAt;
+								course.attd_check_count = course.attd_check_count + 1;
+
 								course.save(function(err) {
 									if (err) {
 								  	console.log(err);

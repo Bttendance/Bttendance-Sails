@@ -48,6 +48,11 @@ module.exports = {
       type: 'array'
     },
 
+    attd_check_count: {
+      type: 'integer',
+      defaultsTo: 0
+    },
+
     school_name: 'string',
 
     attdCheckedAt: 'string'
@@ -77,6 +82,7 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.posts = new Array();
     values.students = new Array();
+    values.grades = new Array();
 
     School.findOne(values.school).done(function(err, school) {
       if (!err && school) {
