@@ -34,15 +34,15 @@ module.exports.policies = {
     forgot_password : true,
   	signup : true,
   	update_type : ['isUser'],
-  	join_school : ['isUser', 'isSchool'],
-  	join_course : ['isUser', 'isCourse'],
+  	join_school : ['isUser'],
+  	join_course : ['isUser'],
     courses : ['isUser'],
     schools : ['isUser'],
     joinable_courses : ['isUser'],
-    update_notification_key : ['isUser', 'hasDevice'],
-    update_profile_image : ['isUser', 'hasDevice'],
-    update_full_name : ['isUser', 'hasDevice'],
-    update_email : ['isUser', 'hasDevice'],
+    update_notification_key : ['isUser'],
+    update_profile_image : ['isUser'],
+    update_full_name : ['isUser'],
+    update_email : ['isUser'],
     feed : 'isUser',
     employ_school : 'isUser',
     enroll_school : 'isUser'
@@ -59,11 +59,11 @@ module.exports.policies = {
 
   PostController: {
   	create : ['isUser'],
-  	update : ['isUser', 'hasPost'],
-  	destroy : ['isUser', 'hasPost'],
-    attendance_start : ['isUser', 'hasCourse'],
-    attendance_found_device : ['isUser', 'hasPost'],
-    attendance_check_manually : ['isUser', 'hasPost'],
+  	update : ['isUser'],
+  	destroy : ['isUser'],
+    attendance_start : ['isUser'],
+    attendance_found_device : ['isUser'],
+    attendance_check_manually : ['isUser'],
     create_notice : ['isUser', 'hasCourse']
   },
 
