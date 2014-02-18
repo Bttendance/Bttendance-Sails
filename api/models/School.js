@@ -29,16 +29,6 @@ module.exports = {
       type: 'array'
     },
 
-    // has many Professors
-    professors: {
-      type: 'array'
-    },
-
-    // has many Students
-    students: {
-      type: 'array'
-    },
-
     // has many Serials
     serials: {
       type: 'array'
@@ -50,8 +40,6 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.courses = new Array();
     values.serials = new Array();
-    values.professors = new Array();
-    values.students = new Array();
     next();
   }
 

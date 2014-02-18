@@ -93,12 +93,14 @@ module.exports = {
 			    }
 			});
 
+			var text = "Dear " + user.full_name + "\nWe have received a request to reset your password.\nYour new password is following.\n" + password + "Please change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\nYours sincerely,\nTeam Bttendance."
+
 			// setup e-mail data with unicode symbols
 			var mailOptions = {
 			    from: "Bttendance<no-reply@bttendance.com>", // sender address
 			    to: email, // list of receivers
 			    subject: "Bttendance Password Recovery", // Subject line
-			    text: "Your new password is " + password, // plaintext body
+			    text: text, // plaintext body
 			}
 
 			// send mail with defined transport object
