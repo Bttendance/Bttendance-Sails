@@ -461,7 +461,7 @@ module.exports = {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  if (user.supervising_courses.indexOf(Number(course_id)) == -1)
+		  if (user.supervising_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(404, { message: "User is supervising this course" });
 
 	  	if (!user.attending_courses) user.attending_courses = new Array();
