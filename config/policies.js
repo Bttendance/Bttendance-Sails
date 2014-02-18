@@ -39,10 +39,10 @@ module.exports.policies = {
     courses : ['isUser'],
     schools : ['isUser'],
     joinable_courses : ['isUser'],
-    update_notification_key : ['isUser'],
-    update_profile_image : ['isUser'],
-    update_full_name : ['isUser'],
-    update_email : ['isUser'],
+    update_notification_key : ['isUser', 'hasDevice'],
+    update_profile_image : ['isUser', 'hasDevice'],
+    update_full_name : ['isUser', 'hasDevice'],
+    update_email : ['isUser', 'hasDevice'],
     feed : 'isUser',
     employ_school : 'isUser',
     enroll_school : 'isUser',
@@ -65,7 +65,7 @@ module.exports.policies = {
     attendance_start : ['isUser'],
     attendance_found_device : ['isUser'],
     attendance_check_manually : ['isUser'],
-    create_notice : ['isUser', 'hasCourse']
+    create_notice : ['isUser']
   },
 
   SchoolController: {
