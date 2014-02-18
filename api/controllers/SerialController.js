@@ -69,7 +69,7 @@ module.exports = {
 			    }
 			});
 
-			var text = "Dear " + email + ",\n\nThank you for registering with team Bttendance!\nYour serial code is following.\n\nSerial Code : " + serial.key + "\n\nNow you can create your personal course in the “Bttendance School”.\nUsing Bttendance for personal purpose is for free under the current pricing policy.\n\nYours sincerely,\nTeam Bttendance."
+			var text = "Dear " + email.split("@")[0] + ",\n\nThank you for registering with team Bttendance!\nYour serial code is following.\n\nSerial Code : " + serial.key + "\n\nNow you can create your personal course in the “Bttendance School”.\nUsing Bttendance for personal purpose is for free under the current pricing policy.\n\nYours sincerely,\nTeam Bttendance."
 
 			// setup e-mail data with unicode symbols
 			var mailOptions = {
