@@ -516,17 +516,17 @@ module.exports = {
 
 		  	if (!user.employed_schools) user.employed_schools = new Array();
 
-	    	var school_serial = new Array();
-	    	school_serial.push(Number(school_id));
-	    	school_serial.push(serial.key);
+	    	var school_key = {};
+	    	school_key["id"] = Number(school_id);
+	    	school_key["key"] = serial.key;
 
 	    	for (var i = 0; i < user.employed_schools.length; i++)
-	    		if (Number(school_id) == user.employed_schools[i][0]) {
+	    		if (Number(school_id) == user.employed_schools[i]["id"]) {
 	    			user.employed_schools.splice(i, 1);
 	    			break;
 	    		}
 
-			  user.employed_schools.push(school_serial);
+			  user.employed_schools.push(school_key);
 
       	// save new values
 	      user.save(function(err) {
@@ -554,10 +554,10 @@ module.exports = {
 
 	  	if (!user.enrolled_schools) user.enrolled_schools = new Array();
 
-    	var school_identity = new Array();
-    	school_identity.push(Number(school_id));
-    	school_identity.push(identity);
-		  user.enrolled_schools.push(school_identity);
+    	var school_key = {};
+    	school_key["id"] = Number(school_id);
+    	school_key["key"] = identity;
+		  user.enrolled_schools.push(school_key);
 
     	// save new values
       user.save(function(err) {
@@ -585,7 +585,7 @@ var getConditionFromIDs = function(array) {
 		idObject["id"] = 0;
 		returnArray.push(idObject);
 	}
-	
+
 	return returnArray;
 }
 
