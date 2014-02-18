@@ -93,7 +93,7 @@ module.exports = {
 			    }
 			});
 
-			var text = "Dear " + user.full_name + "\nWe have received a request to reset your password.\nYour new password is following.\n" + password + "Please change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\nYours sincerely,\nTeam Bttendance."
+			var text = "Dear " + user.full_name + ",\n\nWe have received a request to reset your password.\nYour new password is following.\n\nNew Password : " + password + "\n\nPlease change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\n\nYours sincerely,\nTeam Bttendance."
 
 			// setup e-mail data with unicode symbols
 			var mailOptions = {
@@ -105,7 +105,7 @@ module.exports = {
 
 			// send mail with defined transport object
 			smtpTransport.sendMail(mailOptions, function(error, response) {
-			    if(error || !response)
+			    if(error || !response || !response.message)
 			      console.log(error);
 
 			    console.log("Message sent: " + response.message);

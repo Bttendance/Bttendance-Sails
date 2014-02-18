@@ -69,17 +69,19 @@ module.exports = {
 			    }
 			});
 
+			var text = "Dear " + email + ",\n\nThank you for registering with team Bttendance!\nYour serial code is following.\n\nSerial Code : " + serial.key + "\n\nNow you can create your personal course in the “Bttendance School”.\nUsing Bttendance for personal purpose is for free under the current pricing policy.\n\nYours sincerely,\nTeam Bttendance."
+
 			// setup e-mail data with unicode symbols
 			var mailOptions = {
 			    from: "Bttendance<no-reply@bttendance.com>", // sender address
 			    to: email, // list of receivers
 			    subject: "Welcome to Bttendance", // Subject line
-			    text: "Your serial code is " + serial.key, // plaintext body
+			    text: text, // plaintext body
 			}
 
 			// send mail with defined transport object
 			smtpTransport.sendMail(mailOptions, function(error, response) {
-			    if(error || !response)
+			    if(error || !response || !response.message)
 			      console.log(error);
 
 			    console.log("Message sent: " + response.message);
