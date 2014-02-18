@@ -532,8 +532,24 @@ module.exports = {
 					if (err)
 				    return res.send(500, { message: "User Save Error" });
 
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
+			  	School.findOne(school_id).done(function(err, school) {
+			  		if (err || !school)
+				    	return res.send(500, { message: "School Find Error" });
+
+				    if (!school.professors)
+				    	school.professors = new Array();
+
+				    if (school.professors.indexOf(Number(user.id)) == -1)
+				    	school.professors.push(user.id);
+
+				    school.save(function(err) {
+							if (err)
+						    return res.send(500, { message: "School Save Error" });
+
+							var userJSON = JSON.stringify(user);
+					  	return res.send(userJSON);
+				    });	  			
+			  	});
 	      });
 	  	});
 		});
@@ -556,6 +572,14 @@ module.exports = {
     	var school_key = {};
     	school_key["id"] = Number(school_id);
     	school_key["key"] = identity;
+
+
+    	for (var i = 0; i < user.enrolled_schools.length; i++)
+    		if (Number(school_id) == user.enrolled_schools[i]["id"]) {
+    			user.enrolled_schools.splice(i, 1);
+    			break;
+    		}
+
 		  user.enrolled_schools.push(school_key);
 
     	// save new values
@@ -563,8 +587,24 @@ module.exports = {
 				if (err)
 			    return res.send(500, { message: "User Save Error" });
 
-				var userJSON = JSON.stringify(user);
-		  	return res.send(userJSON);
+		  	School.findOne(school_id).done(function(err, school) {
+		  		if (err || !school)
+			    	return res.send(500, { message: "School Find Error" });
+
+			    if (!school.students)
+			    	school.students = new Array();
+
+			    if (school.students.indexOf(Number(user.id)) == -1)
+			    	school.students.push(user.id);
+
+			    school.save(function(err) {
+						if (err)
+					    return res.send(500, { message: "School Save Error" });
+
+						var userJSON = JSON.stringify(user);
+				  	return res.send(userJSON);
+			    });	  			
+		  	});
       });
 		});
 	}
