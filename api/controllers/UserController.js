@@ -458,38 +458,35 @@ module.exports = {
 			username: username
 		}).done(function(err, user) {
 			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
+			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-		  	if (!user.attending_courses) user.attending_courses = new Array();
 
-      	// add course if user doesn't have course
-		  	if (user.attending_courses.indexOf(Number(course_id)) == -1)
-			  	user.attending_courses.push(Number(course_id));
+		  if (user.supervising_courses.indexOf(Number(course_id)) == -1)
+		    return res.send(404, { message: "User is supervising this course" });
 
-	      Course.findOne(Number(course_id)).done(function(err, course) {
-	      	if (!err && course) {
-	      		if (!course.students) course.students = new Array();
+	  	if (!user.attending_courses) user.attending_courses = new Array();
 
-	      		if (course.students.indexOf(user.id) == -1)
-	      			course.students.push(user.id);
-	      		course.save(function(err) {});
+    	// add course if user doesn't have course
+	  	if (user.attending_courses.indexOf(Number(course_id)) == -1)
+		  	user.attending_courses.push(Number(course_id));
 
-			      user.save(function(err) {
-							if (err)
-						    return res.send(500, { message: "User Save Error" });
+      Course.findOne(Number(course_id)).done(function(err, course) {
+      	if (!err && course) {
+      		if (!course.students) course.students = new Array();
 
-							var userJSON = JSON.stringify(user);
-					  	return res.send(userJSON);
-			      });
-	      	}
-	      });
-		  }
+      		if (course.students.indexOf(user.id) == -1)
+      			course.students.push(user.id);
+      		course.save(function(err) {});
+
+		      user.save(function(err) {
+						if (err)
+					    return res.send(500, { message: "User Save Error" });
+
+						var userJSON = JSON.stringify(user);
+				  	return res.send(userJSON);
+		      });
+      	}
+      });
 		});
 	},
 	
