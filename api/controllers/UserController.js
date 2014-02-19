@@ -390,7 +390,7 @@ module.exports = {
 	  						grade = 0;
 	  					else if (user.supervising_courses.indexOf(courses[index].id) != -1) {
 	  						for (var i = 0; i < postsObject.length; i++) 
-	  							if (postsObject[i].course == course[index].id)
+	  							if (postsObject[i].course == courses[index].id)
 	  								grade += postsObject[i].checks.length;
 	  						grade = Number((grade/courses[index].attd_check_count/courses[index].students.length * 100).toFixed());
 	  					} else {
