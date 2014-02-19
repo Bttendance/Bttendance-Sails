@@ -388,12 +388,12 @@ module.exports = {
 	  					if (courses[index].attd_check_count <= 0
 	  						|| courses[index].students.length <= 0)
 	  						grade = 0;
-	  					else if (user.supervising_courses.indexOf(courses[index].id) != -1) {
+	  					else if (user.supervising_courses.indexOf(courses[index].id) != -1) { //supervising
 	  						for (var i = 0; i < postsObject.length; i++) 
 	  							if (postsObject[i].course == courses[index].id)
-	  								grade += postsObject[i].checks.length;
+	  								grade += postsObject[i].checks.length - 1;
 	  						grade = Number((grade/courses[index].attd_check_count/courses[index].students.length * 100).toFixed());
-	  					} else {
+	  					} else {	//attending
 	  						for (var i = 0; i < postsObject.length; i++) 
 	  							if (postsObject[i].checks.indexOf(user.id) != -1)
 	  								grade++;
