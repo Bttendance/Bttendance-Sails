@@ -321,9 +321,7 @@ module.exports = {
 	    	});
 			});
 		});
-
 	}
-
 };
 
 // Function to get id list
@@ -360,17 +358,33 @@ var sendNotification = function(user, course, post, message, type) {
 	} else if (user.device_type == 'iphone') {
 
 		var apns = require('apn');
-		var options = { cert: "./Certification/aps_development.pem",
-										certData: null,
-										key: "./Certification/APN_Key.pem",
-										keyData: null,
-										passphrase: "bttendanceutopia",
-										ca: null,
-										gateway: "gateway.sandbox.push.apple.com",
-										port: 2195,
-										enhanced: true,
-										errorCallback: undefined,
-										cacheLength: 100 };
+		var options;
+
+		if (process.env.NODE_ENV == 'development') {
+			options = { cert: "./Certification/cert_development.pem",
+									certData: null,
+									key: "./Certification/key_development.pem",
+									keyData: null,
+									passphrase: "bttendance",
+									ca: null,
+									gateway: "gateway.sandbox.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		} else { //production
+			options = { cert: "./Certification/cert_production.pem",
+									certData: null,
+									key: "./Certification/key_production.pem",
+									keyData: null,
+									passphrase: "bttendance",
+									ca: null,
+									gateway: "gateway.sandbox.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		}
 
     var apnConnection = new apns.Connection(options);
 		var myDevice = new apns.Device(user.notification_key); //for token
