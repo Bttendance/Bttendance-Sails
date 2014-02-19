@@ -86,6 +86,11 @@ module.exports.routes = {
     action: 'enroll_school'
   },
 
+  'get /api/user/search/user': {
+    controller: 'user',
+    action: 'search_user'
+  },
+
   'post /api/post/attendance/start': {
     controller: 'post',
     action: 'attendance_start'

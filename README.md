@@ -91,8 +91,4 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - Email : thefinestartist@bttendance.com
 - Phone : +82-10-7755-4400
 
-####Samchon
-- Email : samchon@bttendance.com
-- Phone : +82-10-8831-0006
-
-####Copyright 2014 @Bttendnace Corporation
+####Copyright 2014 @Bttendance Inc.

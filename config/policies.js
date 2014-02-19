@@ -46,7 +46,8 @@ module.exports.policies = {
     feed : 'isUser',
     employ_school : 'isUser',
     enroll_school : 'isUser',
-    attend_course : 'isUser'
+    attend_course : 'isUser',
+    search_user : 'isUser'
   },
 
   CourseController: {

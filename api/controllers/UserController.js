@@ -559,7 +559,7 @@ module.exports = {
 		res.contentType('application/json');
 		var username = req.param('username');
 		var school_id = req.param('school_id');
-		var identity = req.param('identity');
+		var student_id = req.param('student_id');
 
 		User.findOne({
 			username: username
@@ -571,7 +571,7 @@ module.exports = {
 
     	var school_key = {};
     	school_key["id"] = Number(school_id);
-    	school_key["key"] = identity;
+    	school_key["key"] = student_id;
 
 
     	for (var i = 0; i < user.enrolled_schools.length; i++)
@@ -607,6 +607,33 @@ module.exports = {
 		  	});
       });
 		});
+	},
+
+	search_user: function(req, res) {
+		res.contentType('application/json');
+		var search_id = req.param('search_id');
+
+		if (!search_id)
+	    return res.send(400, { message: "Need username of email" });
+
+	  User.findOne({
+	  	username: search_id
+	  }).done(function(err, user) {
+	  	if (err || !user) {
+	  		User.findOne({
+	  			email: search_id
+	  		}).done(function(err, user) {
+	  			if (err || !user)
+				    return res.send(500, { message: "User Find Error" });
+
+					var userJSON = JSON.stringify(user);
+			  	return res.send(userJSON);
+	  		});
+	  	} else {
+				var userJSON = JSON.stringify(user);
+		  	return res.send(userJSON);
+	  	}
+	  });
 	}
 };
 
