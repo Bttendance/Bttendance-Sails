@@ -30,7 +30,7 @@ module.exports.policies = {
   	update : ['isUser', 'hasDevice'],
   	destroy : false,
   	signin : true,
-    auto_signin : ['isUser', 'hasDevice'],
+    auto_signin : true,
     forgot_password : true,
   	signup : true,
   	update_type : ['isUser'],

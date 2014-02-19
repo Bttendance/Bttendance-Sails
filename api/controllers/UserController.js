@@ -23,12 +23,20 @@ module.exports = {
 	auto_signin: function(req, res) {
 		res.contentType('application/json');
 		var username = req.param('username');
+		var password = req.param('password');
+		var device_uuid = req.param('device_uuid');
 
 		User.findOne({
   		username: username
 		}).done(function(err, user) {
 			if (err || !user)
-		    return res.send(500, { message: "User Find Error" });
+		    return res.send(401, { message: "User Find Error" });
+
+		  if (password != user.password)
+		    return res.send(401, { message: "User Find Error" });
+
+		  if (device_uuid != user.device_uuid)
+		    return res.send(401, { message: "User Find Error" });
 
 			var userJSON = JSON.stringify(user);
 	  	return res.send(userJSON);
