@@ -7,13 +7,6 @@
 
 var MemJS = require('memjs').Client
 
-// var express = require('express');
-// var app = express.createServer(express.logger());
-// var port = process.env.PORT || 5000;
-// app.listen(port, function() {
-//   console.log("Listening on " + port);
-// });
-
 module.exports = {
 
 	feed: function(req, res) {
@@ -117,6 +110,49 @@ module.exports = {
 	        var gradeJSON = JSON.stringify(gradesObject);
 	        return res.send(gradeJSON);
 	  		});
+      });
+    });
+	},
+
+	add_manager: function(req, res) {
+    res.contentType('application/json');
+    var course_id = req.param('course_id');
+    var username = req.param('username');
+    var manager = req.param('manager');
+
+    Course.findOne(Number(course_id)).done(function(err, course) {
+      if (err || !course)
+        return res.send(404, { message: "No Course Found Error" });
+
+      User.findOne({
+      	username: username
+      }).done(function(err, user) {
+        if (err || !user)
+          return res.send(404, { message: "No User Found Error" });
+
+        if (user.supervising_courses.indexOf(course.id) == -1)
+          return res.send(404, { message: "User is not supervising course error" });
+
+	      User.findOne({
+	      	username: manager
+	      }).done(function(err, mang) {
+	        if (err || !mang)
+	          return res.send(404, { message: "No User Found Error" });
+
+		      if (!mang.supervising_courses) mang.supervising_courses = new Array();
+		      if (mang.supervising_courses.indexOf(course.id) == -1)
+		        mang.supervising_courses.push(course.id);
+
+		      if (course.managers.indexOf(mang.id) == -1)
+		      	course.managers.push(mang.id);
+
+		      mang.save(function(err) {
+			      course.save(function(err) {
+							var courseJSON = JSON.stringify(course);
+					  	return res.send(courseJSON);
+			      });
+		      });
+	      });
       });
     });
 	}

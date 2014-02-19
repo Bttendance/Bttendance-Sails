@@ -91,6 +91,11 @@ module.exports.routes = {
     action: 'search_user'
   },
 
+  'put /api/course/add/manager': {
+    controller: 'course',
+    action: 'add_manager'
+  },
+
   'post /api/post/attendance/start': {
     controller: 'post',
     action: 'attendance_start'
