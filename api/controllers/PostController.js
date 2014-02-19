@@ -40,7 +40,8 @@ module.exports = {
 								  	var notiUsers = new Array();
 								  	for (var i = 0; i < course.students.length; i++)
 								  		notiUsers.push(course.students[i]);
-								  	notiUsers.push(course.professor);
+								  	for (var i = 0; i < course.managers.length; i++)
+								  		notiUsers.push(course.managers[i]);
 								  	
 							  		User.find({
 							  			where: {
@@ -304,7 +305,8 @@ module.exports = {
 			  	var notiUsers = new Array();
 			  	for (var i = 0; i < course.students.length; i++)
 			  		notiUsers.push(course.students[i]);
-			  	notiUsers.push(course.professor);
+			  	for (var i = 0; i < course.managers.length; i++)
+			  		notiUsers.push(course.managers[i]);
 			  	
 		  		User.find()
 		  		.where({ or: getConditionFromIDs(notiUsers) })
