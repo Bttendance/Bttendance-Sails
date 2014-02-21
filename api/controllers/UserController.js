@@ -403,7 +403,8 @@ module.exports = {
 	  						grade = Number((grade/courses[index].attd_check_count/courses[index].students.length * 100).toFixed());
 	  					} else {	//attending
 	  						for (var i = 0; i < postsObject.length; i++) 
-	  							if (postsObject[i].checks.indexOf(user.id) != -1)
+	  							if (postsObject[i].course == courses[index].id 
+	  								&& postsObject[i].checks.indexOf(user.id) != -1)
 	  								grade++;
 	  						grade = Number((grade/courses[index].attd_check_count * 100).toFixed());
 	  					}
