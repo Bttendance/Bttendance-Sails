@@ -14,27 +14,28 @@ module.exports = function isUser (req, res, ok) {
 
 	if (username == "appletest")
 		ok();
+	else {
+		User.findOne({
+			username: username
+		}).done(function(err, user) {
 
-	User.findOne({
-		username: username
-	}).done(function(err, user) {
+			// Error handling
+			if (err) {
+		    console.log(err);
+		    return res.send(500, { message: "User Find Error" });
 
-		// Error handling
-		if (err) {
-	    console.log(err);
-	    return res.send(500, { message: "User Find Error" });
+		  // No User found
+		  } else if (!user) {
+		    return res.send(404, { message: "No User Found Error" });
 
-	  // No User found
-	  } else if (!user) {
-	    return res.send(404, { message: "No User Found Error" });
+		  // Password Doesn't Match
+		  } else if (user.password != password) {
+			  return res.send(404, { message: "Password doesn't match Error" });
 
-	  // Password Doesn't Match
-	  } else if (user.password != password) {
-		  return res.send(404, { message: "Password doesn't match Error" });
-
-		// Found User
-	  } else {
-	  	ok();
-	  }
-	});
+			// Found User
+		  } else {
+		  	ok();
+		  }
+		});
+	}
 };

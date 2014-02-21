@@ -78,7 +78,7 @@ module.exports = {
 				var userJSON = JSON.stringify(user);
 		  	return res.send(userJSON);
 			}
-			
+
 			if (user)
 				return checkPass(res, err, user, password, uuid);
 			else {
