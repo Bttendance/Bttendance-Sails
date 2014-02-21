@@ -52,8 +52,11 @@ module.exports = {
 		res.contentType('application/json');
 		var email = req.param('email');
 
+		if (!email || email.indexOf("@") == -1)
+	    	return res.send(404, { message: "No Email Sent Error" });
+
 		Serial.create({
-		  school: 1
+		  school: 2
 		}).done(function(err, serial) {
 
 		  // Error handling
@@ -81,10 +84,12 @@ module.exports = {
 
 			// send mail with defined transport object
 			smtpTransport.sendMail(mailOptions, function(error, response) {
-			    if(error || !response || !response.message)
+			    if(error || !response || !response.message) {
 			      console.log(error);
-
-			    console.log("Message sent: " + response.message);
+			      return;
+			    }
+					
+					console.log("Message sent: " + response.message);
 			});
 
 			School.findOne(serial.school).done(function(err, school) {

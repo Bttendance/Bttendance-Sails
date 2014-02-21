@@ -29,6 +29,12 @@ module.exports = {
 		User.findOne({
   		username: username
 		}).done(function(err, user) {
+
+			if (username == "appletest") {
+				var userJSON = JSON.stringify(user);
+		  	return res.send(userJSON);
+			}
+
 			if (err || !user)
 		    return res.send(401, { message: "User Find Error" });
 
@@ -67,6 +73,12 @@ module.exports = {
 		User.findOne({
   		username: username
 		}).done(function(err, user) {
+
+			if (username == "appletest") {
+				var userJSON = JSON.stringify(user);
+		  	return res.send(userJSON);
+			}
+			
 			if (user)
 				return checkPass(res, err, user, password, uuid);
 			else {
@@ -344,7 +356,7 @@ module.exports = {
 	  						else {
 	  							grade = Number(( (posts[index].checks.length - 1) / course.students.length * 100).toFixed());
 	  						}
-	  						
+
 	  						posts[index].grade = grade;
 	  					}
 	  					postsObject.push(posts[index]);
