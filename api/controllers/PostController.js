@@ -63,7 +63,6 @@ module.exports = {
 			} else
     		return res.send(404, { message: "No User Found Error" });
 		});
-
 	},
 
 	attendance_found_device: function(req, res) {
@@ -92,8 +91,10 @@ module.exports = {
 		    		return res.send(404, { message: "No Post Found Error" });
 
 		    	// Check whether users are in same courses(post)
-		    	if (user_api.courses.indexOf(post.course) == -1
-		    		|| user_uuid.courses.indexOf(post.course) == -1)
+		    	if ((user_api.supervising_courses.indexOf(post.course) != -1
+		    		|| user_api.attending_courses.indexOf(post.course) != -1)
+		    		&& (user_uuid.supervising_courses.indexOf(post.course) != -1
+		    		|| user_uuid.attending_courses.indexOf(post.course) != -1))
 		    		return res.send(204, { message: "User is not attending current course" });
 
 					var userids = new Array();
