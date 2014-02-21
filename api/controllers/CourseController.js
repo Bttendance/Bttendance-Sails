@@ -27,8 +27,19 @@ module.exports = {
   				return res.send(404, { message: "No Post Found Error" });
 
 		  	var postsObject = new Array();
-				for (var index in posts)
+				for (var index in posts) {
+
+					var grade;
+					if (course.attd_check_count <= 0
+						|| course.students.length <= 0)
+						grade = 0;
+					else {
+						grade = Number(( (posts[index].checks.length - 1) / course.students.length * 100).toFixed());
+					}
+					
+					posts[index].grade = grade;	  						
 					postsObject.push(posts[index]);
+				}
 				var postsJSON = JSON.stringify(postsObject);
 		  	return res.send(postsJSON);
 
