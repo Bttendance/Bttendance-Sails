@@ -329,8 +329,26 @@ module.exports = {
 	  			}
 	  		}).sort('id DESC').done(function(err, posts) {
 	  			if (!err && posts) {
-	  				for (var index in posts)
+	  				for (var index in posts) {
+	  					if (user.supervising_courses.indexOf(posts[index].course) != -1) {
+
+	  						var course;
+	  						for (i = 0; i < courses.length; i++)
+	  							if (courses[i].id == posts[index].course)
+	  								course = courses[i];
+
+	  						var grade;
+	  						if (course.attd_check_count <= 0
+	  							|| course.students.length <= 0)
+	  							grade = 0;
+	  						else {
+	  							grade = Number(( (posts[index].checks.length - 1) / course.students.length * 100).toFixed());
+	  						}
+	  						
+	  						posts[index].grade = grade;
+	  					}
 	  					postsObject.push(posts[index]);
+	  				}
 						var postsJSON = JSON.stringify(postsObject);
 				  	return res.send(postsJSON);
 	  			} else
