@@ -92,9 +92,9 @@ module.exports = {
 
 		    	// Check whether users are in same courses(post)
 		    	if ((user_api.supervising_courses.indexOf(post.course) != -1
-		    		|| user_api.attending_courses.indexOf(post.course) != -1)
-		    		&& (user_uuid.supervising_courses.indexOf(post.course) != -1
-		    		|| user_uuid.attending_courses.indexOf(post.course) != -1))
+		    		&& user_api.attending_courses.indexOf(post.course) != -1)
+		    		|| (user_uuid.supervising_courses.indexOf(post.course) != -1
+		    		&& user_uuid.attending_courses.indexOf(post.course) != -1))
 		    		return res.send(204, { message: "User is not attending current course" });
 
 					var userids = new Array();
