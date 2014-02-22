@@ -27,19 +27,19 @@ module.exports.policies = {
   UserController: {
   	'*' : 'isDeV',
   	create : true,
-  	find : 'isDeV',
-  	update : ['isUser', 'hasDevice'],
+  	update : 'isDeV',
   	destroy : 'isDeV',
+    find : 'isDeV',
   	signin : true,
     auto_signin : true,
     forgot_password : true,
   	signup : true,
-  	update_type : ['isUser'],
-  	join_school : ['isUser'],
-  	join_course : ['isUser'],
-    courses : ['isUser'],
-    schools : ['isUser'],
-    joinable_courses : ['isUser'],
+  	update_type : 'isUser',
+  	join_school : 'isUser',
+  	join_course : 'isUser',
+    courses : 'isUser',
+    schools : 'isUser',
+    joinable_courses : 'isUser',
     update_notification_key : ['isUser', 'hasDevice'],
     update_profile_image : ['isUser', 'hasDevice'],
     update_full_name : ['isUser', 'hasDevice'],
@@ -52,23 +52,25 @@ module.exports.policies = {
   },
 
   CourseController: {
-  	create : ['isUser'],
-  	update : ['isUser'],
-  	destroy : ['isUser'],
-    feed : ['isUser'],
-    students : ['isUser'],
-    grades : ['isUser'],
-    add_manager : ['isUser']
+  	create : 'isUser',
+  	update : 'isDeV',
+  	destroy : 'isDeV',
+    find: 'isDeV',
+    feed : 'isUser',
+    students : 'isUser',
+    grades : 'isUser',
+    add_manager : 'isUser'
   },
 
   PostController: {
-  	create : ['isUser'],
-  	update : ['isUser'],
-  	destroy : ['isUser'],
-    attendance_start : ['isUser'],
-    attendance_found_device : ['isUser'],
-    attendance_check_manually : ['isUser'],
-    create_notice : ['isUser']
+  	create : 'isDeV',
+  	update : 'isDeV',
+  	destroy : 'isDeV',
+    find : 'isDeV',
+    attendance_start : 'isUser',
+    attendance_found_device : 'isUser',
+    attendance_check_manually : 'isUser',
+    create_notice : 'isUser'
   },
 
   SchoolController: {
