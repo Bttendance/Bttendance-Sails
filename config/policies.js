@@ -19,17 +19,17 @@ module.exports.policies = {
   '*': true,
 
   SerialController: {
-  	'*' : false,
+  	'*' : 'isDeV',
   	validate : true,
     request : true
   },
 
   UserController: {
-  	'*' : false,
+  	'*' : 'isDeV',
   	create : true,
-  	find : false,
+  	find : 'isDeV',
   	update : ['isUser', 'hasDevice'],
-  	destroy : false,
+  	destroy : 'isDeV',
   	signin : true,
     auto_signin : true,
     forgot_password : true,
@@ -72,10 +72,10 @@ module.exports.policies = {
   },
 
   SchoolController: {
-  	create : false,
-  	update : false,
-  	destroy : false,
-    find : true,
+  	create : 'isDeV',
+  	update : 'isDeV',
+  	destroy : 'isDeV',
+    find : 'isDeV',
     all : 'isUser'
   }
 
