@@ -29,12 +29,6 @@ module.exports = {
 		User.findOne({
   		username: username
 		}).done(function(err, user) {
-
-			if (username == "appletest") {
-				var userJSON = JSON.stringify(user);
-		  	return res.send(userJSON);
-			}
-
 			if (err || !user)
 		    return res.send(401, { message: "User Find Error" });
 

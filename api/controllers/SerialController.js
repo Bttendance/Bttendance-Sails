@@ -56,7 +56,7 @@ module.exports = {
 	    	return res.send(404, { message: "No Email Sent Error" });
 
 		Serial.create({
-		  school: 1
+		  school: 2
 		}).done(function(err, serial) {
 
 		  // Error handling
