@@ -114,6 +114,10 @@ module.exports = {
 	        	}
 	        	var gradeObject = new Object();
 	        	gradeObject.id = users[index].id;
+	        	gradeObject.full_name = users[index].full_name;
+	        	for (var i = 0; i < users[index].enrolled_schools.length; i++) 
+	        		if (users[index].enrolled_schools[i].id == course.school)
+	        			gradeObject.student_id = users[index].enrolled_schools[i].key;
 	        	gradeObject.grade = "" + grade + "/" + total_grade;
 	          gradesObject.push(gradeObject);
 	        }
