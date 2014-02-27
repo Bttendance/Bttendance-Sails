@@ -154,6 +154,12 @@ module.exports = {
 	        if (err || !mang)
 	          return res.send(404, { message: "No User Found Error" });
 
+	        // Remove course from attending course
+	        var index = mang.attending_courses.indexOf(course.id);
+	        if (index > -1)
+					  mang.attending_courses.splice(index, 1);
+
+					// Add course in supervising course
 		      if (!mang.supervising_courses) mang.supervising_courses = new Array();
 		      if (mang.supervising_courses.indexOf(course.id) == -1)
 		        mang.supervising_courses.push(course.id);
