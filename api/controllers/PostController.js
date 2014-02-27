@@ -90,6 +90,8 @@ module.exports = {
 					if (err || !post)
 		    		return res.send(404, { message: "No Post Found Error" });
 
+		    	console.log("user api : " + user_api.id + ", user uuid : " + user_uuid.id + ", post.course : " + post.course);
+
 		    	// Check whether users are in same courses(post)
 		    	if ((user_api.supervising_courses.indexOf(post.course) != -1
 		    		&& user_api.attending_courses.indexOf(post.course) != -1)
