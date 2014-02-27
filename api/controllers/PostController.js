@@ -90,21 +90,12 @@ module.exports = {
 					if (err || !post)
 		    		return res.send(404, { message: "No Post Found Error" });
 
-		    	console.log("user api : " + user_api.id + ", user uuid : " + user_uuid.id + ", post.course : " + post.course);
-		    	console.log((user_api.supervising_courses.indexOf(post.course) == -1
-		    		&& user_api.attending_courses.indexOf(post.course) == -1)
-		    		|| (user_uuid.supervising_courses.indexOf(post.course) == -1
-		    		&& user_uuid.attending_courses.indexOf(post.course) == -1));
-
 		    	// Check whether users are in same courses(post)
 		    	if ((user_api.supervising_courses.indexOf(post.course) == -1
 		    		&& user_api.attending_courses.indexOf(post.course) == -1)
 		    		|| (user_uuid.supervising_courses.indexOf(post.course) == -1
 		    		&& user_uuid.attending_courses.indexOf(post.course) == -1))
 		    		return res.send(204, { message: "User is not attending current course" });
-
-
-		    	console.log("What The Hell");
 
 					var userids = new Array();
 					userids.push(user_api.id);
