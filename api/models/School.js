@@ -24,6 +24,12 @@ module.exports = {
       required: true
     },
 
+    // public, private
+    type: {
+      type: 'string',
+      required: true
+    },
+
     // has many Courses
     courses: {
       type: 'array'
