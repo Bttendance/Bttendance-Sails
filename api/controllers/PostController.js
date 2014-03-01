@@ -52,6 +52,10 @@ module.exports = {
 							  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
 							  		});
 
+							  		setTimeout(function() { resendNotis(post.id); }, 40000);
+							  		setTimeout(function() { resendNotis(post.id); }, 75000);
+							  		setTimeout(function() { resendNotis(post.id); }, 120000);
+
 										var courseJSON = JSON.stringify(course);
 								  	return res.send(courseJSON);
 									}
@@ -324,6 +328,38 @@ module.exports = {
 		});
 	}
 };
+
+var resendNotis = function(post_id) {
+	console.log("resendNotis");
+	Post.findOne(post_id).done(function(err, post) {
+		if (err || !post)
+			return;
+
+		Course.findOne(post.course).done(function(err, course) {
+			if (err || !course)
+				return;
+
+			var unchecked = new Array();
+			for (var i = 0; i < course.students.length; i++)
+				unchecked.push(course.students[i]);
+
+			for (var i = 0; i < post.checks.length; i++) {
+				var index = unchecked.indexOf(post.checks[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+								  	
+  		User.find({
+  			where: {
+  				or: getConditionFromIDs(unchecked)
+  			}
+  		}).sort('id DESC').done(function(err, users) {
+  			for (var j = 0; j < users.length; j++)
+  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+  		});
+		});
+	});
+}
 
 // Function to get id list
 var sendNotification = function(user, course, post, message, type) {

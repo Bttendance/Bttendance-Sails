@@ -61,7 +61,7 @@ module.exports = {
         }
       }).sort('full_name DESC').done(function(err, users) {
         if (err || !users)
-          return res.send(404, { message: "No User Found Error" }); 
+          return res.send(404, { message: "No User Found Error" });
 
         var usersObject = new Array();
         for (var index in users)
