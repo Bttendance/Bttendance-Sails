@@ -4,6 +4,10 @@
 
 module.exports = function isUser (req, res, ok) {
 
+	// var admin = req.param('admin');
+	// if (admin == "bttendance")
+	// 	ok();
+
 	if (process.env.NODE_ENV == "development")
 		ok();
 	else

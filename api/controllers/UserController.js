@@ -351,6 +351,9 @@ module.exports = {
 	  							grade = Number(( (posts[index].checks.length - 1) / course.students.length * 100).toFixed());
 	  						}
 
+		  					if (grade  < 0) grade = 0;
+		  					if (grade > 100) grade = 100;
+
 	  						posts[index].grade = grade;
 	  					}
 	  					postsObject.push(posts[index]);
@@ -432,6 +435,10 @@ module.exports = {
 	  								grade++;
 	  						grade = Number((grade/courses[index].attd_check_count * 100).toFixed());
 	  					}
+
+	  					if (grade  < 0) grade = 0;
+	  					if (grade > 100) grade = 100;
+
 	  					courses[index].grade = grade;
 	  					coursesObject.push(courses[index]);
 	  				}

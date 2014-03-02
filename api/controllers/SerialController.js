@@ -51,12 +51,15 @@ module.exports = {
 	request: function(req, res) {
 		res.contentType('application/json');
 		var email = req.param('email');
+		var school_id = req.param('school_id');
 
 		if (!email || email.indexOf("@") == -1)
 	    	return res.send(404, { message: "No Email Sent Error" });
 
+	  if (!school_id)
+	  	school_id = 1;
 		Serial.create({
-		  school: 1
+		  school: school_id
 		}).done(function(err, serial) {
 
 		  // Error handling
