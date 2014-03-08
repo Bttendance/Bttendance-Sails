@@ -70,22 +70,22 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 
 ###Bluetooth Version
 #####Version 2.0
-    *iPhone 3G
+    * iPhone 3G
 #####Version 2.1
-    *iPhone 3GS
-    *iPhone 4
+    * iPhone 3GS
+    * iPhone 4
 #####Version 3.0
-    #Galaxy S2
-    #Galaxy Nexus
-    #Galaxy Note 1
+    # Galaxy S2
+    # Galaxy Nexus
+    # Galaxy Note 1
 #####Version 4.0
-    *iPhone 4s
-    *iPhone 5c
-    *iPhone 5s
-    #Galaxy S3
-    #Galaxy S4
-    #Galaxy Note 2
-    #Galaxy Note 3
+    * iPhone 4s
+    * iPhone 5c
+    * iPhone 5s
+    # Galaxy S3
+    # Galaxy S4
+    # Galaxy Note 2
+    # Galaxy Note 3
 
 ##Developer
 
