@@ -30,13 +30,13 @@ module.exports = {
   		username: username
 		}).done(function(err, user) {
 			if (err || !user)
-		    return res.send(401, { message: "User Find Error" });
+		    return res.send(401, { message: "Username Find Error" });
 
 		  if (password != user.password)
-		    return res.send(401, { message: "User Find Error" });
+		    return res.send(401, { message: "Passwrod doesn't match Error" });
 
 		  if (device_uuid != user.device_uuid)
-		    return res.send(401, { message: "User Find Error" });
+		    return res.send(401, { message: "Device uuid doesn't match Error" });
 
 			var userJSON = JSON.stringify(user);
 	  	return res.send(userJSON);
@@ -69,6 +69,14 @@ module.exports = {
 		}).done(function(err, user) {
 
 			if (username == "appletest" || username == "appletest2") {
+				user.device_uuid = uuid;
+				user.save(function(err) {
+					if (err) {
+						console.log(err);
+				    return res.send(500, { message: "User Save Error" });
+				  }
+				});
+				  
 				var userJSON = JSON.stringify(user);
 		  	return res.send(userJSON);
 			}
