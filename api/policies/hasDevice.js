@@ -11,7 +11,7 @@ module.exports = function hasDevice (req, res, ok) {
 		return res.send(400, { message: "Username and Device UUID  is required"});
 	}
 
-	if (username == "appletest")
+	if (username == "appletest" || username == "appletest2")
 		ok();
 	else {
 		User.findOne({

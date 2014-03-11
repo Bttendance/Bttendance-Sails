@@ -68,7 +68,7 @@ module.exports = {
   		username: username
 		}).done(function(err, user) {
 
-			if (username == "appletest") {
+			if (username == "appletest" || username == "appletest2") {
 				var userJSON = JSON.stringify(user);
 		  	return res.send(userJSON);
 			}
