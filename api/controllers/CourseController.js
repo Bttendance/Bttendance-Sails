@@ -175,6 +175,58 @@ module.exports = {
 	      });
       });
     });
+	},
+
+	remove: function(req, res) {
+    res.contentType('application/json');
+    var course_id = req.param('course_id');
+
+		Course.findOne(course_id).done(function(err, course) {
+			if (err || !course)
+        return res.send(404, { message: "No Course Found Error" });
+
+      School.findOne(course.school).done(function(err, school) {
+	    	for (var i = 0; i < school.courses.length; i++)
+	    		if (Number(course_id) == school.courses[i]) {
+	    			school.courses.splice(i, 1);
+	    			break;
+	    		}
+	    	school.save(function(err) {});
+      });
+
+      User.find()
+      .where({ or: getConditionFromIDs(course.students) })
+      .sort('full_name DESC')
+      .done(function(err, users) {
+        if (err || !users)
+          return;
+
+        for (var i = 0; i < users.length; i++) {
+        	if (users[i].attending_courses.indexOf(Number(course_id)) != -1) {
+	        	users[i].attending_courses.splice(users[i].attending_courses.indexOf(Number(course_id)), 1);
+	        	users[i].save(function(err) {});
+	        }
+        }
+      });
+
+      User.find()
+      .where({ or: getConditionFromIDs(course.managers) })
+      .sort('full_name DESC')
+      .done(function(err, users) {
+        if (err || !users)
+          return;
+
+        for (var i = 0; i < users.length; i++) {
+        	if (users[i].supervising_courses.indexOf(Number(course_id)) != -1) {
+	        	users[i].supervising_courses.splice(users[i].supervising_courses.indexOf(Number(course_id)), 1);
+	        	users[i].save(function(err) {});
+        	}
+        }
+      });
+
+			var courseJSON = JSON.stringify(course);
+	  	return res.send(courseJSON);
+		})
 	}
 };
 

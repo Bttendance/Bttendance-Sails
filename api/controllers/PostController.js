@@ -354,6 +354,9 @@ var resendNotis = function(post_id) {
   				or: getConditionFromIDs(unchecked)
   			}
   		}).sort('id DESC').done(function(err, users) {
+  			if (err || !user)
+  				return;
+  			
   			for (var j = 0; j < users.length; j++)
   				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
   		});

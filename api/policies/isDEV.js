@@ -9,6 +9,7 @@ module.exports = function isUser (req, res, ok) {
 	// 	ok();
 
 	if (process.env.NODE_ENV == "development")
+	// if (process.env.NODE_ENV == "production")
 		ok();
 	else
 		return res.send(403, { message: "Forbidden"});

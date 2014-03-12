@@ -12,7 +12,16 @@ module.exports = function isUser (req, res, ok) {
 		return res.send(400, { message: "Username and Password is required"});
 	}
 
-	if (username == "appletest" || username == "appletest2")
+	if (username == "appletest0"
+		|| username == "appletest1" 
+		|| username == "appletest2"
+		|| username == "appletest3"
+		|| username == "appletest4"
+		|| username == "appletest5"
+		|| username == "appletest6"
+		|| username == "appletest7"
+		|| username == "appletest8"
+		|| username == "appletest9")
 		ok();
 	else {
 		User.findOne({

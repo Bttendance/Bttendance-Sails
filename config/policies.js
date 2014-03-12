@@ -59,7 +59,8 @@ module.exports.policies = {
     feed : 'isUser',
     students : 'isUser',
     grades : 'isUser',
-    add_manager : 'isUser'
+    add_manager : 'isUser',
+    remove : 'isDeV'
   },
 
   PostController: {
