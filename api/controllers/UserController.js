@@ -80,8 +80,10 @@ module.exports = {
 		|| username == "appletest9") {
 				user.device_uuid = uuid;
 				user.save(function(err) {
-					if (err)
+					if (err) {
+						console.log(err);
 				    return res.send(500, { message: "User Save Error" });
+					}
 				  
 					var userJSON = JSON.stringify(user);
 		  		return res.send(userJSON);
