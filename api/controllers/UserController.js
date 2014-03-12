@@ -79,15 +79,31 @@ module.exports = {
 		|| username == "appletest8"
 		|| username == "appletest9") {
 				user.device_uuid = uuid;
-				user.save(function(err) {
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
+
+				User.findOne({
+					device_uuid: uuid
+				}).done(function(err, user_uuid) {
+					if (user_uuid && user.id != user_uuid.id) {
+						user_uuid.device_uuid = user_uuid.username;
+						user_uuid.save(function(err) {
+							user.save(function(err) {
+								if (err)
+							    return res.send(500, { message: "User Save Error" });
+							  
+								var userJSON = JSON.stringify(user);
+					  		return res.send(userJSON);
+							});
+						});
+					} else {
+						user.save(function(err) {
+							if (err)
+						    return res.send(500, { message: "User Save Error" });
+						  
+							var userJSON = JSON.stringify(user);
+				  		return res.send(userJSON);
+						});
 					}
-				  
-					var userJSON = JSON.stringify(user);
-		  		return res.send(userJSON);
-				});
+				})
 			} else if (user)
 				return checkPass(res, err, user, password, uuid);
 			else {
