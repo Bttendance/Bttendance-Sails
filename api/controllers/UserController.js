@@ -80,17 +80,13 @@ module.exports = {
 		|| username == "appletest9") {
 				user.device_uuid = uuid;
 				user.save(function(err) {
-					if (err) {
-						console.log(err);
+					if (err)
 				    return res.send(500, { message: "User Save Error" });
-				  }
-				});
 				  
-				var userJSON = JSON.stringify(user);
-		  	return res.send(userJSON);
-			}
-
-			if (user)
+					var userJSON = JSON.stringify(user);
+		  		return res.send(userJSON);
+				});
+			} else if (user)
 				return checkPass(res, err, user, password, uuid);
 			else {
 				User.findOne({
