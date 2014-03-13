@@ -67,7 +67,7 @@ module.exports.policies = {
   	create : 'isDeV',
   	update : 'isDeV',
   	destroy : 'isDeV',
-    find : 'isDeV',
+    find : 'isUser',
     attendance_start : 'isUser',
     attendance_found_device : 'isUser',
     attendance_check_manually : 'isUser',
