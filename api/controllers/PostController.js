@@ -326,6 +326,29 @@ module.exports = {
 	    	});
 			});
 		});
+	},
+
+	remove: function(req, res) {
+		res.contentType('application/json');
+		var post_id = req.param('post_id');
+
+		Post.findOne(post_id).done(function(err, post) {
+			if (err || !post)
+    		return res.send(404, { message: "No Post Found Error" });
+
+    	Course.findOne(post.course).done(function(err, course) {
+				if (err || !course)
+	    		return res.send(404, { message: "No Course Found Error" });
+
+	    	if (course.posts.indexOf(Number(post.id)) != -1) {
+        	course.posts.splice(course.posts.indexOf(Number(post.id)), 1);
+        	course.save(function(err) {
+						var courseJSON = JSON.stringify(course);
+				  	return res.send(courseJSON);
+        	});
+	    	}
+    	});
+		});
 	}
 };
 

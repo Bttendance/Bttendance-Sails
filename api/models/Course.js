@@ -32,7 +32,7 @@ module.exports = {
       required: true
     },
 
-    // has many Professor Name
+    // professor name
     professor_name: {
       type: 'string',
       required: true
