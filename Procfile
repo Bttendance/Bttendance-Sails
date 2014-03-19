@@ -1,1 +1,1 @@
-web: sails lift
+web: node app.js

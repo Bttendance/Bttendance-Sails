@@ -224,6 +224,7 @@ module.exports = {
         }
       });
 
+      course.destroy(function(err) {});
 			var courseJSON = JSON.stringify(course);
 	  	return res.send(courseJSON);
 		})

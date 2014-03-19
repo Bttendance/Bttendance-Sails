@@ -1,17 +1,19 @@
 /**
- * Allow any authenticated user.
+ * isUser
+ *
+ * @module      :: Policy
+ * @description :: 
+ * @docs        :: http://sailsjs.org/#!documentation/policies
  */
 
-module.exports = function isUser (req, res, ok) {
+module.exports = function isUser (req, res, next) {
 
+	// Super Port Policy
+	if (req.port == 7331) 
+		return next();
+
+	// Super Username Policy
 	var username = req.param('username');
-	var password = req.param('password');
-
-	if (!username || !password) {
-		console.log("isUser : Username and Password is required");
-		return res.send(400, { message: "Username and Password is required"});
-	}
-
 	if (username == "appletest0"
 		|| username == "appletest1" 
 		|| username == "appletest2"
@@ -22,29 +24,38 @@ module.exports = function isUser (req, res, ok) {
 		|| username == "appletest7"
 		|| username == "appletest8"
 		|| username == "appletest9")
-		ok();
-	else {
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
+		return next();
 
-			// Error handling
-			if (err) {
-		    console.log(err);
-		    return res.send(500, { message: "User Find Error" });
+	// isUser Policy
+	var username = req.param('username');
+	var password = req.param('password');
 
-		  // No User found
-		  } else if (!user) {
-		    return res.send(404, { message: "No User Found Error" });
-
-		  // Password Doesn't Match
-		  } else if (user.password != password) {
-			  return res.send(404, { message: "Password doesn't match Error" });
-
-			// Found User
-		  } else {
-		  	ok();
-		  }
-		});
+	if (!username || !password) {
+		console.log("isUser : Username and Password is required");
+		return res.send(400, { message: "Username and Password is required"});
 	}
+
+	User.findOne({
+		username: username
+	}).done(function(err, user) {
+
+		// Error handling
+		if (err) {
+	    console.log(err);
+	    return res.send(500, { message: "User Find Error" });
+
+	  // No User found
+	  } else if (!user) {
+	    return res.send(404, { message: "No User Found Error" });
+
+	  // Password Doesn't Match
+	  } else if (user.password != password) {
+		  return res.send(404, { message: "Password doesn't match Error" });
+
+		// Found User
+	  } else {
+	  	return next();
+	  }
+	});
+
 };

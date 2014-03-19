@@ -342,7 +342,10 @@ module.exports = {
 
 	    	if (course.posts.indexOf(Number(post.id)) != -1) {
         	course.posts.splice(course.posts.indexOf(Number(post.id)), 1);
+        	if (post.type == "attendance")
+        		course.attd_check_count = course.attd_check_count - 1;
         	course.save(function(err) {
+        		post.destroy(function(err) {});
 						var courseJSON = JSON.stringify(course);
 				  	return res.send(courseJSON);
         	});
@@ -424,9 +427,9 @@ var sendNotification = function(user, course, post, message, type) {
 		var options;
 
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./Certification/cert_development.pem",
+			options = { cert: "./certification/cert_development.pem",
 									certData: null,
-									key: "./Certification/key_development.pem",
+									key: "./certification/key_development.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -436,9 +439,9 @@ var sendNotification = function(user, course, post, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: "./Certification/cert_production.pem",
+			options = { cert: "./certification/cert_production.pem",
 									certData: null,
-									key: "./Certification/key_production.pem",
+									key: "./certification/key_production.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,

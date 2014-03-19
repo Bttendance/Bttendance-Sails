@@ -1,12 +1,20 @@
 /**
- * Allow any authenticated user.
+ * isDev
+ *
+ * @module      :: Policy
+ * @description :: 
+ * @docs        :: http://sailsjs.org/#!documentation/policies
  */
 
-module.exports = function isUser (req, res, ok) {
+module.exports = function isDev (req, res, next) {
 
-	// if (process.env.NODE_ENV == "production")
+	// Super Port Policy
+	if (req.port == 7331)
+		return next();
+
+	// isDev Policy
 	if (process.env.NODE_ENV == "development")
-		ok();
-	else
-		return res.send(403, { message: "Forbidden"});
+		return next();
+	
+	return res.send(403, { message: "Forbidden"});
 };
