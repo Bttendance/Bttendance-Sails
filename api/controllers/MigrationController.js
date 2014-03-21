@@ -18,12 +18,12 @@
 module.exports = {
 
 	migrate: function(req, res) {
-		res.contentType('application/json');
 
 		User.find().exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
+			//done
 			for (var i = 0; i < users.length; i++) {
 				Users.create({
 					id: users[i].id,
@@ -31,6 +31,7 @@ module.exports = {
 					password: users[i].password,
 					email: users[i].email,
 					full_name: users[i].full_name,
+					profile_image : users[i].profile_image,
 					createdAt: users[i].createdAt,
 					updatedAt: users[i].updatedAt					
 				}).exec(function callback(err, user) {
@@ -38,6 +39,7 @@ module.exports = {
 				});
 			}
 
+			//done
 			for (var i = 0; i < users.length; i++) {
 				Devices.create({
 					id: users[i].id,
@@ -52,6 +54,7 @@ module.exports = {
 			}
 		});
 
+		//done
 		School.find().exec(function callback(err, schools) {
 			if (err || !schools)
 				return;
@@ -61,6 +64,7 @@ module.exports = {
 					id: schools[i].id,
 					name: schools[i].name,
 					logo_image: schools[i].logo_image,
+					website: schools[i].website,
 					type: schools[i].type,
 					createdAt: schools[i].createdAt,
 					updatedAt: schools[i].updatedAt
@@ -70,6 +74,7 @@ module.exports = {
 			}
 		});
 
+		//done
 		Serial.find().exec(function callback(err, serials) {
 			if (err || !serials)
 				return;
@@ -86,6 +91,7 @@ module.exports = {
 			}
 		})
 
+		//done
 		Course.find().exec(function callback(err, courses) {
 			if (err || !courses)
 				return;
@@ -104,6 +110,7 @@ module.exports = {
 			}
 		});
 
+		//done
 		Post.find().exec(function callback(err, posts) {
 			if (err || !posts)
 				return;
@@ -112,45 +119,42 @@ module.exports = {
 				Posts.create({
 					id: posts[i].id,
 					type: posts[i].type,
-					message: posts[i].message,
 					checks: posts[i].checks,
 					clusters: posts[i].clusters,
 					createdAt: posts[i].createdAt,
 					updatedAt: posts[i].updatedAt
-				})
+				}).exec(function callback(err, post) {
+					console.log(post);
+				});
 			}
 		})
 	},
 
 	associate: function(req, res) {
 
+		//User-Device
 		User.find().exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
 			for (var i = 0; i < users.length; i++) {
-				Users.create({
-					id: users[i].id,
-					username: users[i].username,
-					password: users[i].password,
-					email: users[i].email,
-					full_name: users[i].full_name
-				}).exec(function callback(err, user) {
-					console.log(user);
-				});
-			}
 
-			for (var i = 0; i < users.length; i++) {
-				Devices.create({
-					id: users[i].id,
-					type: users[i].device_type,
-					uuid: users[i].device_uuid,
-					notification_key: users[i].notification_key
-				}).exec(function callback(err, device) {
-					console.log(device);
-				});
 			}
 		});
+		
+		//User-SuvpCourse
+		//User-AttdCourse
+		//User-EmpySchool
+		//User-EnrlSchool
+		//School-Serials
+		//School-Course
+		//Course-Posts
+		//Post-Author
+	},
+
+	grade: function(req, res) {
+		//post grade & message
+		//course grade
 	}
   
 };

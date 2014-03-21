@@ -13,4 +13,5 @@ module.exports.models = {
   //
   // (defaults to localDiskDb)
   connection: process.env.NODE_ENV || 'development',
+  migrate: 'safe'
 };

@@ -21,7 +21,7 @@ var nodemailer = require("nodemailer");
 module.exports = {
 
 	auto_signin: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
@@ -44,7 +44,7 @@ module.exports = {
 	},
 
 	signin: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var password = req.param('password');
 		var uuid = req.param('device_uuid');
@@ -117,7 +117,7 @@ module.exports = {
 	},
 
 	forgot_password: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 
 		User.findOne({
@@ -171,7 +171,7 @@ module.exports = {
 	},
 
 	update_notification_key: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var notification_key = req.param('notification_key');
 
@@ -211,7 +211,7 @@ module.exports = {
 	},
 
 	update_profile_image: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var profile_image = req.param('profile_image');
 
@@ -251,7 +251,7 @@ module.exports = {
 	},
 
 	update_full_name: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var full_name = req.param('full_name');
 
@@ -291,7 +291,7 @@ module.exports = {
 	},
 
 	update_email: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var email = req.param('email');
 
@@ -331,7 +331,7 @@ module.exports = {
 	},
 
 	feed: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var page = req.param('page');
 		
@@ -399,7 +399,7 @@ module.exports = {
 	},
 
 	courses: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 
 		User.findOne({
@@ -483,7 +483,7 @@ module.exports = {
 	},
 
 	schools: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 
 		User.findOne({
@@ -523,7 +523,7 @@ module.exports = {
 	},
 
 	attend_course: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		
@@ -564,7 +564,7 @@ module.exports = {
 	},
 	
 	employ_school: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var school_id = req.param('school_id');
 		var serial = req.param('serial');
@@ -627,7 +627,7 @@ module.exports = {
 	},
 	
 	enroll_school: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var school_id = req.param('school_id');
 		var student_id = req.param('student_id');
@@ -681,7 +681,7 @@ module.exports = {
 	},
 
 	search_user: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var search_id = req.param('search_id');
 
 		if (!search_id)

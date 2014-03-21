@@ -22,8 +22,7 @@ module.exports = {
 
     // One to Many
     school: {
-    	model: 'Schools',
-      required: true
+    	model: 'Schools'
     },
 
     // Many to Many

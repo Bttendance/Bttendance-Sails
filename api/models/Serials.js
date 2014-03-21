@@ -16,8 +16,7 @@ module.exports = {
     },
 
     school: {
-    	model: 'Schools',
-    	required: true
+    	model: 'Schools'
     },
 
     toJSON: function() {

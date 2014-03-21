@@ -35,7 +35,8 @@
         "memjs": "0.8.2",
         "nodemailer": "0.6.0",
         "newrelic": "1.4.0",
-        "nodetime": "0.8.15"
+        "nodetime": "0.8.15",
+        "async": "0.2.10"
     },
     "scripts": {
         "start": "node app.js",

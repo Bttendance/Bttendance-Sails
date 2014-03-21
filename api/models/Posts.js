@@ -10,27 +10,24 @@ module.exports = {
 
   attributes: {
 
-    // attendance, notice
+    // attendance, notice, poll
     type: {
       type: 'string',
       required: true
     },
 
   	message: {
-  		type: 'string',
-  		required: true
+  		type: 'string'
   	},
 
     // One Way
     author: {
-    	model: 'Users',
-    	required: true
+    	model: 'Users'
     },
 
     // One to Many
     course: {
-    	model: 'Courses',
-    	required: true
+    	model: 'Courses'
     },
 
     // has many students (checked)

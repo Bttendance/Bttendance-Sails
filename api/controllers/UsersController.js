@@ -18,9 +18,7 @@
 module.exports = {
 
 	all: function(req, res) {
-		res.set({
-  		'Content-Type': 'application/json',
-		});
+		res.contentType('application/json; charset=utf-8');
 
 		Users.find().sort('id ASC').exec(function callback(err, users) {
 			for (var i = 0; i < users.length; i++)
