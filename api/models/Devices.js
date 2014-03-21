@@ -48,8 +48,12 @@ module.exports = {
     },
 
     toWholeJSON: function() {
-      var obj = this.toObject();
-      return obj;
+      var result = {};
+      for(var key in this) {
+        if (key != 'toJSON')
+          result[key] = this[key];
+      }
+      return result;
     }
     
   },

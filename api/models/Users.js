@@ -6,8 +6,6 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-var passwordHash = require('password-hash');
-
 module.exports = {
 
   attributes: {
@@ -96,8 +94,12 @@ module.exports = {
     },
 
     toWholeJSON: function() {
-      var obj = this.toObject();
-      return obj;
+      var result = {};
+      for(var key in this) {
+        if (key != 'toJSON')
+          result[key] = this[key];
+      }
+      return result;
     }
     
   },
@@ -113,7 +115,6 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.password = passwordHash.generate(values.password);
     next();
   },
 

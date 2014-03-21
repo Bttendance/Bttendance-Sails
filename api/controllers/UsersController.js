@@ -16,15 +16,18 @@
  */
 
 module.exports = {
-    
-  
 
+	all: function(req, res) {
+		res.set({
+  		'Content-Type': 'application/json',
+		});
 
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to UsersController)
-   */
-  _config: {}
-
+		Users.find().sort('id ASC').exec(function callback(err, users) {
+			for (var i = 0; i < users.length; i++)
+				users[i] = users[i].toWholeJSON();
+			var resultJSON = JSON.stringify(users);
+	  	return res.send(resultJSON);
+		});
+	}
   
 };

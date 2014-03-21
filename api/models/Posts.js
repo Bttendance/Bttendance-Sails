@@ -55,8 +55,12 @@ module.exports = {
     },
 
     toWholeJSON: function() {
-      var obj = this.toObject();
-      return obj;
+      var result = {};
+      for(var key in this) {
+        if (key != 'toJSON')
+          result[key] = this[key];
+      }
+      return result;
     }
     
   },
@@ -83,11 +87,13 @@ module.exports = {
 
   beforeCreate: function(values, next) {
 
-    if (values.type == 'attendance') {
+    if (values.type == 'attendance' && !values.checks) {
       var checks = new Array();
       checks.push(values.author);
       values.checks = checks;
+    }
 
+    if (values.type == 'attendance' && !values.clusters) {
       var clusters = new Array();
       var prof = new Array();
       prof.push(values.author);
