@@ -51,10 +51,7 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.students;
-      delete obj.posts;
       delete obj.attdCheckedAt;
-      delete obj.grade;
       return obj;
     },
 

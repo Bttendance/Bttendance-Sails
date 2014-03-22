@@ -27,7 +27,7 @@ module.exports = {
   _config: {},
 
 	validate: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var serial = req.param('serial');
 
 		Serial.findOne({
@@ -49,7 +49,7 @@ module.exports = {
 	},
 
 	request: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 		var school_id = req.param('school_id');
 

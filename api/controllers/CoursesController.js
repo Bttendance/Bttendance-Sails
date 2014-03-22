@@ -18,7 +18,7 @@
 module.exports = {
 
   create: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var name = req.param('name');
 		var school_id = req.param('school_id');

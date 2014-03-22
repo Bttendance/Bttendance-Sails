@@ -11,7 +11,7 @@ var apn = require('apn');
 module.exports = {
 
 	attendance_start: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 
@@ -70,7 +70,7 @@ module.exports = {
 	},
 
 	attendance_found_device: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var post_id = req.param('post_id');
 		var uuid = req.param('uuid');
@@ -241,7 +241,7 @@ module.exports = {
 	},
 
 	attendance_check_manually: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var user_id = req.param('user_id');
 		var post_id = req.param('post_id');
 
@@ -280,7 +280,7 @@ module.exports = {
 	},
 
 	create_notice: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var message = req.param('message');
@@ -329,7 +329,7 @@ module.exports = {
 	},
 
 	remove: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var post_id = req.param('post_id');
 
 		Post.findOne(post_id).done(function(err, post) {

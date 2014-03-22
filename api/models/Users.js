@@ -46,7 +46,7 @@ module.exports = {
     },
 
     // One to One
-    deivce: {
+    device: {
     	model: 'Devices'
     },
 
@@ -84,8 +84,6 @@ module.exports = {
       delete obj.updatedAt;
       delete obj.username_lower;
       delete obj.password;
-      delete obj.profile_image;
-      delete obj.device;
       delete obj.supervising_courses;
       delete obj.attending_courses;
       delete obj.employed_schools;
@@ -105,8 +103,10 @@ module.exports = {
   },
 
   beforeValidate: function(values, next) {
-    values.username_lower = values.username.toLowerCase();
-    values.email = values.email.toLowerCase();
+    if (values.username)
+      values.username_lower = values.username.toLowerCase();
+    if (values.email)
+      values.email = values.email.toLowerCase();
     next();
   },
 

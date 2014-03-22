@@ -8,7 +8,7 @@
 module.exports = {
 
 	all: function(req, res) {
-		res.contentType('application/json');		
+		res.contentType('application/json; charset=utf-8');		
 
 		School.find().done(function(err, schools) {
   			var schoolsObject = new Array();
@@ -20,7 +20,7 @@ module.exports = {
 	},
 
 	courses: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var school_id = req.param('school_id');
 
 		School.findOne(school_id).done(function(err, school) {

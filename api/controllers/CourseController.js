@@ -10,7 +10,7 @@ var MemJS = require('memjs').Client
 module.exports = {
 
 	feed: function(req, res) {
-		res.contentType('application/json');
+		res.contentType('application/json; charset=utf-8');
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
@@ -48,7 +48,7 @@ module.exports = {
 	},
 
 	students: function(req, res) {
-    res.contentType('application/json');
+    res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
    
     Course.findOne(Number(course_id)).done(function(err, course) {
@@ -73,7 +73,7 @@ module.exports = {
 	},
 
 	grades: function(req, res) {
-    res.contentType('application/json');
+    res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
 
     Course.findOne(Number(course_id)).done(function(err, course) {
@@ -130,7 +130,7 @@ module.exports = {
 	},
 
 	add_manager: function(req, res) {
-    res.contentType('application/json');
+    res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
     var username = req.param('username');
     var manager = req.param('manager');
@@ -178,7 +178,7 @@ module.exports = {
 	},
 
 	remove: function(req, res) {
-    res.contentType('application/json');
+    res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
 
 		Course.findOne(course_id).done(function(err, course) {

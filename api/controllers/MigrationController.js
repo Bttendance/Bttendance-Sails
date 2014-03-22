@@ -133,16 +133,70 @@ module.exports = {
 	associate: function(req, res) {
 
 		//User-Device
+		// User.find().exec(function callback(err, users) {
+		// 	if (err || !users)
+		// 		return;
+
+		// 	for (var i = 0; i < users.length; i++) {
+		// 		Users.findOne(users[i].id).exec(function callback(err, user) {
+		// 			if (err || !user)
+		// 				return;
+
+		// 			Users.update({ id: user.id }, { device: user.id }).exec(function callback(err, updated_user) {
+		// 				if (err || !updated_user)
+		// 					return console.log(err);
+		// 				console.log(updated_user);
+		// 			});
+
+		// 			Devices.update({ id: user.id }, { owner: user.id }).exec(function callback(err, updated_device) {
+		// 				if (err || !updated_device)
+		// 					return console.log(err);
+		// 				console.log(updated_device);
+		// 			});
+		// 		});
+		// 	}
+		// });
+
+		//User-SuvpCourse
 		User.find().exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
-			for (var i = 0; i < users.length; i++) {
+			async.eachSeries(users, function (each_user, done) {
+				console.log(each_user.supervising_courses.length);
+				// Users.findOne(each_user.id).exec(function callback(err, user) {
+				// 	if (err || !user)
+				// 		return done(err);
 
-			}
+				// 	if (each_user.supervising_courses.length > 0) {
+				// 		console.log(each_user);
+				// 		Courses.find(getConditionFromIDs(each_user.supervising_courses)).exec(function callback(err, courses) {
+				// 			if (err || !courses)
+				// 				return done(err);
+
+				// 			// console.log(courses);
+
+				// 			for (var i = 0; i < courses.length; i++)
+				// 				user.supervising_courses.add(courses[i].id);
+
+				// 			// console.log(user);
+
+				// 			user.save().exec(function callback(err) {
+				// 				if (err)
+				// 					return done(err);
+
+				// 				// console.log(user);
+				// 				done();
+				// 			});
+				// 		});
+				// 	} else
+				// 		done();
+				// });
+			}, function (err) {
+				console.log(err);
+			});
 		});
-		
-		//User-SuvpCourse
+
 		//User-AttdCourse
 		//User-EmpySchool
 		//User-EnrlSchool
@@ -158,3 +212,21 @@ module.exports = {
 	}
   
 };
+
+// Function to get id list
+var getConditionFromIDs = function(array) {
+	var returnArray = new Array();
+	for (var index in array) {
+		var idObject = [];
+		idObject["id"] = array[index];
+		returnArray.push(idObject);
+	}
+
+	if (array.length == 0) {
+		var idObject = [];
+		idObject["id"] = 0;
+		returnArray.push(idObject);
+	}
+
+	return returnArray;
+}

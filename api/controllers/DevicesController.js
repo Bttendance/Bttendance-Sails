@@ -16,15 +16,16 @@
  */
 
 module.exports = {
-    
-  
 
+	all: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
 
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to DevicesController)
-   */
-  _config: {}
-
+		Devices.find().sort('id ASC').exec(function callback(err, devices) {
+			for (var i = 0; i < devices.length; i++)
+				devices[i] = devices[i].toWholeJSON();
+			var resultJSON = JSON.stringify(devices);
+	  	return res.send(resultJSON);
+		});
+	}
   
 };

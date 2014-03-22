@@ -70,12 +70,12 @@ module.exports = {
       Users.findOne({
         username: values.username
       }).done(function(err, user) {
-        values.author = user.id;
+        if (user)
+          values.author = user.id;
         next();
       });
-    }
-
-    next();
+    } else
+      next();
   },
 
   afterValidate: function(values, next) {
