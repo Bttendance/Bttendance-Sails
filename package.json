@@ -6,7 +6,6 @@
     "keywords": ["Bttendance"],
     "dependencies": {
         "sails": "0.10.0-rc4",
-        "sails-disk": "~0.10.0",
         "sails-postgresql" : "0.10.0-rc3",
         "waterline" : "0.10.0-rc6",
         "rc": "~0.3.3",

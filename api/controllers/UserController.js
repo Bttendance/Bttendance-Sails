@@ -26,20 +26,26 @@ module.exports = {
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 
-		User.findOne({
-  		username: username
-		}).done(function(err, user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(401, { message: "Username Find Error" });
 
 		  if (password != user.password)
 		    return res.send(401, { message: "Passwrod doesn't match Error" });
 
-		  if (device_uuid != user.device_uuid)
+		  if (device_uuid != user.device.uuid)
 		    return res.send(401, { message: "Device uuid doesn't match Error" });
 
-			var userJSON = JSON.stringify(user);
-	  	return res.send(userJSON);
+	  	return res.send(user.toOldObject());
 		});
 	},
 
@@ -47,7 +53,7 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var password = req.param('password');
-		var uuid = req.param('device_uuid');
+		var device_uuid = req.param('device_uuid');
 
 		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
@@ -59,14 +65,27 @@ module.exports = {
 			return res.send(400, { message: "Password is required"});
 		}
 
-		if (!uuid) {
+		if (!device_uuid) {
 			console.log("UserController : signin : UUID is required");
 			return res.send(400, { message: "UUID is required"});
 		}
 
-		User.findOne({
-  		username: username
-		}).done(function(err, user) {
+		username = username.toLowerCase();
+
+		Users
+		.findOne({
+		  or: [{username_lower: username}, {email: username}]
+		})
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
 
 			if (username == "appletest0"
 		|| username == "appletest1" 
@@ -78,41 +97,170 @@ module.exports = {
 		|| username == "appletest7"
 		|| username == "appletest8"
 		|| username == "appletest9") {
-				user.device_uuid = uuid;
 
-				User.findOne({
-					device_uuid: uuid
-				}).done(function(err, user_uuid) {
-					if (user_uuid && user.id != user_uuid.id) {
-						user_uuid.device_uuid = user_uuid.username;
-						user_uuid.save(function(err) {
-							user.save(function(err) {
+				Devices
+				.findOneByUuid(device_uuid)
+				.populate('owner')
+				.exec(function callback(err, device) {
+					if (err)
+				    return res.send(500, { message: "Device Found Error" });
+					else if (!device) {
+						user.device.uuid = device_uuid;
+						user.device.save(function callback(err) {
+					   	if (err)
+						    return res.send(500, { message: "Device Save Error1" });
+
+					  	return res.send(user.toOldObject());
+						});
+					} else if (device.uuid != user.device.uuid) {
+						device.uuid = device.owner.username_lower;
+						device.save(function callback(err) {
+							if (err)
+						    return res.send(500, { message: "Device Save Error2" });
+
+						  user.device.uuid = device_uuid;
+						  console.log(user);
+						  user.device.save(function callback(err) {
 								if (err)
-							    return res.send(500, { message: "User Save Error" });
-							  
-								var userJSON = JSON.stringify(user);
-					  		return res.send(userJSON);
+							    return res.send(500, { message: "Device Save Error3" });
+
+						  	return res.send(user.toOldObject());
+						  })
+						});
+					} else
+				  	return res.send(user.toOldObject());
+				});
+			} else
+				return checkPass(res, err, user, password, device_uuid);
+		});
+	},
+
+	signup: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var password = req.param('password');
+		var full_name = req.param('full_name');
+		var email = req.param('email');
+		var device_type = req.param('device_type');
+		var device_uuid = req.param('device_uuid');
+
+		if (!username) {
+			console.log("UserController : signin : Username or Email is required");
+			return res.send(400, { message: "Username or Email is required"});
+		}
+
+		if (!password) {
+			console.log("UserController : signin : Password is required");
+			return res.send(400, { message: "Password is required"});
+		}
+
+		if (!email) {
+			console.log("UserController : signin : Email is required");
+			return res.send(400, { message: "Email is required"});
+		}
+
+		if (!full_name) {
+			console.log("UserController : signin : Full Name is required");
+			return res.send(400, { message: "Full Name is required"});
+		}
+
+		if (!device_type) {
+			console.log("UserController : signin : Device Type is required");
+			return res.send(400, { message: "Device Type is required"});
+		}
+
+		if (!device_uuid) {
+			console.log("UserController : signin : UUID is required");
+			return res.send(400, { message: "UUID is required"});
+		}
+
+		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
+			if (err)
+		    return res.send(500, { message: "Deivce Find Error" });
+		  console.log(device);
+		  if (device && device.owner)
+		    return res.send(500, { message: "Deivce has been registered to other owner" });
+
+		  Users.findOneByUsername_lower(username.toLowerCase()).exec(function callback(err, user) {
+		  	if (err)
+			    return res.send(500, { message: "User Find Error" });
+			  if (user)
+			    return res.send(500, { message: "Username is already taken" });
+
+			  if (device) {
+					Users.create({
+						username: username,
+						password: password,
+						email: email,
+						full_name: full_name,
+						device: device.id				
+					}).exec(function callback(err, new_user) {
+						if (err || !new_user)
+					    return res.send(500, { message: "User Create Error" });
+
+					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+							if (err || !updated_device)
+						    return res.send(500, { message: "Deivce Save Error" });
+
+					    Users
+							.findOneById(new_user.id)
+							.populate('device')
+							.populate('supervising_courses')
+							.populate('attending_courses')
+							.populate('employed_schools')
+							.populate('serials')
+							.populate('enrolled_schools')
+							.populate('identifications')
+							.exec(function callback(err, user_new) {
+								if (err || !user_new)
+							    return res.send(404, { message: "No User Found Error" });
+
+						  	return res.send(user_new.toOldObject());
 							});
 						});
-					} else {
-						user.save(function(err) {
-							if (err)
-						    return res.send(500, { message: "User Save Error" });
-						  
-							var userJSON = JSON.stringify(user);
-				  		return res.send(userJSON);
+					});
+			  } else {
+					Devices.create({
+						type: device_type,
+						uuid: device_uuid
+					}).exec(function callback(err, new_device) {
+						if (err || !new_device)
+					    return res.send(500, { message: "Deivce Create Error" });
+
+						Users.create({
+							username: username,
+							password: password,
+							email: email,
+							full_name: full_name,
+							device: new_device.id			
+						}).exec(function callback(err, new_user) {
+							if (err || !new_user)
+						    return res.send(500, { message: "User Create Error" });
+
+						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+								if (err || !updated_device)
+							    return res.send(500, { message: "Deivce Save Error" });
+
+						    Users
+								.findOneById(new_user.id)
+								.populate('device')
+								.populate('supervising_courses')
+								.populate('attending_courses')
+								.populate('employed_schools')
+								.populate('serials')
+								.populate('enrolled_schools')
+								.populate('identifications')
+								.exec(function callback(err, user_new) {
+									if (err || !user_new)
+								    return res.send(404, { message: "No User Found Error" });
+
+							  	return res.send(new_user.toOldObject());
+								});
+							});
 						});
-					}
-				})
-			} else if (user)
-				return checkPass(res, err, user, password, uuid);
-			else {
-				User.findOne({
-		  		email: username
-				}).done(function(err, user) {
-					return checkPass(res, err, user, password, uuid);
-				});
-			}
+					});
+				}
+		  });
 		});
 	},
 
@@ -120,9 +268,16 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 
-		User.findOne({
-  		email: email
-		}).done(function(err, user) {
+		Users
+		.findOneByEmail(email)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(500, { message: "User Find Error" });
 
@@ -157,15 +312,10 @@ module.exports = {
 			});
 
 	  	user.save(function(err) {
-				// Error handling
-				if (err) {
-					console.log(err);
+				if (err)
 			    return res.send(500, { message: "User Save Error" });
-			  }
-			  console.log("new password is : " + password);
-		  	// return UserJSON
-				var userJSON = JSON.stringify(user);
-		  	return res.send(userJSON);
+
+		  	return res.send(user.toOldObject());
 	  	});
 		});
 	},
@@ -180,33 +330,26 @@ module.exports = {
 			return res.send(400, { message: "Notification Key is required"});
 		}
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-
-		  // No User found
-		  } else if (!user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  // Found User!
-		  } else {
-			  // Update User
-		  	user.notification_key = notification_key;
-		  	user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-		  	});
-		  }
+		  user.device.notification_key = notification_key;
+		  user.device.save(function callback(err) {
+		   	if (err)
+			    return res.send(500, { message: "Device Save Error" });
+
+		  	return res.send(user.toOldObject());
+	    });
 		});
 	},
 
@@ -220,33 +363,26 @@ module.exports = {
 			return res.send(400, { message: "Profile Image url is required"});
 		}
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-
-		  // No User found
-		  } else if (!user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  // Found User!
-		  } else {
-			  // Update User
-		  	user.profile_image = profile_image;
-		  	user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-		  	});
-		  }
+	  	user.profile_image = profile_image;
+	  	user.save(function callback(err) {
+				if (err)
+			    return res.send(500, { message: "User Save Error" });
+
+		  	return res.send(user.toOldObject());
+	  	});
 		});
 	},
 
@@ -260,33 +396,26 @@ module.exports = {
 			return res.send(400, { message: "Full Name is required"});
 		}
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-
-		  // No User found
-		  } else if (!user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  // Found User!
-		  } else {
-			  // Update User
-		  	user.full_name = full_name;
-		  	user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-		  	});
-		  }
+	  	user.full_name = full_name;
+	  	user.save(function callback(err) {
+				if (err)
+			    return res.send(500, { message: "User Save Error" });
+
+		  	return res.send(user.toOldObject());
+	  	});
 		});
 	},
 
@@ -300,33 +429,26 @@ module.exports = {
 			return res.send(400, { message: "Email is required"});
 		}
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-
-		  // No User found
-		  } else if (!user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  // Found User!
-		  } else {
-			  // Update User
-		  	user.email = email;
-		  	user.save(function(err) {
-					// Error handling
-					if (err) {
-						console.log(err);
-				    return res.send(500, { message: "User Save Error" });
-				  }
-			  	// return UserJSON
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-		  	});
-		  }
+	  	user.email = email;
+	  	user.save(function callback(err) {
+				if (err)
+			    return res.send(500, { message: "User Save Error" });
+
+		  	return res.send(user.toOldObject());
+	  	});
 		});
 	},
 
@@ -335,64 +457,83 @@ module.exports = {
 		var username = req.param('username');
 		var page = req.param('page');
 		
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
+		Users
+		.findOneByUsername(username)
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.exec(function callback(err, user) {
 			if (err || !user) 
 		    return res.send(404, { message: "No User Found Error" });
 
-	  	var total_courses = new Array();
+	  	var supervising_courses = new Array();
 	  	for (var i = 0; i < user.supervising_courses.length; i++)
-	  		total_courses.push(user.supervising_courses[i]);
-	  	for (var i = 0; i < user.attending_courses.length; i++)
-	  		total_courses.push(user.attending_courses[i]);
+	  		supervising_courses.push(user.supervising_courses[i].id);
 
-  		Course.find({
-  			where: {
-  				or: getConditionFromIDs(total_courses)
-  			}
-  		}).done(function(err, courses) {
+	  	var attending_courses = new Array();
+	  	for (var i = 0; i < user.attending_courses.length; i++)
+	  		attending_courses.push(user.attending_courses[i].id);
+
+	  	var total_courses = supervising_courses.concat(attending_courses);
+
+  		Courses
+  		.findById(total_courses)
+			.populate('posts')
+	  	.populate('students')
+	  	.populate('school')
+  		.exec(function callback(err, courses) {
   			if (err || !courses)
 	    		return res.send(404, { message: "No Course Found Error" });
 
-				var postsArray = new Array();
-				for (var index in courses)
-					postsArray = postsArray.concat(courses[index].posts);
+				var total_posts = new Array();
+				for (var i = 0; i < courses.length; i++)
+					for (var j = 0; j < courses[i].posts.length; j++)
+						total_posts.push(courses[i].posts[j].id);
 
-		  	var postsObject = new Array();
-	  		Post.find({
-	  			where: {
-	  				or: getConditionFromIDs(postsArray)
-	  			}
-	  		}).sort('id DESC').done(function(err, posts) {
-	  			if (!err && posts) {
-	  				for (var index in posts) {
-	  					if (user.supervising_courses.indexOf(posts[index].course) != -1) {
-
-	  						var course;
-	  						for (i = 0; i < courses.length; i++)
-	  							if (courses[i].id == posts[index].course)
-	  								course = courses[i];
-
-	  						var grade;
-	  						if (course.attd_check_count <= 0
-	  							|| course.students.length <= 0)
-	  							grade = 0;
-	  						else {
-	  							grade = Number(( (posts[index].checks.length - 1) / course.students.length * 100).toFixed());
-	  						}
-
-		  					if (grade  < 0) grade = 0;
-		  					if (grade > 100) grade = 100;
-
-	  						posts[index].grade = grade;
-	  					}
-	  					postsObject.push(posts[index]);
-	  				}
-						var postsJSON = JSON.stringify(postsObject);
-				  	return res.send(postsJSON);
-	  			} else
+	  		Posts
+	  		.findById(total_posts)
+	  		.populate('author')
+	  		.populate('course')
+	  		.populate('attendance')
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err || !posts)
 		    		return res.send(JSON.stringify(new Array()));
+
+					for (var i = 0; i < posts.length; i++) {
+						posts[i] = posts[i].toWholeObject();
+						posts[i].title = posts[i].course.name;
+						posts[i].checks = posts[i].attendance.checked_students;
+	  				posts[i].author_name = posts[i].author.full_name;
+	  				posts[i].course_name = posts[i].course.name;
+	  				posts[i].course_number = posts[i].course.name;
+	  				posts[i].author = posts[i].author.id;
+
+						var students_count = 0;
+						for (var j = 0; j < courses.length; j++) {
+							if (courses[j].id == posts[i].course.id) {
+								students_count = courses[j].students.length;
+			  				posts[i].school_name = courses[j].school.name;
+							}
+						}
+						var grade = Number(( (posts[i].checks.length - 1) / students_count * 100).toFixed());
+	  				if (grade  < 0) grade = 0;
+	  				if (grade > 100) grade = 100;
+	  				posts[i].grade = grade;
+	  				posts[i].course = posts[i].course.id;
+
+	  				if (supervising_courses.indexOf(posts[i].course) >= 0)
+	  					posts[i].message = "Attendance rate : " + grade + "%";
+	  				else {
+	  					if (posts[i].checks.indexOf(user.id) >= 0)
+	  						posts[i].message = "Attendance Checked";
+	  					else
+	  					 posts[i].message = "Attendance Failed";
+	  				}
+
+	  				delete posts[i].attendance;
+	  				delete posts[i].clicker;
+					}
+			  	return res.send(posts);
 	  		});
   		});
 		});
@@ -402,83 +543,91 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
+		Users
+		.findOneByUsername(username)
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.exec(function callback(err, user) {
+			if (err || !user) 
 		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-		  	var total_courses = new Array();
-		  	for (var i = 0; i < user.supervising_courses.length; i++)
-		  		total_courses.push(user.supervising_courses[i]);
-		  	for (var i = 0; i < user.attending_courses.length; i++)
-		  		total_courses.push(user.attending_courses[i]);
 
-	  		Course.find({
-	  			where: {
-	  				or: getConditionFromIDs(total_courses)
-	  			}
-	  		}).done(function(err, courses) {
-	  			if (err || !courses) 
+	  	var supervising_courses = new Array();
+	  	for (var i = 0; i < user.supervising_courses.length; i++)
+	  		supervising_courses.push(user.supervising_courses[i].id);
+
+	  	var attending_courses = new Array();
+	  	for (var i = 0; i < user.attending_courses.length; i++)
+	  		attending_courses.push(user.attending_courses[i].id);
+
+	  	var total_courses = supervising_courses.concat(attending_courses);
+
+  		Courses
+  		.findById(total_courses)
+			.populate('posts')
+	  	.populate('managers')
+	  	.populate('students')
+	  	.populate('school')
+  		.exec(function callback(err, courses) {
+  			if (err || !courses)
 		    		return res.send(JSON.stringify(new Array()));
 
-		    	var post_ids = new Array();
-		    	for (var index in courses) 
-		    		for (var i = 0; i < courses[index].posts.length; i++)
-		    			if (post_ids.indexOf(courses[index].posts[i]) == -1)
-		    				post_ids.push(courses[index].posts[i]);
+				var total_posts = new Array();
+				for (var i = 0; i < courses.length; i++)
+					for (var j = 0; j < courses[i].posts.length; j++)
+						total_posts.push(courses[i].posts[j].id);
 
-		    	Post.find()
-		  		.where({ or: getConditionFromIDs(post_ids) })
-		  		.sort('id DESC')
-		  		.done(function(err, posts) {
-		  			if (err)
-		    			return res.send(JSON.stringify(new Array()));
+	    	Posts
+	  		.findById(total_posts)
+	  		.populate('attendance')
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err)
+		    		return res.send(JSON.stringify(new Array()));
+					
+					for (var i = 0; i < courses.length; i++) {
+						courses[i] = courses[i].toWholeObject();
 
-				  	var postsObject = new Array();
-						for (var index in posts) {
-							if (posts[index].type == "attendance")
-								postsObject.push(posts[index]);
+						courses[i].number = courses[i].name;
+						courses[i].school_name = courses[i].school.name;
+						courses[i].school = courses[i].school.id;
+
+						//grade
+						var checks = new Array();
+						var attd_check_count = 0;
+						for (var j = 0; j < posts.length; j++) {
+							if (posts[j].type == "attendance") {
+								checks = checks.concat(posts[j].attendance.checked_students);
+								attd_check_count++;
+							}
 						}
+						var grade = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
+  					if (grade  < 0) grade = 0;
+  					if (grade > 100) grade = 100;
 
-		  			var coursesObject = new Array();
-	  				for (var index in courses) {
-	  					var grade = 0;
+  					courses[i].grade = grade;
+						courses[i].attd_check_count = attd_check_count;
 
-	  					if (courses[index].attd_check_count <= 0
-	  						|| courses[index].students.length <= 0)
-	  						grade = 0;
-	  					else if (user.supervising_courses.indexOf(courses[index].id) != -1) { //supervising
-	  						for (var i = 0; i < postsObject.length; i++) 
-	  							if (postsObject[i].course == courses[index].id)
-	  								grade += postsObject[i].checks.length - 1;
-	  						grade = Number((grade/courses[index].attd_check_count/courses[index].students.length * 100).toFixed());
-	  					} else {	//attending
-	  						for (var i = 0; i < postsObject.length; i++) 
-	  							if (postsObject[i].course == courses[index].id 
-	  								&& postsObject[i].checks.indexOf(user.id) != -1)
-	  								grade++;
-	  						grade = Number((grade/courses[index].attd_check_count * 100).toFixed());
-	  					}
+						//managers
+						var managers = new Array();
+						for (index in courses[i].managers)
+							managers.push(courses[i].managers[index].id);
+						courses[i].managers = managers;
 
-	  					if (grade  < 0) grade = 0;
-	  					if (grade > 100) grade = 100;
+						//students
+						var students = new Array();
+						for (index in courses[i].students)
+							students.push(courses[i].students[index].id);
+						courses[i].students = students;
 
-	  					courses[index].grade = grade;
-	  					coursesObject.push(courses[index]);
-	  				}
-
-						var coursesJSON = JSON.stringify(coursesObject);
-				  	return res.send(coursesJSON);
-		  		});
+						//posts
+						var posts = new Array();
+						for (index in courses[i].posts)
+							posts.push(courses[i].posts[index].id);
+						courses[i].posts = posts;
+					}
+			  	return res.send(courses);
 	  		});
-		  }
+  		});
 		});
 	},
 
@@ -486,39 +635,38 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
-			if (err) {
-				console.log(err);
-		    return res.send(500, { message: "User Find Error" });
-		  // No User found
-		  } else if (!user) {
+		Users
+		.findOneByUsername(username)
+		.populate('employed_schools')
+		.populate('enrolled_schools')
+		.exec(function callback(err, user) {
+			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
-		  // Found User!
-		  } else {
-		  	var total_schools = new Array();
-		  	for (var i = 0; i < user.employed_schools.length; i++)
-		  		total_schools.push(user.employed_schools[i]["id"]);
-		  	for (var i = 0; i < user.enrolled_schools.length; i++)
-		  		total_schools.push(user.enrolled_schools[i]["id"]);
 
-	  		School.find({
-	  			where: {
-	  				or: getConditionFromIDs(total_schools)
-	  			}
-	  		}).done(function(err, schools) {
-	  			if (!err && schools) {
-		  			var schoolsObject = new Array();
-	  				for (var index in schools)
-	  					schoolsObject.push(schools[index]);
-						var schoolsJSON = JSON.stringify(schoolsObject);
-				  	return res.send(schoolsJSON);
-	  			} else
-		    		return res.send(JSON.stringify(new Array()));
-	  		});
-		  }
+		  var employed_schools = new Array();
+	  	for (var i = 0; i < user.employed_schools.length; i++)
+	  		employed_schools.push(user.employed_schools[i].id);
+
+	  	var enrolled_schools = new Array();
+	  	for (var i = 0; i < user.enrolled_schools.length; i++)
+	  		enrolled_schools.push(user.enrolled_schools[i].id);
+
+	  	var total_schools = employed_schools.concat(enrolled_schools);
+
+  		Schools
+  		.findById(total_schools)
+  		.populate('serials')
+  		.populate('courses')
+  		.populate('professors')
+  		.populate('students')
+  		.exec(function callback(err, schools) {
+  			if (err || !schools) 
+	    		return res.send(JSON.stringify(new Array()));
+
+				for (var i = 0; i < schools.length; i++)
+					schools[i] = schools[i].toOldObject();
+		  	return res.send(schools);
+  		});
 		});
 	},
 
@@ -527,39 +675,57 @@ module.exports = {
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			// Error handling
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  if (user.supervising_courses.indexOf(Number(course_id)) != -1)
+		  var supervising_courses = new Array();
+		  for (var i = 0; i < user.supervising_courses.length; i++)
+		  	supervising_courses.push(user.supervising_courses[i].id);
+		  if (supervising_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(404, { message: "User is supervising this course" });
 
-	  	if (!user.attending_courses) user.attending_courses = new Array();
+		  var attending_courses = new Array();
+		  for (var i = 0; i < user.attending_courses.length; i++)
+		  	attending_courses.push(user.attending_courses[i].id);
+		  if (attending_courses.indexOf(Number(course_id)) != -1)
+		    return res.send(user.toOldObject());
 
-    	// add course if user doesn't have course
-	  	if (user.attending_courses.indexOf(Number(course_id)) == -1)
-		  	user.attending_courses.push(Number(course_id));
+		  Courses.findOneById(course_id).exec(function callback(err, course) {
+		  	if (err || !course)
+		    	return res.send(404, { message: "No Course Found Error" });
 
-      Course.findOne(Number(course_id)).done(function(err, course) {
-      	if (!err && course) {
-      		if (!course.students) course.students = new Array();
+				user.attending_courses.add(course_id);
+				user.save(function callback(err) {
+					if (err)
+			    	return res.send(500, { message: "User Save Error" });
 
-      		if (course.students.indexOf(user.id) == -1)
-      			course.students.push(user.id);
-      		course.save(function(err) {});
+			    Users
+					.findOneByUsername(username)
+					.populate('device')
+					.populate('supervising_courses')
+					.populate('attending_courses')
+					.populate('employed_schools')
+					.populate('serials')
+					.populate('enrolled_schools')
+					.populate('identifications')
+					.exec(function callback(err, user_new) {
+						if (err || !user_new)
+					    return res.send(404, { message: "No User Found Error" });
 
-		      user.save(function(err) {
-						if (err)
-					    return res.send(500, { message: "User Save Error" });
-
-						var userJSON = JSON.stringify(user);
-				  	return res.send(userJSON);
-		      });
-      	}
-      });
+				  	return res.send(user_new.toOldObject());
+					});
+				});
+		  });
 		});
 	},
 	
@@ -568,61 +734,57 @@ module.exports = {
 		var username = req.param('username');
 		var school_id = req.param('school_id');
 		var serial = req.param('serial');
-
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
+		
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, { message: "User Find Error" });
+		    return res.send(404, { message: "No User Found Error" });
 
-	  	Serial.findOne({
-	  		key: serial
-	  	}).done(function(err, serial) {
-	  		if (err || !serial)
-		    	return res.send(500, { message: "Serial Find Error" });
+		  Serials.findOne({
+		  	key: serial,
+		  	school: school_id
+		  }).exec(function callback(err, serial) {
+		  	if (err || !serial)
+		    	return res.send(404, { message: "No Serial Found Error" });
 
-		    if (serial.school != school_id)
-		    	return res.send(500, { message: "School doesn't match Error" });
+			  var employed_schools = new Array();
+			  for (var i = 0; i < user.employed_schools.length; i++)
+			  	employed_schools.push(user.employed_schools[i].id);
+			  if (employed_schools.indexOf(Number(school_id)) == -1)
+			    user.employed_schools.add(school_id);
 
-		  	if (!user.employed_schools) user.employed_schools = new Array();
+			  var serials = new Array();
+			  for (var i = 0; i < user.serials.length; i++)
+			  	serials.push(user.serials[i].id);
+			  if (serials.indexOf(Number(school_id)) == -1)
+			    user.serials.add(serial.id);
 
-	    	var school_key = {};
-	    	school_key["id"] = Number(school_id);
-	    	school_key["key"] = serial.key;
+				user.save(function callback(err) {
+			    Users
+					.findOneByUsername(username)
+					.populate('device')
+					.populate('supervising_courses')
+					.populate('attending_courses')
+					.populate('employed_schools')
+					.populate('serials')
+					.populate('enrolled_schools')
+					.populate('identifications')
+					.exec(function callback(err, user_new) {
+						if (err || !user_new)
+					    return res.send(404, { message: "No User Found Error" });
 
-	    	for (var i = 0; i < user.employed_schools.length; i++)
-	    		if (Number(school_id) == user.employed_schools[i]["id"]) {
-	    			user.employed_schools.splice(i, 1);
-	    			break;
-	    		}
-
-			  user.employed_schools.push(school_key);
-
-      	// save new values
-	      user.save(function(err) {
-					if (err)
-				    return res.send(500, { message: "User Save Error" });
-
-			  	School.findOne(school_id).done(function(err, school) {
-			  		if (err || !school)
-				    	return res.send(500, { message: "School Find Error" });
-
-				    if (!school.professors)
-				    	school.professors = new Array();
-
-				    if (school.professors.indexOf(Number(user.id)) == -1)
-				    	school.professors.push(user.id);
-
-				    school.save(function(err) {
-							if (err)
-						    return res.send(500, { message: "School Save Error" });
-
-							var userJSON = JSON.stringify(user);
-					  	return res.send(userJSON);
-				    });	  			
-			  	});
-	      });
-	  	});
+				  	return res.send(user_new.toOldObject());
+					});
+				});
+		  });
 		});
 	},
 	
@@ -632,51 +794,57 @@ module.exports = {
 		var school_id = req.param('school_id');
 		var student_id = req.param('student_id');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, { message: "User Find Error" });
+		    return res.send(404, { message: "No User Found Error" });
 
-	  	if (!user.enrolled_schools) user.enrolled_schools = new Array();
+		  var enrolled_schools = new Array();
+		  for (var i = 0; i < user.enrolled_schools.length; i++)
+		  	enrolled_schools.push(user.enrolled_schools[i].id);
+		  if (enrolled_schools.indexOf(Number(school_id)) != -1)
+		  	return res.send(user.toOldObject());
 
-    	var school_key = {};
-    	school_key["id"] = Number(school_id);
-    	school_key["key"] = student_id;
+		  Schools.findOneById(school_id).exec(function callback(err, school) {
+		  	if (err || !school)
+		    	return res.send(404, { message: "No School Found Error" });
 
+				Identifications.create({
+					identity: student_id,
+					owner: user.id,
+					school: school.id
+				}).exec(function callback(err, identification) {
+			  	if (err || !school)
+			    	return res.send(404, { message: "Identity Generate Error" });
 
-    	for (var i = 0; i < user.enrolled_schools.length; i++)
-    		if (Number(school_id) == user.enrolled_schools[i]["id"]) {
-    			user.enrolled_schools.splice(i, 1);
-    			break;
-    		}
+			    user.enrolled_schools.add(school.id);
+					user.save(function callback(err) {
+				    Users
+						.findOneByUsername(username)
+						.populate('device')
+						.populate('supervising_courses')
+						.populate('attending_courses')
+						.populate('employed_schools')
+						.populate('serials')
+						.populate('enrolled_schools')
+						.populate('identifications')
+						.exec(function callback(err, user_new) {
+							if (err || !user_new)
+						    return res.send(404, { message: "No User Found Error" });
 
-		  user.enrolled_schools.push(school_key);
-
-    	// save new values
-      user.save(function(err) {
-				if (err)
-			    return res.send(500, { message: "User Save Error" });
-
-		  	School.findOne(school_id).done(function(err, school) {
-		  		if (err || !school)
-			    	return res.send(500, { message: "School Find Error" });
-
-			    if (!school.students)
-			    	school.students = new Array();
-
-			    if (school.students.indexOf(Number(user.id)) == -1)
-			    	school.students.push(user.id);
-
-			    school.save(function(err) {
-						if (err)
-					    return res.send(500, { message: "School Save Error" });
-
-						var userJSON = JSON.stringify(user);
-				  	return res.send(userJSON);
-			    });	  			
-		  	});
-      });
+					  	return res.send(user_new.toOldObject());
+						});
+					});
+				});
+		  });
 		});
 	},
 
@@ -686,48 +854,30 @@ module.exports = {
 
 		if (!search_id)
 	    return res.send(400, { message: "Need username of email" });
+	  search_id = search_id.toLowerCase();
 
-	  User.findOne({
-	  	username: search_id
-	  }).done(function(err, user) {
-	  	if (err || !user) {
-	  		User.findOne({
-	  			email: search_id
-	  		}).done(function(err, user) {
-	  			if (err || !user)
-				    return res.send(500, { message: "User Find Error" });
+		Users
+		.findOne({
+		  or: [{username_lower: search_id}, {email: search_id}]
+		})
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
 
-					var userJSON = JSON.stringify(user);
-			  	return res.send(userJSON);
-	  		});
-	  	} else {
-				var userJSON = JSON.stringify(user);
-		  	return res.send(userJSON);
-	  	}
-	  });
+	  	return res.send(user.toOldObject());
+		});
 	}
 };
 
-// Function to get id list
-var getConditionFromIDs = function(array) {
-	var returnArray = new Array();
-	for (var index in array) {
-		var idObject = [];
-		idObject["id"] = array[index];
-		returnArray.push(idObject);
-	}
-
-	if (array.length == 0) {
-		var idObject = [];
-		idObject["id"] = 0;
-		returnArray.push(idObject);
-	}
-
-	return returnArray;
-}
-
 // Function for signin API
-var checkPass = function(res, err, user, password, uuid) {
+var checkPass = function(res, err, user, password, device_uuid) {
 
 	// Error handling
 	if (err) {
@@ -741,11 +891,10 @@ var checkPass = function(res, err, user, password, uuid) {
   // Found User!
   } else if (!passwordHash.verify(password, user.password)) {
 	  return res.send(404, { message: "Password doesn't match Error" });
-  } else if (user.device_uuid != uuid) {
+  } else if (user.device.uuid != device_uuid) {
 	  return res.send(406, { message: "UUID doesn't match Error" });
   } else {
-		var userJSON = JSON.stringify(user);
-  	return res.send(userJSON);
+  	return res.send(user.toOldObject());
   }
 }
 

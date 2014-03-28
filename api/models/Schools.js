@@ -58,18 +58,48 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.students;
-      delete obj.professors;
       return obj;
     },
 
-    toWholeJSON: function() {
-      var result = {};
-      for(var key in this) {
-        if (key != 'toJSON')
-          result[key] = this[key];
-      }
-      return result;
+    toWholeObject: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
+      obj.createdAt = this.createdAt;
+      obj.updatedAt = this.updatedAt;
+      return obj;
+    },
+
+    toOldObject: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
+      obj.createdAt = this.createdAt;
+      obj.updatedAt = this.updatedAt;
+
+      //serials
+      var serials = new Array();
+      for (var i = 0; i < obj.serials.length; i++)
+        serials.push(obj.serials[i].id);
+      obj.serials = serials;
+
+      //courses
+      var courses = new Array();
+      for (var i = 0; i < obj.courses.length; i++)
+        courses.push(obj.courses[i].id);
+      obj.courses = courses;
+
+      //professors
+      var professors = new Array();
+      for (var i = 0; i < obj.professors.length; i++)
+        professors.push(obj.professors[i].id);
+      obj.professors = professors;
+      
+      //students
+      var students = new Array();
+      for (var i = 0; i < obj.students.length; i++)
+        students.push(obj.students[i].id);
+      obj.students = students;
+
+      return obj;
     }
     
   },

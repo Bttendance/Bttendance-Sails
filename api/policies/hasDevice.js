@@ -11,10 +11,18 @@ module.exports = function hasDevice (req, res, next) {
 	if (req.port == 7331) 
 		return next();
 
-	// Super Username Policy
+	// Params
 	var username = req.param('username');
+	var device_uuid = req.param('device_uuid');
+
+	if (!username || !device_uuid) {
+		console.log("hasDevice : Username and Device UUID is required");
+		return res.send(400, { message: "Username and Device UUID  is required"});
+	}
+
+	// Super Username Policy
 	if (username == "appletest0"
-		|| username == "appletest1" 
+		|| username == "appletest1"
 		|| username == "appletest2"
 		|| username == "appletest3"
 		|| username == "appletest4"
@@ -26,17 +34,8 @@ module.exports = function hasDevice (req, res, next) {
 		return next();
 
 	// hasDevice Policy
-	var username = req.param('username');
-	var device_uuid = req.param('device_uuid');
-
-	if (!username || !device_uuid) {
-		console.log("hasDevice : Username and Device UUID is required");
-		return res.send(400, { message: "Username and Device UUID  is required"});
-	}
-
-	User.findOne({
-		username: username
-	}).done(function(err, user) {
+	username = username.toLowerCase();
+	Users.findOneByUsername_lower(username).populate('device').done(function(err, user) {
 
 		// Error handling
 		if (err) {
@@ -48,7 +47,7 @@ module.exports = function hasDevice (req, res, next) {
 	    return res.send(404, { message: "No User Found Error" });
 
 	  // User Device Doesn't Match
-	  } else if (user.device_uuid != device_uuid) {
+	  } else if (user.device.uuid != device_uuid) {
 	    return res.send(401, { message: "Device UUID doesn't match Error" });
 
 		// Found User

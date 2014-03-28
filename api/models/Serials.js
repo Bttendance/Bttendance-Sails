@@ -19,21 +19,26 @@ module.exports = {
     	model: 'Schools'
     },
 
+    owners: {
+      collection: 'Users',
+      via: 'serials'
+    },
+
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.key;
+      delete obj.owners;
       return obj;
     },
 
-    toWholeJSON: function() {
-      var result = {};
-      for(var key in this) {
-        if (key != 'toJSON')
-          result[key] = this[key];
-      }
-      return result;
+    toWholeObject: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
+      obj.createdAt = this.createdAt;
+      obj.updatedAt = this.updatedAt;
+      obj.owners = this.owners;
+      return obj;
     }
     
   },

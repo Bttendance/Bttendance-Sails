@@ -20,11 +20,14 @@ module.exports = {
 	all: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 
-		Devices.find().sort('id ASC').exec(function callback(err, devices) {
+		Devices
+		.find()
+		.populate('owner')
+		.sort('id ASC')
+		.exec(function callback(err, devices) {
 			for (var i = 0; i < devices.length; i++)
-				devices[i] = devices[i].toWholeJSON();
-			var resultJSON = JSON.stringify(devices);
-	  	return res.send(resultJSON);
+				devices[i] = devices[i].toWholeObject();
+	  	return res.send(devices);
 		});
 	}
   

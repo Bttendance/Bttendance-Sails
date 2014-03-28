@@ -38,11 +38,11 @@ module.exports = {
 
     // has many students (checked)
     checks: {
-      type: 'array'
+      type: 'json'
     },
 
     clusters: {
-      type: 'array'
+      type: 'json'
     },
 
     author_name: 'string',

@@ -16,15 +16,14 @@
  */
 
 module.exports = {
-    
-  
 
+	all: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
 
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to PostsController)
-   */
-  _config: {}
-
-  
+		Posts.find().populate('author').populate('course').sort('id ASC').exec(function callback(err, posts) {
+			for (var i = 0; i < posts.length; i++)
+				posts[i] = posts[i].toWholeObject();
+	  	return res.send(posts);
+		});
+	}
 };

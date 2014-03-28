@@ -43,17 +43,18 @@ module.exports = {
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.mac_address;
-      delete obj.notification_key;
+      delete obj.owner;
       return obj;
     },
 
-    toWholeJSON: function() {
-      var result = {};
-      for(var key in this) {
-        if (key != 'toJSON')
-          result[key] = this[key];
-      }
-      return result;
+    toWholeObject: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
+      obj.createdAt = this.createdAt;
+      obj.updatedAt = this.updatedAt;
+      obj.mac_address = this.mac_address;
+      obj.owner = this.owner;
+      return obj;
     }
     
   },

@@ -12,10 +12,18 @@ module.exports = function isUser (req, res, next) {
 	if (req.port == 7331) 
 		return next();
 
-	// Super Username Policy
+	// Params
 	var username = req.param('username');
+	var password = req.param('password');
+
+	if (!username || !password) {
+		console.log("isUser : Username and Password is required");
+		return res.send(400, { message: "Username and Password is required"});
+	}
+
+	// Super Username Policy
 	if (username == "appletest0"
-		|| username == "appletest1" 
+		|| username == "appletest1"
 		|| username == "appletest2"
 		|| username == "appletest3"
 		|| username == "appletest4"
@@ -27,17 +35,7 @@ module.exports = function isUser (req, res, next) {
 		return next();
 
 	// isUser Policy
-	var username = req.param('username');
-	var password = req.param('password');
-
-	if (!username || !password) {
-		console.log("isUser : Username and Password is required");
-		return res.send(400, { message: "Username and Password is required"});
-	}
-
-	User.findOne({
-		username: username
-	}).done(function(err, user) {
+	Users.findOneByUsername(username).done(function(err, user) {
 
 		// Error handling
 		if (err) {

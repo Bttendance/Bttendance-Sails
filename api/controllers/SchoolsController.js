@@ -17,14 +17,20 @@
 
 module.exports = {
     
-  
+	all: function(req, res) {
+		res.contentType('application/json; charset=utf-8');		
 
-
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to SchoolsController)
-   */
-  _config: {}
-
+		Schools
+		.find()
+		.populate('serials')
+		.populate('courses')
+		.populate('professors')
+		.populate('students')
+		.exec(function callback(err, schools) {
+			for (var i = 0; i < schools.length; i++)
+				schools[i] = schools[i].toWholeObject();
+	  	return res.send(schools);
+		});
+	},
   
 };

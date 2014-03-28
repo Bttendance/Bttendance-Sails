@@ -28,7 +28,7 @@ module.exports = {
 
     // has many Managers
     managers: {
-      type: 'array',
+      type: 'json',
       required: true
     },
 
@@ -40,12 +40,12 @@ module.exports = {
     
     // has many Students
     students: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Posts
     posts: {
-      type: 'array'
+      type: 'json'
     },
 
     attd_check_count: {

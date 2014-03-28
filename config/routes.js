@@ -46,11 +46,6 @@ module.exports.routes = {
     action: 'forgot_password'
   },
 
-  'post /api/user/signup': {
-    controller: 'user',
-    action: 'create'
-  },
-
   'put /api/user/update/notification_key': {
     controller: 'user',
     action: 'update_notification_key'

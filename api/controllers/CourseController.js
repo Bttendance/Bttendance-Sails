@@ -224,6 +224,8 @@ module.exports = {
         }
       });
 
+      //Course에 포함된 Post지우는게 없음!!!
+
       course.destroy(function(err) {});
 			var courseJSON = JSON.stringify(course);
 	  	return res.send(courseJSON);

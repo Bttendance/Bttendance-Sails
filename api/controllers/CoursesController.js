@@ -17,26 +17,18 @@
 
 module.exports = {
 
-  create: function(req, res) {
+	all: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var name = req.param('name');
-		var school_id = req.param('school_id');
-		var professor_name = req.param('professor_name');
 
-		Courses.create({
-			name: name,
-			school_id: school_id,
-			professor_name: professor_name
-		}).exec(function callback(err, course) {
-			Users.findOne({
-				username: username
-			}).exec(function callback(err, user) {
-				user.supervising_courses.add(course.id);
-				user.save();
-				var courseJSON = JSON.stringify(course);
-		  	return res.send(courseJSON);
-			})
+		Courses
+		.find()
+		.populate('managers')
+		.populate('students')
+		.sort('id ASC')
+		.exec(function callback(err, courses) {
+			for (var i = 0; i < courses.length; i++)
+				courses[i] = courses[i].toWholeObject();
+	  	return res.send(courses);
 		});
-  }
+	}
 };

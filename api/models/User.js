@@ -61,22 +61,22 @@ module.exports = {
 
     // has many Supervising Courses
     supervising_courses: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Attending Courses
     attending_courses: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Employed Schools (id, latest_serial)
     employed_schools: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Enrolled Schools (id, student_id or phone_number)
     enrolled_schools: {
-      type: 'array'
+      type: 'json'
     }
   },
 

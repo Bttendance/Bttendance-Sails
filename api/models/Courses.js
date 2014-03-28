@@ -45,8 +45,6 @@ module.exports = {
 
     attdCheckedAt: 'string',
 
-    grade: 'integer',
-
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
@@ -55,13 +53,53 @@ module.exports = {
       return obj;
     },
 
-    toWholeJSON: function() {
-      var result = {};
-      for(var key in this) {
-        if (key != 'toJSON')
-          result[key] = this[key];
-      }
-      return result;
+    toWholeObject: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
+      obj.createdAt = this.createdAt;
+      obj.updatedAt = this.updatedAt;
+      obj.attdCheckedAt = this.attdCheckedAt;
+      return obj;
+    },
+
+    toOldObject: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
+      obj.createdAt = this.createdAt;
+      obj.updatedAt = this.updatedAt;
+      obj.attdCheckedAt = this.attdCheckedAt;
+
+      obj.number = obj.name;
+      obj.school_name = obj.school.name;
+      obj.school = obj.school.id;
+
+      //attd_check_count
+      var checks = new Array();
+      var attd_check_count = 0;
+      for (var j = 0; j < obj.posts.length; j++)
+        if (obj.posts[j].type == "attendance")
+          attd_check_count++;
+      obj.attd_check_count = attd_check_count;
+
+      //managers
+      var managers = new Array();
+      for (index in obj.managers)
+        managers.push(obj.managers[index].id);
+      obj.managers = managers;
+
+      //students
+      var students = new Array();
+      for (index in obj.students)
+        students.push(obj.students[index].id);
+      obj.students = students;
+
+      //posts
+      var posts = new Array();
+      for (index in obj.posts)
+        posts.push(obj.posts[index].id);
+      obj.posts = posts;
+
+      return obj;
     }
     
   },

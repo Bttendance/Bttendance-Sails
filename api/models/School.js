@@ -32,22 +32,22 @@ module.exports = {
 
     // has many Courses
     courses: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Professors
     professors: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Students
     students: {
-      type: 'array'
+      type: 'json'
     },
 
     // has many Serials
     serials: {
-      type: 'array'
+      type: 'json'
     }
     
   },
