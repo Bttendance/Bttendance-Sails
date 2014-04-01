@@ -120,6 +120,7 @@ module.exports = {
 				Courses.create({
 					id: courses[i].id,
 					name: courses[i].name,
+					number: courses[i].number,
 					professor_name: courses[i].professor_name,
 					attdCheckedAt: courses[i].attdCheckedAt,
 					createdAt: courses[i].createdAt,
@@ -143,6 +144,7 @@ module.exports = {
 				Posts.create({
 					id: posts[i].id,
 					type: posts[i].type,
+					message: posts[i].message,
 					createdAt: posts[i].createdAt,
 					updatedAt: posts[i].updatedAt
 				}).exec(function callback(err, post) {

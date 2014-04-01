@@ -15,57 +15,63 @@ module.exports = {
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
-			if (!err && user) {
-				Post.create({
-				  author: user.id,
-				  author_name: user.full_name,
-				  course: course_id,
-				  type: 'attendance'
-				}).done(function(err, post) {
-					if (!err && post) {
-						Course.findOne(course_id).done(function(err, course) {
-							if(!err && course) {
-								course.attdCheckedAt = JSON.parse(JSON.stringify(post)).createdAt;
-								course.attd_check_count = course.attd_check_count + 1;
+		Users
+		.findOneByUsername(username)
+		.exec(function callback(err, user) {
+			if(err || !user)
+    		return res.send(404, { message: "User Found Error" });
 
-								course.save(function(err) {
-									if (err) {
-								  	console.log(err);
-						    		return res.send(404, { message: "Course Save Error" });
-									} else {
-								  	// Send notification about post to Prof & Std
-								  	var notiUsers = new Array();
-								  	for (var i = 0; i < course.students.length; i++)
-								  		notiUsers.push(course.students[i]);
-								  	for (var i = 0; i < course.managers.length; i++)
-								  		notiUsers.push(course.managers[i]);
-								  	
-							  		User.find({
-							  			where: {
-							  				or: getConditionFromIDs(notiUsers)
-							  			}
-							  		}).sort('id DESC').done(function(err, users) {
-							  			for (var j = 0; j < users.length; j++)
-							  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
-							  		});
+			Posts.create({
+			  author: user.id,
+			  course: course_id,
+			  type: 'attendance'
+			}).exec(function callback(err, post) {
+				if (err || !post)
+	    		return res.send(500, { message: "Post Create Error" });
 
-							  		setTimeout(function() { resendNotis(post.id); }, 40000);
-							  		setTimeout(function() { resendNotis(post.id); }, 75000);
-							  		setTimeout(function() { resendNotis(post.id); }, 120000);
+	    	Posts
+	    	.findById(post.id)
+	  		.populate('author')
+	  		.populate('course')
+	  		.populate('attendance')
+	  		.exec(function callback(err, post) {
+	  			if (err || !post)
+	  				return res.send(500, {message: "Post Find Error"});
 
-										var courseJSON = JSON.stringify(course);
-								  	return res.send(courseJSON);
-									}
-								});
-							}
-						});
-					}
+		    	Courses
+		    	.update({id: post.course}, {attdCheckedAt: post.createdAt})
+					.populate('posts')
+			  	.populate('managers')
+			  	.populate('students')
+			  	.populate('school')
+		    	.exec(function callback(err, course) {
+		    		if (err || !course)
+			    		return res.send(404, { message: "Course UpdateError" });
+
+				  	// Send notification about post to Prof & Std
+				  	var notiUsers = new Array();
+				  	for (var i = 0; i < course.students.length; i++)
+				  		notiUsers.push(course.students[i].id);
+				  	for (var i = 0; i < course.managers.length; i++)
+				  		notiUsers.push(course.managers[i].id);
+				  	
+			  		Users
+			  		.findById(notiUsers)
+						.populate('device')
+			  		.sort('id DESC')
+			  		.exec(function callback(err, users) {
+			  			for (var j = 0; j < users.length; j++)
+			  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+			  		});
+
+			  		setTimeout(function() { resendNotis(post.id); }, 40000);
+			  		setTimeout(function() { resendNotis(post.id); }, 75000);
+			  		setTimeout(function() { resendNotis(post.id); }, 120000);
+
+				  	return res.send(course.toOldObject());
+		    	});
 				});
-			} else
-    		return res.send(404, { message: "No User Found Error" });
+			});
 		});
 	},
 
@@ -75,22 +81,27 @@ module.exports = {
 		var post_id = req.param('post_id');
 		var uuid = req.param('uuid');
 
-		User.findOne({
+		Users.findOne({
 			device_uuid: uuid
 		}).done(function(err, user_uuid) {
 			if (err || !user_uuid)
     		return res.send(202, { message: "Found wrong device" });
 
-			User.findOne({
-				username: username
-			}).done(function(err, user_api) {
+			Users
+			.findOneByUsername(username)
+			.exec(function callback(err, user_api) {
 				if (err || !user_api)
     			return res.send(404, { message: "No User Found Error" });
 
     		if (user_uuid.id == user_api.id)
     			return res.send(400, { message: "User has found his own device somehow" });
 
-				Post.findOne(post_id).done(function(err, post) {
+				Posts
+				.findOneById(post_id)
+	  		.populate('author')
+	  		.populate('course')
+	  		.populate('attendance')
+				.exec(function callback(err, post) {
 					if (err || !post)
 		    		return res.send(404, { message: "No Post Found Error" });
 
@@ -215,7 +226,10 @@ module.exports = {
 											noti = false;
 
 									if (noti) {
-										User.findOne(notiable[j]).done(function(err, user) {
+										Users
+										.findOneById(notiable[j])
+										.populate('device')
+										.exec(function callback(err, user) {
 											if (user)
 												sendNotification(user, null, post, "Attendance has been checked", "attendance_checked");
 										});
@@ -231,8 +245,7 @@ module.exports = {
 					post.checks = checks;
 					post.clusters = clusters;
 					post.save(function(err) {
-						var postJSON = JSON.stringify(post);
-				  	return res.send(postJSON);
+				  	return res.send(post.toOldObject());
 					});
 				});
 			})
@@ -245,11 +258,19 @@ module.exports = {
 		var user_id = req.param('user_id');
 		var post_id = req.param('post_id');
 
-		User.findOne(user_id).done(function(err, user) {
+		Users
+		.findOneById(user_id)
+		.populate('device')
+		.exec(function callback(err, user) {
 			if (err || !user)
   			return res.send(404, { message: "No User Found Error" });
 
-  		Post.findOne(post_id).done(function(err, post) {
+  		Posts
+  		.findOneById(post_id)
+  		.populate('author')
+  		.populate('course')
+  		.populate('attendance')
+  		.exec(function callback(err, post) {
 				if (err || !post)
 	  			return res.send(404, { message: "No Post Found Error" });
 
@@ -267,12 +288,10 @@ module.exports = {
 					checks.push(user.id);
 					post.checks = checks;
 					post.save(function(err) {
-						var postJSON = JSON.stringify(post);
-				  	return res.send(postJSON);
+				  	return res.send(post.toOldObject());
 					});
 				} else {
-					var postJSON = JSON.stringify(post);
-			  	return res.send(postJSON);
+			  	return res.send(post.toOldObject());
 				}
 
   		})
@@ -285,83 +304,110 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 
-		User.findOne({
-			username: username
-		}).done(function(err, user) {
+		Users
+		.findOneByUsername(username)
+		.exec(function callback(err, user) {
 			if (err || !user)
-    		return res.send(404, { message: "No User Found Error" });
+    		return res.send(404, { message: "User Found Error" });
 
-			Course.findOne(course_id).done(function(err, course) {
+			Courses
+			.findOneById(course_id)
+			.populate('posts')
+	  	.populate('managers')
+	  	.populate('students')
+	  	.populate('school')
+			.exec(function callback(err, course) {
 				if(err || !course)
-	    		return res.send(404, { message: "No Course Found Error" });
+	    		return res.send(404, { message: "Course Found Error" });
 
-				Post.create({
+				Posts.create({
 				  author: user.id,
 				  author_name: user.full_name,
 				  course: course_id,
 				  title: course.name + ' Notice',
 				  message: message,
 				  type: 'notice'
-				}).done(function(err, post) {
+				}).exec(function callback(err, post) {
 					if (err || !post)
 	    			return res.send(404, { message: "No Post Found Error" });
 
-			  	// Send notification about post to Prof & Std
-			  	var notiUsers = new Array();
-			  	for (var i = 0; i < course.students.length; i++)
-			  		notiUsers.push(course.students[i]);
-			  	for (var i = 0; i < course.managers.length; i++)
-			  		notiUsers.push(course.managers[i]);
-			  	
-		  		User.find()
-		  		.where({ or: getConditionFromIDs(notiUsers) })
-		  		.sort('id DESC')
-		  		.done(function(err, users) {
-		  			for (var j = 0; j < users.length; j++)
-		  				sendNotification(users[j], course, post, message, "notification");
-		  		});
+	    		Posts
+	    		.findById(post.id)
+		  		.populate('author')
+		  		.populate('course')
+		  		.populate('attendance')
+		  		.exec(function callback(err, post) {
+		  			if (err || !post)
+		  				return res.send(404, {message: "No Post Found Error"});
 
-					var postJSON = JSON.stringify(post);
-			  	return res.send(postJSON);
-	    	});
+				  	// Send notification about post to Prof & Std
+				  	var notiUsers = new Array();
+				  	for (var i = 0; i < course.students.length; i++)
+				  		notiUsers.push(course.students[i]);
+				  	for (var i = 0; i < course.managers.length; i++)
+				  		notiUsers.push(course.managers[i]);
+				  	
+			  		Users
+			  		.findById(notiUsers)
+			  		.populate('device')
+			  		.sort('id DESC')
+			  		.exec(function callback(err, users) {
+			  			for (var j = 0; j < users.length; j++)
+			  				sendNotification(users[j], course, post, message, "notification");
+			  		});
+
+				  	return res.send(post.toOldObject());
+		    	});
+		  	});
 			});
 		});
 	},
 
-	remove: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var post_id = req.param('post_id');
+	// remove: function(req, res) {
+	// 	res.contentType('application/json; charset=utf-8');
+	// 	var post_id = req.param('post_id');
 
-		Post.findOne(post_id).done(function(err, post) {
-			if (err || !post)
-    		return res.send(404, { message: "No Post Found Error" });
+	// 	Post.findOne(post_id).done(function(err, post) {
+	// 		if (err || !post)
+ //    		return res.send(404, { message: "No Post Found Error" });
 
-    	Course.findOne(post.course).done(function(err, course) {
-				if (err || !course)
-	    		return res.send(404, { message: "No Course Found Error" });
+ //    	Course.findOne(post.course).done(function(err, course) {
+	// 			if (err || !course)
+	//     		return res.send(404, { message: "No Course Found Error" });
 
-	    	if (course.posts.indexOf(Number(post.id)) != -1) {
-        	course.posts.splice(course.posts.indexOf(Number(post.id)), 1);
-        	if (post.type == "attendance")
-        		course.attd_check_count = course.attd_check_count - 1;
-        	course.save(function(err) {
-        		post.destroy(function(err) {});
-						var courseJSON = JSON.stringify(course);
-				  	return res.send(courseJSON);
-        	});
-	    	}
-    	});
-		});
-	}
+	//     	if (course.posts.indexOf(Number(post.id)) != -1) {
+ //        	course.posts.splice(course.posts.indexOf(Number(post.id)), 1);
+ //        	if (post.type == "attendance")
+ //        		course.attd_check_count = course.attd_check_count - 1;
+ //        	course.save(function(err) {
+ //        		post.destroy(function(err) {});
+	// 					var courseJSON = JSON.stringify(course);
+	// 			  	return res.send(courseJSON);
+ //        	});
+	//     	}
+ //    	});
+	// 	});
+	// }
 };
 
 var resendNotis = function(post_id) {
-	console.log("resendNotis");
-	Post.findOne(post_id).done(function(err, post) {
+
+	Posts
+	.findOneById(post_id)
+	.populate('author')
+	.populate('course')
+	.populate('attendance')
+	.exec(function callback(err, post) {
 		if (err || !post)
 			return;
 
-		Course.findOne(post.course).done(function(err, course) {
+		Courses
+		.findOneById(post.course)
+		.populate('posts')
+  	.populate('managers')
+  	.populate('students')
+  	.populate('school')
+		.exec(function callback(err, course) {
 			if (err || !course)
 				return;
 
@@ -375,11 +421,10 @@ var resendNotis = function(post_id) {
 					unchecked.splice(index, 1);
 			}
 								  	
-  		User.find({
-  			where: {
-  				or: getConditionFromIDs(unchecked)
-  			}
-  		}).sort('id DESC').done(function(err, users) {
+  		Users
+  		.findById(unchecked)
+  		.populate('device')
+  		.sort('id DESC').exec(function(err, users) {
   			if (err || !users)
   				return;
   			
@@ -391,11 +436,14 @@ var resendNotis = function(post_id) {
 }
 
 // Function to get id list
+// user.populate('device')
+// post.populate(all)
+// course.populate(all)
 var sendNotification = function(user, course, post, message, type) {
-	if (!user.notification_key)
+	if (!user.device.notification_key)
 		return;
 
-	if (user.device_type == 'android') {
+	if (user.device.type == 'android') {
 
 		var message = new gcm.Message({
 		    collapseKey: 'bttendance',
@@ -405,13 +453,13 @@ var sendNotification = function(user, course, post, message, type) {
 		    	title: post.course_name,
 		      message: message,
 		      type: type,
-		      post: JSON.stringify(post),
-		      course: JSON.stringify(course)
+		      post: JSON.stringify(post.toOldObject()),
+		      course: JSON.stringify(course.toOldObject())
 		    }
 		});
 
 		var registrationIds = [];
-		registrationIds.push(user.notification_key);
+		registrationIds.push(user.device.notification_key);
 
 		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
 		sender.send(message, registrationIds, 4, function (err, result) {
@@ -421,7 +469,7 @@ var sendNotification = function(user, course, post, message, type) {
     		console.log(result);
 		});
 
-	} else if (user.device_type == 'iphone') {
+	} else if (user.device.type == 'iphone') {
 
 		var apns = require('apn');
 		var options;
@@ -453,7 +501,7 @@ var sendNotification = function(user, course, post, message, type) {
 		}
 
     var apnConnection = new apns.Connection(options);
-		var myDevice = new apns.Device(user.notification_key); //for token
+		var myDevice = new apns.Device(user.device.notification_key); //for token
 		var note = new apns.Notification();
 
 		var alert = "Notification from Bttendance";
@@ -478,80 +526,57 @@ var sendNotification = function(user, course, post, message, type) {
 
 		// apnConnection.pushNotification(note, myDevice);
 		apnConnection.sendNotification(note);
-
 	}
 }
 
-// Function to get id list
-var getConditionFromIDs = function(array) {
-	var returnArray = new Array();
-	for (var index in array) {
-		var idObject = [];
-		idObject["id"] = array[index];
-		returnArray.push(idObject);
-	}
-	return returnArray;
-}
+// var isClose = function(location_a, location_b) {
+// 	var lat_a = parseFloat(location_a[0]);
+// 	var lgn_a = parseFloat(location_a[1]);
+// 	var lat_b = parseFloat(location_b[0]);
+// 	var lgn_b = parseFloat(location_b[1]);
 
-// Function to get id list
-var getConditionFromUUIDs = function(array) {
-	var returnArray = new Array();
-	for (var index in array) {
-		var idObject = [];
-		idObject["device_uuid"] = array[index];
-		returnArray.push(idObject);
-	}
-	return returnArray;
-}
+// 	if (isNaN(lat_a) || isNaN(lgn_a) || isNaN(lat_b) || isNaN(lgn_b)
+// 		|| lat_a == 0 || lgn_a == 0 || lat_b == 0 || lgn_b == 0)
+// 		return false;
 
-var isClose = function(location_a, location_b) {
-	var lat_a = parseFloat(location_a[0]);
-	var lgn_a = parseFloat(location_a[1]);
-	var lat_b = parseFloat(location_b[0]);
-	var lgn_b = parseFloat(location_b[1]);
+// 	if (((lat_a - lat_b) * (lat_a - lat_b) + (lgn_a - lgn_b) * (lgn_a - lgn_b)) > 0.01)
+// 		return false;
 
-	if (isNaN(lat_a) || isNaN(lgn_a) || isNaN(lat_b) || isNaN(lgn_b)
-		|| lat_a == 0 || lgn_a == 0 || lat_b == 0 || lgn_b == 0)
-		return false;
+// 	return true;
+// }
 
-	if (((lat_a - lat_b) * (lat_a - lat_b) + (lgn_a - lgn_b) * (lgn_a - lgn_b)) > 0.01)
-		return false;
+// // Function to get median location of a cluster
+// var getMedianLocation = function(cluster, locations) {
+// 	var medianLocation = new Array();
+// 	var latitudeArray = new Array();
+// 	var longitudeArray = new Array();
+// 	for (var i in cluster) {
+// 		for (var j in locations)
+// 			if (locations[j][0] == cluster[i]) {
+// 				latitudeArray.push(locations[j][1]);
+// 				longitudeArray.push(locations[j][2]);
+// 			}
+// 	}
 
-	return true;
-}
+// 	medianLocation.push(getMedian(latitudeArray));
+// 	medianLocation.push(getMedian(longitudeArray));
 
-// Function to get median location of a cluster
-var getMedianLocation = function(cluster, locations) {
-	var medianLocation = new Array();
-	var latitudeArray = new Array();
-	var longitudeArray = new Array();
-	for (var i in cluster) {
-		for (var j in locations)
-			if (locations[j][0] == cluster[i]) {
-				latitudeArray.push(locations[j][1]);
-				longitudeArray.push(locations[j][2]);
-			}
-	}
+// 	return medianLocation;
+// }
 
-	medianLocation.push(getMedian(latitudeArray));
-	medianLocation.push(getMedian(longitudeArray));
+// // Get Median of an array
+// var getMedian = function(array) {
+// 	if (array.length < 3)
+// 		return 0;
 
-	return medianLocation;
-}
-
-// Get Median of an array
-var getMedian = function(array) {
-	if (array.length < 3)
-		return 0;
-
-	for (var i = 0; i < array.length; i++) {
-		for (var j = i; j < array.length; j++) {
-			if (array[i] > array[j]) {
-				var k = array[i];
-				array[i] = array[j];
-				array[j] = k;
-			}
-		}
-	}
-	return array[Math.floor(array.length/2)];
-}
+// 	for (var i = 0; i < array.length; i++) {
+// 		for (var j = i; j < array.length; j++) {
+// 			if (array[i] > array[j]) {
+// 				var k = array[i];
+// 				array[i] = array[j];
+// 				array[j] = k;
+// 			}
+// 		}
+// 	}
+// 	return array[Math.floor(array.length/2)];
+// }

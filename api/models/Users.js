@@ -142,17 +142,8 @@ module.exports = {
       obj.notification_key = obj.device.notification_key;
       delete obj.device;
 
-      //supervising_courses
-      var supervising_courses = new Array();
-      for (var i = 0; i < obj.supervising_courses.length; i++)
-        supervising_courses.push(obj.supervising_courses[i].id);
-      obj.supervising_courses = supervising_courses;
-
-      //attending_courses
-      var attending_courses = new Array();
-      for (var i = 0; i < obj.attending_courses.length; i++)
-        attending_courses.push(obj.attending_courses[i].id);
-      obj.attending_courses = attending_courses;
+      obj.supervising_courses = getIds(obj.supervising_courses);
+      obj.attending_courses = getIds(obj.attending_courses);
 
       //employed_schools
       var employed_schools = new Array();
@@ -232,3 +223,13 @@ module.exports = {
   }
 
 };
+
+var getIds = function(jsonArray) {
+  if (!jsonArray)
+    return new Array();
+
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+    ids.push(jsonArray[i].id);
+  return ids;
+}

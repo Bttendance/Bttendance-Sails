@@ -15,6 +15,10 @@ module.exports = {
       required: true
     },
 
+    number: {
+      type: 'string'
+    },
+
     professor_name: {
       type: 'string',
       required: true
@@ -69,7 +73,7 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.attdCheckedAt = this.attdCheckedAt;
 
-      obj.number = obj.name;
+      obj.number = obj.number;
       obj.school_name = obj.school.name;
       obj.school = obj.school.id;
 
@@ -81,23 +85,9 @@ module.exports = {
           attd_check_count++;
       obj.attd_check_count = attd_check_count;
 
-      //managers
-      var managers = new Array();
-      for (index in obj.managers)
-        managers.push(obj.managers[index].id);
-      obj.managers = managers;
-
-      //students
-      var students = new Array();
-      for (index in obj.students)
-        students.push(obj.students[index].id);
-      obj.students = students;
-
-      //posts
-      var posts = new Array();
-      for (index in obj.posts)
-        posts.push(obj.posts[index].id);
-      obj.posts = posts;
+      obj.managers = getIds(obj.managers);
+      obj.students = getIds(obj.students);
+      obj.posts = getIds(obj.posts);
 
       return obj;
     }
@@ -139,3 +129,13 @@ module.exports = {
   }
 
 };
+
+var getIds = function(jsonArray) {
+  if (!jsonArray)
+    return new Array();
+
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+    ids.push(jsonArray[i].id);
+  return ids;
+}

@@ -108,7 +108,7 @@ module.exports = {
 						user.device.uuid = device_uuid;
 						user.device.save(function callback(err) {
 					   	if (err)
-						    return res.send(500, { message: "Device Save Error1" });
+						    return res.send(500, { message: "Device Save Error" });
 
 					  	return res.send(user.toOldObject());
 						});
@@ -116,13 +116,13 @@ module.exports = {
 						device.uuid = device.owner.username_lower;
 						device.save(function callback(err) {
 							if (err)
-						    return res.send(500, { message: "Device Save Error2" });
+						    return res.send(500, { message: "Device Save Error" });
 
 						  user.device.uuid = device_uuid;
 						  console.log(user);
 						  user.device.save(function callback(err) {
 								if (err)
-							    return res.send(500, { message: "Device Save Error3" });
+							    return res.send(500, { message: "Device Save Error" });
 
 						  	return res.send(user.toOldObject());
 						  })
@@ -465,14 +465,8 @@ module.exports = {
 			if (err || !user) 
 		    return res.send(404, { message: "No User Found Error" });
 
-	  	var supervising_courses = new Array();
-	  	for (var i = 0; i < user.supervising_courses.length; i++)
-	  		supervising_courses.push(user.supervising_courses[i].id);
-
-	  	var attending_courses = new Array();
-	  	for (var i = 0; i < user.attending_courses.length; i++)
-	  		attending_courses.push(user.attending_courses[i].id);
-
+	  	var supervising_courses = getIds(user.supervising_courses);
+	  	var attending_courses = getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
   		Courses
@@ -500,13 +494,6 @@ module.exports = {
 		    		return res.send(JSON.stringify(new Array()));
 
 					for (var i = 0; i < posts.length; i++) {
-						posts[i] = posts[i].toWholeObject();
-						posts[i].title = posts[i].course.name;
-						posts[i].checks = posts[i].attendance.checked_students;
-	  				posts[i].author_name = posts[i].author.full_name;
-	  				posts[i].course_name = posts[i].course.name;
-	  				posts[i].course_number = posts[i].course.name;
-	  				posts[i].author = posts[i].author.id;
 
 						var students_count = 0;
 						for (var j = 0; j < courses.length; j++) {
@@ -515,23 +502,29 @@ module.exports = {
 			  				posts[i].school_name = courses[j].school.name;
 							}
 						}
-						var grade = Number(( (posts[i].checks.length - 1) / students_count * 100).toFixed());
-	  				if (grade  < 0) grade = 0;
-	  				if (grade > 100) grade = 100;
-	  				posts[i].grade = grade;
-	  				posts[i].course = posts[i].course.id;
 
-	  				if (supervising_courses.indexOf(posts[i].course) >= 0)
-	  					posts[i].message = "Attendance rate : " + grade + "%";
-	  				else {
-	  					if (posts[i].checks.indexOf(user.id) >= 0)
-	  						posts[i].message = "Attendance Checked";
-	  					else
-	  					 posts[i].message = "Attendance Failed";
+						var grade;
+						var message;
+						if (posts[i].type == 'attendance') {
+							grade = Number(( (posts[i].attendance.checked_students.length - 1) / students_count * 100).toFixed());
+		  				if (grade  < 0) grade = 0;
+		  				if (grade > 100) grade = 100;
+
+		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
+		  					message = "Attendance rate : " + grade + "%";
+		  				else {
+		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
+		  						message = "Attendance Checked";
+		  					else
+		  					 message = "Attendance Failed";
+		  				}
+		  			}
+
+	  				posts[i] = posts[i].toOldObject();
+	  				if (posts[i].type == 'attendance') {
+		  				posts[i].grade = grade;
+	  					posts[i].message = message;
 	  				}
-
-	  				delete posts[i].attendance;
-	  				delete posts[i].clicker;
 					}
 			  	return res.send(posts);
 	  		});
@@ -551,14 +544,8 @@ module.exports = {
 			if (err || !user) 
 		    return res.send(404, { message: "No User Found Error" });
 
-	  	var supervising_courses = new Array();
-	  	for (var i = 0; i < user.supervising_courses.length; i++)
-	  		supervising_courses.push(user.supervising_courses[i].id);
-
-	  	var attending_courses = new Array();
-	  	for (var i = 0; i < user.attending_courses.length; i++)
-	  		attending_courses.push(user.attending_courses[i].id);
-
+	  	var supervising_courses = getIds(user.supervising_courses);
+	  	var attending_courses = getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
   		Courses
@@ -585,11 +572,6 @@ module.exports = {
 		    		return res.send(JSON.stringify(new Array()));
 					
 					for (var i = 0; i < courses.length; i++) {
-						courses[i] = courses[i].toWholeObject();
-
-						courses[i].number = courses[i].name;
-						courses[i].school_name = courses[i].school.name;
-						courses[i].school = courses[i].school.id;
 
 						//grade
 						var checks = new Array();
@@ -604,26 +586,8 @@ module.exports = {
   					if (grade  < 0) grade = 0;
   					if (grade > 100) grade = 100;
 
+						courses[i] = courses[i].toOldObject();
   					courses[i].grade = grade;
-						courses[i].attd_check_count = attd_check_count;
-
-						//managers
-						var managers = new Array();
-						for (index in courses[i].managers)
-							managers.push(courses[i].managers[index].id);
-						courses[i].managers = managers;
-
-						//students
-						var students = new Array();
-						for (index in courses[i].students)
-							students.push(courses[i].students[index].id);
-						courses[i].students = students;
-
-						//posts
-						var posts = new Array();
-						for (index in courses[i].posts)
-							posts.push(courses[i].posts[index].id);
-						courses[i].posts = posts;
 					}
 			  	return res.send(courses);
 	  		});
@@ -643,14 +607,8 @@ module.exports = {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  var employed_schools = new Array();
-	  	for (var i = 0; i < user.employed_schools.length; i++)
-	  		employed_schools.push(user.employed_schools[i].id);
-
-	  	var enrolled_schools = new Array();
-	  	for (var i = 0; i < user.enrolled_schools.length; i++)
-	  		enrolled_schools.push(user.enrolled_schools[i].id);
-
+		  var employed_schools = getIds(user.employed_schools);
+	  	var enrolled_schools = getIds(user.enrolled_schools);
 	  	var total_schools = employed_schools.concat(enrolled_schools);
 
   		Schools
@@ -688,15 +646,11 @@ module.exports = {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  var supervising_courses = new Array();
-		  for (var i = 0; i < user.supervising_courses.length; i++)
-		  	supervising_courses.push(user.supervising_courses[i].id);
+		  var supervising_courses = getIds(user.supervising_courses);
 		  if (supervising_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(404, { message: "User is supervising this course" });
 
-		  var attending_courses = new Array();
-		  for (var i = 0; i < user.attending_courses.length; i++)
-		  	attending_courses.push(user.attending_courses[i].id);
+		  var attending_courses = getIds(user.attending_courses);
 		  if (attending_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(user.toOldObject());
 
@@ -755,15 +709,11 @@ module.exports = {
 		  	if (err || !serial)
 		    	return res.send(404, { message: "No Serial Found Error" });
 
-			  var employed_schools = new Array();
-			  for (var i = 0; i < user.employed_schools.length; i++)
-			  	employed_schools.push(user.employed_schools[i].id);
+			  var employed_schools = getIds(user.employed_schools);
 			  if (employed_schools.indexOf(Number(school_id)) == -1)
 			    user.employed_schools.add(school_id);
 
-			  var serials = new Array();
-			  for (var i = 0; i < user.serials.length; i++)
-			  	serials.push(user.serials[i].id);
+			  var serials = getIds(user.serials);
 			  if (serials.indexOf(Number(school_id)) == -1)
 			    user.serials.add(serial.id);
 
@@ -807,9 +757,7 @@ module.exports = {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  var enrolled_schools = new Array();
-		  for (var i = 0; i < user.enrolled_schools.length; i++)
-		  	enrolled_schools.push(user.enrolled_schools[i].id);
+		  var enrolled_schools = getIds(user.enrolled_schools);
 		  if (enrolled_schools.indexOf(Number(school_id)) != -1)
 		  	return res.send(user.toOldObject());
 
@@ -875,6 +823,16 @@ module.exports = {
 		});
 	}
 };
+
+var getIds = function(jsonArray) {
+	if (!jsonArray)
+		return new Array();
+
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+  	ids.push(jsonArray[i].id);
+	return ids;
+}
 
 // Function for signin API
 var checkPass = function(res, err, user, password, device_uuid) {

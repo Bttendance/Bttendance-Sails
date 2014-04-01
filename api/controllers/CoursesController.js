@@ -22,8 +22,10 @@ module.exports = {
 
 		Courses
 		.find()
-		.populate('managers')
-		.populate('students')
+		.populate('posts')
+  	.populate('managers')
+  	.populate('students')
+  	.populate('school')
 		.sort('id ASC')
 		.exec(function callback(err, courses) {
 			for (var i = 0; i < courses.length; i++)

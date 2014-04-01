@@ -74,31 +74,10 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-
-      //serials
-      var serials = new Array();
-      for (var i = 0; i < obj.serials.length; i++)
-        serials.push(obj.serials[i].id);
-      obj.serials = serials;
-
-      //courses
-      var courses = new Array();
-      for (var i = 0; i < obj.courses.length; i++)
-        courses.push(obj.courses[i].id);
-      obj.courses = courses;
-
-      //professors
-      var professors = new Array();
-      for (var i = 0; i < obj.professors.length; i++)
-        professors.push(obj.professors[i].id);
-      obj.professors = professors;
-      
-      //students
-      var students = new Array();
-      for (var i = 0; i < obj.students.length; i++)
-        students.push(obj.students[i].id);
-      obj.students = students;
-
+      obj.serials = getIds(obj.serials);
+      obj.courses = getIds(obj.courses);
+      obj.professors = getIds(obj.professors);
+      obj.students = getIds(obj.students);
       return obj;
     }
     
@@ -137,3 +116,13 @@ module.exports = {
   }
 
 };
+
+var getIds = function(jsonArray) {
+  if (!jsonArray)
+    return new Array();
+
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+    ids.push(jsonArray[i].id);
+  return ids;
+}
