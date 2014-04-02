@@ -7,7 +7,7 @@ We've started this service from 2013/11/01.
 This app uses "Sails.js" as framework and "Java Script" as language.
 
 ##Guide Line
-
+=================
 ####Model
 - Attribute doesn't contain Capital Letter.
 - Attribute uses '_' as space between words.
@@ -20,7 +20,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - Controller Action : ':action_:model' (ex : join_school)
 - Route : 'api/:controller/:action/:model' to ':action_:model'
 - Every API requires username, password
-
+=================
 ####Install & Run
     $ git clone git@github.com:Bttendance/Bttendance-NodeJS.git
     $ sudo npm install -g sails
