@@ -90,23 +90,23 @@ module.exports.connections = {
 
   // Heroku Postgre SQL has connection limit up to 500 
   // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
-  development: {
-    module   : 'sails-postgresql',
-    host     : 'ec2-54-204-42-178.compute-1.amazonaws.com',
-    port     : 5432,
-    user     : 'neqpefgtcbgyym',
-    password : 'ub0oR3o9VsAbGsuiYarNsx4yqw',
-    database : 'd9vocafm0kncoe',
-    ssl      : true
-  },
-
   // development: {
   //   module   : 'sails-postgresql',
-  //   host     : 'localhost',
+  //   host     : 'ec2-54-204-42-178.compute-1.amazonaws.com',
   //   port     : 5432,
-  //   user     : 'TheFinestArtist',
-  //   password : 'postgres',
-  //   database : 'postgres'
-  // }
+  //   user     : 'neqpefgtcbgyym',
+  //   password : 'ub0oR3o9VsAbGsuiYarNsx4yqw',
+  //   database : 'd9vocafm0kncoe',
+  //   ssl      : true
+  // },
+
+  development: {
+    module   : 'sails-postgresql',
+    host     : 'localhost',
+    port     : 5432,
+    user     : 'TheFinestArtist',
+    password : 'postgres',
+    database : 'postgres'
+  }
 
 };

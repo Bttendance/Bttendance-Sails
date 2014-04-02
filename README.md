@@ -8,6 +8,19 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 
 ##Guide Line
 
+####Model
+- Attribute doesn't contain Capital Letter.
+- Attribute uses '_' as space between words.
+- User Model is for Access (which includes username, email, password, access_token, etc)
+- Every Model is associated via waterline association.
+- Some Model is associcated via array of id.
+
+####API
+- API Schema : 'api/:controller/:action/:model' (ex : 'api/user/join/school')
+- Controller Action : ':action_:model' (ex : join_school)
+- Route : 'api/:controller/:action/:model' to ':action_:model'
+- Every API requires username, password
+
 ####Install & Run
     $ git clone git@github.com:Bttendance/Bttendance-NodeJS.git
     $ sudo npm install -g sails
@@ -81,19 +94,6 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ git push origin old
     $ git remote add bttd-old git@heroku.com:bttendance-old.git
     $ git push bttd-old old:master
-
-####Model
-- Attribute doesn't contain Capital Letter.
-- Attribute uses '_' as space between words.
-- User Model is for Access (which includes username, email, password, access_token, etc)
-- Every Model is associated via waterline association.
-- Some Model is associcated via array of id.
-
-####API
-- API Schema : 'api/:controller/:action/:model' (ex : 'api/user/join/school')
-- Controller Action : ':action_:model' (ex : join_school)
-- Route : 'api/:controller/:action/:model' to ':action_:model'
-- Every API requires username, password
 
 ##Developer
 
