@@ -30,19 +30,23 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var serial = req.param('serial');
 
-		Serial.findOne({
-			key: serial
-		}).done(function(err, serial) {
+		Serials
+		.findOneByKey(serial)
+		.exec(function callback(err, serial) {
 			if (err || !serial) 
-	    	return res.send(404, { message: "No Serial Found Error" });
+	    	return res.send(404, { message: "Serial Found Error" });
 
-			School.findOne(serial.school).done(function(err, school) {
+			Schools
+			.findOneById(serial.school)
+			.populate('serials')
+			.populate('courses')
+			.populate('professors')
+			.populate('students')
+			.exec(function callback(err, school) {
 				if (err || !school) 
 	    		return res.send(404, { message: "No School Found Error" });
 
-		  	// return SchoolJSON
-				var schoolJSON = JSON.stringify(school);
-		  	return res.send(schoolJSON);
+		  	return res.send(school.toOldObject());
 			});
 		});
 
@@ -58,9 +62,10 @@ module.exports = {
 
 	  if (!school_id)
 	  	school_id = 1;
-		Serial.create({
+
+		Serials.create({
 		  school: school_id
-		}).done(function(err, serial) {
+		}).exec(function callback(err, serial) {
 
 		  // Error handling
 		  if (err || !serial)
@@ -95,22 +100,7 @@ module.exports = {
 					console.log("Message sent: " + response.message);
 			});
 
-			School.findOne(serial.school).done(function(err, school) {
-		  	if (!school.serials) user.serials = new Array();
-
-	    	// add course if user doesn't have course
-		  	if (school.serials.indexOf(Number(serial.id)) == -1)
-			  	school.serials.push(Number(serial.id));
-
-	      school.save(function(err) {
-					if (err)
-				    return res.send(500, { message: "School Save Error" });
-
-			  	// return SerialJSON
-					var serialJSON = JSON.stringify(serial);
-			  	return res.send(serialJSON);
-	      });
-			})
+	  	return res.send(serial);
 		});
 	}
   

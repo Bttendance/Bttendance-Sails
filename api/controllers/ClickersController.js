@@ -1,5 +1,5 @@
 /**
- * PollsController.js 
+ * ClickersController.js 
  *
  * @description ::
  * @docs        :: http://sailsjs.org/#!documentation/controllers

@@ -110,22 +110,32 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-
-    if (values.type == 'attendance' && !values.checks) {
+    if (values.type == 'attendance') {
       var checks = new Array();
       checks.push(values.author);
-      values.checks = checks;
-    }
 
-    if (values.type == 'attendance' && !values.clusters) {
       var clusters = new Array();
       var prof = new Array();
       prof.push(values.author);
       clusters.push(prof);
-      values.clusters = clusters;
-    }
 
-    next();
+      Attendances
+      .create().exec(function callback(err, attendance) {
+        if (err || !attendance)
+          next(err);
+        values.attendance = attendance.id;
+        next();
+      });
+    } else if (values.type == 'clicker') {
+      Clickers
+      .create().exec(function callback(err, clicker) {
+        if (err || !clicker)
+          next(err);
+        values.clicker = clicker.id;
+        next();
+      });
+    } else
+      next();
   },
 
   afterCreate: function(values, next) {

@@ -16,21 +16,4 @@
  */
 
 module.exports = {
-
-	all: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-
-		Posts
-		.find()
-		.populate('author')
-		.populate('course')
-		.populate('attendance')
-		.populate('clicker')
-		.sort('id ASC')
-		.exec(function callback(err, posts) {
-			for (var i = 0; i < posts.length; i++)
-				posts[i] = posts[i].toWholeObject();
-	  	return res.send(posts);
-		});
-	}
 };
