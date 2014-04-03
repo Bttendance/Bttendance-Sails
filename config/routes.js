@@ -109,6 +109,11 @@ module.exports.routes = {
   'post /api/post/create/notice': {
     controller: 'post',
     action: 'create_notice'
+  },
+
+  'get /api/post/:post_id': {
+    controller: 'post',
+    action: 'find_post'
   }
 
 

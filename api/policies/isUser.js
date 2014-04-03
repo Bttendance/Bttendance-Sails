@@ -8,10 +8,6 @@
 
 module.exports = function isUser (req, res, next) {
 
-	// Super Port Policy
-	if (req.port == 7331) 
-		return next();
-
 	// Params
 	var username = req.param('username');
 	var password = req.param('password');

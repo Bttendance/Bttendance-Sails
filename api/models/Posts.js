@@ -111,8 +111,8 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     if (values.type == 'attendance') {
-      var checks = new Array();
-      checks.push(values.author);
+      var checked_students = new Array();
+      checked_students.push(values.author);
 
       var clusters = new Array();
       var prof = new Array();
@@ -120,7 +120,10 @@ module.exports = {
       clusters.push(prof);
 
       Attendances
-      .create().exec(function callback(err, attendance) {
+      .create({
+        checked_students: checked_students,
+        clusters: clusters
+      }).exec(function callback(err, attendance) {
         if (err || !attendance)
           next(err);
         values.attendance = attendance.id;
@@ -139,7 +142,24 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
-    next();
+    if (values.type == 'attendance') {
+      Attendances
+      .update({id: values.attendance}, {post: values.id})
+      .exec(function callback(err, attendance) {
+        if (err || !attendance)
+          next(err);
+        next();
+      });
+    } else if (values.type == 'clicker') {
+      Clickers
+      .update({id: values.clicker}, {post: values.id})
+      .exec(function callback(err, clicker) {
+        if (err || !clicker)
+          next(err);
+        next();
+      });
+    } else
+      next();
   },
 
   beforeUpdate: function(values, next) {

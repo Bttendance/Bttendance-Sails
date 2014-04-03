@@ -12,6 +12,6 @@ module.exports.models = {
   // i.e. the name of one of your app's connections (see `config/connections.js`)
   //
   // (defaults to localDiskDb)
-  connection: process.env.NODE_ENV || 'local',
+  connection: process.env.NODE_ENV || 'development',
   // migrate: 'safe'
 };

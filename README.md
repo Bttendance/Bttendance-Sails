@@ -84,16 +84,16 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ git branch
     $ git remote
     $ git remote add origin git@github.com:Bttendance/Bttendance-NodeJS.git
-    $ git remote add bttd-dev git@heroku.com:bttendance-dev.git
-    $ git remote add bttd git@heroku.com:bttendance.git
+    $ git remote add bttendance-dev git@heroku.com:bttendance-dev.git
+    $ git remote add bttendance git@heroku.com:bttendance.git
     $ git push origin master
-    $ git push bttd-dev master
-    $ git push bttd master
+    $ git push bttendance-dev master
+    $ git push bttendance master
 
     $ git checkout old
     $ git push origin old
-    $ git remote add bttd-old git@heroku.com:bttendance-old.git
-    $ git push bttd-old old:master
+    $ git remote add bttendance-old git@heroku.com:bttendance-old.git
+    $ git push bttendance-old old:master
 
 ##Developer
 

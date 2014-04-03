@@ -7,10 +7,6 @@
  */
 module.exports = function hasDevice (req, res, next) {
 
-	// Super Port Policy
-	if (req.port == 7331) 
-		return next();
-
 	// Params
 	var username = req.param('username');
 	var device_uuid = req.param('device_uuid');

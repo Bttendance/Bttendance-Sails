@@ -13,7 +13,7 @@ module.exports = function isDev (req, res, next) {
 		return next();
 
 	// isDev Policy
-	if (process.env.NODE_ENV == "development")
+	if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == 'staging')
 		return next();
 	
 	return res.send(403, { message: "Forbidden"});

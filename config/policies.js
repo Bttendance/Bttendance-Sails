@@ -16,71 +16,58 @@ module.exports.policies = {
 
   // Default policy for all controllers and actions
   // (`true` allows public access) 
-  '*': true,
+  '*': 'isDev',
 
   SerialController: {
-  	'*' : 'isDeV',
-  	validate : true,
-    request : true
+  	validate: true,
+    request: true
   },
 
   UserController: {
-  	'*' : 'isDeV',
-  	create : true,
-  	update : 'isDeV',
-  	destroy : 'isDeV',
-    find : 'isDeV',
-    signup : true,
-    signin : 'hasDevice',
-    auto_signin : true,
-    forgot_password : true,
-  	signup : true,
-  	update_type : 'isUser',
-  	join_school : 'isUser',
-  	join_course : 'isUser',
-    courses : 'isUser',
-    schools : 'isUser',
-    joinable_courses : 'isUser',
-    update_notification_key : ['isUser', 'hasDevice'],
-    update_profile_image : ['isUser', 'hasDevice'],
-    update_full_name : ['isUser', 'hasDevice'],
-    update_email : ['isUser', 'hasDevice'],
-    feed : 'isUser',
-    employ_school : 'isUser',
-    enroll_school : 'isUser',
-    attend_course : 'isUser',
-    search_user : 'isUser'
+    signup: true,
+    signin: 'hasDevice',
+    auto_signin: true,
+    forgot_password: true,
+  	signup: true,
+  	update_type: 'isUser',
+  	join_school: 'isUser',
+  	join_course: 'isUser',
+    courses: 'isUser',
+    schools: 'isUser',
+    joinable_courses: 'isUser',
+    update_notification_key: ['isUser', 'hasDevice'],
+    update_profile_image: ['isUser', 'hasDevice'],
+    update_full_name: ['isUser', 'hasDevice'],
+    update_email: ['isUser', 'hasDevice'],
+    feed: 'isUser',
+    employ_school: 'isUser',
+    enroll_school: 'isUser',
+    attend_course: 'isUser',
+    search_user: 'isUser'
   },
 
   CourseController: {
-  	create : 'isUser',
-  	update : 'isDeV',
-  	destroy : 'isDeV',
-    find: 'isDeV',
-    feed : 'isUser',
-    students : 'isUser',
-    grades : 'isUser',
-    add_manager : 'isUser',
-    remove : 'isDeV'
+    feed: 'isUser',
+    students: 'isUser',
+    grades: 'isUser',
+    add_manager: 'isUser',
+    remove: 'isDeV'
   },
 
   PostController: {
-  	create : 'isDeV',
-  	update : 'isDeV',
-  	destroy : 'isDeV',
-    find : 'isDev',
-    attendance_start : 'isUser',
-    attendance_found_device : 'isUser',
-    attendance_check_manually : 'isUser',
-    create_notice : 'isUser'
+    attendance_start: 'isUser',
+    attendance_found_device: 'isUser',
+    attendance_check_manually: 'isUser',
+    create_notice: 'isUser',
+    find_post: 'isUser'
   },
 
   SchoolController: {
-  	create : 'isDeV',
-  	update : 'isDeV',
-  	destroy : 'isDeV',
-    find : 'isDeV',
-    all : 'isUser'
+    all: 'isUser'
+  },
+
+  AdminController: {
+    show: true
   }
 
   /*
