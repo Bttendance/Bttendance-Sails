@@ -68,6 +68,11 @@ module.exports.policies = {
 
   AdminController: {
     show: true
+  },
+
+  MigrationController: {
+    migrate: true,
+    associate: true
   }
 
   /*
