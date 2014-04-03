@@ -311,12 +311,8 @@ module.exports = {
 			    console.log("Message sent: " + response.message);
 			});
 
-	  	user.save(function(err) {
-				if (err)
-			    return res.send(500, { message: "User Save Error" });
-
-		  	return res.send(user.toOldObject());
-	  	});
+	  	user.save();
+	  	return res.send(user.toOldObject());
 		});
 	},
 
@@ -377,12 +373,8 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 
 	  	user.profile_image = profile_image;
-	  	user.save(function callback(err) {
-				if (err)
-			    return res.send(500, { message: "User Save Error" });
-
-		  	return res.send(user.toOldObject());
-	  	});
+	  	user.save();
+	  	return res.send(user.toOldObject());
 		});
 	},
 
@@ -410,12 +402,8 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 
 	  	user.full_name = full_name;
-	  	user.save(function callback(err) {
-				if (err)
-			    return res.send(500, { message: "User Save Error" });
-
-		  	return res.send(user.toOldObject());
-	  	});
+	  	user.save();
+	  	return res.send(user.toOldObject());
 		});
 	},
 
@@ -443,12 +431,8 @@ module.exports = {
 		    return res.send(404, { message: "No User Found Error" });
 
 	  	user.email = email;
-	  	user.save(function callback(err) {
-				if (err)
-			    return res.send(500, { message: "User Save Error" });
-
-		  	return res.send(user.toOldObject());
-	  	});
+	  	user.save();
+	  	return res.send(user.toOldObject());
 		});
 	},
 
