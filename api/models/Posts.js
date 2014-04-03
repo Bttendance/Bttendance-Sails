@@ -111,6 +111,8 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     if (values.type == 'attendance') {
+      values.message = 'Attendance';
+
       var checked_students = new Array();
       checked_students.push(values.author);
 
