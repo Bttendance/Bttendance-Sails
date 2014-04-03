@@ -193,7 +193,7 @@ module.exports = {
 		});
 	},
 
-	associate: function(req, res) {
+	associate1: function(req, res) {
 
 		//User-Password
 		User.find().exec(function callback(err, users) {
@@ -311,56 +311,6 @@ module.exports = {
 			}, function (err) {
 				if (err == null)
 					console.log('User-AttdCourse finished');
-				else
-					console.log(err);
-			});
-		});
-
-		//User-EmpySchool & Serials
-		User.find().exec(function callback(err, users) {
-			if (err || !users)
-				return;
-
-			async.eachSeries(users, function (each_user, done) {
-				var employed_schools = each_user.employed_schools;
-				if (employed_schools.length > 0) {
-					Users.findOne(each_user.id).exec(function callback(err, user) {
-						if (err || !user)
-							return done(err);
-
-						var school_array = new Array();
-						var serial_array = new Array();
-						for (var i = 0; i < employed_schools.length; i++) {
-							school_array.push(employed_schools[i].id);
-							serial_array.push(employed_schools[i].key);
-						}
-
-
-						Schools.findById(school_array).exec(function callback(err, schools) {
-							if (err || !schools)
-								return done(err);
-
-							for (var i = 0; i < schools.length; i++)
-								user.employed_schools.add(schools[i].id);
-
-							Serials.findOneByKey(serial_array[0]).exec(function callback(err, serial) {
-								if (err || !serial)
-									return done(err);
-								user.serials.add(serial.id);
-								
-								user.save(function callback(err) {
-									if (err)
-										done(console.log(err));
-									done();
-								});
-							});
-						});
-					});
-				} else
-					done();
-			}, function (err) {
-				if (err == null)
-					console.log('User-EmpySchool & Serials finished');
 				else
 					console.log(err);
 			});
@@ -557,6 +507,59 @@ module.exports = {
 			}, function (err) {
 				if (err == null)
 					console.log('Post-Attendance finished');
+				else
+					console.log(err);
+			});
+		});
+	},
+
+	associate2: function(req, res) {
+
+		//User-EmpySchool & Serials
+		User.find().exec(function callback(err, users) {
+			if (err || !users)
+				return;
+
+			async.eachSeries(users, function (each_user, done) {
+				var employed_schools = each_user.employed_schools;
+				if (employed_schools.length > 0) {
+					Users.findOne(each_user.id).exec(function callback(err, user) {
+						if (err || !user)
+							return done(err);
+
+						var school_array = new Array();
+						var serial_array = new Array();
+						for (var i = 0; i < employed_schools.length; i++) {
+							school_array.push(employed_schools[i].id);
+							serial_array.push(employed_schools[i].key);
+						}
+
+
+						Schools.findById(school_array).exec(function callback(err, schools) {
+							if (err || !schools)
+								return done(err);
+
+							for (var i = 0; i < schools.length; i++)
+								user.employed_schools.add(schools[i].id);
+
+							Serials.findOneByKey(serial_array[0]).exec(function callback(err, serial) {
+								if (err || !serial)
+									return done(err);
+								user.serials.add(serial.id);
+								
+								user.save(function callback(err) {
+									if (err)
+										done(console.log(err));
+									done();
+								});
+							});
+						});
+					});
+				} else
+					done();
+			}, function (err) {
+				if (err == null)
+					console.log('User-EmpySchool & Serials finished');
 				else
 					console.log(err);
 			});
