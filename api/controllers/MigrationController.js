@@ -554,7 +554,7 @@ module.exports = {
 					done();
 			}, function (err) {
 				if (err == null)
-					console.log('User-EmpySchool & Serials finished');
+					console.log('User-EmpySchool finished');
 				else
 					console.log(err);
 			});
@@ -575,8 +575,6 @@ module.exports = {
 						if (err || !user)
 							return done(err);
 
-						console.log(user);
-
 						var school_array = new Array();
 						var serial_array = new Array();
 						for (var i = 0; i < employed_schools.length; i++) {
@@ -587,8 +585,9 @@ module.exports = {
 						Serials.findOneByKey(serial_array[0]).exec(function callback(err, serial) {
 							if (err || !serial)
 								return done(err);
+
 							user.serials.add(serial.id);
-							
+							console.log(user);
 							user.save(function callback(err) {
 								if (err)
 									done(console.log(err));
@@ -600,7 +599,7 @@ module.exports = {
 					done();
 			}, function (err) {
 				if (err == null)
-					console.log('User-EmpySchool & Serials finished');
+					console.log('User-Serials finished');
 				else
 					console.log(err);
 			});
