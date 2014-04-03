@@ -11,8 +11,7 @@ module.exports = {
   attributes: {
 
     key: {
-      type: 'string',
-    	required: true
+      type: 'string'
     },
 
     school: {
@@ -46,8 +45,6 @@ module.exports = {
   beforeValidate: function(values, next) {
     if (values.school_id)
       values.school = values.school_id;
-    if (!values.key)
-      values.key = randomKey();
     next();
   },
 
@@ -56,6 +53,8 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    if (!values.key)
+      values.key = randomKey();
     next();
   },
 

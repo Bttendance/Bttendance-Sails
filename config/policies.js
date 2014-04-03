@@ -72,9 +72,7 @@ module.exports.policies = {
 
   MigrationController: {
     migrate: true,
-    associate1: true,
-    associate2: true,
-    associate3: true
+    associate: true
   }
 
   /*
