@@ -527,6 +527,8 @@ module.exports = {
 						if (err || !user)
 							return done(err);
 
+						console.log(user);
+
 						var school_array = new Array();
 						var serial_array = new Array();
 						for (var i = 0; i < employed_schools.length; i++) {
