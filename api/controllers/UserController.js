@@ -177,7 +177,7 @@ module.exports = {
 		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
 			if (err)
 		    return res.send(500, { message: "Deivce Find Error" });
-		  console.log(device);
+
 		  if (device && device.owner)
 		    return res.send(500, { message: "Deivce has been registered to other owner" });
 
@@ -254,7 +254,7 @@ module.exports = {
 									if (err || !user_new)
 								    return res.send(404, { message: "No User Found Error" });
 
-							  	return res.send(new_user.toOldObject());
+							  	return res.send(user_new.toOldObject());
 								});
 							});
 						});
