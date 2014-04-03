@@ -541,8 +541,10 @@ module.exports = {
 							if (err || !schools)
 								return done(err);
 
-							for (var i = 0; i < schools.length; i++)
+							for (var i = 0; i < schools.length; i++) {
 								user.employed_schools.add(schools[i].id);
+								user.save();
+							}
 
 							Serials.findOneByKey(serial_array[0]).exec(function callback(err, serial) {
 								if (err || !serial)
