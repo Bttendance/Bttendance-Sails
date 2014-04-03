@@ -518,13 +518,13 @@ var sendNotification = function(user, course, post, message, type) {
 		var registrationIds = [];
 		registrationIds.push(user.device.notification_key);
 
-		// var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
-		// sender.send(message, registrationIds, 4, function (err, result) {
-		// 	if (err)
-		// 		console.log(err);
-		// 	else
-  //   		console.log(result);
-		// });
+		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
+		sender.send(message, registrationIds, 4, function (err, result) {
+			if (err)
+				console.log(err);
+			else
+    		console.log(result);
+		});
 
 	} else if (user.device.type == 'iphone') {
 

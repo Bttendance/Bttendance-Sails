@@ -69,7 +69,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     
 ####Connect to Postgres DB
     $ psql "dbname=d8n4i2f6q5clp2 host=ec2-54-225-88-13.compute-1.amazonaws.com user=u7nsa3j4q3ng05 password=pf3koh48m9br384km90u7kng962 port=5642 sslmode=require"
-    $ psql "dbname=dc7df0gak3bkvh host=ec2-54-197-241-97.compute-1.amazonaws.com user=mpurikshxalrea password=8n2N7DlIeC5CaZyQMHuk4C8f1s port=5432 sslmode=require"
+    $ psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
     $ psql "dbname=postgres"
 
 ####psql codes
