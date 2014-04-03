@@ -40,7 +40,7 @@ module.exports = {
 	  				return res.send(500, {message: "Post Find Error"});
 
 		    	Courses
-		    	.update({id: post.course.id}, {attdCheckedAt: post.createdAt})
+		    	.update({id: post.course.id}, {attdCheckedAt: JSON.parse(JSON.stringify(post.toWholeObject())).createdAt})
 		    	.exec(function callback(err, courses) {
 		    		if (err || !courses)
 			    		return res.send(404, { message: "Course Update Error" });
