@@ -8,11 +8,11 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name : getAppname(),
+  app_name : ['Bttendance-dev'],
   /**
    * Your New Relic license key.
    */
-  license_key : getLicense(),
+  license_key : '302cd8c75e7a012a91a4810be466198eb4a31cf5',
   
   logging : {
     /**
