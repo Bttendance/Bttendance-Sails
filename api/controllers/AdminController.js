@@ -37,7 +37,7 @@ module.exports = {
 				.exec(function callback (err, users) {
 					if (err || !users) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 						for (var i = 0; i < users.length; i++)
@@ -58,7 +58,7 @@ module.exports = {
 				.exec(function callback (err, user) {
 					if (err || !user) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(user.toWholeObject());
@@ -76,7 +76,7 @@ module.exports = {
 				.exec(function callback (err, schools) {
 					if (err || !schools) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 						for (var i = 0; i < schools.length; i++)
@@ -94,7 +94,7 @@ module.exports = {
 				.exec(function callback (err, school) {
 					if (err || !school) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(school.toWholeObject());
@@ -112,7 +112,7 @@ module.exports = {
 				.exec(function callback (err, courses) {
 					if (err || !courses) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 						for (var i = 0; i < courses.length; i++)
@@ -130,7 +130,7 @@ module.exports = {
 				.exec(function callback (err, course) {
 					if (err || !course) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(course.toWholeObject());
@@ -148,7 +148,7 @@ module.exports = {
 				.exec(function callback (err, posts) {
 					if (err || !posts) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 						for (var i = 0; i < posts.length; i++)
@@ -166,7 +166,7 @@ module.exports = {
 				.exec(function callback (err, post) {
 					if (err || !post) {
 						res.contentType('html');
-						return res.notFound(err);
+						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(post.toWholeObject());

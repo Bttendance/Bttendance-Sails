@@ -5,7 +5,11 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var connections = require('../../config/connections');
+
 module.exports = {
+
+	connection: connections.getRedis(),
 
 	attributes: {
 
