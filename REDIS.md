@@ -18,9 +18,7 @@
     $ redis-cli -h pub-redis-13039.us-east-1-3.3.ec2.garantiadata.com -p 13039 -a Wpx1B0Mn54G0I1mT
     $ redis-cli -h pub-redis-18746.us-east-1-3.3.ec2.garantiadata.com -p 18746 -a gMKUfHW5uRSxpd54
 
-
-
-
+####codes
     // redis-cli -h pub-redis-13039.us-east-1-3.3.ec2.garantiadata.com -p 13039 -a Wpx1B0Mn54G0I1mT
     redisProduction: {
     module   : 'sails-redis',
