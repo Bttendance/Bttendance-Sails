@@ -86,7 +86,6 @@ module.exports = {
 
       return obj;
     }
-    
   },
 
   beforeValidate: function(values, next) {
