@@ -57,17 +57,17 @@ module.exports = {
 
 		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
-			return res.send(400, { message: "Username or Email is required"});
+			return res.send(400, signError("Username or Email is required", device_type));
 		}
 
 		if (!password) {
 			console.log("UserController : signin : Password is required");
-			return res.send(400, { message: "Password is required"});
+			return res.send(400, signError("Password is required", device_type));
 		}
 
 		if (!device_uuid) {
 			console.log("UserController : signin : UUID is required");
-			return res.send(400, { message: "UUID is required"});
+			return res.send(400, signError("UUID is required", device_type));
 		}
 
 		username = username.toLowerCase();
@@ -103,12 +103,13 @@ module.exports = {
 				.populate('owner')
 				.exec(function callback(err, device) {
 					if (err)
-				    return res.send(500, { message: "Device Found Error" });
+						return res.send(500, signError("Device Found Error", device_type));
+
 					else if (!device) {
 						user.device.uuid = device_uuid;
 						user.device.save(function callback(err) {
 					   	if (err)
-						    return res.send(500, { message: "Device Save Error" });
+								return res.send(500, signError("Device Save Error", device_type));
 
 					  	return res.send(user.toOldObject());
 						});
@@ -116,13 +117,13 @@ module.exports = {
 						device.uuid = device.owner.username_lower;
 						device.save(function callback(err) {
 							if (err)
-						    return res.send(500, { message: "Device Save Error" });
+								return res.send(500, signError("Device Save Error", device_type));
 
 						  user.device.uuid = device_uuid;
 						  console.log(user);
 						  user.device.save(function callback(err) {
 								if (err)
-							    return res.send(500, { message: "Device Save Error" });
+									return res.send(500, signError("Device Save Error", device_type));
 
 						  	return res.send(user.toOldObject());
 						  })
@@ -146,46 +147,46 @@ module.exports = {
 
 		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
-			return res.send(400, signUpError("Username or Email is required", device_type));
+			return res.send(400, signError("Username or Email is required", device_type));
 		}
 
 		if (!password) {
 			console.log("UserController : signin : Password is required");
-			return res.send(400, signUpError("Password is required", device_type));
+			return res.send(400, signError("Password is required", device_type));
 		}
 
 		if (!email) {
 			console.log("UserController : signin : Email is required");
-			return res.send(400, signUpError("Email is required", device_type));
+			return res.send(400, signError("Email is required", device_type));
 		}
 
 		if (!full_name) {
 			console.log("UserController : signin : Full Name is required");
-			return res.send(400, signUpError("Full Name is required", device_type));
+			return res.send(400, signError("Full Name is required", device_type));
 		}
 
 		if (!device_type) {
 			console.log("UserController : signin : Device Type is required");
-			return res.send(400, signUpError("Device Type is required", device_type));
+			return res.send(400, signError("Device Type is required", device_type));
 		}
 
 		if (!device_uuid) {
 			console.log("UserController : signin : UUID is required");
-			return res.send(400, signUpError("UUID is required", device_type));
+			return res.send(400, signError("UUID is required", device_type));
 		}
 
 		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
 			if (err)
-				return res.send(500, signUpError("Deivce Find Error", device_type));
+				return res.send(500, signError("Deivce Find Error", device_type));
 
 		  if (device && device.owner)
-				return res.send(500, signUpError("Deivce has been registered to other owner", device_type));
+				return res.send(500, signError("Deivce has been registered to other owner", device_type));
 
 		  Users.findOneByUsername_lower(username.toLowerCase()).exec(function callback(err, user) {
 		  	if (err)
-					return res.send(500, signUpError("User Find Error", device_type));
+					return res.send(500, signError("User Find Error", device_type));
 			  if (user)
-					return res.send(500, signUpError("Username is already taken", device_type));
+					return res.send(500, signError("Username is already taken", device_type));
 
 			  if (device) {
 					Users.create({
@@ -196,11 +197,11 @@ module.exports = {
 						device: device.id				
 					}).exec(function callback(err, new_user) {
 						if (err || !new_user)
-							return res.send(500, signUpError("User Create Error", device_type));
+							return res.send(500, signError("User Create Error", device_type));
 
 					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 							if (err || !updated_device)
-								return res.send(500, signUpError("Deivce Save Error", device_type));
+								return res.send(500, signError("Deivce Save Error", device_type));
 
 					    Users
 							.findOneById(new_user.id)
@@ -213,7 +214,7 @@ module.exports = {
 							.populate('identifications')
 							.exec(function callback(err, user_new) {
 								if (err || !user_new)
-									return res.send(404, signUpError("No User Found Error", device_type));
+									return res.send(404, signError("No User Found Error", device_type));
 
 						  	return res.send(user_new.toOldObject());
 							});
@@ -225,7 +226,7 @@ module.exports = {
 						uuid: device_uuid
 					}).exec(function callback(err, new_device) {
 						if (err || !new_device)
-							return res.send(500, signUpError("Deivce Create Error", device_type));
+							return res.send(500, signError("Deivce Create Error", device_type));
 
 						Users.create({
 							username: username,
@@ -235,11 +236,11 @@ module.exports = {
 							device: new_device.id			
 						}).exec(function callback(err, new_user) {
 							if (err || !new_user)
-								return res.send(500, signUpError("User Create Error", device_type));
+								return res.send(500, signError("User Create Error", device_type));
 
 						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 								if (err || !updated_device)
-									return res.send(500, signUpError("Deivce Save Error", device_type));
+									return res.send(500, signError("Deivce Save Error", device_type));
 
 						    Users
 								.findOneById(new_user.id)
@@ -252,7 +253,7 @@ module.exports = {
 								.populate('identifications')
 								.exec(function callback(err, user_new) {
 									if (err || !user_new)
-										return res.send(404, signUpError("No User Found Error", device_type));
+										return res.send(404, signError("No User Found Error", device_type));
 
 							  	return res.send(user_new.toOldObject());
 								});
@@ -854,9 +855,9 @@ function randomKey() {
     return text;
 }
 
-var signUpError = function(message, device_type) {
+var signError = function(message, device_type) {
 	var returnJSON = {};
-	
+
 	if (device_type == 'iphone') {
 		var array = new Array();
 		array.push(message);
