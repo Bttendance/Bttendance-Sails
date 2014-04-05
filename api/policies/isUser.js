@@ -36,15 +36,15 @@ module.exports = function isUser (req, res, next) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, { message: "User Find Error" });
+	    return res.send(500, { message: "User Find Error", toast: "User Find Error" });
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, { message: "No User Found Error" });
+	    return res.send(404, { message: "No User Found Error", toast: "No User Found Error" });
 
 	  // Password Doesn't Match
 	  } else if (user.password != password) {
-		  return res.send(404, { message: "Password doesn't match Error" });
+		  return res.send(404, { message: "Password doesn't match Error", toast: "Password doesn't match Error" });
 
 		// Found User
 	  } else {
