@@ -553,12 +553,13 @@ module.exports = {
 	  		.populate('attendance')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
-	  			if (err)
-		    		return res.send(JSON.stringify(new Array()));
+	  			if (!posts) {
+						for (var i = 0; i < courses.length; i++)
+							courses[i].grade = 0;
+				  	return res.send(courses);
+	  			}
 					
 					for (var i = 0; i < courses.length; i++) {
-
-						//grade
 						var checks = new Array();
 						var attd_check_count = 0;
 						for (var j = 0; j < posts.length; j++) {
