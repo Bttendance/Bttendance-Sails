@@ -554,8 +554,10 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (!posts) {
-						for (var i = 0; i < courses.length; i++)
+						for (var i = 0; i < courses.length; i++) {
+							courses[i] = courses[i].toOldObject();
 							courses[i].grade = 0;
+						}
 				  	return res.send(courses);
 	  			}
 					
