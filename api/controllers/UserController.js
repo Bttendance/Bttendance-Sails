@@ -829,17 +829,17 @@ var checkPass = function(res, err, user, password, device_uuid) {
 	// Error handling
 	if (err) {
 		console.log(err);
-    return res.send(500, { message: "User Find Error" });
+    return res.send(500, { message: "User Find Error", toast: "User Find Error" });
 
   // No User found
   } else if (!user) {
-    return res.send(404, { message: "No User Found Error" });
+    return res.send(404, { message: "No User Found Error", toast: "No User Found Error" });
 
   // Found User!
   } else if (!passwordHash.verify(password, user.password)) {
-	  return res.send(404, { message: "Password doesn't match Error" });
+	  return res.send(404, { message: "Password doesn't match Error", toast: "Password doesn't match Error" });
   } else if (user.device.uuid != device_uuid) {
-	  return res.send(406, { message: "UUID doesn't match Error" });
+	  return res.send(406, { message: "UUID doesn't match Error", toast: "UUID doesn't match Error" });
   } else {
   	return res.send(user.toOldObject());
   }
