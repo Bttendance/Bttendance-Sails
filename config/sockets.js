@@ -118,7 +118,7 @@ module.exports.sockets = {
         // to report an error, call `cb(err)`
     }
   */
-  authorization: true,
+  authorization: false,
 
   // Match string representing the origins that are allowed to connect to the Socket.IO server
   origins: '*:*',
@@ -153,7 +153,7 @@ module.exports.sockets = {
   // If you are using a hosting provider that doesn't allow you to start servers
   // other than on port 80 or the provided port, and you still want to support flashsockets 
   // you can set the `flash policy port` to -1
-  'flash policy port': 10843,
+  'flash policy port': -1,
 
   // Used by the HTTP transports. The Socket.IO server buffers HTTP request bodies up to this limit. 
   // This limit is not applied to websocket or flashsockets.
