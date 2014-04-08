@@ -1,1 +1,1 @@
-web: node app.js --port 1337
+web: node app.js
