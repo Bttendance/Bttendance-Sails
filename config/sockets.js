@@ -18,7 +18,11 @@ module.exports.sockets = {
 
     // By default, do nothing.
     console.log('session : ' + JSON.stringify(session));
-    console.log('socket : ' + JSON.stringify(socket));
+    
+    var socketId = sails.sockets.id(socket);
+    console.log('socket : ' + socketId);
+
+    sails.sockets.emit(socketId, 'bttendance', {msg: 'Hi!'});
     
   },
 
