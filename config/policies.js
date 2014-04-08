@@ -66,13 +66,18 @@ module.exports.policies = {
     all: 'isUser'
   },
 
+  MigrationController: {
+    migrate: true,
+    associate: true
+  },
+
+  /*********** New APIs **********/
   AdminController: {
     show: true
   },
 
-  MigrationController: {
-    migrate: true,
-    associate: true
+  ClickersController: {
+    click: true,
   }
 
   /*

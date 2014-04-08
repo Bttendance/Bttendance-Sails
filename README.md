@@ -13,12 +13,16 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - User Model is for Access (which includes username, email, password, access_token, etc)
 - Every Model is associated via waterline association.
 - Some Model is associcated via array of id.
+- Model is using Heroku Postgres DB
 
 ####API
 - API Schema : 'api/:controller/:action/:model' (ex : 'api/user/join/school')
 - Controller Action : ':action_:model' (ex : join_school)
 - Route : 'api/:controller/:action/:model' to ':action_:model'
 - Every API requires username, password
+
+####Socket
+- Socket is using Redis Cloud DB
 
 =================
 ####Install & Run
@@ -79,6 +83,24 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ \du
     $ \q
     $ DROP TABLE users, courses, posts, devices, schools, serials, attendances, clickers, courses_managers__users_supervising_courses, courses_students__users_attending_courses, schools_professors__users_employed_schools, schools_students__users_enrolled_schools, identifications, serials_owners__users_serials;
+
+####Install wget
+    $ ftp http://ftp.gnu.org/pub/gnu/wget/wget-1.15.tar.gz
+    $ tar -xzf wget-1.15.tar.gz
+    $ cd wget-1.15
+    $ ./configure --with-ssl=openssl
+    $ make
+    $ sudo make install
+
+####Install Redis
+    $ wget http://download.redis.io/releases/redis-2.8.8.tar.gz
+    $ tar xzf redis-2.8.8.tar.gz
+    $ cd redis-2.8.8
+    $ make
+
+####redis-cli codes
+    $ redis-cli -h pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com -p 15511 -a eBKknThiKi1VHZSe
+    $ redis-cli -h pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com -p 15296 -a sZ17PA571loLwYNt
 
 ####git codes
     $ git branch

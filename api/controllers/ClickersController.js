@@ -6,5 +6,8 @@
  */
 
 module.exports = {
-	
+	click: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		
+	}
 };

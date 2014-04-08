@@ -50,6 +50,38 @@ module.exports.connections = {
     user     : 'TheFinestArtist',
     password : 'postgres',
     database : 'postgres'
+  },
+
+  // redis-cli -h pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com -p 15511 -a eBKknThiKi1VHZSe
+  redisProduction: {
+  module   : 'sails-redis',
+  host     : 'pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com',
+  port     : 15511,
+    options: {
+      auth_pass: 'eBKknThiKi1VHZSe',
+      parser: 'javascript',
+      return_buffers: false,
+      detect_buffers: false,
+      socket_nodelay: true,
+      no_ready_check: false,
+      enable_offline_queue: true
+    }
+  },
+
+  // redis-cli -h pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com -p 15296 -a sZ17PA571loLwYNt
+  redisDevelopment: {
+    module   : 'sails-redis',
+    host     : 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
+    port     : 15296,
+    options: {
+      auth_pass: 'sZ17PA571loLwYNt',
+      parser: 'javascript',
+      return_buffers: false,
+      detect_buffers: false,
+      socket_nodelay: true,
+      no_ready_check: false,
+      enable_offline_queue: true
+    }
   }
 
 };
@@ -61,4 +93,14 @@ exports.getPostgres = function() {
     return 'postgresDevelopment';
   else 
     return 'postgresLocal';
+},
+
+
+exports.getRedis = function() {
+    if (process.env.NODE_ENV == 'production')
+        return 'redisProduction';
+    else if (process.env.NODE_ENV == 'development')
+        return 'redisDevelopment';
+    else 
+        return 'redisDevelopment';
 }
