@@ -98,9 +98,13 @@ This app uses "Sails.js" as framework and "Java Script" as language.
     $ cd redis-2.8.8
     $ make
 
-####redis-cli codes
+####Connect to Redis DB
     $ redis-cli -h pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com -p 15511 -a eBKknThiKi1VHZSe
     $ redis-cli -h pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com -p 15296 -a sZ17PA571loLwYNt
+
+####redis-cli codes
+    $ KEYS *
+    $ GET mykey
 
 ####git codes
     $ git branch
