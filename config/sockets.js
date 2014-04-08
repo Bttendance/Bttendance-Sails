@@ -17,8 +17,8 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
 
     // By default, do nothing.
-    console.log(session);
-    console.log(socket);
+    console.log('session : ' + session);
+    console.log('socket : ' + socket);
     
   },
 
