@@ -47,11 +47,6 @@ module.exports.routes = {
     action: 'forgot_password'
   },
 
-  'put /api/users/update/notification_key': {
-    controller: 'users',
-    action: 'update_notification_key'
-  },
-
   'put /api/users/update/profile_image': {
     controller: 'users',
     action: 'update_profile_image'
@@ -62,6 +57,17 @@ module.exports.routes = {
     action: 'update_full_name'
   },
 
+  'put /api/users/update/email': {
+    controller: 'users',
+    action: 'update_email'
+  },
+
+  /************* Devices APIs **********/  
+  'put /api/devices/update/notification_key': {
+    controller: 'devices',
+    action: 'update_notification_key'
+  },
+
   /************* Courses APIs **********/  
   'put /api/courses/add/manager': {
     controller: 'courses',
@@ -69,9 +75,30 @@ module.exports.routes = {
   },
 
   /************* Posts APIs ************/  
-  'post /api/posts/clicker/start': {
+  'post /api/posts/start/attendance': {
     controller: 'posts',
-    action: 'clicker_start'
+    action: 'start_attendance'
+  },
+
+  'post /api/posts/start/clicker': {
+    controller: 'posts',
+    action: 'start_clicker'
+  },
+
+  'post /api/posts/create/notice': {
+    controller: 'posts',
+    action: 'create_notice'
+  },
+
+  /********* Attendances APIs **********/  
+  'put /api/attendances/found/device': {
+    controller: 'attendances',
+    action: 'found_device'
+  },
+
+  'put /api/attendances/check/manually': {
+    controller: 'attendances',
+    action: 'check_manually'
   },
 
 

@@ -507,7 +507,7 @@ var sendNotification = function(user, course, post, message, type) {
 		    delayWhileIdle: false,
 		    timeToLive: 4,
 		    data: {
-		    	title: post.course_name,
+		    	title: post.course.name,
 		      message: message,
 		      type: type,
 		      post: postJSON,
@@ -575,13 +575,13 @@ var sendNotification = function(user, course, post, message, type) {
 		note.sound = "ping.aiff";
 		note.alert = alert;
 		note.payload = {
-			'title' 	: post.course_name,
+			'title' 	: post.course.name,
 			'message' : message,
 			'type' 		: type 
 		};
 		note.device = myDevice;
 
-		// apnConnection.sendNotification(note);
+		apnConnection.sendNotification(note);
 	}
 
 	console.log("noti sent : " + user.id + ", course : " + course + ", post : " + post);
