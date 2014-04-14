@@ -19,13 +19,6 @@ var nodemailer = require("nodemailer");
 
 module.exports = {
 
-  /**
-   * Overrides for the settings in `config/controllers.js`
-   * (specific to SerialController)
-   */
-   
-  _config: {},
-
 	validate: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var serial = req.param('serial');

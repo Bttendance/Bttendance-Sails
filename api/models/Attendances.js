@@ -25,6 +25,7 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
+      delete obj.clusters;
       return obj;
     },
 
@@ -33,6 +34,7 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.clusters = this.clusters;
       return obj;
     }
 	}

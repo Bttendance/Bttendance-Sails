@@ -18,6 +18,21 @@ module.exports.policies = {
   // (`true` allows public access) 
   '*': 'isDev',
 
+  AdminController: {
+    show: true
+  },
+
+  PostsController: {
+    '*': true
+  },
+
+  ClickersController: {
+    '*': true,
+    click: true,
+    connect: true
+  },
+
+  /*********** Old APIs Start **********/
   SerialController: {
   	validate: true,
     request: true
@@ -69,16 +84,8 @@ module.exports.policies = {
   MigrationController: {
     migrate: true,
     associate: true
-  },
-
-  /*********** New APIs **********/
-  AdminController: {
-    show: true
-  },
-
-  ClickersController: {
-    click: true,
   }
+  /*********** Old APIs End **********/
 
   /*
 	// Here's an example of adding some policies to a controller

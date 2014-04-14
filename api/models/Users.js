@@ -97,6 +97,7 @@ module.exports = {
       delete obj.updatedAt;
       delete obj.username_lower;
       delete obj.password;
+      delete obj.device;
       delete obj.supervising_courses;
       delete obj.attending_courses;
       delete obj.employed_schools;
@@ -113,6 +114,7 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.username_lower = this.username_lower;
       obj.password = this.password;
+      obj.device = this.device;
       obj.supervising_courses = this.supervising_courses;
       obj.attending_courses = this.attending_courses;
       obj.employed_schools = this.employed_schools;
@@ -129,6 +131,7 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.username_lower = this.username_lower;
       obj.password = this.password;
+      obj.device = this.device;
       obj.supervising_courses = this.supervising_courses;
       obj.attending_courses = this.attending_courses;
       obj.employed_schools = this.employed_schools;

@@ -53,6 +53,9 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
+      delete obj.managers;
+      delete obj.students;
+      delete obj.posts;
       delete obj.attdCheckedAt;
       return obj;
     },
@@ -71,6 +74,9 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.managers = this.managers;
+      obj.students = this.students;
+      obj.posts = this.posts;
       obj.attdCheckedAt = this.attdCheckedAt;
 
       obj.number = obj.number;

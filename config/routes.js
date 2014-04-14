@@ -36,6 +36,46 @@ module.exports.routes = {
     view: 'homepage'
   },
 
+  /************* Users APIs ************/  
+  'get /api/users/auto/signin': {
+    controller: 'users',
+    action: 'auto_signin'
+  },
+
+  'put /api/users/forgot/password': {
+    controller: 'users',
+    action: 'forgot_password'
+  },
+
+  'put /api/users/update/notification_key': {
+    controller: 'users',
+    action: 'update_notification_key'
+  },
+
+  'put /api/users/update/profile_image': {
+    controller: 'users',
+    action: 'update_profile_image'
+  },
+
+  'put /api/users/update/full_name': {
+    controller: 'users',
+    action: 'update_full_name'
+  },
+
+  /************* Courses APIs **********/  
+  'put /api/courses/add/manager': {
+    controller: 'courses',
+    action: 'add_manager'
+  },
+
+  /************* Posts APIs ************/  
+  'post /api/posts/clicker/start': {
+    controller: 'posts',
+    action: 'clicker_start'
+  },
+
+
+  /*********** Old APIs Start **********/
   'get /api/user/auto/signin': {
     controller: 'user',
     action: 'auto_signin'
@@ -115,6 +155,7 @@ module.exports.routes = {
     controller: 'post',
     action: 'find_post'
   }
+  /*********** Old APIs End **********/
 
 
   /*

@@ -16,4 +16,530 @@
  */
 
 module.exports = {
+
+	auto_signin: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var password = req.param('password');
+		var device_uuid = req.param('device_uuid');
+
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(401, { message: "Username Find Error" });
+
+		  if (password != user.password)
+		    return res.send(401, { message: "Passwrod doesn't match Error" });
+
+		  if (device_uuid != user.device.uuid)
+		    return res.send(401, { message: "Device uuid doesn't match Error" });
+
+	  	return res.send(user.toWholeObject());
+		});
+	},
+
+	signin: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var password = req.param('password');
+		var device_uuid = req.param('device_uuid');
+
+		if (!username) {
+			console.log("UserController : signin : Username or Email is required");
+			return res.send(400, signError("Username or Email is required", device_type));
+		}
+
+		if (!password) {
+			console.log("UserController : signin : Password is required");
+			return res.send(400, signError("Password is required", device_type));
+		}
+
+		if (!device_uuid) {
+			console.log("UserController : signin : UUID is required");
+			return res.send(400, signError("UUID is required", device_type));
+		}
+
+		username = username.toLowerCase();
+
+		Users
+		.findOne({
+		  or: [{username_lower: username}, {email: username}]
+		})
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
+
+			if (username == "appletest0"
+		|| username == "appletest1" 
+		|| username == "appletest2"
+		|| username == "appletest3"
+		|| username == "appletest4"
+		|| username == "appletest5"
+		|| username == "appletest6"
+		|| username == "appletest7"
+		|| username == "appletest8"
+		|| username == "appletest9") {
+
+				Devices
+				.findOneByUuid(device_uuid)
+				.populate('owner')
+				.exec(function callback(err, device) {
+					if (err)
+						return res.send(500, signError("Device Found Error", device_type));
+
+					else if (!device) {
+						user.device.uuid = device_uuid;
+						user.device.save(function callback(err) {
+					   	if (err)
+								return res.send(500, signError("Device Save Error", device_type));
+
+					  	return res.send(user.toWholeObject());
+						});
+					} else if (device.uuid != user.device.uuid) {
+						device.uuid = device.owner.username_lower;
+						device.save(function callback(err) {
+							if (err)
+								return res.send(500, signError("Device Save Error", device_type));
+
+						  user.device.uuid = device_uuid;
+						  console.log(user);
+						  user.device.save(function callback(err) {
+								if (err)
+									return res.send(500, signError("Device Save Error", device_type));
+
+						  	return res.send(user.toWholeObject());
+						  })
+						});
+					} else
+				  	return res.send(user.toWholeObject());
+				});
+			} else
+				return checkPass(res, err, user, password, device_uuid);
+		});
+	},
+
+	signup: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var password = req.param('password');
+		var full_name = req.param('full_name');
+		var email = req.param('email');
+		var device_type = req.param('device_type');
+		var device_uuid = req.param('device_uuid');
+
+		if (!username) {
+			console.log("UserController : signin : Username or Email is required");
+			return res.send(400, signError("Username or Email is required", device_type));
+		}
+
+		if (!password) {
+			console.log("UserController : signin : Password is required");
+			return res.send(400, signError("Password is required", device_type));
+		}
+
+		if (!email) {
+			console.log("UserController : signin : Email is required");
+			return res.send(400, signError("Email is required", device_type));
+		}
+
+		if (!full_name) {
+			console.log("UserController : signin : Full Name is required");
+			return res.send(400, signError("Full Name is required", device_type));
+		}
+
+		if (!device_type) {
+			console.log("UserController : signin : Device Type is required");
+			return res.send(400, signError("Device Type is required", device_type));
+		}
+
+		if (!device_uuid) {
+			console.log("UserController : signin : UUID is required");
+			return res.send(400, signError("UUID is required", device_type));
+		}
+
+		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
+			if (err)
+				return res.send(500, signError("Deivce Find Error", device_type));
+
+		  if (device && device.owner)
+				return res.send(500, signError("Deivce has been registered to other owner", device_type));
+
+		  Users.findOneByUsername_lower(username.toLowerCase()).exec(function callback(err, user) {
+		  	if (err)
+					return res.send(500, signError("User Find Error", device_type));
+			  if (user)
+					return res.send(500, signError("Username is already taken", device_type));
+
+			  if (device) {
+					Users.create({
+						username: username,
+						password: password,
+						email: email,
+						full_name: full_name,
+						device: device.id				
+					}).exec(function callback(err, new_user) {
+						if (err || !new_user)
+							return res.send(500, signError("User Create Error", device_type));
+
+					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+							if (err || !updated_device)
+								return res.send(500, signError("Deivce Save Error", device_type));
+
+					    Users
+							.findOneById(new_user.id)
+							.populate('device')
+							.populate('supervising_courses')
+							.populate('attending_courses')
+							.populate('employed_schools')
+							.populate('serials')
+							.populate('enrolled_schools')
+							.populate('identifications')
+							.exec(function callback(err, user_new) {
+								if (err || !user_new)
+									return res.send(404, signError("No User Found Error", device_type));
+
+						  	return res.send(user_new.toWholeObject());
+							});
+						});
+					});
+			  } else {
+					Devices.create({
+						type: device_type,
+						uuid: device_uuid
+					}).exec(function callback(err, new_device) {
+						if (err || !new_device)
+							return res.send(500, signError("Deivce Create Error", device_type));
+
+						Users.create({
+							username: username,
+							password: password,
+							email: email,
+							full_name: full_name,
+							device: new_device.id			
+						}).exec(function callback(err, new_user) {
+							if (err || !new_user)
+								return res.send(500, signError("User Create Error", device_type));
+
+						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+								if (err || !updated_device)
+									return res.send(500, signError("Deivce Save Error", device_type));
+
+						    Users
+								.findOneById(new_user.id)
+								.populate('device')
+								.populate('supervising_courses')
+								.populate('attending_courses')
+								.populate('employed_schools')
+								.populate('serials')
+								.populate('enrolled_schools')
+								.populate('identifications')
+								.exec(function callback(err, user_new) {
+									if (err || !user_new)
+										return res.send(404, signError("No User Found Error", device_type));
+
+							  	return res.send(user_new.toWholeObject());
+								});
+							});
+						});
+					});
+				}
+		  });
+		});
+	},
+
+	forgot_password: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
+
+		Users
+		.findOneByEmail(email)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(500, { message: "User Find Error" });
+
+		  var password = randomKey();
+		  user.password = passwordHash.generate(password);
+
+			// create reusable transport method (opens pool of SMTP connections)
+			var smtpTransport = nodemailer.createTransport("SMTP",{
+			    service: "Gmail",
+			    auth: {
+			        user: "no-reply@bttendance.com",
+			        pass: "N0n0r2ply"
+			    }
+			});
+
+			var text = "Dear " + user.full_name + ",\n\nWe have received a request to reset your password.\nYour new password is following.\n\nNew Password : " 
+			+ password + "\n\nPlease change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\n\nYours sincerely,\nTeam Bttendance."
+
+			// setup e-mail data with unicode symbols
+			var mailOptions = {
+			    from: "Bttendance<no-reply@bttendance.com>", // sender address
+			    to: email, // list of receivers
+			    subject: "Bttendance Password Recovery", // Subject line
+			    text: text, // plaintext body
+			}
+
+			// send mail with defined transport object
+			smtpTransport.sendMail(mailOptions, function(error, response) {
+			    if(error || !response || !response.message)
+			      console.log(error);
+
+			    console.log("Message sent: " + response.message);
+			});
+
+	  	user.save();
+	  	return res.send(user.toWholeObject());
+		});
+	},
+
+	update_notification_key: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var notification_key = req.param('notification_key');
+
+		if (!notification_key) {
+			console.log("UserController : update_notification_key : Notification Key is required");
+			return res.send(400, { message: "Notification Key is required"});
+		}
+
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
+
+		  user.device.notification_key = notification_key;
+		  user.device.save(function callback(err) {
+		   	if (err)
+			    return res.send(500, { message: "Device Save Error" });
+
+		  	return res.send(user.toWholeObject());
+	    });
+		});
+	},
+
+	update_profile_image: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var profile_image = req.param('profile_image');
+
+		if (!profile_image) {
+			console.log("UserController : update_profile_image : Profile Image url is required");
+			return res.send(400, { message: "Profile Image url is required"});
+		}
+
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
+
+	  	user.profile_image = profile_image;
+	  	user.save();
+	  	return res.send(user.toWholeObject());
+		});
+	},
+
+	update_full_name: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var full_name = req.param('full_name');
+
+		if (!full_name) {
+			console.log("UserController : update_full_name : Full Name is required");
+			return res.send(400, { message: "Full Name is required"});
+		}
+
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
+
+	  	user.full_name = full_name;
+	  	user.save();
+	  	return res.send(user.toWholeObject());
+		});
+	},
+
+	update_email: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var email = req.param('email');
+
+		if (!email) {
+			console.log("UserController : update_email : Email is required");
+			return res.send(400, { message: "Email is required"});
+		}
+
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
+
+	  	user.email = email;
+	  	user.save();
+	  	return res.send(user.toWholeObject());
+		});
+	},
+
+	feed: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var page = req.param('page');
+		
+		Users
+		.findOneByUsername(username)
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.exec(function callback(err, user) {
+			if (err || !user) 
+		    return res.send(404, { message: "No User Found Error" });
+
+	  	var supervising_courses = getIds(user.supervising_courses);
+	  	var attending_courses = getIds(user.attending_courses);
+	  	var total_courses = supervising_courses.concat(attending_courses);
+
+  		Courses
+  		.findById(total_courses)
+			.populate('posts')
+	  	.populate('students')
+	  	.populate('school')
+  		.exec(function callback(err, courses) {
+  			if (err || !courses)
+	    		return res.send(404, { message: "No Course Found Error" });
+
+				var total_posts = new Array();
+				for (var i = 0; i < courses.length; i++)
+					for (var j = 0; j < courses[i].posts.length; j++)
+						total_posts.push(courses[i].posts[j].id);
+
+	  		Posts
+	  		.findById(total_posts)
+	  		.populate('author')
+	  		.populate('course')
+	  		.populate('attendance')
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err || !posts)
+		    		return res.send(JSON.stringify(new Array()));
+
+					for (var i = 0; i < posts.length; i++) {
+
+						var students_count = 0;
+						for (var j = 0; j < courses.length; j++) {
+							if (courses[j].id == posts[i].course.id) {
+								students_count = courses[j].students.length;
+			  				posts[i].school_name = courses[j].school.name;
+							}
+						}
+
+						var grade;
+						var message;
+						if (posts[i].type == 'attendance') {
+							grade = Number(( (posts[i].attendance.checked_students.length - 1) / students_count * 100).toFixed());
+		  				if (grade  < 0) grade = 0;
+		  				if (grade > 100) grade = 100;
+
+		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
+		  					message = "Attendance rate : " + grade + "%";
+		  				else {
+		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
+		  						message = "Attendance Checked";
+		  					else
+		  					 message = "Attendance Failed";
+		  				}
+		  			}
+
+	  				posts[i] = posts[i].toWholeObject();
+	  				if (posts[i].type == 'attendance') {
+		  				posts[i].grade = grade;
+	  					posts[i].message = message;
+	  				}
+					}
+			  	return res.send(posts);
+	  		});
+  		});
+		});
+	},
+
+	search: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var search_id = req.param('search_id');
+
+		if (!search_id)
+	    return res.send(400, { message: "Need username of email" });
+	  search_id = search_id.toLowerCase();
+
+		Users
+		.findOne({
+		  or: [{username_lower: search_id}, {email: search_id}]
+		})
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
+
+	  	return res.send(user.toWholeObject());
+		});
+	}
+	
 };

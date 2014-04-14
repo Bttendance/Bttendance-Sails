@@ -16,13 +16,9 @@ module.exports.sockets = {
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
 
-    // By default, do nothing.
-    console.log('session : ' + JSON.stringify(session));
-    
+    //send back socketId to Client
     var socketId = sails.sockets.id(socket);
-    console.log('socket : ' + socketId);
-
-    sails.sockets.emit(socketId, 'bttendance', {msg: 'Hi!'});
+    sails.sockets.emit(socketId, 'onConnect', {socketId: socketId});
     
   },
 

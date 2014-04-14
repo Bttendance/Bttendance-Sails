@@ -17,20 +17,5 @@
 
 module.exports = {
 
-	all: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-
-		Courses
-		.find()
-		.populate('posts')
-  	.populate('managers')
-  	.populate('students')
-  	.populate('school')
-		.sort('id ASC')
-		.exec(function callback(err, courses) {
-			for (var i = 0; i < courses.length; i++)
-				courses[i] = courses[i].toWholeObject();
-	  	return res.send(courses);
-		});
-	}
+	
 };
