@@ -1,5 +1,5 @@
 /**
- * isUser
+ * Employed
  *
  * @module      :: Policy
  * @description :: 
@@ -7,34 +7,24 @@
  */
 
 var Error = require('../utils/errors');
+var Arrays = require('../utils/arrays');
 
 module.exports = function isUser (req, res, next) {
 
 	// Params
 	var username = req.param('username');
 	var password = req.param('password');
+	var school_id = req.param('school_id');
 
-	if (!username || !password) {
-		console.log("isUser : Username and password is required.");
-		return res.send(400, Error.log("Username and password is required."));
+	if (!username || !password || !school_id) {
+		console.log("isUser : Username, password and school id is required.");
+		return res.send(400, Error.log("Username, password and school id is required."));
 	}
-
-	// Super Username Policy
-	if (username == "appletest0"
-		|| username == "appletest1"
-		|| username == "appletest2"
-		|| username == "appletest3"
-		|| username == "appletest4"
-		|| username == "appletest5"
-		|| username == "appletest6"
-		|| username == "appletest7"
-		|| username == "appletest8"
-		|| username == "appletest9")
-		return next();
 
 	// isUser Policy
 	Users
 	.findOneByUsername(username)
+	.populate('employed_schools')
 	.exec(function callback(err, user) {
 
 		// Error handling
@@ -50,8 +40,13 @@ module.exports = function isUser (req, res, next) {
 	  } else if (user.password != password) {
 		  return res.send(404, Error.log("Password doesn't match."));
 
+		// User attending check
+		} else if (Arrays.getIds(user.employed_schools).indexOf(school_id) < 0) {
+		  return res.send(403, Error.log("User is not employed current school."));
+
 		// Found User
 	  } else {
+	  	// Haven't validated for deprecated serials.
 	  	return next();
 	  }
 	});

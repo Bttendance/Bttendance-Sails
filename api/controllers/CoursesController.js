@@ -15,6 +15,11 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var Arrays = require('../utils/arrays');
+var Xlsx = require('node-xlsx');
+var Nodemailer = require("nodemailer");
+var Moment = require('moment');
+
 module.exports = {
 
 	create: function(req, res) {
@@ -76,11 +81,11 @@ module.exports = {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  var supervising_courses = getIds(user.supervising_courses);
+		  var supervising_courses = Arrays.getIds(user.supervising_courses);
 		  if (supervising_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(404, { message: "User is supervising this course" });
 
-		  var attending_courses = getIds(user.attending_courses);
+		  var attending_courses = Arrays.getIds(user.attending_courses);
 		  if (attending_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(user.toWholeObject());
 
@@ -88,7 +93,72 @@ module.exports = {
 		  	if (err || !course)
 		    	return res.send(404, { message: "No Course Found Error" });
 
+				Courses.update({ id: course.id }, { students_count: course.students_count + 1 }).exec(function callback(err, updated_courses) {
+					if (err || !updated_courses)
+						return console.log(err);
+				});
+
 				user.attending_courses.add(course_id);
+				user.save(function callback(err) {
+					if (err)
+			    	return res.send(500, { message: "User Save Error" });
+
+			    Users
+					.findOneByUsername(username)
+					.populate('device')
+					.populate('supervising_courses')
+					.populate('attending_courses')
+					.populate('employed_schools')
+					.populate('serials')
+					.populate('enrolled_schools')
+					.populate('identifications')
+					.exec(function callback(err, user_new) {
+						if (err || !user_new)
+					    return res.send(404, { message: "No User Found Error" });
+
+				  	return res.send(user_new.toWholeObject());
+					});
+				});
+		  });
+		});
+	},
+
+	dettend: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var course_id = req.param('course_id');
+		
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.populate('employed_schools')
+		.populate('serials')
+		.populate('enrolled_schools')
+		.populate('identifications')
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, { message: "No User Found Error" });
+
+		  var supervising_courses = Arrays.getIds(user.supervising_courses);
+		  if (supervising_courses.indexOf(Number(course_id)) != -1)
+		    return res.send(404, { message: "User is supervising this course" });
+
+		  var attending_courses = Arrays.getIds(user.attending_courses);
+		  if (attending_courses.indexOf(Number(course_id)) == -1)
+		    return res.send(404, { message: "User is not attending this course" });
+
+		  Courses.findOneById(course_id).exec(function callback(err, course) {
+		  	if (err || !course)
+		    	return res.send(404, { message: "No Course Found Error" });
+
+				Courses.update({ id: course.id }, { students_count: course.students_count - 1 }).exec(function callback(err, updated_courses) {
+					if (err || !updated_courses)
+						return console.log(err);
+				});
+
+				user.attending_courses.remove(course_id);
 				user.save(function callback(err) {
 					if (err)
 			    	return res.send(500, { message: "User Save Error" });
@@ -127,7 +197,7 @@ module.exports = {
 			if (err || !user) 
 		    return res.send(404, { message: "No User Found Error" });
 
-	  	var supervising_courses = getIds(user.supervising_courses);
+	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
 
 			Courses
 			.findOneById(course_id)
@@ -138,7 +208,7 @@ module.exports = {
 	    		return res.send(404, { message: "Course Found Error" });
 
 	  		Posts
-	  		.findById(getIds(course.posts))
+	  		.findById(Arrays.getIds(course.posts))
 				.populate('author')
 				.populate('course')
 				.populate('attendance')
@@ -190,7 +260,7 @@ module.exports = {
         return res.send(404, { message: "Course Found Error" });
 
       Users
-      .findById(getIds(course.students))
+      .findById(Arrays.getIds(course.students))
 			.populate('device')
 			.populate('supervising_courses')
 			.populate('attending_courses')
@@ -272,7 +342,7 @@ module.exports = {
         return res.send(404, { message: "Course Found Error" });
 
       Users
-      .findById(getIds(course.students))
+      .findById(Arrays.getIds(course.students))
   		.populate('identifications')
       .sort('full_name DESC')
       .exec(function callback(err, users) {
@@ -280,7 +350,7 @@ module.exports = {
           return res.send(404, { message: "User Found Error" });
 
 	  		Posts
-	  		.findById(getIds(course.posts))
+	  		.findById(Arrays.getIds(course.posts))
 	  		.populate('attendance')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
@@ -293,6 +363,7 @@ module.exports = {
 							postsObject.push(posts[index]);
 
 					var total_grade = postsObject.length;
+					console.log(postsObject);
 
 	        var gradesObject = new Array();
 	        for (var index in users) {
@@ -309,9 +380,17 @@ module.exports = {
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
 	        		if (users[index].identifications[i].school == course.school)
 	        			gradeObject.student_id = users[index].identifications[i].identity;
-	        	gradeObject.grade = "" + grade + "/" + total_grade;
+	        	gradeObject.grade = grade + "/" + total_grade;
 	          gradesObject.push(gradeObject);
 	        }
+
+	        gradesObject.sort(function(a, b) {
+	        	if (!a.student_id)
+	        		return true;
+	        	if (!b.student_id)
+	        		return false;
+	        	return a.student_id.localeCompare(b.student_id);
+	        });
 
 	        var gradeJSON = JSON.stringify(gradesObject);
 	        return res.send(gradeJSON);
@@ -319,5 +398,162 @@ module.exports = {
       });
     });
 	},
+
+	export: function(req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var username = req.param('username');
+    var course_id = req.param('course_id');
+
+    Courses
+    .findOneById(course_id)
+    .populate('students')
+    .populate('posts')
+    .exec(function callback(err, course) {
+      if (err || !course)
+        return res.send(404, { message: "Course Found Error" });
+
+      Users
+      .findById(Arrays.getIds(course.students))
+  		.populate('identifications')
+      .sort('full_name DESC')
+      .exec(function callback(err, users) {
+        if (err || !users)
+          return res.send(404, { message: "User Found Error" });
+
+	  		Posts
+	  		.findById(Arrays.getIds(course.posts))
+	  		.populate('attendance')
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err || !posts)
+	  				return res.send(404, { message: "Post Found Error" });
+
+			  	var postsObject = new Array();
+					for (var index in posts)
+						if (posts[index].type == "attendance")
+							postsObject.push(posts[index]);
+
+					var total_grade = postsObject.length;
+
+	        var data = new Array();
+
+	        // Student Name, Student ID, username, date#1, date#2, ... , date#n, Total Grade
+	        var headline = new Array();
+	        headline.push("Students Name");
+	        headline.push("Students ID");
+	        headline.push("username");
+	        for (var i = 0; i < postsObject.length; i++)
+	        	headline.push(Moment(postsObject[i].createdAt).format("YYYY/MM/DD"));
+	        headline.push("Total Grade");
+
+	        data.push(headline);
+
+	        var grades = new Array();
+	        for (var index in users) {
+	        	var gradeObject = new Array();
+	        	gradeObject.push(users[index].full_name); // Student Name
+	        	for (var i = 0; i < users[index].identifications.length; i++) 
+	        		if (users[index].identifications[i].school == course.school)
+	        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+
+	        	if (gradeObject.length < 2)
+	        		gradeObject.push("Student has no ID");
+
+	        	gradeObject.push(users[index].username); // Username
+
+	        	var grade = 0;
+	        	for (var i = 0; i < postsObject.length; i++) {
+	        		var check = 0;
+	        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
+	        			if (postsObject[i].attendance.checked_students[j] == users[index].id) {
+	        				grade++;
+	        				check++;
+	        			}
+	        		}
+	        		gradeObject.push(check);
+	        	}
+
+	        	gradeObject.push(grade + "/" + total_grade);
+	          grades.push(gradeObject);
+	        }
+
+	        grades.sort(function(a, b) {
+	        	if (!a[1])
+	        		return true;
+	        	if (!b[1])
+	        		return false;
+	        	return a[1].localeCompare(b[1]);
+	        });
+
+	        data = data.concat(grades);
+
+	        var buffer = Xlsx.build({
+        		worksheets: [
+				  		{
+				  			"name": course.name, 
+				  			"data": data
+				  		}
+				  	]
+					});
+
+	        Users.findOneByUsername(username).exec(function callback(err, user) {
+
+						// create reusable transport method (opens pool of SMTP connections)
+						var smtpTransport = Nodemailer.createTransport("SMTP",{
+						    service: "Gmail",
+						    auth: {
+						        user: "no-reply@bttendance.com",
+						        pass: "N0n0r2ply"
+						    }
+						});
+
+						var text = "Dear " + user.full_name + ",\n\nWe have received a request to reset your password.\nYour new password is following.\n\nNew Password : " 
+						+ user.password + "\n\nPlease change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\n\nYours sincerely,\nTeam Bttendance."
+
+						var today = new Date();
+						var dd = today.getDate();
+						var mm = today.getMonth()+1; //January is 0!
+						var yyyy = today.getFullYear();
+
+						if(dd<10) {
+						    dd='0'+dd
+						} 
+
+						if(mm<10) {
+						    mm='0'+mm
+						} 
+
+						today = mm+'/'+dd+'/'+yyyy;
+
+						// setup e-mail data with unicode symbols
+						var mailOptions = {
+						    from: "Bttendance<no-reply@bttendance.com>", // sender address
+						    to: user.email, // list of receivers
+						    subject: "Grade of " + course.name, // Subject line
+						    text: text, // plaintext body
+						    attachments: [
+							    {   
+							    	// binary buffer as an attachment
+					          fileName: course.name + " Grade " + today + ".xlsx",
+					          contents: buffer
+					        }
+						    ]
+						}
+
+						// send mail with defined transport object
+						smtpTransport.sendMail(mailOptions, function(error, response) {
+						    if(error || !response || !response.message)
+						      console.log(error);
+
+						    console.log("Message sent: " + response.message);
+						});
+
+	        });
+
+	        return res.send(course.toWholeObject());
+	  		});
+      });
+    });
+	}
 
 };

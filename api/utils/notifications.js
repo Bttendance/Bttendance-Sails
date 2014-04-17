@@ -17,7 +17,7 @@ var apn = require('apn');
 // Function to get id list
 // user.populate('device')
 // post.populate(all)
-var send = function(user, post, message, type) {
+exports.send = function(user, post, message, type) {
 	if (!user.device.notification_key)
 		return;
 

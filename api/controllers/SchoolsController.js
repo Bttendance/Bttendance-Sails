@@ -15,6 +15,8 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var Arrays = require('../utils/arrays');
+
 module.exports = {
 	
 	all: function(req, res) {
@@ -96,11 +98,11 @@ module.exports = {
 		  	if (err || !serial)
 		    	return res.send(404, { message: "No Serial Found Error" });
 
-			  var employed_schools = getIds(user.employed_schools);
+			  var employed_schools = Arrays.getIds(user.employed_schools);
 			  if (employed_schools.indexOf(Number(school_id)) == -1)
 			    user.employed_schools.add(school_id);
 
-			  var serials = getIds(user.serials);
+			  var serials = Arrays.getIds(user.serials);
 			  if (serials.indexOf(Number(school_id)) == -1)
 			    user.serials.add(serial.id);
 
@@ -144,7 +146,7 @@ module.exports = {
 			if (err || !user)
 		    return res.send(404, { message: "No User Found Error" });
 
-		  var enrolled_schools = getIds(user.enrolled_schools);
+		  var enrolled_schools = Arrays.getIds(user.enrolled_schools);
 		  if (enrolled_schools.indexOf(Number(school_id)) != -1)
 		  	return res.send(user.toWholeObject());
 

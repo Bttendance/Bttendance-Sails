@@ -5,6 +5,9 @@
  * @description :: 
  * @docs        :: http://sailsjs.org/#!documentation/policies
  */
+
+var Error = require('../utils/errors');
+
 module.exports = function hasDevice (req, res, next) {
 
 	// Params
@@ -12,8 +15,8 @@ module.exports = function hasDevice (req, res, next) {
 	var device_uuid = req.param('device_uuid');
 
 	if (!username || !device_uuid) {
-		console.log("hasDevice : Username and Device UUID is required");
-		return res.send(400, { message: "Username and Device UUID  is required", toast: "Username and Device UUID  is required"});
+		console.log("hasDevice : Username and device uuid is required.");
+		return res.send(400, Error.log("Username and device uuid is required."));
 	}
 
 	// Super Username Policy
@@ -30,25 +33,26 @@ module.exports = function hasDevice (req, res, next) {
 		return next();
 
 	// hasDevice Policy
-	username = username.toLowerCase();
-	Users.findOneByUsername_lower(username).populate('device').done(function(err, user) {
+	Users
+	.findOneByUsername(username)
+	.populate('device')
+	.exec(function callback(err, user) {
 
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, { message: "User Find Error", toast: "User Find Error" });
+	    return res.send(500, Error.log("Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, { message: "No User Found Error", toast: "No User Found Error" });
+	    return res.send(404, Error.log("User doesn't exitst."));
 
 	  // User Device Doesn't Match
 	  } else if (user.device.uuid != device_uuid) {
-		  return res.send(401, { message: "Device UUID doesn't match Error", toast: "Device UUID doesn't match Error" });
+		  return res.send(404, Error.log("Device uuid doesn't match."));
 
 		// Found User
 	  } else {
-    	console.log("User found : " + user);
 	  	return next();
 	  }
 	});

@@ -561,5 +561,27 @@ module.exports = {
 					console.log(err);
 			});
 		});
+	},
+
+	counts: function(req, res) {
+
+		//done
+		Courses
+		.find()
+		.populate('students')
+		.sort('id ASC')
+		.exec(function callback(err, courses) {
+			if (err || !courses)
+				return;
+
+			for (var i = 0; i < courses.length; i++) {
+				Courses.update({ id: courses[i].id }, { students_count: courses[i].students.length }).exec(function callback(err, updated_courses) {
+					if (err || !updated_courses)
+						return console.log(err);
+					console.log(updated_courses);
+				});
+			}
+		});
 	}
 };
+

@@ -15,7 +15,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var nodemailer = require("nodemailer");
+var Nodemailer = require("nodemailer");
 
 module.exports = {
 
@@ -65,7 +65,7 @@ module.exports = {
 	    	return res.send(404, { message: "No Serial Created Error" });
 
 			// create reusable transport method (opens pool of SMTP connections)
-			var smtpTransport = nodemailer.createTransport("SMTP",{
+			var smtpTransport = Nodemailer.createTransport("SMTP",{
 			    service: "Gmail",
 			    auth: {
 			        user: "no-reply@bttendance.com",

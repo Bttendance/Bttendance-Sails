@@ -172,6 +172,68 @@ module.exports = {
 				  	return res.send(post.toWholeObject());
 					}
 				});
+		} else if (model == 'devices') {
+			if (id == 'all')
+				Devices
+				.find()
+				.populate('owner')
+				.sort('id ASC')
+				.exec(function callback (err, devices) {
+					if (err || !devices) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < devices.length; i++)
+							devices[i] = devices[i].toWholeObject();
+				  	return res.send(devices);
+					}
+				});
+			else 
+				Devices
+				.findOneById(Number(id))
+				.populate('owner')
+				.exec(function callback (err, device) {
+					if (err || !device) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(device.toWholeObject());
+					}
+				});
+		} else if (model == 'serials') {
+			if (id == 'all')
+				Serials
+				.find()
+				.populate('school')
+				.populate('owners')
+				.sort('id ASC')
+				.exec(function callback (err, serials) {
+					if (err || !serials) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < serials.length; i++)
+							serials[i] = serials[i].toWholeObject();
+				  	return res.send(serials);
+					}
+				});
+			else 
+				Serials
+				.findOneById(Number(id))
+				.populate('school')
+				.populate('owners')
+				.exec(function callback (err, serial) {
+					if (err || !serial) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(serial.toWholeObject());
+					}
+				});
 		} else {
 			res.contentType('html');
 			return res.forbidden('Check out your model parameter.');

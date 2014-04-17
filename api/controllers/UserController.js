@@ -647,6 +647,11 @@ module.exports = {
 		  	if (err || !course)
 		    	return res.send(404, { message: "No Course Found Error" });
 
+				Courses.update({ id: course.id }, { students_count: course.students_count + 1 }).exec(function callback(err, updated_courses) {
+					if (err || !updated_courses)
+						return console.log(err);
+				});
+
 				user.attending_courses.add(course_id);
 				user.save(function callback(err) {
 					if (err)

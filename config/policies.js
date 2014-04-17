@@ -22,14 +22,55 @@ module.exports.policies = {
     show: true
   },
 
+  UsersController: {
+    signup: true,
+    auto_signin: true,
+    signin: true,
+    forgot_password: true,
+    signup: true,
+    update_profile_image: ['isUser', 'hasDevice'],
+    update_full_name: ['isUser', 'hasDevice'],
+    update_email: ['isUser', 'hasDevice'],
+    feed: 'isUser',
+    courses: 'isUser',
+    search_user: 'isUser'
+  },
+
+  DevicesController: {
+    update_notification_key: ['isUser', 'hasDevice']
+  },
+
+  SchoolsController: {
+    all: 'isUser',
+    courses: 'isUser',
+    employ: 'isUser',
+    enroll: 'isUser'
+  },
+
+  CoursesController: {
+    create: 'employed',
+    attend: 'isUser',
+    feed: 'attending',
+    students: 'supervising',
+    add_manager: 'supervising',
+    grades: 'supervising'
+  },
+
   PostsController: {
-    '*': true
+    start_attendance: 'supervising',
+    start_clicker: 'supervising',
+    create_notice: 'supervising'
   },
 
   ClickersController: {
     '*': true,
     click: true,
     connect: true
+  },
+
+  SerialsController: {
+    validate: true,
+    request: true
   },
 
   /*********** Old APIs Start **********/
@@ -83,7 +124,8 @@ module.exports.policies = {
 
   MigrationController: {
     migrate: true,
-    associate: true
+    associate: true,
+    students: true
   }
   /*********** Old APIs End **********/
 

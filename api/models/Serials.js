@@ -6,6 +6,8 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var Random = require('../utils/random');
+
 module.exports = {
 
   attributes: {
@@ -54,7 +56,7 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     if (!values.key)
-      values.key = randomKey();
+      values.key = Random.string(7);
     next();
   },
 
@@ -79,13 +81,3 @@ module.exports = {
   }
 
 };
-
-function randomKey() {
-  var text = "";
-  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-  for(var i=0; i < 7; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}

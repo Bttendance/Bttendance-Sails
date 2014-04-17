@@ -41,6 +41,10 @@ module.exports = {
     	via: 'attending_courses'
     },
 
+    students_count: {
+      type: 'integer'
+    },
+
     // One to Many
     posts: {
     	collection: 'Posts',
@@ -111,6 +115,7 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    values.students_count = 0;
     next();
   },
 
