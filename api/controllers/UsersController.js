@@ -225,7 +225,7 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, alert("Sign In Error", "Please check your username of email again."));
+		    return res.send(500, Error.alert("Sign In Error", "Please check your username of email again."));
 
 			if (username == "appletest0"
 		|| username == "appletest1" 
