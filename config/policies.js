@@ -59,7 +59,8 @@ module.exports.policies = {
   PostsController: {
     start_attendance: 'supervising',
     start_clicker: 'supervising',
-    create_notice: 'supervising'
+    create_notice: 'supervising',
+    remove: 'supervising'
   },
 
   ClickersController: {
@@ -84,7 +85,6 @@ module.exports.policies = {
     signin: 'hasDevice',
     auto_signin: true,
     forgot_password: true,
-  	signup: true,
   	update_type: 'isUser',
   	join_school: 'isUser',
   	join_course: 'isUser',
@@ -103,6 +103,7 @@ module.exports.policies = {
   },
 
   CourseController: {
+    create: 'isUser',
     feed: 'isUser',
     students: 'isUser',
     grades: 'isUser',
@@ -111,6 +112,7 @@ module.exports.policies = {
   },
 
   PostController: {
+    create: 'isUser',
     attendance_start: 'isUser',
     attendance_found_device: 'isUser',
     attendance_check_manually: 'isUser',
@@ -119,7 +121,8 @@ module.exports.policies = {
   },
 
   SchoolController: {
-    all: 'isUser'
+    all: 'isUser',
+    courses: 'isUser'
   },
 
   MigrationController: {

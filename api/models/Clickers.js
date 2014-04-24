@@ -9,6 +9,12 @@ module.exports = {
 
 	attributes: {
 
+		choice_count: {
+			type: 'integer',
+			min: 2,
+			max: 5
+		},
+
 		a_students: {
 			type: 'json'
 		},
@@ -22,6 +28,10 @@ module.exports = {
 		},
 
 		d_students: {
+			type: 'json'
+		},
+
+		e_students: {
 			type: 'json'
 		},
 

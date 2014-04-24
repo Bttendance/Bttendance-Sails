@@ -41,7 +41,7 @@ module.exports = function isUser (req, res, next) {
 		  return res.send(404, Error.log("Password doesn't match."));
 
 		// User attending check
-		} else if (Arrays.getIds(user.supervising_courses).indexOf(course_id) < 0) {
+		} else if (Arrays.getIds(user.supervising_courses).indexOf(Number(course_id)) < 0) {
 		  return res.send(403, Error.log("User is not supervising current course."));
 
 		// Found User

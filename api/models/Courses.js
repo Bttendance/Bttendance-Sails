@@ -41,17 +41,28 @@ module.exports = {
     	via: 'attending_courses'
     },
 
-    students_count: {
-      type: 'integer'
-    },
-
     // One to Many
     posts: {
     	collection: 'Posts',
     	via: 'course'
     },
 
+    students_count: {
+      type: 'integer',
+      defaultsTo: 0
+    },
+
     attdCheckedAt: 'string',
+
+    clicker_usage: {
+      type: 'integer',
+      defaultsTo: 0
+    },
+
+    notice_usage: {
+      type: 'integer',
+      defaultsTo: 0
+    },
 
     toJSON: function() {
       var obj = this.toObject();

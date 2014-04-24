@@ -411,7 +411,7 @@ module.exports = {
 
 	  	return res.send(post.toOldObject());
 		});
-	}
+	},
 
 	remove: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
