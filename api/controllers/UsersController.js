@@ -158,6 +158,10 @@ module.exports = {
 		});
 	},
 
+
+  // 401 : Auto Sign Out
+	// 441 : Update Recommended
+	// 442 : Update Required
 	auto_signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
@@ -185,7 +189,9 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 		    return res.send(401, Error.alert("Auto Sign Out", "User has been signed-in other device."));
 
-	  	return res.send(user.toWholeObject());
+	    return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
+	    // return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
+	  	// return res.send(user.toWholeObject());
 		});
 	},
 
