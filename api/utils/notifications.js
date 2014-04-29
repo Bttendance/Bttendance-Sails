@@ -99,9 +99,7 @@ exports.send = function(user, post, message, type) {
 			'type' 		: type 
 		};
 		note.device = myDevice;
-
 		apnConnection.sendNotification(note);
+		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
 	}
-
-	console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
 }
