@@ -189,7 +189,7 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 		    return res.send(401, Error.alert("Auto Sign Out", "User has been signed-in other device."));
 
-	    return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
+	    // return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
 	    // return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
 	  	// return res.send(user.toWholeObject());
 		});
@@ -347,10 +347,8 @@ module.exports = {
 		var username = req.param('username');
 		var profile_image = req.param('profile_image');
 
-		if (!profile_image) {
-			console.log("UserController : update_profile_image : Profile Image url is required");
-			return res.send(400, { message: "Profile Image url is required"});
-		}
+		if (!profile_image)
+			return res.send(400, Error.alert("Update Profile Image Error", "Profile Image is required."));
 
 		Users
 		.findOneByUsername(username)
@@ -363,11 +361,14 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+				return res.send(404, Error.alert("Update Profile Image Error", "User doesn't exist."));
 
 	  	user.profile_image = profile_image;
-	  	user.save();
-	  	return res.send(user.toWholeObject());
+	  	user.save(function callback(err, updated_user) {
+	  		if (err || !updated_user)
+					return res.send(400, Error.alert("Update Profile Image Error", "Updating profile image has been failed."));
+		  	return res.send(updated_user.toWholeObject());
+	  	});
 		});
 	},
 
@@ -376,10 +377,8 @@ module.exports = {
 		var username = req.param('username');
 		var full_name = req.param('full_name');
 
-		if (!full_name) {
-			console.log("UserController : update_full_name : Full Name is required");
-			return res.send(400, { message: "Full Name is required"});
-		}
+		if (!full_name)
+			return res.send(400, Error.alert("FullName Update Error", "FullName is required."));
 
 		Users
 		.findOneByUsername(username)
@@ -392,11 +391,14 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+				return res.send(404, Error.alert("FullName Update Error", "User doesn't exist."));
 
 	  	user.full_name = full_name;
-	  	user.save();
-	  	return res.send(user.toWholeObject());
+	  	user.save(function callback(err, updated_user) {
+	  		if (err || !updated_user)
+					return res.send(400, Error.alert("FullName Update Error", "Updating full name has been failed."));
+		  	return res.send(updated_user.toWholeObject());
+	  	});
 		});
 	},
 
@@ -405,10 +407,8 @@ module.exports = {
 		var username = req.param('username');
 		var email = req.param('email');
 
-		if (!email) {
-			console.log("UserController : update_email : Email is required");
-			return res.send(400, { message: "Email is required"});
-		}
+		if (!email)
+			return res.send(400, Error.alert("Email Update Error", "Email is required."));
 
 		Users
 		.findOneByUsername(username)
@@ -421,11 +421,14 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+				return res.send(404, Error.alert("Email Update Error", "User doesn't exist."));
 
 	  	user.email = email;
-	  	user.save();
-	  	return res.send(user.toWholeObject());
+	  	user.save(function callback(err, updated_user) {
+	  		if (err || !updated_user)
+					return res.send(400, Error.alert("Email Update Error", "Email already registered to other user."));
+		  	return res.send(updated_user.toWholeObject());
+	  	});
 		});
 	},
 

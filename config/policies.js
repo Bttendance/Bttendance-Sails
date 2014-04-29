@@ -50,7 +50,7 @@ module.exports.policies = {
   CoursesController: {
     create: 'employed',
     attend: 'isUser',
-    feed: 'attending',
+    feed: 'attending_or_supervising',
     students: 'supervising',
     add_manager: 'supervising',
     grades: 'supervising'
