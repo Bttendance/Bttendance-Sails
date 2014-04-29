@@ -189,7 +189,7 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 		    return res.send(401, Error.alert("Auto Sign Out", "User has been signed-in other device."));
 
-	    return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
+	    return res.send(442, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
 	    // return res.send(441, Error.alert("Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
 	  	// return res.send(user.toWholeObject());
 		});
@@ -203,7 +203,7 @@ module.exports = {
 
 		if (!username) {
 			console.log("UserController : signin : Username or Email is required");
-			return res.send(400, Error.toast("Username or Email is required."));
+			return res.send(400, Error.alert("Sign In Error", "Username or Email is required."));
 		}
 
 		if (!password) {
