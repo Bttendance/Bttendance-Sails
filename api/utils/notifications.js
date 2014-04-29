@@ -47,7 +47,7 @@ exports.send = function(user, post, message, type) {
 			if (err)
 				console.log(err);
 			else
-    		console.log(result);
+    		console.log("Android notification has been sent to " + user.full_name + " (" + user.username + ")");
 		});
 
 	} else if (user.device.type == 'iphone') {
@@ -103,5 +103,5 @@ exports.send = function(user, post, message, type) {
 		apnConnection.sendNotification(note);
 	}
 
-	console.log("noti sent : " + user.id + ", post : " + post);
+	console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
 }
