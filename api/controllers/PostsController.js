@@ -63,7 +63,7 @@ module.exports = {
 				  	.populate('school')
 				  	.exec(function callback(err, course) {
 			    		if (err || !course)
-				    		return res.send(404, { message: "Course Update Error" });
+				    		return res.send(404, { message: "Course Find Error" });
 
 					  	// Send notification about post to Prof & Std
 					  	var notiUsers = new Array();
@@ -124,44 +124,37 @@ module.exports = {
 	  				return res.send(500, {message: "Post Find Error"});
 
 		    	Courses
-		    	.update({id: post.course.id}, {attdCheckedAt: JSON.parse(JSON.stringify(post.toWholeObject())).createdAt})
-		    	.exec(function callback(err, courses) {
-		    		if (err || !courses)
-			    		return res.send(404, { message: "Course Update Error" });
+		    	.findOneById(post.course.id)
+					.populate('posts')
+			  	.populate('managers')
+			  	.populate('students')
+			  	.populate('school')
+			  	.exec(function callback(err, course) {
+		    		if (err || !course)
+			    		return res.send(404, { message: "Course Find Error" });
 
-			    	Courses
-			    	.findOneById(courses[0].id)
-						.populate('posts')
-				  	.populate('managers')
-				  	.populate('students')
-				  	.populate('school')
-				  	.exec(function callback(err, course) {
-			    		if (err || !course)
-				    		return res.send(404, { message: "Course Update Error" });
+				  	// Send notification about post to Prof & Std
+				  	var notiUsers = new Array();
+				  	for (var i = 0; i < course.students.length; i++)
+				  		notiUsers.push(course.students[i].id);
+				  	for (var i = 0; i < course.managers.length; i++)
+				  		notiUsers.push(course.managers[i].id);
+				  	
+			  		Users
+			  		.findById(notiUsers)
+						.populate('device')
+			  		.sort('id DESC')
+			  		.exec(function callback(err, users) {
+			  			for (var j = 0; j < users.length; j++)
+			  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+			  		});
 
-					  	// Send notification about post to Prof & Std
-					  	var notiUsers = new Array();
-					  	for (var i = 0; i < course.students.length; i++)
-					  		notiUsers.push(course.students[i].id);
-					  	for (var i = 0; i < course.managers.length; i++)
-					  		notiUsers.push(course.managers[i].id);
-					  	
-				  		Users
-				  		.findById(notiUsers)
-							.populate('device')
-				  		.sort('id DESC')
-				  		.exec(function callback(err, users) {
-				  			for (var j = 0; j < users.length; j++)
-				  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
-				  		});
+			  		setTimeout(function() { resendNotis(post.id); }, 40000);
+			  		setTimeout(function() { resendNotis(post.id); }, 75000);
+			  		setTimeout(function() { resendNotis(post.id); }, 120000);
 
-				  		setTimeout(function() { resendNotis(post.id); }, 40000);
-				  		setTimeout(function() { resendNotis(post.id); }, 75000);
-				  		setTimeout(function() { resendNotis(post.id); }, 120000);
-
-					  	return res.send(course.toWholeObject());
-				  	});
-		    	});
+				  	return res.send(course.toWholeObject());
+			  	});
 				});
 			});
 		});
@@ -198,24 +191,35 @@ module.exports = {
 	  			if (err || !post)
 	  				return res.send(404, {message: "Post Found Error"});
 
-			  	// Send notification about post to Prof & Std
-			  	var notiUsers = new Array();
-			  	for (var i = 0; i < course.students.length; i++)
-			  		notiUsers.push(course.students[i].id);
-			  	for (var i = 0; i < course.managers.length; i++)
-			  		notiUsers.push(course.managers[i].id);
-			  	
-		  		Users
-		  		.findById(notiUsers)
-		  		.populate('device')
-		  		.sort('id DESC')
-		  		.exec(function callback(err, users) {
-		  			for (var j = 0; j < users.length; j++)
-		  				Noti.send(users[j], post, message, "notification");
-		  		});
+		    	Courses
+		    	.findOneById(post.course.id)
+					.populate('posts')
+			  	.populate('managers')
+			  	.populate('students')
+			  	.populate('school')
+			  	.exec(function callback(err, course) {
+		    		if (err || !course)
+			    		return res.send(404, { message: "Course Find Error" });
 
-			  	return res.send(post.toWholeObject());
-	    	});
+				  	// Send notification about post to Prof & Std
+				  	var notiUsers = new Array();
+				  	for (var i = 0; i < course.students.length; i++)
+				  		notiUsers.push(course.students[i].id);
+				  	for (var i = 0; i < course.managers.length; i++)
+				  		notiUsers.push(course.managers[i].id);
+				  	
+			  		Users
+			  		.findById(notiUsers)
+			  		.populate('device')
+			  		.sort('id DESC')
+			  		.exec(function callback(err, users) {
+			  			for (var j = 0; j < users.length; j++)
+			  				Noti.send(users[j], post, message, "notification");
+			  		});
+
+				  	return res.send(post.toWholeObject());
+		    	});
+			  });
 	  	});
 		});
 	},
