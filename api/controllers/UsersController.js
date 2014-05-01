@@ -306,7 +306,7 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, { message: "User Find Error" });
+		    return res.send(404, Error.alert("Password Recovery Error", "Email hasn't been registered."));
 
 		  var password = Random.string(8);
 		  user.password = PasswordHash.generate(password);
@@ -323,7 +323,7 @@ module.exports = {
 			var path = Path.resolve(__dirname, '../../assets/emails/change_password.html');
 			FS.readFile(path, 'utf8', function (err, file) {
 			  if (err)
-  				return res.send(404, { message: "File Read Error" });
+				  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
 
   			file = file.replace('#fullname', user.full_name);
   			file = file.replace('#password', password);

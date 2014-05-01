@@ -7,6 +7,7 @@
 
 var QueryString = require('querystring');
 var Arrays = require('../utils/arrays');
+var Noti = require('../utils/notifications');
 
 module.exports = {
 
@@ -19,6 +20,10 @@ module.exports = {
 				return res.redirect('http://www.bttendance.com/verification-failed');
 
 			if (token.action == 'createCourse') {
+
+				token.expired = true;
+				token.save();
+
 				var params = QueryString.parse(token.params);
 				return employSchool(params, res);
 			} else

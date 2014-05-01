@@ -25,8 +25,7 @@ module.exports = {
 
     // mac address
     mac_address: {
-      type: 'string',
-      unique: true
+      type: 'string'
     },
 
     notification_key: {

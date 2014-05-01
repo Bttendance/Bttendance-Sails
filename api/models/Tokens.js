@@ -23,8 +23,9 @@ module.exports = {
       type: 'string'
     },
 
-    expire: {
-      
+    expired: {
+      type: 'boolean',
+      defaultsTo: false
     }
 
 	},
