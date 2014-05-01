@@ -498,7 +498,7 @@ module.exports = {
 						if (posts[i].type == 'attendance') {
 							grade = Number(( (posts[i].attendance.checked_students.length - 1) / students_count * 100).toFixed());
 							console.log(grade);
-		  				if (grade < 0) grade = 0;
+		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
