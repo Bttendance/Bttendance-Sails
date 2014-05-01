@@ -54,10 +54,22 @@ exports.send = function(user, title, message, type) {
 		console.log(path);
 		console.log(__dirname);
 
-		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "/app/certification/cert_development.pem",
+		// if (process.env.NODE_ENV == 'development') {
+		// 	options = { cert: "/app/certification/cert_development.pem",
+		// 							certData: null,
+		// 							key: "/app/certification/key_development.pem",
+		// 							keyData: null,
+		// 							passphrase: "bttendance",
+		// 							ca: null,
+		// 							gateway: "gateway.sandbox.push.apple.com",
+		// 							port: 2195,
+		// 							enhanced: true,
+		// 							errorCallback: undefined,
+		// 							cacheLength: 100 };
+		// } else { //production
+			options = { cert: "/app/certification/cert_production.pem",
 									certData: null,
-									key: "/app/certification/key_development.pem",
+									key: "/app/certification/key_production.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -66,19 +78,7 @@ exports.send = function(user, title, message, type) {
 									enhanced: true,
 									errorCallback: undefined,
 									cacheLength: 100 };
-		} else { //production
-			options = { cert: "../../certification/cert_production.pem",
-									certData: null,
-									key: "../../certification/key_production.pem",
-									keyData: null,
-									passphrase: "bttendance",
-									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
-									port: 2195,
-									enhanced: true,
-									errorCallback: undefined,
-									cacheLength: 100 };
-		}
+		// }
 
 		console.log(user.device.notification_key);
 
