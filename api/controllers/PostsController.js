@@ -78,7 +78,7 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				Noti.send(users[j], post, "Attendance check has been started", "attendance_started");
+				  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
 				  		});
 
 				  		setTimeout(function() { resendNotis(post.id); }, 40000);
@@ -146,7 +146,7 @@ module.exports = {
 			  		.sort('id DESC')
 			  		.exec(function callback(err, users) {
 			  			for (var j = 0; j < users.length; j++)
-			  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+			  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
 			  		});
 
 			  		setTimeout(function() { resendNotis(post.id); }, 40000);
@@ -214,7 +214,7 @@ module.exports = {
 			  		.sort('id DESC')
 			  		.exec(function callback(err, users) {
 			  			for (var j = 0; j < users.length; j++)
-			  				Noti.send(users[j], post, message, "notification");
+			  				Noti.send(users[j], post.course.name, message, "notice");
 			  		});
 
 				  	return res.send(post.toWholeObject());

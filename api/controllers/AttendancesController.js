@@ -184,7 +184,7 @@ module.exports = {
 												.populate('device')
 												.exec(function callback(err, user) {
 													if (user)
-														Noti.send(user, post, "Attendance has been checked", "attendance_checked");
+														Noti.send(user, post.course.name, "Attendance has been checked", "attendance_checked");
 												});
 											}
 										}
@@ -248,7 +248,7 @@ module.exports = {
 							return res.send(404, {message: "Attendance update failed"});
 
 						post.attendance = attendance[0];
-						Noti.send(user, post, "Attendance has been checked manually", "attendance_checked");
+						Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
 				  	return res.send(post.toOldObject());
 					});
 				} else {

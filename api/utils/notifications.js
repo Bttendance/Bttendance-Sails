@@ -16,26 +16,20 @@ var apn = require('apn');
 
 // Function to get id list
 // user.populate('device')
-// post.populate(all)
-exports.send = function(user, post, message, type) {
+exports.send = function(user, title, message, type) {
 	if (!user.device.notification_key)
 		return;
 
 	if (user.device.type == 'android') {
-
-		var postJSON;
-		if (post)
-			postJSON = JSON.stringify(post.toWholeObject());
 
 		var msg = new gcm.Message({
 		    collapseKey: 'bttendance',
 		    delayWhileIdle: false,
 		    timeToLive: 4,
 		    data: {
-		    	title: post.course.name,
+		    	title: title,
 		      message: message,
-		      type: type,
-		      post: postJSON
+		      type: type
 		    }
 		});
 
@@ -85,16 +79,16 @@ exports.send = function(user, post, message, type) {
 		var myDevice = new apns.Device(user.device.notification_key); //for token
 		var note = new apns.Notification();
 
-		var alert = "Notification from " + post.course.name;
+		var alert = "Notification from " + title;
 		if (message)
-			alert = post.course.name + " : " + message;
+			alert = title + " : " + message;
 
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
 		note.badge = 1;
 		note.sound = "ping.aiff";
 		note.alert = alert;
 		note.payload = {
-			'title' 	: post.course.name,
+			'title' 	: title,
 			'message' : message,
 			'type' 		: type 
 		};

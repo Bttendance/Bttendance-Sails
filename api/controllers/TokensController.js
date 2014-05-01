@@ -120,7 +120,7 @@ var createCourse = function(params, res) {
 				if (err) 
 					return res.redirect('http://www.bttendance.com/verification-failed');
 
-				Noti.send(user, null, "Course has been created", "course_created");
+				Noti.send(user, "Bttendance", "Course has been created", "course_created");
 				return res.redirect('http://www.bttendance.com/course-created');
 			});
 		});
