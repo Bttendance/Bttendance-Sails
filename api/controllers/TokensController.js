@@ -107,7 +107,10 @@ var createCourse = function(params, res) {
 		if (err || !course) 
 			return res.redirect('http://www.bttendance.com/verification-failed');
 
-		Users.findOneByUsername(username).exec(function callback(err, user) {
+		Users
+		.findOneByUsername(username)
+		.populate('device')
+		.exec(function callback(err, user) {
 			if (err || !user) 
 				return res.redirect('http://www.bttendance.com/verification-failed');
 
@@ -116,6 +119,8 @@ var createCourse = function(params, res) {
 			user.save(function callback(err) {
 				if (err) 
 					return res.redirect('http://www.bttendance.com/verification-failed');
+				
+				Noti.send(user, nil, "Course has been created", "course_created");
 				return res.redirect('http://www.bttendance.com/course-created');
 			});
 		});
