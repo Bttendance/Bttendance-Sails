@@ -16,7 +16,7 @@ module.exports = {
 		Tokens
 		.findOneByKey(key)
 		.exec(function callback(err, token) {
-			if (err || !token)
+			if (err || !token || token.expired)
 				return res.redirect('http://www.bttendance.com/verification-failed');
 
 			if (token.action == 'createCourse') {
