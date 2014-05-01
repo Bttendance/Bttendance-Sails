@@ -75,6 +75,8 @@ exports.send = function(user, title, message, type) {
 									cacheLength: 100 };
 		}
 
+		console.log(user.device.notification_key);
+
     var apnConnection = new apns.Connection(options);
 		var myDevice = new apns.Device(user.device.notification_key); //for token
 		var note = new apns.Notification();
