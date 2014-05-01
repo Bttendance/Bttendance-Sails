@@ -72,6 +72,8 @@ module.exports = {
       delete obj.students;
       delete obj.posts;
       delete obj.attdCheckedAt;
+      delete obj.clicker_usage;
+      delete obj.notice_usage;
       return obj;
     },
 
@@ -81,6 +83,9 @@ module.exports = {
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.attdCheckedAt = this.attdCheckedAt;
+      obj.students_count = this.students_count;
+      obj.clicker_usage = this.clicker_usage;
+      obj.notice_usage = this.notice_usage;
       return obj;
     },
 

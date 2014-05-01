@@ -71,61 +71,6 @@ module.exports = {
   		});
 		});
 	},
-
-	employ: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var school_id = req.param('school_id');
-		var serial = req.param('serial');
-		
-		Users
-		.findOneByUsername(username)
-		.populate('device')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('serials')
-		.populate('enrolled_schools')
-		.populate('identifications')
-		.exec(function callback(err, user) {
-			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
-
-		  Serials.findOne({
-		  	key: serial,
-		  	school: school_id
-		  }).exec(function callback(err, serial) {
-		  	if (err || !serial)
-		    	return res.send(404, { message: "No Serial Found Error" });
-
-			  var employed_schools = Arrays.getIds(user.employed_schools);
-			  if (employed_schools.indexOf(Number(school_id)) == -1)
-			    user.employed_schools.add(school_id);
-
-			  var serials = Arrays.getIds(user.serials);
-			  if (serials.indexOf(Number(school_id)) == -1)
-			    user.serials.add(serial.id);
-
-				user.save(function callback(err) {
-			    Users
-					.findOneByUsername(username)
-					.populate('device')
-					.populate('supervising_courses')
-					.populate('attending_courses')
-					.populate('employed_schools')
-					.populate('serials')
-					.populate('enrolled_schools')
-					.populate('identifications')
-					.exec(function callback(err, user_new) {
-						if (err || !user_new)
-					    return res.send(404, { message: "No User Found Error" });
-
-				  	return res.send(user_new.toWholeObject());
-					});
-				});
-		  });
-		});
-	},
 	
 	enroll: function(req, res) {
 		res.contentType('application/json; charset=utf-8');

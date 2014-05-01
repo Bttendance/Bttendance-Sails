@@ -563,19 +563,33 @@ module.exports = {
 		});
 	},
 
-	counts: function(req, res) {
+	update: function(req, res) {
 
 		//done
 		Courses
 		.find()
 		.populate('students')
+		.populate('posts')
 		.sort('id ASC')
 		.exec(function callback(err, courses) {
 			if (err || !courses)
 				return;
 
 			for (var i = 0; i < courses.length; i++) {
-				Courses.update({ id: courses[i].id }, { students_count: courses[i].students.length }).exec(function callback(err, updated_courses) {
+
+				var notice = 0;
+				for (var j = 0; j < courses[i].posts.length; j++)
+					if (courses[i].posts[j].type == 'notice')
+						notice++;
+
+				Courses
+				.update({ 
+					id: courses[i].id 
+				}, { 
+					students_count: courses[i].students.length,
+					clicker_usage: 0,
+					notice_usage: notice
+				}).exec(function callback(err, updated_courses) {
 					if (err || !updated_courses)
 						return console.log(err);
 					console.log(updated_courses);
@@ -583,5 +597,6 @@ module.exports = {
 			}
 		});
 	}
+
 };
 

@@ -18,8 +18,11 @@
 var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
 var Random = require('../utils/random');
+var Email = require('../utils/email');
 var PasswordHash = require('password-hash');
 var Nodemailer = require("nodemailer");
+var	FS = require('fs');
+var Path = require('path');
 
 module.exports = {
 
@@ -157,7 +160,6 @@ module.exports = {
 		  });
 		});
 	},
-
 
   // 401 : Auto Sign Out
 	// 441 : Update Recommended
@@ -318,27 +320,34 @@ module.exports = {
 			    }
 			});
 
-			var text = "Dear " + user.full_name + ",\n\nWe have received a request to reset your password.\nYour new password is following.\n\nNew Password : " 
-			+ password + "\n\nPlease change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\n\nYours sincerely,\nTeam Bttendance."
+			var path = Path.resolve(__dirname, '../../assets/emails/change_password.html');
+			FS.readFile(path, 'utf8', function (err, file) {
+			  if (err)
+  				return res.send(404, { message: "File Read Error" });
 
-			// setup e-mail data with unicode symbols
-			var mailOptions = {
-			    from: "Bttendance<no-reply@bttendance.com>", // sender address
-			    to: email, // list of receivers
-			    subject: "Bttendance Password Recovery", // Subject line
-			    text: text, // plaintext body
-			}
+  			file = file.replace('#fullname', user.full_name);
+  			file = file.replace('#password', password);
 
-			// send mail with defined transport object
-			smtpTransport.sendMail(mailOptions, function(error, response) {
-			    if(error || !response || !response.message)
-			      console.log(error);
+				// setup e-mail data with unicode symbols
+				var mailOptions = {
+				    from: "Bttendance<no-reply@bttendance.com>", // sender address
+				    to: user.email, // list of receivers
+				    subject: "Password Recovery", // Subject line
+				    html: file, // plaintext body
+				}
 
-			    console.log("Message sent: " + response.message);
-			});
+				user.save(function callback(err, user) {
+		  		if (err || !user)
+						return res.send(400, Error.alert("Password Recovery Error", "Updating password has been failed."));
 
-	  	user.save();
-	  	return res.send(user.toWholeObject());
+					// send mail with defined transport object
+					smtpTransport.sendMail(mailOptions, function(error, response) {
+				    if(error || !response || !response.message)
+						  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+		        return res.send(Email.json(user.email));
+					});
+				});
+  		});
 		});
 	},
 

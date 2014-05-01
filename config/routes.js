@@ -69,9 +69,19 @@ module.exports.routes = {
   },
 
   /************* Courses APIs **********/  
+  'post /api/courses/create/request': {
+    controller: 'courses',
+    action: 'create_request'
+  },
+
   'put /api/courses/add/manager': {
     controller: 'courses',
     action: 'add_manager'
+  },
+
+  'put /api/courses/export/grades': {
+    controller: 'courses',
+    action: 'export_grades'
   },
 
   /************* Posts APIs ************/  
@@ -101,6 +111,12 @@ module.exports.routes = {
     action: 'check_manually'
   },
 
+  /********* Tokens APIs **********/  
+  '/verify/:token_key': {
+    controller: 'tokens',
+    action: 'verify'
+  },
+  
 
   /*********** Old APIs Start **********/
   'get /api/user/auto/signin': {

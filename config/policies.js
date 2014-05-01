@@ -43,17 +43,17 @@ module.exports.policies = {
   SchoolsController: {
     all: 'isUser',
     courses: 'isUser',
-    employ: 'isUser',
     enroll: 'isUser'
   },
 
   CoursesController: {
-    create: 'employed',
+    create_request: 'isUser',
     attend: 'isUser',
     feed: 'attending_or_supervising',
     students: 'supervising',
     add_manager: 'supervising',
-    grades: 'supervising'
+    grades: 'supervising',
+    export_grades: 'supervising'
   },
 
   PostsController: {
@@ -69,9 +69,8 @@ module.exports.policies = {
     connect: true
   },
 
-  SerialsController: {
-    validate: true,
-    request: true
+  TokensController: {
+    verify: true
   },
 
   /*********** Old APIs Start **********/

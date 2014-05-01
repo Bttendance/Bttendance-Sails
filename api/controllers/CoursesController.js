@@ -19,10 +19,15 @@ var Arrays = require('../utils/arrays');
 var Xlsx = require('node-xlsx');
 var Nodemailer = require("nodemailer");
 var Moment = require('moment');
+var Url = require('url');
+var QueryString = require('querystring');
+var Email = require('../utils/email');
+var	FS = require('fs');
+var Path = require('path');
 
 module.exports = {
 
-	create: function(req, res) {
+	create_request: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var name = req.param('name');
@@ -30,36 +35,69 @@ module.exports = {
 		var school_id = req.param('school_id');
 		var professor_name = req.param('professor_name');
 
-		Courses.create({
-			name: name,
-			number: number,
-			school: school_id,
-			professor_name: professor_name
-		}).exec(function callback(err, course) {
-			if (err || !course) 
-				return res.send(500, {message: "Course create Error"});
+		var params = req.params.all('httpParam');
+		var query = QueryString.stringify(params);
 
-			Users.findOneByUsername(username).exec(function callback(err, user) {
-				if (err || !user) 
-			    return res.send(404, { message: "No User Found Error" });
+		Users
+		.findOneByUsername(username)
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(404, Error.log("User doesn't exitst."));
 
-				user.supervising_courses.add(course.id);
+		  Schools
+		  .findOneById(school_id)
+		  .exec(function callback(err, school) {
+				if (err || !school) 
+			    return res.send(404, Error.log("School doesn't exitst."));
 
-				user.save(function callback(err) {
-					if (err) 
-				    return res.send(500, { message: "User Save Error" });
-				  
-				  Courses
-				  .findOneById(course.id)
-					.populate('posts')
-			  	.populate('managers')
-			  	.populate('students')
-			  	.populate('school')
-			  	.exec(function callback(err, new_course) {
-		        return res.send(new_course.toWholeObject());
-				  });
+				Tokens.create({
+					action: 'createCourse',
+					params: query
+				}).exec(function callback(err, token) {
+					if (err || !token) 
+				    return res.send(404, Error.log("Token creation has been failed."));
+
+				  var link = req.baseUrl + "/verify/" + token.key;
+
+					// create reusable transport method (opens pool of SMTP connections)
+					var smtpTransport = Nodemailer.createTransport("SMTP",{
+					    service: "Gmail",
+					    auth: {
+					        user: "no-reply@bttendance.com",
+					        pass: "N0n0r2ply"
+					    }
+					});
+
+					var path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
+					FS.readFile(path, 'utf8', function (err, file) {
+					  if (err)
+		  				return res.send(404, { message: "File Read Error" });
+
+		  			file = file.replace('#fullname', user.full_name);
+		  			file = file.replace('#courseTitle', name);
+		  			file = file.replace('#courseID', number);
+		  			file = file.replace('#profname', professor_name);
+		  			file = file.replace('#schoolname', school.name);
+		  			file = file.replace('#schoolname', school.name);
+		  			file = file.replace('#validationLink', link);
+
+						// setup e-mail data with unicode symbols
+						var mailOptions = {
+						    from: "Bttendance<no-reply@bttendance.com>", // sender address
+						    to: user.email, // list of receivers
+						    subject: "Course Creation Verification Email", // Subject line
+						    html: file, // plaintext body
+						}
+
+						// send mail with defined transport object
+						smtpTransport.sendMail(mailOptions, function(error, response) {
+					    if(error || !response || !response.message)
+							  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+			        return res.send(Email.json(user.email));
+						});
+					});
 				});
-			});
+		  });
 		});
 	},
 
@@ -399,7 +437,7 @@ module.exports = {
     });
 	},
 
-	export: function(req, res) {
+	export_grades: function(req, res) {
     res.contentType('application/json; charset=utf-8');
     var username = req.param('username');
     var course_id = req.param('course_id');
@@ -497,6 +535,8 @@ module.exports = {
 					});
 
 	        Users.findOneByUsername(username).exec(function callback(err, user) {
+		        if (err || !user)
+		          return res.send(404, { message: "User Found Error" });
 
 						// create reusable transport method (opens pool of SMTP connections)
 						var smtpTransport = Nodemailer.createTransport("SMTP",{
@@ -507,50 +547,53 @@ module.exports = {
 						    }
 						});
 
-						var text = "Dear " + user.full_name + ",\n\nWe have received a request to reset your password.\nYour new password is following.\n\nNew Password : " 
-						+ user.password + "\n\nPlease change your password that you can remember.\nIf you did not request a password reset, then let us know about it.\n\nYours sincerely,\nTeam Bttendance."
+						var path = Path.resolve(__dirname, '../../assets/emails/export_grades.html');
+						FS.readFile(path, 'utf8', function (err, file) {
+						  if (err)
+			  				return res.send(404, { message: "File Read Error" });
 
-						var today = new Date();
-						var dd = today.getDate();
-						var mm = today.getMonth()+1; //January is 0!
-						var yyyy = today.getFullYear();
+							var today = new Date();
+							var dd = today.getDate();
+							var mm = today.getMonth()+1; //January is 0!
+							var yyyy = today.getFullYear();
 
-						if(dd<10) {
-						    dd='0'+dd
-						} 
+							if(dd<10) {
+							    dd='0'+dd
+							} 
 
-						if(mm<10) {
-						    mm='0'+mm
-						} 
+							if(mm<10) {
+							    mm='0'+mm
+							} 
 
-						today = mm+'/'+dd+'/'+yyyy;
+							today = yyyy+'/'+mm+'/'+dd;
 
-						// setup e-mail data with unicode symbols
-						var mailOptions = {
-						    from: "Bttendance<no-reply@bttendance.com>", // sender address
-						    to: user.email, // list of receivers
-						    subject: "Grade of " + course.name, // Subject line
-						    text: text, // plaintext body
-						    attachments: [
-							    {   
-							    	// binary buffer as an attachment
-					          fileName: course.name + " Grade " + today + ".xlsx",
-					          contents: buffer
-					        }
-						    ]
-						}
+			  			file = file.replace('#fullname', user.full_name);
+			  			file = file.replace('#firstdate', Moment(course.createdAt).format("YYYY/MM/DD"));
+			  			file = file.replace('#lastdate', today);
 
-						// send mail with defined transport object
-						smtpTransport.sendMail(mailOptions, function(error, response) {
-						    if(error || !response || !response.message)
-						      console.log(error);
+							// setup e-mail data with unicode symbols
+							var mailOptions = {
+							    from: "Bttendance<no-reply@bttendance.com>", // sender address
+							    to: user.email, // list of receivers
+							    subject: "Grade of " + course.name, // Subject line
+							    html: file,
+							    attachments: [
+								    {   
+								    	// binary buffer as an attachment
+						          fileName: course.name + " Grade " + today + ".xlsx",
+						          contents: buffer
+						        }
+							    ]
+							}
 
-						    console.log("Message sent: " + response.message);
+							// send mail with defined transport object
+							smtpTransport.sendMail(mailOptions, function(error, response) {
+							    if(error || !response || !response.message)
+									  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+					        return res.send(Email.json(user.email));
+							});
 						});
-
 	        });
-
-	        return res.send(course.toWholeObject());
 	  		});
       });
     });
