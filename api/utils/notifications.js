@@ -55,9 +55,9 @@ exports.send = function(user, title, message, type) {
 		console.log(__dirname);
 
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "../../certification/cert_development.pem",
+			options = { cert: "/app/certification/cert_development.pem",
 									certData: null,
-									key: "../../certification/key_development.pem",
+									key: "/app/certification/key_development.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
