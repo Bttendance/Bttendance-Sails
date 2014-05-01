@@ -13,6 +13,7 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
+var Path = require('path');
 
 // Function to get id list
 // user.populate('device')
