@@ -26,7 +26,7 @@
         "grunt-contrib-coffee": "~0.7.0",
         "optimist": "0.3.4",
         "password-hash": "1.2.1",
-        "apn": "1.4.3",
+        "apn": "1.5.2",
         "node-gcm": "0.9.7",
         "jsclass": "4.0.5",
         "moment": "2.6.0",
