@@ -57,6 +57,8 @@ module.exports = {
 					if (err || !token) 
 				    return res.send(404, Error.log("Token creation has been failed."));
 
+				  console.log(req);
+
 				  var link = req.baseUrl + "/verify/" + token.key;
 
 					// create reusable transport method (opens pool of SMTP connections)
