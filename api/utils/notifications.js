@@ -13,7 +13,6 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
-var Path = require('path');
 
 // Function to get id list
 // user.populate('device')
@@ -51,9 +50,9 @@ exports.send = function(user, title, message, type) {
 		var options;
 
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: Path.resolve(__dirname, '../../certification/cert_development.pem'),
+			options = { cert: "./certification/cert_development.pem",
 									certData: null,
-									key: Path.resolve(__dirname, '../../certification/key_development.pem'),
+									key: "./certification/key_development.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
