@@ -49,10 +49,13 @@ exports.send = function(user, title, message, type) {
 		var apns = require('apn');
 		var options;
 
+		var path = Path.resolve(__dirname, '../../certification/cert_development.pem');
+		console.log(path);
+
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./certification/cert_development.pem",
+			options = { cert: "../../certification/cert_development.pem",
 									certData: null,
-									key: "./certification/key_development.pem",
+									key: "../../certification/key_development.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -62,9 +65,9 @@ exports.send = function(user, title, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: "./certification/cert_production.pem",
+			options = { cert: "../../certification/cert_production.pem",
 									certData: null,
-									key: "./certification/key_production.pem",
+									key: "../../certification/key_production.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
