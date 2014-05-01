@@ -52,6 +52,7 @@ exports.send = function(user, title, message, type) {
 
 		var path = Path.resolve(__dirname, '../../certification/cert_development.pem');
 		console.log(path);
+		console.log(__dirname);
 
 		if (process.env.NODE_ENV == 'development') {
 			options = { cert: "../../certification/cert_development.pem",
