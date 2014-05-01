@@ -49,19 +49,19 @@ exports.send = function(user, title, message, type) {
 		var apns = require('apn');
 		var options;
 
-		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./certification/cert_development.pem",
-									certData: null,
-									key: "./certification/key_development.pem",
-									keyData: null,
-									passphrase: "bttendance",
-									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
-									port: 2195,
-									enhanced: true,
-									errorCallback: undefined,
-									cacheLength: 100 };
-		} else { //production
+		// if (process.env.NODE_ENV == 'development') {
+		// 	options = { cert: "./certification/cert_development.pem",
+		// 							certData: null,
+		// 							key: "./certification/key_development.pem",
+		// 							keyData: null,
+		// 							passphrase: "bttendance",
+		// 							ca: null,
+		// 							gateway: "gateway.sandbox.push.apple.com",
+		// 							port: 2195,
+		// 							enhanced: true,
+		// 							errorCallback: undefined,
+		// 							cacheLength: 100 };
+		// } else { //production
 			options = { cert: "./certification/cert_production.pem",
 									certData: null,
 									key: "./certification/key_production.pem",
@@ -73,7 +73,7 @@ exports.send = function(user, title, message, type) {
 									enhanced: true,
 									errorCallback: undefined,
 									cacheLength: 100 };
-		}
+		// }
 
 		console.log(user.device.notification_key);
 
