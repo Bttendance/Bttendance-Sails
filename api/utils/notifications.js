@@ -13,7 +13,6 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
-var Path = require('path');
 
 // Function to get id list
 // user.populate('device')
@@ -50,26 +49,10 @@ exports.send = function(user, title, message, type) {
 		var apns = require('apn');
 		var options;
 
-		var path = Path.resolve(__dirname, '../../certification/cert_development.pem');
-		console.log(path);
-		console.log(__dirname);
-
-		// if (process.env.NODE_ENV == 'development') {
-		// 	options = { cert: "/app/certification/cert_development.pem",
-		// 							certData: null,
-		// 							key: "/app/certification/key_development.pem",
-		// 							keyData: null,
-		// 							passphrase: "bttendance",
-		// 							ca: null,
-		// 							gateway: "gateway.sandbox.push.apple.com",
-		// 							port: 2195,
-		// 							enhanced: true,
-		// 							errorCallback: undefined,
-		// 							cacheLength: 100 };
-		// } else { //production
-			options = { cert: "/app/certification/cert_production.pem",
+		if (process.env.NODE_ENV == 'development') {
+			options = { cert: "./certification/cert_development.pem",
 									certData: null,
-									key: "/app/certification/key_production.pem",
+									key: "./certification/key_development.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -78,9 +61,19 @@ exports.send = function(user, title, message, type) {
 									enhanced: true,
 									errorCallback: undefined,
 									cacheLength: 100 };
-		// }
-
-		console.log(user.device.notification_key);
+		} else { //production
+			options = { cert: "./certification/cert_production.pem",
+									certData: null,
+									key: "./certification/key_production.pem",
+									keyData: null,
+									passphrase: "bttendance",
+									ca: null,
+									gateway: "gateway.sandbox.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		}
 
     var apnConnection = new apns.Connection(options);
 		var myDevice = new apns.Device(user.device.notification_key); //for token
