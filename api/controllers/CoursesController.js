@@ -57,9 +57,7 @@ module.exports = {
 					if (err || !token) 
 				    return res.send(404, Error.log("Token creation has been failed."));
 
-				  console.log(req);
-
-				  var link = req.baseUrl + "/verify/" + token.key;
+				  var link = 'http://' + Url.parse(req.baseUrl).hostname + "/verify/" + token.key;
 
 					// create reusable transport method (opens pool of SMTP connections)
 					var smtpTransport = Nodemailer.createTransport("SMTP",{
