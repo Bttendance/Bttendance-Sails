@@ -377,6 +377,7 @@ module.exports = {
 				  mang.supervising_courses.add(course.id);
 
 					mang.save(function callback(err) {
+						console.log(err);
 						if (err)
 			        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
 		        return res.send(course.toWholeObject());
