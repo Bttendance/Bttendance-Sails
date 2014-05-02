@@ -333,13 +333,13 @@ module.exports = {
   	.populate('school')
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, Error.alert("Adding Manager Error", "Course doesn't exist."});
+        return res.send(404, Error.alert("Adding Manager Error", "Course doesn't exist."));
  
       if (Arrays.getUsernames(course.managers).indexOf(username) == -1)
-        return res.send(404, Error.alert("Adding Manager Error", "You are not supervising current course."});
+        return res.send(404, Error.alert("Adding Manager Error", "You are not supervising current course."));
 
       if (Arrays.getUsernames(course.students).indexOf(manager) >= 0)
-        return res.send(404, Error.alert("Adding Manager Error", "User is already attending current course."});
+        return res.send(404, Error.alert("Adding Manager Error", "User is already attending current course."));
 
       if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
         return res.send(course.toWholeObject());
@@ -348,12 +348,12 @@ module.exports = {
       .findOneByUsername(manager)
       .exec(function callback(err, mang) {
         if (err || !mang)
-	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."});
+	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
 
 	      course.managers.add(mang.id);
 	      course.save(function callback(err) {
 	      	if (err)
-		        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."});
+		        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
 	        return res.send(new_course.toWholeObject());
 	      })
       });
