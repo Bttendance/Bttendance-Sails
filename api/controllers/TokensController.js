@@ -43,13 +43,8 @@ var employSchool = function(params, res) {
 	
 	Users
 	.findOneByUsername(username)
-	.populate('device')
-	.populate('supervising_courses')
-	.populate('attending_courses')
 	.populate('employed_schools')
 	.populate('serials')
-	.populate('enrolled_schools')
-	.populate('identifications')
 	.exec(function callback(err, user) {
 		if (err || !user)
 			return res.redirect('http://www.bttendance.com/verification-failed');
@@ -71,20 +66,9 @@ var employSchool = function(params, res) {
 		    user.serials.add(serial.id);
 
 			user.save(function callback(err) {
-		    Users
-				.findOneByUsername(username)
-				.populate('device')
-				.populate('supervising_courses')
-				.populate('attending_courses')
-				.populate('employed_schools')
-				.populate('serials')
-				.populate('enrolled_schools')
-				.populate('identifications')
-				.exec(function callback(err, user_new) {
-					if (err || !user_new)
-						return res.redirect('http://www.bttendance.com/verification-failed');
-			  	return createCourse(params, res);
-				});
+				if (err)
+					return res.redirect('http://www.bttendance.com/verification-failed');
+		  	return createCourse(params, res);
 			});
 	  });
 	});

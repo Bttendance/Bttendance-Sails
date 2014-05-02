@@ -332,10 +332,8 @@ module.exports = {
 
     Courses
     .findOneById(course_id)
-		.populate('posts')
   	.populate('managers')
   	.populate('students')
-  	.populate('school')
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(404, Error.alert("Adding Manager Error", "Course doesn't exist."));
@@ -348,6 +346,9 @@ module.exports = {
 
       Users
       .findOneByUsername(manager)
+			.populate('supervising_courses')
+			.populate('employed_schools')
+			.populate('serials')
       .exec(function callback(err, mang) {
         if (err || !mang)
 	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
@@ -355,12 +356,30 @@ module.exports = {
 	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
 	        return res.send(400, Error.alert("Add Manager", mang.full_name + " is already supervising current course."));
 
-	      course.managers.add(mang.id);
-	      course.save(function callback(err) {
-	      	if (err)
-		        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
-	        return res.send(course.toWholeObject());
-	      })
+			  Serials
+			  .findOne({
+			  	school: school_id
+			  })
+			  .exec(function callback(err, serial) {
+			  	if (err || !serial)
+		        return res.send(400, Error.alert("Adding Manager Error", "School of current course has no serial."));
+
+				  var employed_schools = Arrays.getIds(user.employed_schools);
+				  if (employed_schools.indexOf(Number(school_id)) == -1)
+				    user.employed_schools.add(school_id);
+
+				  var serials = Arrays.getIds(user.serials);
+				  if (serials.indexOf(Number(school_id)) == -1)
+				    user.serials.add(serial.id);
+
+				  user.supervising_courses.add(course.id);
+
+					user.save(function callback(err) {
+						if (err)
+			        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
+		        return res.send(course.toWholeObject());
+					});
+			  });
       });
     });
 	},
