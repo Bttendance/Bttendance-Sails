@@ -332,8 +332,10 @@ module.exports = {
 
     Courses
     .findOneById(course_id)
+    .populate('school')
   	.populate('managers')
   	.populate('students')
+    .populate('posts')
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(404, Error.alert("Adding Manager Error", "Course doesn't exist."));
