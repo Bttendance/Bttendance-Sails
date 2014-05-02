@@ -65,7 +65,7 @@ module.exports.policies = {
 
   AttendancesController: {
     found_device: true,
-    check_manually: 'supervising'
+    check_manually: 'isUser'
   },
 
   ClickersController: {

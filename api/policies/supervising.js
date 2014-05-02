@@ -9,7 +9,7 @@
 var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
 
-module.exports = function isUser (req, res, next) {
+module.exports = function supervising (req, res, next) {
 
 	// Params
 	var username = req.param('username');
@@ -17,11 +17,11 @@ module.exports = function isUser (req, res, next) {
 	var course_id = req.param('course_id');
 
 	if (!username || !password || !course_id) {
-		console.log("isUser : Username, password and course id is required.");
+		console.log("Supervising : Username, password and course id is required.");
 		return res.send(400, Error.log("Username, password and course id is required."));
 	}
 
-	// isUser Policy
+	// Supervising Policy
 	Users
 	.findOneByUsername(username)
 	.populate('supervising_courses')

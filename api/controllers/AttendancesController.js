@@ -7,6 +7,7 @@
 
 var Noti = require('../utils/notifications');
 var Error = require('../utils/errors');
+var Arrays = require('../utils/arrays');
 
 module.exports = {
 
@@ -217,6 +218,7 @@ module.exports = {
 		Users
 		.findOneById(user_id)
 		.populate('device')
+		.populate('supervising_courses')
 		.exec(function callback(err, user) {
 			if (err || !user)
   			return res.send(404, Error.alert("Manual Check Error", "Student doesn't exist."));
