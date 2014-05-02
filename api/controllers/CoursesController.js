@@ -360,18 +360,18 @@ module.exports = {
 
 			  Serials
 			  .findOne({
-			  	school: course.school
+			  	school: course.school.id
 			  })
 			  .exec(function callback(err, serial) {
 			  	if (err || !serial)
 		        return res.send(400, Error.alert("Adding Manager Error", "School of current course has no serial."));
 
 				  var employed_schools = Arrays.getIds(mang.employed_schools);
-				  if (employed_schools.indexOf(Number(course.school)) == -1)
-				    mang.employed_schools.add(course.school);
+				  if (employed_schools.indexOf(Number(course.school.id)) == -1)
+				    mang.employed_schools.add(course.school.id);
 
 				  var serials = Arrays.getIds(mang.serials);
-				  if (serials.indexOf(Number(course.school)) == -1)
+				  if (serials.indexOf(Number(course.school.id)) == -1)
 				    mang.serials.add(serial.id);
 
 				  mang.supervising_courses.add(course.id);
