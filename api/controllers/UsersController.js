@@ -593,7 +593,7 @@ module.exports = {
 		var search_id = req.param('search_id');
 
 		if (!search_id)
-	    return res.send(400, { message: "Need username of email" });
+	    return res.send(400, Error.alert("Searching User Error", "Username or email is required." });
 	  search_id = search_id.toLowerCase();
 
 		Users
@@ -609,7 +609,7 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+		    return res.send(404, Error.alert("Searching User Error", "Fail to find a user \"" + search_id + "\".\nPlease check User Id of Email again."});
 
 	  	return res.send(user);
 		});
