@@ -300,17 +300,24 @@ module.exports = {
 
       Users
       .findById(Arrays.getIds(course.students))
-			.populate('device')
-			.populate('supervising_courses')
-			.populate('attending_courses')
-			.populate('employed_schools')
-			.populate('serials')
-			.populate('enrolled_schools')
 			.populate('identifications')
-      .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
           return res.send(404, { message: "User Found Error" });
+
+        for (var index in users) {  
+        	for (var i = 0; i < users[index].identifications.length; i++) 
+        		if (users[index].identifications[i].school == course.school)
+        			users[index].student_id = users[index].identifications[i].identity;
+      	}
+
+        users.sort(function(a, b) {
+        	if (!a.student_id)
+        		return true;
+        	if (!b.student_id)
+        		return false;
+        	return a.student_id.localeCompare(b.student_id);
+        });
 
 		  	return res.send(users);
       });
