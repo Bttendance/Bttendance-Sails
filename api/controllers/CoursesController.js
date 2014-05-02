@@ -378,7 +378,7 @@ module.exports = {
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(404, { message: "User Found Error" });
+          return res.send(400, Error.toast("Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -386,7 +386,7 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	  				return res.send(404, { message: "Post Found Error" });
+	          return res.send(400, Error.toast("Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -417,8 +417,6 @@ module.exports = {
 	        	return a.student_id.localeCompare(b.student_id);
 	        });
 
-					// for (var i = 0; i < users.length; i++)
-					// 	users[i] = users[i].toWholeObject();
 	        return res.send(users);
 	  		});
       });
