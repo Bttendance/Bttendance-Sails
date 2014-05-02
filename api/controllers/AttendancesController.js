@@ -6,6 +6,7 @@
  */
 
 var Noti = require('../utils/notifications');
+var Error = require('../utils/errors');
 
 module.exports = {
 
@@ -218,14 +219,14 @@ module.exports = {
 		.populate('device')
 		.exec(function callback(err, user) {
 			if (err || !user)
-  			return res.send(404, { message: "User Found Error" });
+  			return res.send(404, Error.alert("Manual Check Error", "Student doesn't exist."));
 
   		Attendances
   		.findOneById(attendance_id)
   		.populate('post')
   		.exec(function callback(err, attendance) {
 				if (err || !attendance)
-	  			return res.send(404, { message: "Attendance Found Error" });
+	  			return res.send(404, Error.alert("Manual Check Error", "Attendance record doesn't exist."));
 
 				var checked_students = new Array();
 				var has_user = false;
@@ -242,10 +243,18 @@ module.exports = {
 					attendance.checked_students = checked_students;
 					attendance.save(function callback(err) {
 						if (err)
-							return res.send(404, {message: "Attendance update failed"});
-						
-						Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
-				  	return res.send(attendance.toWholeObject());
+			  			return res.send(404, Error.alert("Manual Check Error", "Updating attendance record has been failed."));
+
+						Posts
+						.findOneById(attendance.post.id)
+						.populate('course')
+						.exec(function callback(err, post) {
+							if (err || !post)
+				  			return res.send(404, Error.alert("Manual Check Error", "Manual attendance check failed. Please try again."));
+
+							Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
+					  	return res.send(attendance.toWholeObject());
+						});
 					});
 				} else {
 			  	return res.send(attendance.toWholeObject());
