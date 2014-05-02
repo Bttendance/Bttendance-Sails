@@ -63,6 +63,11 @@ module.exports.policies = {
     remove: 'supervising'
   },
 
+  AttendancesController: {
+    found_device: 'true',
+    check_manually: 'supervising'
+  },
+
   ClickersController: {
     '*': true,
     click: true,
