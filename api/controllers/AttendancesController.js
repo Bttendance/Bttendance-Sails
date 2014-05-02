@@ -211,7 +211,7 @@ module.exports = {
 	check_manually: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var user_id = req.param('user_id');
-		var post_id = req.param('post_id');
+		var attendance_id = req.param('attendance_id');
 
 		Users
 		.findOneById(user_id)
@@ -220,19 +220,17 @@ module.exports = {
 			if (err || !user)
   			return res.send(404, { message: "User Found Error" });
 
-  		Posts
-  		.findOneById(post_id)
-  		.populate('author')
-  		.populate('course')
-  		.populate('attendance')
-  		.exec(function callback(err, post) {
-				if (err || !post)
-	  			return res.send(404, { message: "Post Found Error" });
+  		Attendances
+  		.findOneById(attendance_id)
+  		.populate('post')
+  		.exec(function callback(err, attendance) {
+				if (err || !attendance)
+	  			return res.send(404, { message: "Attendance Found Error" });
 
 				var checked_students = new Array();
 				var has_user = false;
-				for (var i = 0; i < post.attendance.checked_students.length; i++) {
-					var id = post.attendance.checked_students[i];
+				for (var i = 0; i < attendance.checked_students.length; i++) {
+					var id = attendance.checked_students[i];
 					checked_students.push(id);
 					if (id == user.id)
 						has_user = true;
@@ -241,18 +239,16 @@ module.exports = {
 				if (!has_user) {
 					checked_students.push(user.id);
 
-					Attendances
-					.update({id: post.attendance.id}, {checked_students: checked_students})
-					.exec(function callback(err, attendance) {
-						if (err || !attendance)
+					attendance.checked_students = checked_students;
+					attendance.save(function callback(err) {
+						if (err)
 							return res.send(404, {message: "Attendance update failed"});
-
-						post.attendance = attendance[0];
+						
 						Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
-				  	return res.send(post.toOldObject());
+				  	return res.send(attendance.toWholeObject());
 					});
 				} else {
-			  	return res.send(post.toOldObject());
+			  	return res.send(attendance.toWholeObject());
 				}
 
   		})
