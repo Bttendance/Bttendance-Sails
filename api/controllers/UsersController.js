@@ -591,6 +591,7 @@ module.exports = {
 	search: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var search_id = req.param('search_id');
+		var username = req.param('username');
 
 		if (!search_id)
 	    return res.send(400, Error.alert("Searching User Error", "Username or email is required." ));
@@ -609,7 +610,10 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, Error.alert("Searching User Error", "Fail to find a user \"" + search_id + "\".\nPlease check User Id of Email again."));
+		    return res.send(404, Error.alert("Searching User Error", "Fail to find a user \"" + search_id + "\".\nPlease check User ID of Email again."));
+
+		  if (user.username == username)
+		    return res.send(400, Error.alert("Easy One", "HaHa, trying to find yourself? Got You! :)"));
 
 	  	return res.send(user);
 		});
