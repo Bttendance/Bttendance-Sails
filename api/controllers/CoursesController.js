@@ -341,14 +341,14 @@ module.exports = {
       if (Arrays.getUsernames(course.students).indexOf(manager) >= 0)
         return res.send(404, Error.alert("Adding Manager Error", "User is already attending current course."));
 
-      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
-        return res.send(course.toWholeObject());
-
       Users
       .findOneByUsername(manager)
       .exec(function callback(err, mang) {
         if (err || !mang)
 	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
+
+	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
+	        return res.send(400, Error.alert("Add Manager", mang.full_name + "is already supervising current course."));
 
 	      course.managers.add(mang.id);
 	      course.save(function callback(err) {
