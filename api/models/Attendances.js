@@ -37,6 +37,40 @@ module.exports = {
       obj.clusters = this.clusters;
       return obj;
     }
-	}
+	},
+
+  beforeValidate: function(values, next) {
+    next();
+  },
+
+  afterValidate: function(values, next) {
+    next();
+  },
+
+  beforeCreate: function(values, next) {
+    values.checked_students = new Array();
+    values.clusters = new Array();
+    next();
+  },
+
+  afterCreate: function(values, next) {
+    next();
+  },
+
+  beforeUpdate: function(values, next) {
+    next();
+  },
+
+  afterUpdate: function(values, next) {
+    next();
+  },
+
+  beforeDestroy: function(values, next) {
+    next();
+  },
+
+  afterDestroy: function(next) {
+    next();
+  }
 
 };

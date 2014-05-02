@@ -15,6 +15,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
 var Xlsx = require('node-xlsx');
 var Nodemailer = require("nodemailer");
@@ -261,7 +262,7 @@ module.exports = {
 						var message;
 						if (posts[i].type == 'attendance') {
 							grade = Number(( (posts[i].attendance.checked_students.length - 1) / course.students.length * 100).toFixed());
-		  				if (grade  < 0) grade = 0;
+		  				if (grade  < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
@@ -456,7 +457,7 @@ module.exports = {
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(404, { message: "User Found Error" });
+          return res.send(400, Error.alert("Export Grades Error", "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -464,7 +465,7 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	  				return res.send(404, { message: "Post Found Error" });
+	          return res.send(400, Error.alert("Export Grades Error", "Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
