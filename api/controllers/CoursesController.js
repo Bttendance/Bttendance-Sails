@@ -364,17 +364,17 @@ module.exports = {
 			  	if (err || !serial)
 		        return res.send(400, Error.alert("Adding Manager Error", "School of current course has no serial."));
 
-				  var employed_schools = Arrays.getIds(user.employed_schools);
+				  var employed_schools = Arrays.getIds(mang.employed_schools);
 				  if (employed_schools.indexOf(Number(course.school)) == -1)
-				    user.employed_schools.add(course.school);
+				    mang.employed_schools.add(course.school);
 
-				  var serials = Arrays.getIds(user.serials);
+				  var serials = Arrays.getIds(mang.serials);
 				  if (serials.indexOf(Number(course.school)) == -1)
-				    user.serials.add(serial.id);
+				    mang.serials.add(serial.id);
 
-				  user.supervising_courses.add(course.id);
+				  mang.supervising_courses.add(course.id);
 
-					user.save(function callback(err) {
+					mang.save(function callback(err) {
 						if (err)
 			        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
 		        return res.send(course.toWholeObject());
