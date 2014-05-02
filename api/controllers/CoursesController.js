@@ -312,8 +312,6 @@ module.exports = {
         if (err || !users)
           return res.send(404, { message: "User Found Error" });
 
-				for (var i = 0; i < users.length; i++)
-					users[i] = users[i].toWholeObject();
 		  	return res.send(users);
       });
     });
