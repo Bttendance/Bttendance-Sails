@@ -371,7 +371,7 @@ module.exports = {
 				    mang.employed_schools.add(course.school.id);
 
 				  var serials = Arrays.getIds(mang.serials);
-				  if (serials.indexOf(Number(course.school.id)) == -1)
+				  if (serials.indexOf(Number(serial.id)) == -1)
 				    mang.serials.add(serial.id);
 
 				  mang.supervising_courses.add(course.id);

@@ -62,7 +62,7 @@ var employSchool = function(params, res) {
 		    user.employed_schools.add(school_id);
 
 		  var serials = Arrays.getIds(user.serials);
-		  if (serials.indexOf(Number(school_id)) == -1)
+		  if (serials.indexOf(Number(serial.id)) == -1)
 		    user.serials.add(serial.id);
 
 			user.save(function callback(err) {
