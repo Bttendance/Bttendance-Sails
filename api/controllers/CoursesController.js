@@ -335,13 +335,13 @@ module.exports = {
       if (err || !course)
         return res.send(404, { message: "Course Found Error" });
 
-      if (getUsernames(course.managers).indexOf(username) == -1)
+      if (Arrays.getUsernames(course.managers).indexOf(username) == -1)
         return res.send(404, { message: "User is not supervising course error" });
 
-      if (getUsernames(course.students).indexOf(manager) >= 0)
+      if (Arrays.getUsernames(course.students).indexOf(manager) >= 0)
       	return res.send(404, { message: "User is already attending current course"});
 
-      if (getUsernames(course.managers).indexOf(manager) >= 0)
+      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
         return res.send(course.toWholeObject());
 
       Users
