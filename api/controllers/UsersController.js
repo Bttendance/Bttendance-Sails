@@ -613,7 +613,7 @@ module.exports = {
 		    return res.send(404, Error.alert("Searching User Error", "Fail to find a user \"" + search_id + "\".\nPlease check User ID of Email again."));
 
 		  if (user.username == username)
-		    return res.send(400, Error.alert("Easy One", "HaHa, trying to find yourself? Got You! :)"));
+		    return res.send(400, Error.alert("Busted", "HaHa, trying to find yourself? Got You! :)"));
 
 	  	return res.send(user);
 		});
