@@ -348,13 +348,13 @@ module.exports = {
 	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
 
 	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
-	        return res.send(400, Error.alert("Add Manager", mang.full_name + "is already supervising current course."));
+	        return res.send(400, Error.alert("Add Manager", mang.full_name + " is already supervising current course."));
 
 	      course.managers.add(mang.id);
 	      course.save(function callback(err) {
 	      	if (err)
 		        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
-	        return res.send(new_course.toWholeObject());
+	        return res.send(course.toWholeObject());
 	      })
       });
     });
