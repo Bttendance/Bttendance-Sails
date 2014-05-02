@@ -64,7 +64,7 @@ module.exports.policies = {
   },
 
   AttendancesController: {
-    found_device: 'true',
+    found_device: true,
     check_manually: 'supervising'
   },
 
