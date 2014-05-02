@@ -252,7 +252,7 @@ module.exports = {
 				.populate('course')
 				.populate('attendance')
 				.populate('clicker')
-	  		.sort('id DESC').done(function(err, posts) {
+	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
 	  				return res.send(404, { message: "Post Found Error" });
 
