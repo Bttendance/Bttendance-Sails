@@ -394,9 +394,6 @@ module.exports = {
 							postsObject.push(posts[index]);
 
 					var total_grade = postsObject.length;
-					console.log(postsObject);
-
-	        var gradesObject = new Array();
 	        for (var index in users) {
 	        	var grade = 0;
 	        	for (var i = 0; i < postsObject.length; i++) {
@@ -405,17 +402,14 @@ module.exports = {
 	        				grade++;
 	        		}
 	        	}
-	        	var gradeObject = new Object();
-	        	gradeObject.id = users[index].id;
-	        	gradeObject.full_name = users[index].full_name;
+	        
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
 	        		if (users[index].identifications[i].school == course.school)
-	        			gradeObject.student_id = users[index].identifications[i].identity;
-	        	gradeObject.grade = grade + "/" + total_grade;
-	          gradesObject.push(gradeObject);
+	        			users[index].student_id = users[index].identifications[i].identity;
+	        	users[index].grade = grade + "/" + total_grade;
 	        }
 
-	        gradesObject.sort(function(a, b) {
+	        users.sort(function(a, b) {
 	        	if (!a.student_id)
 	        		return true;
 	        	if (!b.student_id)
@@ -423,8 +417,9 @@ module.exports = {
 	        	return a.student_id.localeCompare(b.student_id);
 	        });
 
-	        var gradeJSON = JSON.stringify(gradesObject);
-	        return res.send(gradeJSON);
+					// for (var i = 0; i < users.length; i++)
+					// 	users[i] = users[i].toWholeObject();
+	        return res.send(users);
 	  		});
       });
     });
