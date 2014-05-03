@@ -130,9 +130,7 @@ module.exports.policies = {
   },
 
   MigrationController: {
-    migrate: true,
-    associate: true,
-    students: true
+    '*': true
   }
   /*********** Old APIs End **********/
 
