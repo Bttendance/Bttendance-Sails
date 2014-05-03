@@ -46,106 +46,107 @@ exports.send = function(user, title, message, type) {
 
 	} else if (user.device.type == 'iphone') {
 
-		// var apns = require('apn');
-		// 	var options;
+		var apns = require('apn');
+			var options;
 
-		// 	if (process.env.NODE_ENV == 'development') {
-		// 		options = { cert: "./Certification/cert_development.pem",
-		// 								certData: null,
-		// 								key: "./Certification/key_development.pem",
-		// 								keyData: null,
-		// 								passphrase: "bttendance",
-		// 								ca: null,
-		// 								gateway: "gateway.sandbox.push.apple.com",
-		// 								port: 2195,
-		// 								enhanced: true,
-		// 								errorCallback: undefined,
-		// 								cacheLength: 100 };
-		// 	} else { //production
-		// 		options = { cert: "./Certification/cert_production.pem",
-		// 								certData: null,
-		// 								key: "./Certification/key_production.pem",
-		// 								keyData: null,
-		// 								passphrase: "bttendance",
-		// 								ca: null,
-		// 								gateway: "gateway.sandbox.push.apple.com",
-		// 								port: 2195,
-		// 								enhanced: true,
-		// 								errorCallback: undefined,
-		// 								cacheLength: 100 };
-		// 	}
+			if (process.env.NODE_ENV == 'development') {
+				options = { cert: "./Certification/cert_development.pem",
+										certData: null,
+										key: "./Certification/key_development.pem",
+										keyData: null,
+										passphrase: "bttendance",
+										ca: null,
+										gateway: "gateway.sandbox.push.apple.com",
+										port: 2195,
+										enhanced: true,
+										errorCallback: undefined,
+										cacheLength: 100 };
+			} else { //production
+				options = { cert: "./Certification/cert_production.pem",
+										certData: null,
+										key: "./Certification/key_production.pem",
+										keyData: null,
+										passphrase: "bttendance",
+										ca: null,
+										gateway: "gateway.sandbox.push.apple.com",
+										port: 2195,
+										enhanced: true,
+										errorCallback: undefined,
+										cacheLength: 100 };
+			}
 
-	 //    var apnConnection = new apns.Connection(options);
-		// 	var myDevice = new apns.Device(user.notification_key); //for token
-		// 	var note = new apns.Notification();
+	    var apnConnection = new apns.Connection(options);
+			var myDevice = new apns.Device(user.notification_key); //for token
+			var note = new apns.Notification();
 
-		// 	var alert = "Notification from Bttendance";
+			var alert = "Notification from Bttendance";
 
-		// 	note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-		// 	note.badge = 1;
-		// 	note.sound = "ping.aiff";
-		// 	note.alert = alert;
-		// 	note.payload = {
-		// 		'title' 	: "Hello",
-		// 		'message' : message,
-		// 		'type' 		: type 
-		// 	};
-		// 	note.device = myDevice;
+			note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+			note.badge = 1;
+			note.sound = "ping.aiff";
+			note.alert = alert;
+			note.payload = {
+				'title' 	: "Hello",
+				'message' : message,
+				'type' 		: type 
+			};
+			note.device = myDevice;
 
-			// apnConnection.pushNotification(note, myDevice);
-			// apnConnection.sendNotification(note);
-
-
+			apnConnection.pushNotification(note, myDevice);
+			apnConnection.sendNotification(note);
 
 
 
-		var options;
-		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./app/certification/cert_development.pem",
-									certData: null,
-									key: "./app/certification/key_development.pem",
-									keyData: null,
-									passphrase: "bttendance",
-									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
-									port: 2195,
-									enhanced: true,
-									errorCallback: undefined,
-									cacheLength: 100 };
-		} else { //production
-			options = { cert: "./app/certification/cert_production.pem",
-									certData: null,
-									key: "./app/certification/key_production.pem",
-									keyData: null,
-									passphrase: "bttendance",
-									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
-									port: 2195,
-									enhanced: true,
-									errorCallback: undefined,
-									cacheLength: 100 };
-		}
 
-    var apnConnection = new apns.Connection(options);
-		var myDevice = new apn.Device(user.device.notification_key); //for token
-		var note = new apn.Notification();
 
-		var alert = "Notification from " + title;
-		if (message)
-			alert = title + " : " + message;
+		// var options;
+		// if (process.env.NODE_ENV == 'development') {
+		// 	options = { cert: "./app/certification/cert_development.pem",
+		// 							certData: null,
+		// 							key: "./app/certification/key_development.pem",
+		// 							keyData: null,
+		// 							passphrase: "bttendance",
+		// 							ca: null,
+		// 							gateway: "gateway.sandbox.push.apple.com",
+		// 							port: 2195,
+		// 							enhanced: true,
+		// 							errorCallback: undefined,
+		// 							cacheLength: 100 };
+		// } else { //production
+		// 	options = { cert: "./app/certification/cert_production.pem",
+		// 							certData: null,
+		// 							key: "./app/certification/key_production.pem",
+		// 							keyData: null,
+		// 							passphrase: "bttendance",
+		// 							ca: null,
+		// 							gateway: "gateway.sandbox.push.apple.com",
+		// 							port: 2195,
+		// 							enhanced: true,
+		// 							errorCallback: undefined,
+		// 							cacheLength: 100 };
+		// }
 
-		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-		note.badge = 1;
-		note.sound = "ping.aiff";
-		note.alert = alert;
-		note.payload = {
-			'title' 	: title,
-			'message' : message,
-			'type' 		: type 
-		};
-		// note.device = myDevice;
-		// apnConnection.sendNotification(note);
-		apnConnection.pushNotification(note, myDevice);
+  //   var apnConnection = new apn.Connection(options);
+		// var myDevice = new apn.Device(user.device.notification_key); //for token
+		// var note = new apn.Notification();
+
+		// var alert = "Notification from " + title;
+		// if (message)
+		// 	alert = title + " : " + message;
+
+		// note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+		// note.badge = 1;
+		// note.sound = "ping.aiff";
+		// note.alert = alert;
+		// note.payload = {
+		// 	'title' 	: title,
+		// 	'message' : message,
+		// 	'type' 		: type 
+		// };
+		// // note.device = myDevice;
+		// // apnConnection.sendNotification(note);
+		// apnConnection.pushNotification(note, myDevice);
+		
 		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
 	}
 }
