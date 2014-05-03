@@ -46,6 +46,59 @@ exports.send = function(user, title, message, type) {
 
 	} else if (user.device.type == 'iphone') {
 
+		// var apns = require('apn');
+		// 	var options;
+
+		// 	if (process.env.NODE_ENV == 'development') {
+		// 		options = { cert: "./Certification/cert_development.pem",
+		// 								certData: null,
+		// 								key: "./Certification/key_development.pem",
+		// 								keyData: null,
+		// 								passphrase: "bttendance",
+		// 								ca: null,
+		// 								gateway: "gateway.sandbox.push.apple.com",
+		// 								port: 2195,
+		// 								enhanced: true,
+		// 								errorCallback: undefined,
+		// 								cacheLength: 100 };
+		// 	} else { //production
+		// 		options = { cert: "./Certification/cert_production.pem",
+		// 								certData: null,
+		// 								key: "./Certification/key_production.pem",
+		// 								keyData: null,
+		// 								passphrase: "bttendance",
+		// 								ca: null,
+		// 								gateway: "gateway.sandbox.push.apple.com",
+		// 								port: 2195,
+		// 								enhanced: true,
+		// 								errorCallback: undefined,
+		// 								cacheLength: 100 };
+		// 	}
+
+	 //    var apnConnection = new apns.Connection(options);
+		// 	var myDevice = new apns.Device(user.notification_key); //for token
+		// 	var note = new apns.Notification();
+
+		// 	var alert = "Notification from Bttendance";
+
+		// 	note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+		// 	note.badge = 1;
+		// 	note.sound = "ping.aiff";
+		// 	note.alert = alert;
+		// 	note.payload = {
+		// 		'title' 	: "Hello",
+		// 		'message' : message,
+		// 		'type' 		: type 
+		// 	};
+		// 	note.device = myDevice;
+
+			// apnConnection.pushNotification(note, myDevice);
+			// apnConnection.sendNotification(note);
+
+
+
+
+
 		var options;
 		if (process.env.NODE_ENV == 'development') {
 			options = { cert: "./app/certification/cert_development.pem",
@@ -74,8 +127,8 @@ exports.send = function(user, title, message, type) {
 		}
 
     var apnConnection = new apns.Connection(options);
-		var myDevice = new apns.Device(user.device.notification_key); //for token
-		var note = new apns.Notification();
+		var myDevice = new apn.Device(user.device.notification_key); //for token
+		var note = new apn.Notification();
 
 		var alert = "Notification from " + title;
 		if (message)
@@ -90,8 +143,9 @@ exports.send = function(user, title, message, type) {
 			'message' : message,
 			'type' 		: type 
 		};
-		note.device = myDevice;
-		apnConnection.sendNotification(note);
+		// note.device = myDevice;
+		// apnConnection.sendNotification(note);
+		apnConnection.pushNotification(note, myDevice);
 		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
 	}
 }
