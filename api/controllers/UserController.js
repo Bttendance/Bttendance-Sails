@@ -510,6 +510,8 @@ module.exports = {
 	  				if (posts[i].type == 'attendance') {
 		  				posts[i].grade = grade;
 	  					posts[i].message = message;
+	  				} else {
+							posts[i].grade = 0;
 	  				}
 					}
 			  	return res.send(posts);
