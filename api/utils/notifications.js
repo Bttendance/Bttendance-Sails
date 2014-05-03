@@ -50,9 +50,9 @@ exports.send = function(user, title, message, type) {
 		var options;
 
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./certification/cert_development.pem",
+			options = { cert: "./app/certification/cert_development.pem",
 									certData: null,
-									key: "./certification/key_development.pem",
+									key: "./app/certification/key_development.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -62,9 +62,9 @@ exports.send = function(user, title, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: "./certification/cert_production.pem",
+			options = { cert: "./app/certification/cert_production.pem",
 									certData: null,
-									key: "./certification/key_production.pem",
+									key: "./app/certification/key_production.pem",
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
