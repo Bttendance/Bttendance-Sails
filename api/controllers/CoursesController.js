@@ -17,12 +17,13 @@
 
 var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
+var Noti = require('../utils/notifications');
+var Email = require('../utils/email');
 var Xlsx = require('node-xlsx');
 var Nodemailer = require("nodemailer");
 var Moment = require('moment');
 var Url = require('url');
 var QueryString = require('querystring');
-var Email = require('../utils/email');
 var	FS = require('fs');
 var Path = require('path');
 
@@ -348,6 +349,7 @@ module.exports = {
 
       Users
       .findOneByUsername(manager)
+      .populate('device')
 			.populate('supervising_courses')
 			.populate('employed_schools')
 			.populate('serials')
@@ -380,6 +382,8 @@ module.exports = {
 						console.log(err);
 						if (err)
 			        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
+
+						Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
 		        return res.send(course.toWholeObject());
 					});
 			  });
