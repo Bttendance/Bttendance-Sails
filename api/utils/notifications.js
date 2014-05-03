@@ -46,9 +46,7 @@ exports.send = function(user, title, message, type) {
 
 	} else if (user.device.type == 'iphone') {
 
-		var apns = require('apn');
 		var options;
-
 		if (process.env.NODE_ENV == 'development') {
 			options = { cert: "./app/certification/cert_development.pem",
 									certData: null,
