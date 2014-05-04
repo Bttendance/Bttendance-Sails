@@ -469,8 +469,8 @@ var resendNotis = function(post_id) {
 			for (var i = 0; i < course.students.length; i++)
 				unchecked.push(course.students[i]);
 
-			for (var i = 0; i < post.checks.length; i++) {
-				var index = unchecked.indexOf(post.checks[i]);
+			for (var i = 0; i < post.attendance.checked_students.length; i++) {
+				var index = unchecked.indexOf(post.attendance.checked_students[i]);
 				if (index > -1)
 					unchecked.splice(index, 1);
 			}

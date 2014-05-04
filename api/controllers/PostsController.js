@@ -254,5 +254,50 @@ module.exports = {
     	});
 		});
 	}
-	
 };
+
+
+var resendNotis = function(post_id) {
+
+	Posts
+	.findOneById(post_id)
+	.populate('author')
+	.populate('course')
+	.populate('attendance')
+	.exec(function callback(err, post) {
+		if (err || !post)
+			return;
+
+		Courses
+		.findOneById(post.course)
+		.populate('posts')
+  	.populate('managers')
+  	.populate('students')
+  	.populate('school')
+		.exec(function callback(err, course) {
+			if (err || !course)
+				return;
+
+			var unchecked = new Array();
+			for (var i = 0; i < course.students.length; i++)
+				unchecked.push(course.students[i]);
+
+			for (var i = 0; i < post.attendance.checked_students.length; i++) {
+				var index = unchecked.indexOf(post.attendance.checked_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+								  	
+  		Users
+  		.findById(unchecked)
+  		.populate('device')
+  		.sort('id DESC').exec(function(err, users) {
+  			if (err || !users)
+  				return;
+  			
+  			for (var j = 0; j < users.length; j++)
+  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+  		});
+		});
+	});
+}
