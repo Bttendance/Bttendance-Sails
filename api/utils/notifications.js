@@ -52,14 +52,11 @@ exports.send = function(user, title, message, type) {
 
 	} else if (user.device.type == 'iphone') {
 
-		console.log(Path.resolve(__dirname, '../../certification/cert_development.pem'));
-		console.log(__dirname);
-
 		var options;
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: '/app/certification/cert_development.pem ',
+			options = { cert: './assets/certification/cert_development.pem',
 									certData: null,
-									key: '/app/certification/cert_development.pem ',
+									key: './assets/certification/key_development.pem',
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -69,9 +66,9 @@ exports.send = function(user, title, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: Path.resolve(__dirname, '../../certification/cert_production.pem'),
+			options = { cert: './assets/certification/cert_production.pem',
 									certData: null,
-									key: Path.resolve(__dirname, '../../certification/key_production.pem'),
+									key: './assets/certification/key_production.pem',
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
