@@ -53,6 +53,7 @@ exports.send = function(user, title, message, type) {
 	} else if (user.device.type == 'iphone') {
 
 		console.log(Path.resolve(__dirname, '../../certification/cert_development.pem'));
+		console.log(__dirname);
 
 		var options;
 		if (process.env.NODE_ENV == 'development') {
