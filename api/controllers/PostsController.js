@@ -259,6 +259,8 @@ module.exports = {
 
 var resendNotis = function(post_id) {
 
+	console.log(post_id);
+
 	Posts
 	.findOneById(post_id)
 	.populate('author')
