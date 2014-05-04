@@ -288,6 +288,8 @@ var resendNotis = function(post_id) {
 					unchecked.splice(index, 1);
 			}
 								  	
+			console.log(unchecked);
+
   		Users
   		.findById(unchecked)
   		.populate('device')
@@ -295,8 +297,8 @@ var resendNotis = function(post_id) {
   			if (err || !users)
   				return;
   			
-  			for (var j = 0; j < users.length; j++)
-  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+  			for (var i = 0; i < users.length; i++)
+  				sendNotification(users[i], course, post, "Attendance has been started", "attendance_started");
   		});
 		});
 	});

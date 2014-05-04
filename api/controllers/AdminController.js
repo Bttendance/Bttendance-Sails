@@ -234,6 +234,36 @@ module.exports = {
 				  	return res.send(serial.toWholeObject());
 					}
 				});
+		} else if (model == 'attendances') {
+			if (id == 'all')
+				Attendances
+				.find()
+				.populate('post')
+				.sort('id ASC')
+				.exec(function callback (err, attendances) {
+					if (err || !attendances) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < attendances.length; i++)
+							attendances[i] = attendances[i].toWholeObject();
+				  	return res.send(attendances);
+					}
+				});
+			else 
+				Attendances
+				.findOneById(Number(id))
+				.populate('post')
+				.exec(function callback (err, attendance) {
+					if (err || !attendance) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(attendance.toWholeObject());
+					}
+				});
 		} else {
 			res.contentType('html');
 			return res.forbidden('Check out your model parameter.');
