@@ -36,7 +36,12 @@ exports.send = function(user, title, message, type) {
 		var registrationIds = [];
 		registrationIds.push(user.device.notification_key);
 
-		var sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
+		var sender;
+		if (process.env.NODE_ENV == 'development')
+		 	sender = new gcm.Sender('AIzaSyCqiq_YpGtSzIi7lr5SGcL5a74nJxm6K3o');
+		else
+		 	sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
+		 
 		sender.send(msg, registrationIds, 4, function (err, result) {
 			if (err)
 				console.log(err);
