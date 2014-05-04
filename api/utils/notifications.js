@@ -13,6 +13,7 @@
 
 var gcm = require('node-gcm');
 var apn = require('apn');
+var Path = require('path');
 
 // Function to get id list
 // user.populate('device')
@@ -50,11 +51,14 @@ exports.send = function(user, title, message, type) {
 		});
 
 	} else if (user.device.type == 'iphone') {
+
+		console.log(Path.resolve(__dirname, '../../certification/cert_development.pem'));
+
 		var options;
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./certification/cert_development.pem",
+			options = { cert: Path.resolve(__dirname, '../../certification/cert_development.pem'),
 									certData: null,
-									key: "./certification/key_development.pem",
+									key: Path.resolve(__dirname, '../../certification/key_development.pem'),
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -64,9 +68,9 @@ exports.send = function(user, title, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: "./certification/cert_production.pem",
+			options = { cert: Path.resolve(__dirname, '../../certification/cert_production.pem'),
 									certData: null,
-									key: "./certification/key_production.pem",
+									key: Path.resolve(__dirname, '../../certification/key_production.pem'),
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
