@@ -576,7 +576,7 @@ module.exports = {
 							}
 						}
 						var grade = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
-  					if (grade  < 0) grade = 0;
+  					if (grade < 0 || attd_check_count == 0) grade = 0;
   					if (grade > 100) grade = 100;
 
 						courses[i] = courses[i].toWholeObject();
