@@ -5,6 +5,7 @@
  * @description	:: Contains logic for handling requests.
  */
 
+var Noti = require('../utils/notifications');
 var gcm = require('node-gcm');
 var apn = require('apn');
 
@@ -68,12 +69,12 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
+				  				Noti.send(users[j], post.name, "Attendance check has been started", "attendance_started");
 				  		});
 
-				  		setTimeout(function() { resendNotis(post.id); }, 40000);
-				  		setTimeout(function() { resendNotis(post.id); }, 75000);
-				  		setTimeout(function() { resendNotis(post.id); }, 120000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 40000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
 
 					  	return res.send(course.toOldObject());
 				  	});
@@ -258,7 +259,7 @@ module.exports = {
 												.populate('device')
 												.exec(function callback(err, user) {
 													if (user)
-														sendNotification(user, null, post, "Attendance has been checked", "attendance_checked");
+														Noti.send(user, post.course.name, "Attendance has been checked", "attendance_checked");
 												});
 											}
 										}
@@ -322,7 +323,7 @@ module.exports = {
 							return res.send(404, {message: "Attendance update failed"});
 
 						post.attendance = attendance[0];
-						sendNotification(user, null, post, "Attendance has been checked manually", "attendance_checked");
+						Noti.send(user, post.course.name, "Attendance has been checked", "attendance_checked");
 				  	return res.send(post.toOldObject());
 					});
 				} else {
@@ -386,7 +387,7 @@ module.exports = {
 			  		.sort('id DESC')
 			  		.exec(function callback(err, users) {
 			  			for (var j = 0; j < users.length; j++)
-			  				sendNotification(users[j], course, post, message, "notification");
+			  				Noti.send(users[j], post.course.name, message, "notice");
 			  		});
 
 				  	return res.send(post.toOldObject());
@@ -443,209 +444,6 @@ module.exports = {
 		});
 	}
 };
-
-var resendNotis = function(post_id) {
-
-	Posts
-	.findOneById(post_id)
-	.populate('author')
-	.populate('course')
-	.populate('attendance')
-	.exec(function callback(err, post) {
-		if (err || !post)
-			return;
-
-		Courses
-		.findOneById(post.course)
-		.populate('posts')
-  	.populate('managers')
-  	.populate('students')
-  	.populate('school')
-		.exec(function callback(err, course) {
-			if (err || !course)
-				return;
-
-			var unchecked = new Array();
-			for (var i = 0; i < course.students.length; i++)
-				unchecked.push(course.students[i]);
-
-			for (var i = 0; i < post.attendance.checked_students.length; i++) {
-				var index = unchecked.indexOf(post.attendance.checked_students[i]);
-				if (index > -1)
-					unchecked.splice(index, 1);
-			}
-								  	
-  		Users
-  		.findById(unchecked)
-  		.populate('device')
-  		.sort('id DESC').exec(function(err, users) {
-  			if (err || !users)
-  				return;
-  			
-  			for (var j = 0; j < users.length; j++)
-  				sendNotification(users[j], course, post, "Attendance has been started", "attendance_started");
-  		});
-		});
-	});
-}
-
-// Function to get id list
-// user.populate('device')
-// post.populate(all)
-// course.populate(all)
-var sendNotification = function(user, course, post, message, type) {
-	if (!user.device.notification_key)
-		return;
-
-	if (user.device.type == 'android') {
-
-		var postJSON;
-		var courseJSON;
-		if (post)
-			postJSON = JSON.stringify(post.toOldObject());
-		if (course)
-			courseJSON = JSON.stringify(course.toOldObject());
-
-		var message = new gcm.Message({
-		    collapseKey: 'bttendance',
-		    delayWhileIdle: false,
-		    timeToLive: 4,
-		    data: {
-		    	title: post.course.name,
-		      message: message,
-		      type: type,
-		      post: postJSON,
-		      course: courseJSON
-		    }
-		});
-
-		var registrationIds = [];
-		registrationIds.push(user.device.notification_key);
-		
-		var sender;
-		if (process.env.NODE_ENV == 'development')
-		 	sender = new gcm.Sender('AIzaSyCqiq_YpGtSzIi7lr5SGcL5a74nJxm6K3o');
-		else
-		 	sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
-		
-		sender.send(message, registrationIds, 4, function (err, result) {
-			if (err)
-				console.log(err);
-			else
-    		console.log(result);
-		});
-
-	} else if (user.device.type == 'iphone') {
-
-		var apns = require('apn');
-
-		var options;
-		if (process.env.NODE_ENV == 'development') {
-			options = { cert: './assets/certification/cert_development.pem',
-									certData: null,
-									key: './assets/certification/key_development.pem',
-									keyData: null,
-									passphrase: "bttendance",
-									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
-									port: 2195,
-									enhanced: true,
-									errorCallback: undefined,
-									cacheLength: 100 };
-		} else { //production
-			options = { cert: './assets/certification/cert_production.pem',
-									certData: null,
-									key: './assets/certification/key_production.pem',
-									keyData: null,
-									passphrase: "bttendance",
-									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
-									port: 2195,
-									enhanced: true,
-									errorCallback: undefined,
-									cacheLength: 100 };
-		}
-
-    var apnConnection = new apns.Connection(options);
-		var myDevice = new apns.Device(user.device.notification_key); //for token
-		var note = new apns.Notification();
-
-		var alert = "Notification from Bttendance";
-		if (type == "attendance_started") {
-			alert = post.course.name + " attendance has been started.";
-		} else if (type == "attendance_checked") {
-			alert = post.course.name + " attendance has been chekced.";
-		} else if (type == "notification") {
-			alert = post.course.name + " : " + message;
-		}
-
-		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-		note.badge = 1;
-		note.sound = "ping.aiff";
-		note.alert = alert;
-		note.payload = {
-			'title' 	: post.course.name,
-			'message' : message,
-			'type' 		: type 
-		};
-		apnConnection.pushNotification(note, myDevice);
-	}
-
-	console.log("noti sent : " + user.id + ", course : " + course + ", post : " + post);
-}
-
-// var isClose = function(location_a, location_b) {
-// 	var lat_a = parseFloat(location_a[0]);
-// 	var lgn_a = parseFloat(location_a[1]);
-// 	var lat_b = parseFloat(location_b[0]);
-// 	var lgn_b = parseFloat(location_b[1]);
-
-// 	if (isNaN(lat_a) || isNaN(lgn_a) || isNaN(lat_b) || isNaN(lgn_b)
-// 		|| lat_a == 0 || lgn_a == 0 || lat_b == 0 || lgn_b == 0)
-// 		return false;
-
-// 	if (((lat_a - lat_b) * (lat_a - lat_b) + (lgn_a - lgn_b) * (lgn_a - lgn_b)) > 0.01)
-// 		return false;
-
-// 	return true;
-// }
-
-// // Function to get median location of a cluster
-// var getMedianLocation = function(cluster, locations) {
-// 	var medianLocation = new Array();
-// 	var latitudeArray = new Array();
-// 	var longitudeArray = new Array();
-// 	for (var i in cluster) {
-// 		for (var j in locations)
-// 			if (locations[j][0] == cluster[i]) {
-// 				latitudeArray.push(locations[j][1]);
-// 				longitudeArray.push(locations[j][2]);
-// 			}
-// 	}
-
-// 	medianLocation.push(getMedian(latitudeArray));
-// 	medianLocation.push(getMedian(longitudeArray));
-
-// 	return medianLocation;
-// }
-
-// // Get Median of an array
-// var getMedian = function(array) {
-// 	if (array.length < 3)
-// 		return 0;
-
-// 	for (var i = 0; i < array.length; i++) {
-// 		for (var j = i; j < array.length; j++) {
-// 			if (array[i] > array[j]) {
-// 				var k = array[i];
-// 				array[i] = array[j];
-// 				array[j] = k;
-// 			}
-// 		}
-// 	}
-// 	return array[Math.floor(array.length/2)];
-// }
-
 
 var getIds = function(jsonArray) {
 	if (!jsonArray)

@@ -100,3 +100,43 @@ exports.send = function(user, title, message, type) {
 		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
 	}
 }
+
+exports.resendAttedance = function(attendance_id) {
+
+	Attendances
+	.findOneById(attendance_id)
+	.populate('post')
+	.exec(function callback(err, attendance) {
+		if (err || !attendance)
+			return;
+
+		Courses
+		.findOneById(attendance.post.course)
+  	.populate('students')
+		.exec(function callback(err, course) {
+			if (err || !course)
+				return;
+
+			var unchecked = new Array();
+			for (var i = 0; i < course.students.length; i++)
+				unchecked.push(course.students[i].id);
+
+			for (var i = 0; i < attendance.checked_students.length; i++) {
+				var index = unchecked.indexOf(attendance.checked_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+
+  		Users
+  		.findById(unchecked)
+  		.populate('device')
+  		.sort('id DESC').exec(function(err, users) {
+  			if (err || !users)
+  				return;
+  			
+  			for (var i = 0; i < users.length; i++)
+				  send(users[j], course.name, "Attendance check has been started", "attendance_started");
+  		});
+		});
+	});
+}
