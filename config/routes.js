@@ -101,6 +101,11 @@ module.exports.routes = {
   },
 
   /********* Attendances APIs **********/  
+  'get /api/attendances/from/courses': {
+    controller: 'attendances',
+    action: 'from_courses'
+  },
+
   'put /api/attendances/found/device': {
     controller: 'attendances',
     action: 'found_device'

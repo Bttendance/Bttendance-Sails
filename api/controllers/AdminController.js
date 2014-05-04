@@ -239,6 +239,33 @@ module.exports = {
 			return res.forbidden('Check out your model parameter.');
 		}
 
+	},
+
+	emails: function(req, res) {
+		var password = req.param('password');
+
+		if (password != 'bttendance') {
+			res.contentType('html');
+			return res.forbidden('Your password doesn\'t match.');
+		}
+		
+		Users
+		.find()
+		.sort('id ASC')
+		.exec(function callback (err, users) {
+			if (err || !users) {
+				res.contentType('html');
+				return res.notFound();
+			} else {
+				res.contentType('application/json; charset=utf-8');
+				var emails = new Array();
+				for (var i = 0; i < users.length; i++)
+					emails.push(users[i].email);
+				var json = {};
+				json.emails = emails;
+		  	return res.send(json);
+			}
+		});
 	}
 	
 };

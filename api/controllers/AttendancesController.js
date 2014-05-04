@@ -8,8 +8,34 @@
 var Noti = require('../utils/notifications');
 var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
+var Moment = require('moment');
 
 module.exports = {
+
+	from_courses: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var course_ids = req.param('course_ids');
+
+		Courses
+		.findById(course_ids)
+		.populate('posts')
+		.exec(function callback(err, courses) {
+			var attendances = new Array();
+			if (err || !courses)
+    		return res.send(attendances);
+    	
+			var now = Moment();
+    	for (var i = 0; i < courses.length; i++) {
+    		for (var j = 0; j < courses[i].posts.length; j++) {
+    			var createdAt = Moment(courses[i].posts[j].createdAt);
+    			var diff = now.diff(createdAt);
+    			if (diff < 3 * 60 * 1000 && courses[i].posts[j].type == 'attendance')
+    				attendances.push(courses[i].posts[j].attendance);
+    		}
+    	}
+  		return res.send(attendances);
+		});
+	},
 
 	found_device: function(req, res) {
 		res.contentType('application/json; charset=utf-8');

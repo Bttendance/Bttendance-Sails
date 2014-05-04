@@ -5,7 +5,7 @@
  * @description	:: Contains logic for notification JSON handling.
  *
  *  { 
- *      "type": "type", (attendance_started, attendance_checked, clicker_opened, notice, comments, etc)
+ *      "type": "type",
  *      "title" : "title",
  *      "message": "message"
  *  }

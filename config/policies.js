@@ -19,7 +19,7 @@ module.exports.policies = {
   '*': 'isDev',
 
   AdminController: {
-    show: true
+    '*': true
   },
 
   UsersController: {
@@ -64,6 +64,7 @@ module.exports.policies = {
   },
 
   AttendancesController: {
+    from_courses: 'isUser',
     found_device: true,
     check_manually: 'isUser'
   },
