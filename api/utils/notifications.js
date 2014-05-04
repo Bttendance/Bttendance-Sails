@@ -135,7 +135,7 @@ exports.resendAttedance = function(attendance_id) {
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-				  send(users[j], course.name, "Attendance check has been started", "attendance_started");
+				  send(users[i], course.name, "Attendance check has been started", "attendance_started");
   		});
 		});
 	});
