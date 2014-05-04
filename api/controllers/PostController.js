@@ -538,12 +538,12 @@ var sendNotification = function(user, course, post, message, type) {
 	} else if (user.device.type == 'iphone') {
 
 		var apns = require('apn');
-		var options;
 
+		var options;
 		if (process.env.NODE_ENV == 'development') {
-			options = { cert: "./certification/cert_development.pem",
+			options = { cert: './assets/certification/cert_development.pem',
 									certData: null,
-									key: "./certification/key_development.pem",
+									key: './assets/certification/key_development.pem',
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
@@ -553,9 +553,9 @@ var sendNotification = function(user, course, post, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: "./certification/cert_production.pem",
+			options = { cert: './assets/certification/cert_production.pem',
 									certData: null,
-									key: "./certification/key_production.pem",
+									key: './assets/certification/key_production.pem',
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
