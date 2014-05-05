@@ -23,6 +23,8 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
+		var message = req.param('message');
+		var choice_count = req.param('choice_count');
 
 		Users
 		.findOneByUsername(username)
@@ -34,7 +36,9 @@ module.exports = {
 			.create({
 			  author: user.id,
 			  course: course_id,
-			  type: 'clicker'
+			  message: message,
+			  type: 'clicker',
+			  choice_count: choice_count
 			})
   		.populate('author')
   		.populate('course')

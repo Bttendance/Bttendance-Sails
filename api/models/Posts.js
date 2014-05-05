@@ -132,7 +132,9 @@ module.exports = {
       });
     } else if (values.type == 'clicker') {
       Clickers
-      .create().exec(function callback(err, clicker) {
+      .create({
+        choice_count: values.choice_count
+      }).exec(function callback(err, clicker) {
         if (err || !clicker)
           next(err);
         values.clicker = clicker.id;
