@@ -177,7 +177,7 @@ module.exports = {
 
 								var has_prof = false;
 								for (var j = 0; j < clusters[i].length; j++) {
-									if (clusters[i][j] == post.author.id) {
+									if (clusters[i][j] == attendance.post.author) {
 										has_prof = true;
 										break;
 									}
