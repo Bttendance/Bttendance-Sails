@@ -40,7 +40,7 @@ module.exports = {
 	found_device: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
-		var post_id = req.param('post_id');
+		var attendance_id = req.param('attendance_id');
 		var uuid = req.param('uuid');
 
 		Devices
@@ -68,168 +68,160 @@ module.exports = {
 	    		if (user_uuid.id == user_api.id)
 	    			return res.send(400, { message: "User has found his own device somehow" });
 
-					Posts
-					.findOneById(post_id)
-		  		.populate('author')
-		  		.populate('course')
-		  		.populate('attendance')
-					.exec(function callback(err, post) {
-						if (err || !post)
-			    		return res.send(404, { message: "Post Found Error" });
+
+		    	Attendances
+		    	.findOneById(attendance_id)
+		    	.populate('post')
+		    	.exec(function callback(err, attendance) {
+						if (err || !attendance)
+			    		return res.send(404, { message: "Attendance Found Error" });
 
 			    	// Check whether users are in same courses(post)
-			    	if ((getIds(user_api.supervising_courses).indexOf(post.course.id) == -1
-			    		&& getIds(user_api.attending_courses).indexOf(post.course.id) == -1)
-			    		|| (getIds(user_uuid.supervising_courses).indexOf(post.course.id) == -1
-			    		&& getIds(user_uuid.attending_courses).indexOf(post.course.id) == -1))
+			    	if ((Arrays.getIds(user_api.supervising_courses).indexOf(attendance.post.course) == -1
+			    		&& Arrays.getIds(user_api.attending_courses).indexOf(attendance.post.course) == -1)
+			    		|| (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) == -1
+			    		&& Arrays.getIds(user_uuid.attending_courses).indexOf(attendance.post.course) == -1))
 			    		return res.send(204, { message: "User is not attending current course" });
 
-			    	if (post.type != 'attendance')
-			    		return res.send(204, { message: "Current Post is not for Attendance" });
+						var userids = new Array();
+						userids.push(user_api.id);
+						userids.push(user_uuid.id);
 
-			    	Attendances
-			    	.findOneById(post.attendance.id)
-			    	.exec(function callback(err, attendance) {
-							if (err || !post)
-				    		return res.send(404, { message: "Attendance Found Error" });
+						// Re Clustering - user_api : A, user_uuid : B
+						//          Find Cluster Number which User A, B included (say it's a,b)
+						// Case 1 : None included => Make new cluster and add
+						// Case 2 : One included => Add other to the cluster
+						// Case 3 : Both included Same => Do nothing
+						// Case 4 : Both included Diff => Merge two cluster
+						{
+							var clusters = new Array();
+							for (var i = 0; i < attendance.clusters.length; i++)
+								clusters.push(attendance.clusters[i]);
 
-							var userids = new Array();
-							userids.push(user_api.id);
-							userids.push(user_uuid.id);
-
-							// Re Clustering - user_api : A, user_uuid : B
-							//          Find Cluster Number which User A, B included (say it's a,b)
-							// Case 1 : None included => Make new cluster and add
-							// Case 2 : One included => Add other to the cluster
-							// Case 3 : Both included Same => Do nothing
-							// Case 4 : Both included Diff => Merge two cluster
-							{
-								var clusters = new Array();
-								for (var i = 0; i < attendance.clusters.length; i++)
-									clusters.push(attendance.clusters[i]);
-
-								// Find Cluster Number a, b
-								var a = -1;
-								var b = -1;
-								for (var i = 0; i < clusters.length; i++) {
-									for (var j = 0; j < clusters[i].length; j++) {
-										if (clusters[i][j] == user_api.id)
-											a = i;
-										if (clusters[i][j] == user_uuid.id)
-											b = i;
-									}
-								}
-
-								// Case 3
-								if (a == b && a != -1)
-				    			return res.send(202, { message: "Users are already accepted" });
-
-				    		// Case 1
-				    		else if (a == b && a == -1)
-				    			clusters.push(userids);
-
-				    		// Case 2
-				    		else if (a != -1 && b == -1)
-				    			clusters[a].push(user_uuid.id);
-
-				    		// Case 2
-				    		else if (a == -1 && b != -1)
-				    			clusters[b].push(user_api.id);
-
-				    		// Case 4
-				    		else {
-				    			var new_cluster = new Array();
-				    			for (var i = 0; i < clusters.length; i++) {
-				    				if (i != a && i != b)
-				    					new_cluster.push(clusters[i]);
-				    			}
-
-				    			var merged_array = clusters[a].concat(clusters[b]);
-				    			new_cluster.push(merged_array);
-
-				    			clusters = new_cluster;
-				    		}
-							}
-
-							// Found if any cluster has more than 4 users
-							{
-								var a = -1;	// cluster which has more than 4 users
-								var b = -1; // cluster which prof is included
-								for (var i = 0; i < clusters.length; i++)
-									for (var j = 0; j < clusters[i].length; j++)
-										if (clusters[i][j] == post.author.id)
-											b = i;
-
-								for (var i = 0; i < clusters.length; i++)
-									if (i != b && clusters[i].length > 2)
+							// Find Cluster Number a, b
+							var a = -1;
+							var b = -1;
+							for (var i = 0; i < clusters.length; i++) {
+								for (var j = 0; j < clusters[i].length; j++) {
+									if (clusters[i][j] == user_api.id)
 										a = i;
-
-								if (a != -1) {
-				    			var new_cluster = new Array();
-				    			for (var i = 0; i < clusters.length; i++) {
-				    				if (i != a && i != b)
-				    					new_cluster.push(clusters[i]);
-				    			}
-
-									var merged_array = clusters[a].concat(clusters[b]);
-				    			new_cluster.push(merged_array);
-
-				    			clusters = new_cluster;
+									if (clusters[i][j] == user_uuid.id)
+										b = i;
 								}
 							}
 
-							// Send Notification
-							{
-								var checks = new Array();
-								for (var i = 0; i < attendance.checked_students.length; i++)
-									checks.push(attendance.checked_students[i]);
+							// Case 3
+							if (a == b && a != -1)
+			    			return res.send(202, { message: "Users are already accepted" });
 
-								for (var i = 0; i < clusters.length; i++) {
+			    		// Case 1
+			    		else if (a == b && a == -1)
+			    			clusters.push(userids);
 
-									var has_prof = false;
-									for (var j = 0; j < clusters[i].length; j++) {
-										if (clusters[i][j] == post.author.id) {
-											has_prof = true;
-											break;
-										}
+			    		// Case 2
+			    		else if (a != -1 && b == -1)
+			    			clusters[a].push(user_uuid.id);
+
+			    		// Case 2
+			    		else if (a == -1 && b != -1)
+			    			clusters[b].push(user_api.id);
+
+			    		// Case 4
+			    		else {
+			    			var new_cluster = new Array();
+			    			for (var i = 0; i < clusters.length; i++) {
+			    				if (i != a && i != b)
+			    					new_cluster.push(clusters[i]);
+			    			}
+
+			    			var merged_array = clusters[a].concat(clusters[b]);
+			    			new_cluster.push(merged_array);
+
+			    			clusters = new_cluster;
+			    		}
+						}
+
+						// Found if any cluster has more than 4 users
+						{
+							var a = -1;	// cluster which has more than 4 users
+							var b = -1; // cluster which prof is included
+							for (var i = 0; i < clusters.length; i++)
+								for (var j = 0; j < clusters[i].length; j++)
+									if (clusters[i][j] == post.author.id)
+										b = i;
+
+							for (var i = 0; i < clusters.length; i++)
+								if (i != b && clusters[i].length > 2)
+									a = i;
+
+							if (a != -1) {
+			    			var new_cluster = new Array();
+			    			for (var i = 0; i < clusters.length; i++) {
+			    				if (i != a && i != b)
+			    					new_cluster.push(clusters[i]);
+			    			}
+
+								var merged_array = clusters[a].concat(clusters[b]);
+			    			new_cluster.push(merged_array);
+
+			    			clusters = new_cluster;
+							}
+						}
+
+						// Send Notification
+						{
+							var checks = new Array();
+							for (var i = 0; i < attendance.checked_students.length; i++)
+								checks.push(attendance.checked_students[i]);
+
+							for (var i = 0; i < clusters.length; i++) {
+
+								var has_prof = false;
+								for (var j = 0; j < clusters[i].length; j++) {
+									if (clusters[i][j] == post.author.id) {
+										has_prof = true;
+										break;
 									}
+								}
 
-									if (has_prof) {
-										var notiable = new Array();
-										for (var j = 0; j < clusters[i].length; j++)
-											notiable.push(clusters[i][j]);
+								if (has_prof) {
+									var notiable = new Array();
+									for (var j = 0; j < clusters[i].length; j++)
+										notiable.push(clusters[i][j]);
 
-										for (var j = 0; j < notiable.length; j++) {
+									for (var j = 0; j < notiable.length; j++) {
 
-											var noti = true;
-											for (var k = 0; k < checks.length; k++)
-												if (notiable[j] == checks[k])
-													noti = false;
+										var noti = true;
+										for (var k = 0; k < checks.length; k++)
+											if (notiable[j] == checks[k])
+												noti = false;
 
-											if (noti) {
+										if (noti) {
+											Courses
+											.findOneById(attendance.post.course)
+											.exec(function callback(err, course) {
 												Users
 												.findOneById(notiable[j])
 												.populate('device')
 												.exec(function callback(err, user) {
 													if (user)
-														Noti.send(user, post.course.name, "Attendance has been checked", "attendance_checked");
+														Noti.send(user, course.name, "Attendance has been checked", "attendance_checked");
 												});
-											}
+											});
 										}
-										break;
 									}
+									break;
 								}
 							}
-							checks = notiable;
-							
-							// Update Checks & Clusters
-							attendance.checked_students = checks;
-							attendance.clusters = clusters;
-							attendance.save(function(err) {
-								post.attendance = attendance;
-						  	return res.send(post.toOldObject());
-							});						
-			    	});
+						}
+						checks = notiable;
+						
+						// Update Checks & Clusters
+						attendance.checked_students = checks;
+						attendance.clusters = clusters;
+						attendance.save(function(err) {
+					  	return res.send(attendance.toWholeObject());
+						});						
 					});
 				});
     	});
