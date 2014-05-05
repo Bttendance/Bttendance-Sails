@@ -19,6 +19,63 @@ var Noti = require('../utils/notifications');
 
 module.exports = {
 
+	start_clicker: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var username = req.param('username');
+		var course_id = req.param('course_id');
+
+		Users
+		.findOneByUsername(username)
+		.exec(function callback(err, user) {
+			if(err || !user)
+    		return res.send(404, { message: "User Found Error" });
+
+			Posts
+			.create({
+			  author: user.id,
+			  course: course_id,
+			  type: 'clicker'
+			})
+  		.populate('author')
+  		.populate('course')
+  		.populate('attendance')
+  		.populate('clicker')
+			.exec(function callback(err, post) {
+				if (err || !post)
+	    		return res.send(500, { message: "Post Create Error" });
+
+	    	Courses
+	    	.findOneById(post.course.id)
+		  	.populate('managers')
+		  	.populate('students')
+		  	.exec(function callback(err, course) {
+	    		if (err || !course)
+		    		return res.send(404, { message: "Course Find Error" });
+
+			  	// Send notification about post to Prof & Std
+			  	var notiUsers = new Array();
+			  	for (var i = 0; i < course.students.length; i++)
+			  		notiUsers.push(course.students[i].id);
+			  	for (var i = 0; i < course.managers.length; i++)
+			  		notiUsers.push(course.managers[i].id);
+			  	
+		  		Users
+		  		.findById(notiUsers)
+					.populate('device')
+		  		.sort('id DESC')
+		  		.exec(function callback(err, users) {
+		  			for (var j = 0; j < users.length; j++)
+		  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
+		  		});
+
+		  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
+
+			  	return res.send(post.toWholeObject());
+		  	});
+			});
+		});
+	},
+
 	start_attendance: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
@@ -85,76 +142,9 @@ module.exports = {
 				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
 				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
 
-					  	return res.send(course.toWholeObject());
+					  	return res.send(post.toWholeObject());
 				  	});
 		    	});
-				});
-			});
-		});
-	},
-
-	start_clicker: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var course_id = req.param('course_id');
-
-		Users
-		.findOneByUsername(username)
-		.exec(function callback(err, user) {
-			if(err || !user)
-    		return res.send(404, { message: "User Found Error" });
-
-			Posts
-			.create({
-			  author: user.id,
-			  course: course_id,
-			  type: 'clicker'
-			}).exec(function callback(err, post) {
-				if (err || !post)
-	    		return res.send(500, { message: "Post Create Error" });
-
-	    	Posts
-	    	.findOneById(post.id)
-	  		.populate('author')
-	  		.populate('course')
-	  		.populate('attendance')
-	  		.populate('clicker')
-	  		.exec(function callback(err, post) {
-	  			if (err || !post)
-	  				return res.send(500, {message: "Post Find Error"});
-
-		    	Courses
-		    	.findOneById(post.course.id)
-					.populate('posts')
-			  	.populate('managers')
-			  	.populate('students')
-			  	.populate('school')
-			  	.exec(function callback(err, course) {
-		    		if (err || !course)
-			    		return res.send(404, { message: "Course Find Error" });
-
-				  	// Send notification about post to Prof & Std
-				  	var notiUsers = new Array();
-				  	for (var i = 0; i < course.students.length; i++)
-				  		notiUsers.push(course.students[i].id);
-				  	for (var i = 0; i < course.managers.length; i++)
-				  		notiUsers.push(course.managers[i].id);
-				  	
-			  		Users
-			  		.findById(notiUsers)
-						.populate('device')
-			  		.sort('id DESC')
-			  		.exec(function callback(err, users) {
-			  			for (var j = 0; j < users.length; j++)
-			  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
-			  		});
-
-			  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 40000);
-			  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
-			  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
-
-				  	return res.send(course.toWholeObject());
-			  	});
 				});
 			});
 		});
@@ -227,34 +217,34 @@ module.exports = {
 		});
 	},
 
-	remove: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var post_id = req.param('post_id');
+	// remove: function(req, res) {
+	// 	res.contentType('application/json; charset=utf-8');
+	// 	var post_id = req.param('post_id');
 
-		Posts
-		.findOneById(post_id)
-		.exec(function callback(err, post) {
-			if (err || !post)
-    		return res.send(404, { message: "No Post Found Error" });
+	// 	Posts
+	// 	.findOneById(post_id)
+	// 	.exec(function callback(err, post) {
+	// 		if (err || !post)
+ //    		return res.send(404, { message: "No Post Found Error" });
 
-    	Courses
-    	.findOneById(post.course)
-    	.populate('posts')
-	  	.populate('managers')
-	  	.populate('students')
-	  	.populate('school')
-    	.exec(function callback(err, course) {
-				if (err || !course)
-	    		return res.send(404, { message: "No Course Found Error" });
+ //    	Courses
+ //    	.findOneById(post.course)
+ //    	.populate('posts')
+	//   	.populate('managers')
+	//   	.populate('students')
+	//   	.populate('school')
+ //    	.exec(function callback(err, course) {
+	// 			if (err || !course)
+	//     		return res.send(404, { message: "No Course Found Error" });
 
-	    	course.posts.remove(post_id);
-	    	course.save(function callback(err) {
-	    		if (err)
-	    			return res.send(404, { message: "Course Save Error" });
-	    		else
-	    			return res.send(course.toWholeObject());
-	    	});
-    	});
-		});
-	}
+	//     	course.posts.remove(post_id);
+	//     	course.save(function callback(err) {
+	//     		if (err)
+	//     			return res.send(404, { message: "Course Save Error" });
+	//     		else
+	//     			return res.send(course.toWholeObject());
+	//     	});
+ //    	});
+	// 	});
+	// }
 };
