@@ -134,7 +134,7 @@ module.exports = {
       console.log(values);
       Clickers
       .create({
-        choice_count: values.choice_count
+        choice_count: Number(values.choice_count)
       }).exec(function callback(err, clicker) {
         if (err || !clicker)
           next(err);
