@@ -159,10 +159,6 @@ module.exports = {
           next(err);
         next();
       });
-    } else if (values.type = 'notice') {
-      console.log('notice : ' + values.course.notice_usage);
-      course.notice_usage = course.notice_usage + 1;
-      course.save();
     } else
       next();
   },

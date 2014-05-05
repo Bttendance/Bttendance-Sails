@@ -48,8 +48,10 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.checked_students = new Array();
-    values.clusters = new Array();
+    if (!values.checked_students)
+      values.checked_students = new Array();
+    if (!values.clusters)
+      values.clusters = new Array();
     next();
   },
 
