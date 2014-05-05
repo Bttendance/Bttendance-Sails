@@ -68,7 +68,6 @@ module.exports = {
 	    		if (user_uuid.id == user_api.id)
 	    			return res.send(400, { message: "User has found his own device somehow" });
 
-
 		    	Attendances
 		    	.findOneById(attendance_id)
 		    	.populate('post')
@@ -147,7 +146,7 @@ module.exports = {
 							var b = -1; // cluster which prof is included
 							for (var i = 0; i < clusters.length; i++)
 								for (var j = 0; j < clusters[i].length; j++)
-									if (clusters[i][j] == post.author.id)
+									if (clusters[i][j] == post.author)
 										b = i;
 
 							for (var i = 0; i < clusters.length; i++)
