@@ -198,16 +198,17 @@ module.exports = {
 										console.log("notiable : " + notiable[j]);
 
 										if (noti) {
-											Courses
-											.findOneById(attendance.post.course)
-											.exec(function callback(err, course) {
-												Users
-												.findOneById(notiable[j])
-												.populate('device')
-												.exec(function callback(err, user) {
-													if (user)
+											Users
+											.findOneById(notiable[j])
+											.populate('device')
+											.exec(function callback(err, user) {
+												if (user) {
+													Courses
+													.findOneById(attendance.post.course)
+													.exec(function callback(err, course) {
 														Noti.send(user, course.name, "Attendance has been checked", "attendance_checked");
-												});
+													});
+												}
 											});
 										}
 									}
@@ -215,10 +216,9 @@ module.exports = {
 								}
 							}
 						}
-						checks = notiable;
 						
 						// Update Checks & Clusters
-						attendance.checked_students = checks;
+						attendance.checked_students = notiable;
 						attendance.clusters = clusters;
 						attendance.save(function(err) {
 					  	return res.send(attendance.toWholeObject());
