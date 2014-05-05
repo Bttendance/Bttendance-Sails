@@ -201,7 +201,7 @@ module.exports = {
 		    		if (err || !course)
 			    		return res.send(404, { message: "Course Find Error" });
 
-			    	course.notice_usage = courses.notice_usage + 1;
+			    	course.notice_usage = course.notice_usage + 1;
 			    	course.save();
 
 				  	// Send notification about post to Prof & Std
