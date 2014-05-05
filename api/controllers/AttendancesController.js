@@ -195,6 +195,8 @@ module.exports = {
 											if (notiable[j] == checks[k])
 												noti = false;
 
+										console.log("notiable : " + notiable[j]);
+
 										if (noti) {
 											Courses
 											.findOneById(attendance.post.course)
