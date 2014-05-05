@@ -45,13 +45,13 @@ module.exports = {
 			  clicker.save();
 
 			  Clickers.publishUpdate(clicker_id, { 
-			  	a_students:clicker.a_students  
-			  	b_students:clicker.b_students  
-			  	c_students:clicker.c_students  
-			  	d_students:clicker.d_students  
+			  	a_students:clicker.a_students,  
+			  	b_students:clicker.b_students,  
+			  	c_students:clicker.c_students,  
+			  	d_students:clicker.d_students,  
 			  	e_students:clicker.e_students 
 			  });
-			  
+
 			  return res.send(clicker.toWholeObject());
 		  });
 		});
