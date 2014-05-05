@@ -506,7 +506,7 @@ module.exports = {
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
 		  						message = "Attendance Checked";
-		  					else if (now.diff(Moment(posts[i].createdAt)) < 3 * 60 * 1000) 
+		  					else if (Moment().diff(Moment(posts[i].createdAt)) < 3 * 60 * 1000) 
 		  					 message = "Attendance Checking";
 	  						else
 		  					 message = "Attendance Failed";
