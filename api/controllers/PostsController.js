@@ -39,43 +39,49 @@ module.exports = {
 			  message: message,
 			  type: 'clicker',
 			  choice_count: choice_count
-			})
-  		.populate('author')
-  		.populate('course')
-  		.populate('attendance')
-  		.populate('clicker')
-			.exec(function callback(err, post) {
+			}).exec(function callback(err, post) {
 				if (err || !post)
 	    		return res.send(500, { message: "Post Create Error" });
 
-	    	Courses
-	    	.findOneById(post.course.id)
-		  	.populate('managers')
-		  	.populate('students')
-		  	.exec(function callback(err, course) {
-	    		if (err || !course)
-		    		return res.send(404, { message: "Course Find Error" });
+	    	Posts
+	    	.findOneById(post.id)
+	  		.populate('author')
+	  		.populate('course')
+	  		.populate('attendance')
+	  		.populate('clicker')
+	  		.exec(function callback(err, post) {
+	  			if (err || !post)
+	  				return res.send(500, {message: "Post Find Error"});
 
-			  	// Send notification about post to Prof & Std
-			  	var notiUsers = new Array();
-			  	for (var i = 0; i < course.students.length; i++)
-			  		notiUsers.push(course.students[i].id);
-			  	for (var i = 0; i < course.managers.length; i++)
-			  		notiUsers.push(course.managers[i].id);
-			  	
-		  		Users
-		  		.findById(notiUsers)
-					.populate('device')
-		  		.sort('id DESC')
-		  		.exec(function callback(err, users) {
-		  			for (var j = 0; j < users.length; j++)
-		  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
-		  		});
+		    	Courses
+		    	.findOneById(post.course.id)
+			  	.populate('managers')
+			  	.populate('students')
+			  	.exec(function callback(err, course) {
+		    		if (err || !course)
+			    		return res.send(404, { message: "Course Find Error" });
 
-		  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
+				  	// Send notification about post to Prof & Std
+				  	var notiUsers = new Array();
+				  	for (var i = 0; i < course.students.length; i++)
+				  		notiUsers.push(course.students[i].id);
+				  	for (var i = 0; i < course.managers.length; i++)
+				  		notiUsers.push(course.managers[i].id);
+				  	
+			  		Users
+			  		.findById(notiUsers)
+						.populate('device')
+			  		.sort('id DESC')
+			  		.exec(function callback(err, users) {
+			  			for (var j = 0; j < users.length; j++)
+			  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
+			  		});
 
-			  	return res.send(post.toWholeObject());
-		  	});
+			  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
+
+				  	return res.send(post.toWholeObject());
+			  	});
+				});
 			});
 		});
 	},
