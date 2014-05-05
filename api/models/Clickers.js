@@ -10,9 +10,7 @@ module.exports = {
 	attributes: {
 
 		choice_count: {
-			type: 'integer',
-			min: 2,
-			max: 5
+			type: 'integer'
 		},
 
 		a_students: {
@@ -64,6 +62,13 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    if (!values.choice_count)
+      values.choice_count = 4;
+    if (values.choice_count < 2)
+      values.choice_count = 2;
+    if (values.choice_count > 5)
+      values.choice_count = 5;
+    
     values.a_students = new Array();
     values.b_students = new Array();
     values.c_students = new Array();

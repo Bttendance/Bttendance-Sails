@@ -135,18 +135,8 @@ module.exports = {
       .create({
         choice_count: Number(values.choice_count)
       }).exec(function callback(err, clicker) {
-        console.log(clicker);
-      });
-
-      Clickers
-      .create({
-        choice_count: Number(values.choice_count)
-      }).exec(function callback(err, clicker) {
-        console.log(clicker);
-        console.log(err);
         if (err || !clicker)
           next(err);
-        console.log(clicker);
         values.clicker = clicker.id;
         next();
       });
