@@ -140,3 +140,67 @@ exports.resendAttedance = function(attendance_id) {
 		});
 	});
 }
+
+exports.resendClicker = function(clicker_id) {
+
+	Clickers
+	.findOneById(clicker_id)
+	.populate('post')
+	.exec(function callback(err, clicker) {
+		if (err || !clicker)
+			return;
+
+		Courses
+		.findOneById(clicker.post.course)
+  	.populate('students')
+		.exec(function callback(err, course) {
+			if (err || !course)
+				return;
+
+			var unchecked = new Array();
+			for (var i = 0; i < course.students.length; i++)
+				unchecked.push(course.students[i].id);
+
+			for (var i = 0; i < clicker.a_students.length; i++) {
+				var index = unchecked.indexOf(clicker.a_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+
+			for (var i = 0; i < clicker.b_students.length; i++) {
+				var index = unchecked.indexOf(clicker.b_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+
+			for (var i = 0; i < clicker.c_students.length; i++) {
+				var index = unchecked.indexOf(clicker.c_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+
+			for (var i = 0; i < clicker.d_students.length; i++) {
+				var index = unchecked.indexOf(clicker.d_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+
+			for (var i = 0; i < clicker.e_students.length; i++) {
+				var index = unchecked.indexOf(clicker.e_students[i]);
+				if (index > -1)
+					unchecked.splice(index, 1);
+			}
+
+  		Users
+  		.findById(unchecked)
+  		.populate('device')
+  		.sort('id DESC').exec(function(err, users) {
+  			if (err || !users)
+  				return;
+  			
+  			for (var i = 0; i < users.length; i++)
+				  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_on_going");
+  		});
+		});
+	});
+}
