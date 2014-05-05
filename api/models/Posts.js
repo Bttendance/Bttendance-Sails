@@ -131,6 +131,7 @@ module.exports = {
         next();
       });
     } else if (values.type == 'clicker') {
+      console.log(values);
       Clickers
       .create({
         choice_count: values.choice_count
