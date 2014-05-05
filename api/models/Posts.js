@@ -137,6 +137,7 @@ module.exports = {
       }).exec(function callback(err, clicker) {
         if (err || !clicker)
           next(err);
+        console.log(clicker);
         values.clicker = clicker.id;
         next();
       });

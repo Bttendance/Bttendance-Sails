@@ -264,6 +264,36 @@ module.exports = {
 				  	return res.send(attendance.toWholeObject());
 					}
 				});
+		} else if (model == 'clickers') {
+			if (id == 'all')
+				Clickers
+				.find()
+				.populate('post')
+				.sort('id ASC')
+				.exec(function callback (err, clickers) {
+					if (err || !clickers) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < clickers.length; i++)
+							clickers[i] = clickers[i].toWholeObject();
+				  	return res.send(clickers);
+					}
+				});
+			else 
+				Clickers
+				.findOneById(Number(id))
+				.populate('post')
+				.exec(function callback (err, clicker) {
+					if (err || !clicker) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(clicker.toWholeObject());
+					}
+				});
 		} else {
 			res.contentType('html');
 			return res.forbidden('Check out your model parameter.');
