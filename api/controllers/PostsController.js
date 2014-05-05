@@ -61,6 +61,9 @@ module.exports = {
 		    		if (err || !course)
 			    		return res.send(404, { message: "Course Find Error" });
 
+			    	course.clicker_usage = course.clicker_usage + 1;
+			    	course.save();
+
 				  	// Send notification about post to Prof & Std
 				  	var notiUsers = new Array();
 				  	for (var i = 0; i < course.students.length; i++)
