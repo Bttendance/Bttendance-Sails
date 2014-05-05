@@ -258,10 +258,6 @@ module.exports = {
 
 				if (!has_user) {
 					checked_students.push(user.id);
-					
-					console.log(user.id);
-					console.log(checked_students);
-					console.log(attendance.checked_students);
 
 					attendance.checked_students = checked_students;
 					attendance.save(function callback(err) {
