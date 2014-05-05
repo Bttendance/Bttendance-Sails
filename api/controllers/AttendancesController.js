@@ -146,7 +146,7 @@ module.exports = {
 							var b = -1; // cluster which prof is included
 							for (var i = 0; i < clusters.length; i++)
 								for (var j = 0; j < clusters[i].length; j++)
-									if (clusters[i][j] == post.author)
+									if (clusters[i][j] == attendance.post.author)
 										b = i;
 
 							for (var i = 0; i < clusters.length; i++)
