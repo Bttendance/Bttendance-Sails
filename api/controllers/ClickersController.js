@@ -31,6 +31,17 @@ module.exports = {
 		  	if (choice_number > clicker.choice_count)
 			    return res.send(404, Error.log("Clicker choice is out of bound."));
 
+			  if (clicker.a_students.indexOf(user.id) != -1)
+			    return res.send(404, Error.toast("You've already chosen A as a choice."));
+			  if (clicker.b_students.indexOf(user.id) != -1)
+			    return res.send(404, Error.toast("You've already chosen B as a choice."));
+			  if (clicker.c_students.indexOf(user.id) != -1)
+			    return res.send(404, Error.toast("You've already chosen C as a choice."));
+			  if (clicker.d_students.indexOf(user.id) != -1)
+			    return res.send(404, Error.toast("You've already chosen D as a choice."));
+			  if (clicker.e_students.indexOf(user.id) != -1)
+			    return res.send(404, Error.toast("You've already chosen E as a choice."));
+
 			  if(choice_number == 1)
 			  	clicker.a_students.push(user.id);
 			  if(choice_number == 2)
@@ -41,16 +52,9 @@ module.exports = {
 			  	clicker.d_students.push(user.id);
 			  if(choice_number == 5)
 			  	clicker.e_students.push(user.id);
-
 			  clicker.save();
 
-			  Clickers.publishUpdate(clicker_id, { 
-			  	a_students:clicker.a_students,  
-			  	b_students:clicker.b_students,  
-			  	c_students:clicker.c_students,  
-			  	d_students:clicker.d_students,  
-			  	e_students:clicker.e_students 
-			  });
+			  Clickers.publishUpdate(clicker_id, clicker);
 
 			  return res.send(clicker.toWholeObject());
 		  });
