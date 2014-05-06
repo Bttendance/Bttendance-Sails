@@ -199,7 +199,7 @@ exports.resendClicker = function(clicker_id) {
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-				  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_on_going");
+				  exports.send(users[i], course.name, "Clicker is on-going", "clicker_on_going");
   		});
 		});
 	});
