@@ -54,7 +54,7 @@ module.exports = {
 			  	clicker.e_students.push(user.id);
 			  clicker.save();
 
-			  Clickers.publishUpdate(clicker_id, clicker);
+			  Clickers.publishUpdate(clicker_id, clicker.toWholeObject());
 
 			  return res.send(clicker.toWholeObject());
 		  });
