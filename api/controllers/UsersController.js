@@ -578,17 +578,17 @@ module.exports = {
 						var attd_checked_count = 0;
 						for (var j = 0; j < posts.length; j++) {
 							if (posts[j].course == courses[i].id && posts[j].type == "attendance") {
-								checks = checks.concat(posts[j].attendance.checked_students);
-								attd_check_count++;
 								if (posts[j].attendance.checked_students.indexOf(user.id) >= 0)
 									attd_checked_count++;
+								checks = checks.concat(posts[j].attendance.checked_students);
+								attd_check_count++;
 							}
 						}
 
 						var grade = 0;
-	  				if (supervising_courses.indexOf(courses[i].id) >= 0) {
+	  				if (supervising_courses.indexOf(courses[i].id) >= 0)
 							grade = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
-	  				} else
+	  				else
 							grade = Number( (attd_checked_count / attd_check_count * 100).toFixed() );
 
   					if (grade < 0 || attd_check_count == 0) grade = 0;
