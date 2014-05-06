@@ -75,8 +75,11 @@ module.exports = {
 	  .populate('post')
 		.exec(function callback(err, clicker) {
 			if (err || !clicker)
-			    return res.send(404, Error.log("Clicker doesn't exitst."));
-				
+		    return res.send(404, Error.log("Clicker doesn't exitst."));
+
+			if (!socket)
+		    return res.send(404, Error.log("Socket doesn't exitst."));
+
       Clickers.subscribe(socket, clicker, ['update']);
 	  	return res.send(clicker.toWholeObject());
     });
