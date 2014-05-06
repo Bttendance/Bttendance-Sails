@@ -72,6 +72,7 @@ module.exports = {
 
 		Clickers
 		.findOneById(clicker_id)
+	  .populate('post')
 		.exec(function callback(err, clicker){
       Clickers.subscribe(socket, clicker, ['update']);
 	  	return res.send(clicker.toWholeObject());
