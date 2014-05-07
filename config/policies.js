@@ -49,6 +49,7 @@ module.exports.policies = {
   CoursesController: {
     create_request: 'isUser',
     attend: 'isUser',
+    dettend: 'attending',
     feed: 'attending_or_supervising',
     students: 'supervising',
     add_manager: 'supervising',
