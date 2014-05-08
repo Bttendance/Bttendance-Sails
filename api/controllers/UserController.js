@@ -566,6 +566,7 @@ module.exports = {
 	  			}
 					
 					for (var i = 0; i < courses.length; i++) {
+
 						var checks = new Array();
 						var attd_check_count = 0;
 						var attd_checked_count = 0;
@@ -587,7 +588,7 @@ module.exports = {
   					if (grade < 0 || attd_check_count == 0) grade = 0;
   					if (grade > 100) grade = 100;
 
-						courses[i] = courses[i].toWholeObject();
+						courses[i] = courses[i].toOldObject();
   					courses[i].grade = grade;
 					}
 			  	return res.send(courses);
