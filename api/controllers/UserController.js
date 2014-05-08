@@ -17,6 +17,7 @@
 
 var passwordHash = require('password-hash');
 var nodemailer = require("nodemailer");
+var Moment = require('moment');
 
 module.exports = {
 
@@ -493,7 +494,7 @@ module.exports = {
 						var message;
 						if (posts[i].type == 'attendance') {
 							grade = Number(( (posts[i].attendance.checked_students.length - 1) / students_count * 100).toFixed());
-		  				if (grade  < 0) grade = 0;
+		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
@@ -501,8 +502,10 @@ module.exports = {
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
 		  						message = "Attendance Checked";
-		  					else
-		  					 message = "Attendance Failed";
+		  					else if (Moment().diff(Moment(posts[i].createdAt)) < 3 * 60 * 1000) 
+		  					 	message = "Attendance Checking";
+	  						else
+		  					 	message = "Attendance Failed";
 		  				}
 		  			}
 
@@ -510,8 +513,6 @@ module.exports = {
 	  				if (posts[i].type == 'attendance') {
 		  				posts[i].grade = grade;
 	  					posts[i].message = message;
-	  				} else {
-							posts[i].grade = 0;
 	  				}
 					}
 			  	return res.send(posts);
