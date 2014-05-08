@@ -66,9 +66,9 @@ exports.send = function(user, title, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: './assets/certification/cert_production.pem',
+			options = { cert: './assets/cert/cert.pem',
 									certData: null,
-									key: './assets/certification/key_production.pem',
+									key: './assets/cert/key.pem',
 									keyData: null,
 									passphrase: "bttendance",
 									ca: null,
