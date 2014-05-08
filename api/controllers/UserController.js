@@ -568,17 +568,26 @@ module.exports = {
 					for (var i = 0; i < courses.length; i++) {
 						var checks = new Array();
 						var attd_check_count = 0;
+						var attd_checked_count = 0;
 						for (var j = 0; j < posts.length; j++) {
 							if (posts[j].course == courses[i].id && posts[j].type == "attendance") {
+								if (posts[j].attendance.checked_students.indexOf(user.id) >= 0)
+									attd_checked_count++;
 								checks = checks.concat(posts[j].attendance.checked_students);
 								attd_check_count++;
 							}
 						}
-						var grade = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
+
+						var grade = 0;
+	  				if (supervising_courses.indexOf(courses[i].id) >= 0)
+							grade = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
+	  				else
+							grade = Number( (attd_checked_count / attd_check_count * 100).toFixed() );
+
   					if (grade < 0 || attd_check_count == 0) grade = 0;
   					if (grade > 100) grade = 100;
 
-						courses[i] = courses[i].toOldObject();
+						courses[i] = courses[i].toWholeObject();
   					courses[i].grade = grade;
 					}
 			  	return res.send(courses);
