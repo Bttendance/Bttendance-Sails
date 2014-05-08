@@ -22,6 +22,10 @@ module.exports.policies = {
     '*': true
   },
 
+  MigrationController: {
+    '*': true
+  },
+
   UsersController: {
     signup: true,
     auto_signin: true,
@@ -129,10 +133,6 @@ module.exports.policies = {
   SchoolController: {
     all: 'isUser',
     courses: 'isUser'
-  },
-
-  MigrationController: {
-    '*': true
   }
   /*********** Old APIs End **********/
 
