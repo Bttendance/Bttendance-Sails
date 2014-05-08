@@ -66,13 +66,13 @@ exports.send = function(user, title, message, type) {
 									errorCallback: undefined,
 									cacheLength: 100 };
 		} else { //production
-			options = { cert: './assets/cert/cert.pem',
+			options = { cert: './assets/certification/cert_production.pem',
 									certData: null,
-									key: './assets/cert/key.pem',
+									key: './assets/certification/key_production.pem',
 									keyData: null,
-									passphrase: "bttendance",
+									passphrase: "bttendanceutopia",
 									ca: null,
-									gateway: "gateway.sandbox.push.apple.com",
+									gateway: "gateway.push.apple.com",
 									port: 2195,
 									enhanced: true,
 									errorCallback: undefined,
