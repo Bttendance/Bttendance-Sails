@@ -473,8 +473,8 @@ var send = function(user, title, message, type, course, post) {
 		    	title: title,
 		      message: message,
 		      type: type,
-		      course: course,
-		      post: post
+		      course: JSON.stringify(course),
+		      post: JSON.stringify(post)
 		    }
 		});
 
