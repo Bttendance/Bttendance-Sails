@@ -7,6 +7,7 @@
 
 var MemJS = require('memjs').Client
 var Moment = require('moment');
+var Noti = require('../utils/notifications');
 
 module.exports = {
 
@@ -238,6 +239,7 @@ module.exports = {
 
       Users
       .findOneByUsername(manager)
+      .populate('device')
       .exec(function callback(err, mang) {
         if (err || !mang)
           return res.send(404, { message: "User Found Error" });
@@ -253,6 +255,7 @@ module.exports = {
 			  	.populate('students')
 			  	.populate('school')
 			  	.exec(function callback(err, new_course) {
+						Noti.send(mang, new_course.name, "You have been added as a manager.", "added_as_manager");
 		        return res.send(new_course.toOldObject());
 				  });
 	      })
