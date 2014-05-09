@@ -68,7 +68,7 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				send(users[j], post.name, "Attendance check has been started", "attendance_started", post.toOldObject(), course.toOldObject());
+				  				send(users[j], post.name, "Attendance check has been started", "attendance_started", course.toOldObject(), post.toOldObject());
 				  		});
 
 				  		setTimeout(function() { resendAttedance(post.attendance.id); }, 40000);
@@ -259,7 +259,7 @@ module.exports = {
 												.populate('device')
 												.exec(function callback(err, user) {
 													if (user)
-														send(user, post.course.name, "Attendance has been checked", "attendance_checked", post.toOldObject(), null);
+														send(user, post.course.name, "Attendance has been checked", "attendance_checked", null, post.toOldObject());
 												});
 											}
 										}
@@ -333,7 +333,7 @@ module.exports = {
 								return res.send(404, {message: "Attendance update failed"});
 
 							post.attendance = attendance[0];
-							send(user, post.course.name, "Attendance has been checked", "attendance_checked", post.toOldObject(), course.toOldObject());
+							send(user, post.course.name, "Attendance has been checked", "attendance_checked", course.toOldObject(), post.toOldObject());
 					  	return res.send(post.toOldObject());
 						});
 					} else {
@@ -400,7 +400,7 @@ module.exports = {
 			  		.sort('id DESC')
 			  		.exec(function callback(err, users) {
 			  			for (var j = 0; j < users.length; j++)
-			  				send(users[j], post.course.name, message, "notice", post.toOldObject(), null);
+			  				send(users[j], post.course.name, message, "notice", null, post.toOldObject());
 			  		});
 
 				  	return res.send(post.toOldObject());
@@ -464,9 +464,6 @@ var send = function(user, title, message, type, course, post) {
 		return;
 
 	if (user.device.type == 'android') {
-
-		console.log(post);
-		console.log(JSON.stringify(post));
 
 		var msg = new gcm.Message({
 		    collapseKey: 'bttendance',
@@ -593,7 +590,7 @@ var resendAttedance = function(attendance_id) {
 	  				return;
 	  			
 	  			for (var i = 0; i < users.length; i++)
-					  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_started", course.toOldObject(), post.toOldObject());
+					  send(users[i], course.name, "Attendance check is on-going", "attendance_started", course.toOldObject(), post.toOldObject());
 	  		});
 			});
 		});
