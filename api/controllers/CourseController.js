@@ -112,6 +112,12 @@ module.exports = {
 							posts[i].grade = grade;
 	  					posts[i].message = message;
 	  				}
+
+		  			if (post.type == 'clicker') {
+		  				post[i].type = 'attendance';
+		  				post[i].title = 'Update Required'
+		  				post[i].message = 'Current version doesn\'t support clicker.';
+		  			}
 					}
 			  	return res.send(posts);
 	  		});
