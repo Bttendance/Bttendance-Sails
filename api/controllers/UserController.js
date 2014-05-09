@@ -517,9 +517,9 @@ module.exports = {
 	  				}
 
 		  			if (posts[i].type == 'clicker') {
-		  				posts[i].type = 'attendance';
+		  				posts[i].type = 'notice';
 		  				posts[i].title = 'Update Required';
-		  				posts[i].message = 'Current version doesn\'t support clicker.';
+		  				posts[i].message = 'Your version doesn\'t support clicker.';
 		  			}
 					}
 			  	return res.send(posts);
