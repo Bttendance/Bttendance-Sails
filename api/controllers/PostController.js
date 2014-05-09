@@ -465,6 +465,9 @@ var send = function(user, title, message, type, course, post) {
 
 	if (user.device.type == 'android') {
 
+		console.log(post);
+		console.log(JSON.stringify(post));
+
 		var msg = new gcm.Message({
 		    collapseKey: 'bttendance',
 		    delayWhileIdle: false,
