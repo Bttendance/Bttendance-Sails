@@ -64,7 +64,7 @@ module.exports.sockets = {
   // Luckily, Socket.io (and consequently Sails.js) apps support Redis for sockets by default.
   // To enable a remote redis pubsub server: 
   adapter: 'redis',
-  host: process.env.REDIS_HOST || 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
+  host: '54.197.217.65',
   port: process.env.REDIS_PORT || 15296,
   db:   process.env.REDIS_DB   || 'redis-app23178340',
   pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',

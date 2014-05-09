@@ -39,7 +39,6 @@ module.exports.session = {
   db:   process.env.REDIS_DB   || 'redis-app23178340',
   pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',
 
-
   // Uncomment the following lines to use your Mongo adapter as a session store
   // adapter: 'mongo',
   //
