@@ -515,9 +515,9 @@ module.exports = {
 	  					posts[i].message = message;
 	  				}
 
-		  			if (post.type == 'clicker') {
+		  			if (post[i].type == 'clicker') {
 		  				post[i].type = 'attendance';
-		  				post[i].title = 'Update Required'
+		  				post[i].title = 'Update Required';
 		  				post[i].message = 'Current version doesn\'t support clicker.';
 		  			}
 					}
