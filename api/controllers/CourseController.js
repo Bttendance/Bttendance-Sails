@@ -108,6 +108,7 @@ module.exports = {
 		  			}
 
 						posts[i] = posts[i].toOldObject();
+						
 	  				if (posts[i].type == 'attendance') {
 							posts[i].grade = grade;
 	  					posts[i].message = message;
