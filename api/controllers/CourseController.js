@@ -108,16 +108,16 @@ module.exports = {
 		  			}
 
 						posts[i] = posts[i].toOldObject();
-						
+
 	  				if (posts[i].type == 'attendance') {
 							posts[i].grade = grade;
 	  					posts[i].message = message;
 	  				}
 
-		  			if (post[i].type == 'clicker') {
-		  				post[i].type = 'attendance';
-		  				post[i].title = 'Update Required';
-		  				post[i].message = 'Current version doesn\'t support clicker.';
+		  			if (posts[i].type == 'clicker') {
+		  				posts[i].type = 'attendance';
+		  				posts[i].title = 'Update Required';
+		  				posts[i].message = 'Current version doesn\'t support clicker.';
 		  			}
 					}
 			  	return res.send(posts);
