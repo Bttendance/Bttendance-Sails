@@ -5,7 +5,6 @@
  * @description	:: Contains logic for handling requests.
  */
 
-var Noti = require('../utils/notifications');
 var gcm = require('node-gcm');
 var apn = require('apn');
 
@@ -69,12 +68,12 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				Noti.send(users[j], post.name, "Attendance check has been started", "attendance_started");
+				  				send(users[j], post.name, "Attendance check has been started", "attendance_started", post.toOldObject(), course.toOldObject());
 				  		});
 
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 40000);
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
+				  		setTimeout(function() { resendAttedance(post.attendance.id); }, 40000);
+				  		setTimeout(function() { resendAttedance(post.attendance.id); }, 75000);
+				  		setTimeout(function() { resendAttedance(post.attendance.id); }, 120000);
 
 					  	return res.send(course.toOldObject());
 				  	});
@@ -246,6 +245,7 @@ module.exports = {
 										for (var j = 0; j < clusters[i].length; j++)
 											notiable.push(clusters[i][j]);
 
+										post.attendance.checked_students = notiable;
 										for (var j = 0; j < notiable.length; j++) {
 
 											var noti = true;
@@ -259,7 +259,7 @@ module.exports = {
 												.populate('device')
 												.exec(function callback(err, user) {
 													if (user)
-														Noti.send(user, post.course.name, "Attendance has been checked", "attendance_checked");
+														send(user, post.course.name, "Attendance has been checked", "attendance_checked", post.toOldObject(), null);
 												});
 											}
 										}
@@ -304,34 +304,44 @@ module.exports = {
 				if (err || !post)
 	  			return res.send(404, { message: "Post Found Error" });
 
-				var checked_students = new Array();
-				var has_user = false;
-				for (var i = 0; i < post.attendance.checked_students.length; i++) {
-					var id = post.attendance.checked_students[i];
-					checked_students.push(id);
-					if (id == user.id)
-						has_user = true;
-				}
+				Courses
+				.findOneById(post.course.id)
+				.populate('posts')
+		  	.populate('managers')
+		  	.populate('students')
+		  	.populate('school')
+				.exec(function callback(err, course) {
+					if (err || !course)
+		  			return res.send(404, { message: "Course Found Error" });
 
-				if (!has_user) {
-					checked_students.push(user.id);
+					var checked_students = new Array();
+					var has_user = false;
+					for (var i = 0; i < post.attendance.checked_students.length; i++) {
+						var id = post.attendance.checked_students[i];
+						checked_students.push(id);
+						if (id == user.id)
+							has_user = true;
+					}
 
-					Attendances
-					.update({id: post.attendance.id}, {checked_students: checked_students})
-					.exec(function callback(err, attendance) {
-						if (err || !attendance)
-							return res.send(404, {message: "Attendance update failed"});
+					if (!has_user) {
+						checked_students.push(user.id);
 
-						post.attendance = attendance[0];
-						Noti.send(user, post.course.name, "Attendance has been checked", "attendance_checked");
+						Attendances
+						.update({id: post.attendance.id}, {checked_students: checked_students})
+						.exec(function callback(err, attendance) {
+							if (err || !attendance)
+								return res.send(404, {message: "Attendance update failed"});
+
+							post.attendance = attendance[0];
+							send(user, post.course.name, "Attendance has been checked", "attendance_checked", post.toOldObject(), course.toOldObject());
+					  	return res.send(post.toOldObject());
+						});
+					} else {
 				  	return res.send(post.toOldObject());
-					});
-				} else {
-			  	return res.send(post.toOldObject());
-				}
-
-  		})
-		})
+					}
+				});
+  		});
+		});
 	},
 
 	create_notice: function(req, res) {
@@ -390,7 +400,7 @@ module.exports = {
 			  		.sort('id DESC')
 			  		.exec(function callback(err, users) {
 			  			for (var j = 0; j < users.length; j++)
-			  				Noti.send(users[j], post.course.name, message, "notice");
+			  				send(users[j], post.course.name, message, "notice", post.toOldObject(), null);
 			  		});
 
 				  	return res.send(post.toOldObject());
@@ -447,6 +457,145 @@ module.exports = {
 		});
 	}
 };
+
+
+var send = function(user, title, message, type, course, post) {
+	if (!user.device.notification_key)
+		return;
+
+	if (user.device.type == 'android') {
+
+		var msg = new gcm.Message({
+		    collapseKey: 'bttendance',
+		    delayWhileIdle: false,
+		    timeToLive: 4,
+		    data: {
+		    	title: title,
+		      message: message,
+		      type: type,
+		      course: course,
+		      post: post
+		    }
+		});
+
+		var registrationIds = [];
+		registrationIds.push(user.device.notification_key);
+
+		var sender;
+		if (process.env.NODE_ENV == 'development')
+		 	sender = new gcm.Sender('AIzaSyCqiq_YpGtSzIi7lr5SGcL5a74nJxm6K3o');
+		else
+		 	sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
+		 
+		sender.send(msg, registrationIds, 4, function (err, result) {
+			if (err)
+				console.log(err);
+			else
+    		console.log("Android notification has been sent to " + user.full_name + " (" + user.username + ")");
+		});
+
+	} else if (user.device.type == 'iphone') {
+
+		var options;
+		if (process.env.NODE_ENV == 'development') {
+			options = { cert: './assets/certification/cert_development.pem',
+									certData: null,
+									key: './assets/certification/key_development.pem',
+									keyData: null,
+									// passphrase: "bttendance",
+									ca: null,
+									gateway: "gateway.sandbox.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		} else { //production
+			options = { cert: './assets/certification/cert_production.pem',
+									certData: null,
+									key: './assets/certification/key_production.pem',
+									keyData: null,
+									// passphrase: "bttendanceutopia",
+									ca: null,
+									gateway: "gateway.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		}
+
+    var apnConnection = new apn.Connection(options);
+		var myDevice = new apn.Device(user.device.notification_key); //for token
+		var note = new apn.Notification();
+
+		var alert = "Notification from " + title;
+		if (message)
+			alert = title + " : " + message;
+
+		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+		note.badge = 1;
+		note.sound = "ping.aiff";
+		note.alert = alert;
+		note.payload = {
+			'title' 	: title,
+			'message' : message,
+			'type' 		: type 
+		};
+		apnConnection.pushNotification(note, myDevice);
+		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
+	}
+}
+
+var resendAttedance = function(attendance_id) {
+
+	Attendances
+	.findOneById(attendance_id)
+	.populate('post')
+	.exec(function callback(err, attendance) {
+		if (err || !attendance)
+			return;
+
+		Post.findOneById(attendance.post.id)
+		.populate('author')
+		.populate('course')
+		.populate('attendance')
+		.exec(function callback(err, post) {
+			if (err || !post)
+				return;
+
+			Courses
+			.findOneById(post.course.id)
+			.populate('posts')
+	  	.populate('managers')
+	  	.populate('students')
+	  	.populate('school')
+			.exec(function callback(err, course) {
+				if (err || !course)
+					return;
+
+				var unchecked = new Array();
+				for (var i = 0; i < course.students.length; i++)
+					unchecked.push(course.students[i].id);
+
+				for (var i = 0; i < attendance.checked_students.length; i++) {
+					var index = unchecked.indexOf(attendance.checked_students[i]);
+					if (index > -1)
+						unchecked.splice(index, 1);
+				}
+
+	  		Users
+	  		.findById(unchecked)
+	  		.populate('device')
+	  		.sort('id DESC').exec(function(err, users) {
+	  			if (err || !users)
+	  				return;
+	  			
+	  			for (var i = 0; i < users.length; i++)
+					  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_started", course.toOldObject(), post.toOldObject());
+	  		});
+			});
+		});
+	});
+}
 
 var getIds = function(jsonArray) {
 	if (!jsonArray)
