@@ -25,7 +25,7 @@ module.exports.sockets = {
     // }).exec(function callback(err, socket) {
       sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
       console.log('onConnect');
-      // console.log(JSON.serialize(socket));
+      console.log(socket);
       console.log(Serialize.serialize(socket));
     // });
   },
