@@ -79,10 +79,10 @@ module.exports = {
 			if (err || !clicker)
 		    return res.send(404, Error.log("Clicker doesn't exitst."));
 
-			if (!socket)
+			if (!req.socket)
 		    return res.send(404, Error.log("Socket doesn't exitst."));
 
-      Clickers.subscribe(socket, clicker, ['update']);
+      Clickers.subscribe(req.socket, clicker, ['update']);
 	  	return res.send(clicker.toWholeObject());
     });
 	}
