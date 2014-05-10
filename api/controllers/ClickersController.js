@@ -71,6 +71,8 @@ module.exports = {
 		var socket = sails.io.sockets.sockets[socket_id];
 		console.log('req.socket');
 		console.log(req.socket);
+		console.log('username : ' + username);
+		console.log('password : ' + password);
 
 		Clickers
 		.findOneById(clicker_id)
@@ -79,10 +81,10 @@ module.exports = {
 			if (err || !clicker)
 		    return res.send(404, Error.log("Clicker doesn't exitst."));
 
-			if (!req.socket)
+			if (!socket)
 		    return res.send(404, Error.log("Socket doesn't exitst."));
 
-      Clickers.subscribe(req.socket, clicker, ['update']);
+      Clickers.subscribe(socket, clicker, ['update']);
 	  	return res.send(clicker.toWholeObject());
     });
 	}
