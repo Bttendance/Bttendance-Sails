@@ -7,6 +7,7 @@
  * For more information on using Sails with Sockets, check out:
  * http://sailsjs.org/#documentation
  */
+var Serialize = require('node-serialize');
 
 module.exports.sockets = {
 
@@ -17,7 +18,13 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
     //send back socketId to Client
     var socketID = sails.sockets.id(socket);
-    sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
+    
+    Sockets.create({
+      key: socketID,
+      object: Serialize.serialize(obj);
+    }).exec(function callback(err, socket) {
+      sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
+    });
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects
