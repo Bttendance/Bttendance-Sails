@@ -71,19 +71,16 @@ module.exports = {
 
 		// var socket = sails.io.sockets.sockets[socket_id];
 
-		// Clickers
-		// .findOneById(clicker_id)
-	 //  .populate('post')
-		// .exec(function callback(err, clicker) {
-		// 	if (err || !clicker)
-		//     return res.send(404, Error.log("Clicker doesn't exitst."));
+		Clickers
+		.findOneById(clicker_id)
+	  .populate('post')
+		.exec(function callback(err, clicker) {
+			if (err || !clicker)
+		    return res.send(404, Error.log("Clicker doesn't exitst."));
 
-		// 	if (!socket)
-		//     return res.send(404, Error.log("Socket doesn't exitst."));
-
-  //     Clickers.subscribe(socket, clicker, ['update']);
-	 //  	return res.send(clicker.toWholeObject());
-  //   });
+      // Clickers.subscribe(socket, clicker, ['update']);
+	  	return res.send(clicker.toWholeObject());
+    });
 	}
 	
 };
