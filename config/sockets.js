@@ -18,13 +18,14 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
     //send back socketId to Client
     var socketID = sails.sockets.id(socket);
-    
-    Sockets.create({
-      key: socketID,
-      object: Serialize.serialize(obj);
-    }).exec(function callback(err, socket) {
+
+    // Sockets.create({
+    //   key: socketID,
+    //   object: Serialize.serialize(socket);
+    // }).exec(function callback(err, socket) {
       sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
-    });
+      console.log(Serialize.serialize(socket));
+    // });
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects

@@ -18,6 +18,6 @@ module.exports.models = {
   // and create and update database as model 
   // and migrate back to server
   // so set it safe if you want to skip this process
-  migrate: 'safe'
+  // migrate: 'safe'
 
 };

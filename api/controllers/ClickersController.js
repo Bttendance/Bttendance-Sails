@@ -69,14 +69,15 @@ module.exports = {
 		var socket_id = req.param('socket_id');
 		var clicker_id = req.param('clicker_id');
 
-		// var socket = sails.io.sockets.sockets[socket_id];
-		Sockets
-		.findOneByKey(socket_id)
-		.exec(function callback(err, found_socket) {
-			if (err || !socket)
-		    return res.send(404, Error.log("Socket doesn't exitst."));
+		var socket = sails.io.sockets.sockets[socket_id];
+		
+		// Sockets
+		// .findOneByKey(socket_id)
+		// .exec(function callback(err, found_socket) {
+		// 	if (err || !socket)
+		//     return res.send(404, Error.log("Socket doesn't exitst."));
 
-		  var socket = Serialize.unserialize(found_socket.object);
+		//   var socket = Serialize.unserialize(found_socket.object);
 
 			Clickers
 			.findOneById(clicker_id)
@@ -91,7 +92,7 @@ module.exports = {
 	      Clickers.subscribe(socket, clicker, ['update']);
 		  	return res.send(clicker.toWholeObject());
 	    });
-		});
+		// });
 	}
 	
 };
