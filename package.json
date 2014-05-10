@@ -35,7 +35,8 @@
         "node-xlsx": "0.4.0",
         "newrelic": "1.5.0",
         "async": "0.2.10",
-        "node-serialize": "0.0.3"
+        "node-serialize": "0.0.3",
+        "json-serialize": "1.1.2"
     },
     "scripts": {
         "start": "node app.js",
