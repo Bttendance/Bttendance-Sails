@@ -69,8 +69,8 @@ module.exports = {
 		var clicker_id = req.param('clicker_id');
 
 		var socket = sails.io.sockets.sockets[socket_id];
-		console.log("Socket ID Sent : " + socket_id);
-		console.log("Socket ID Find : " + sails.sockets.id(socket));
+		console.log(req);
+		console.log(req.socket);
 
 		Clickers
 		.findOneById(clicker_id)
