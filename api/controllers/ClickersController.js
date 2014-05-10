@@ -68,12 +68,13 @@ module.exports = {
 		var socket_id = req.param('socket_id');
 		var clicker_id = req.param('clicker_id');
 
-		var socket = sails.io.sockets.sockets[socket_id];
-		console.log('req.socket');
-		console.log(req.socket);
 		console.log('username : ' + username);
 		console.log('password : ' + password);
+		console.log('req.socket');
+		console.log(req.socket);
 
+		var socket = sails.io.sockets.sockets[socket_id];
+		
 		Clickers
 		.findOneById(clicker_id)
 	  .populate('post')
