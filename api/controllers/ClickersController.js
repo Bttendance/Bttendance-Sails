@@ -69,7 +69,7 @@ module.exports = {
 		var clicker_id = req.param('clicker_id');
 
 		var socket = sails.io.sockets.sockets[socket_id];
-		console.log(req);
+		console.log('req.socket');
 		console.log(req.socket);
 
 		Clickers
