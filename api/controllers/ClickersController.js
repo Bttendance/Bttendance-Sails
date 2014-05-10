@@ -55,7 +55,7 @@ module.exports = {
 			  	clicker.e_students.push(user.id);
 			  clicker.save();
 
-			  Clickers.publishUpdate(clicker_id, clicker.toWholeObject());
+			  Clickers.publishCreate(clicker.toWholeObject());
 
 			  return res.send(clicker.toWholeObject());
 		  });
@@ -70,29 +70,20 @@ module.exports = {
 		var clicker_id = req.param('clicker_id');
 
 		var socket = sails.io.sockets.sockets[socket_id];
-		
-		// Sockets
-		// .findOneByKey(socket_id)
-		// .exec(function callback(err, found_socket) {
-		// 	if (err || !socket)
-		//     return res.send(404, Error.log("Socket doesn't exitst."));
 
-		//   var socket = Serialize.unserialize(found_socket.object);
+		Clickers
+		.findOneById(clicker_id)
+	  .populate('post')
+		.exec(function callback(err, clicker) {
+			if (err || !clicker)
+		    return res.send(404, Error.log("Clicker doesn't exitst."));
 
-			Clickers
-			.findOneById(clicker_id)
-		  .populate('post')
-			.exec(function callback(err, clicker) {
-				if (err || !clicker)
-			    return res.send(404, Error.log("Clicker doesn't exitst."));
+			if (!socket)
+		    return res.send(404, Error.log("Socket doesn't exitst."));
 
-				if (!socket)
-			    return res.send(404, Error.log("Socket doesn't exitst."));
-
-	      Clickers.subscribe(socket, clicker, ['update']);
-		  	return res.send(clicker.toWholeObject());
-	    });
-		// });
+      Clickers.subscribe(socket, clicker, ['update']);
+	  	return res.send(clicker.toWholeObject());
+    });
 	}
 	
 };

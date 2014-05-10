@@ -17,17 +17,9 @@ module.exports.sockets = {
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
     //send back socketId to Client
+    Clickers.watch(socket);
     var socketID = sails.sockets.id(socket);
-
-    // Sockets.create({
-    //   key: socketID,
-    //   object: Serialize.serialize(socket);
-    // }).exec(function callback(err, socket) {
-      sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
-      console.log('onConnect');
-      console.log(socket);
-      console.log(Serialize.serialize(socket));
-    // });
+    sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects
