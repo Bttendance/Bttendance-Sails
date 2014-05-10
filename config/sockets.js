@@ -18,6 +18,7 @@ module.exports.sockets = {
     //send back socketId to Client
     var socketID = sails.sockets.id(socket);
     sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
+    console.log('connect');
     console.log('socket : ' + JSON.stringify(socket) + ' socketID : ' + socketID);
   },
 
