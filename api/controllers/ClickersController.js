@@ -69,7 +69,9 @@ module.exports = {
 		var socket_id = req.param('socket_id');
 		var clicker_id = req.param('clicker_id');
 
-		// var socket = sails.io.sockets.sockets[socket_id];
+		var socket = sails.io.sockets.sockets[socket_id];
+		if (socket)
+  		Clickers.watch(socket);
 
 		Clickers
 		.findOneById(clicker_id)
