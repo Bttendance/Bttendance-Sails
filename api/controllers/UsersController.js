@@ -71,7 +71,7 @@ module.exports = {
 				return res.send(500, Error.log("Deivce Find Error"));
 
 		  if (device && device.owner)
-				return res.send(500, Error.alert("Sign Up Error", "Deivce has been registered to other owner."));
+				return res.send(500, Error.alert("Sign Up Error", "Your deivce already has been registered."));
 
 		  Users
 		  .findOne({
@@ -234,7 +234,7 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, Error.alert("Sign In Error", "Please check your username of email again."));
+		    return res.send(500, Error.alert("Sign In Error", "Please check your username of email address again."));
 
 			if (username == "appletest0"
 		|| username == "appletest1" 
@@ -307,7 +307,7 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, Error.alert("Password Recovery Error", "Email hasn't been registered."));
+		    return res.send(404, Error.alert("Password Recovery Error", "Please check your email address again."));
 
 		  var password = Random.string(8);
 		  user.password = PasswordHash.generate(password);
