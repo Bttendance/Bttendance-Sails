@@ -6,7 +6,7 @@
     "keywords": ["Bttendance"],
     "dependencies": {
         "sails": "0.10.0-rc5",
-        "waterline" : "0.10.0-rc12",
+        "waterline" : "0.10.0-rc10",
         "sails-postgresql" : "0.10.0-rc3",
         "sails-redis" : "0.10.0-rc1",
         "memjs": "0.8.4",
