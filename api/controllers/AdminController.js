@@ -330,7 +330,7 @@ module.exports = {
 
 	noti: function(req, res) {
 		Users
-		.findOneByUsername('thefinestartist')
+		.findOneByUsername('galaxys2')
 		.populate('device')
 		.exec(function callback(err, user) {
 			var Noti = require('../utils/notifications');
