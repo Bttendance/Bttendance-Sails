@@ -22,6 +22,10 @@ module.exports.policies = {
     '*': true
   },
 
+  AnalyticsController: {
+    '*': true
+  },
+
   MigrationController: {
     '*': true
   },
