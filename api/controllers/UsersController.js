@@ -284,7 +284,7 @@ module.exports = {
 				if (!PasswordHash.verify(password, user.password)) {
 				  return res.send(404, Error.alert("Sign In Error", "Please check your password again."));
 			  } else if (user.device.uuid != device_uuid) {
-				  return res.send(404, Error.alert("Sign In Error", "We doesn't support multi devices for now."));
+				  return res.send(404, Error.alert("Sign In Error", "We doesn't support multi devices for now. If you have changed your phone, please contact us via contact@bttendance.com."));
 			  } else {
 			  	return res.send(user.toWholeObject());
 			  }
