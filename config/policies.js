@@ -41,7 +41,7 @@ module.exports.policies = {
     update_email: ['isUser', 'hasDevice'],
     feed: 'isUser',
     courses: 'isUser',
-    search_user: 'isUser'
+    search: 'isUser'
   },
 
   DevicesController: {
