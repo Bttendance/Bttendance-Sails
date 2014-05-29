@@ -49,6 +49,7 @@ module.exports.policies = {
   },
 
   SchoolsController: {
+    create: true,
     all: 'isUser',
     courses: 'isUser',
     enroll: 'isUser'

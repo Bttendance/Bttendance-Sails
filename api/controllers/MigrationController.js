@@ -566,36 +566,79 @@ module.exports = {
 	update: function(req, res) {
 
 		//done
-		Courses
-		.find()
-		.populate('students')
-		.populate('posts')
-		.sort('id ASC')
-		.exec(function callback(err, courses) {
-			if (err || !courses)
-				return;
+		// Courses
+		// .find()
+		// .populate('students')
+		// .populate('posts')
+		// .sort('id ASC')
+		// .exec(function callback(err, courses) {
+		// 	if (err || !courses)
+		// 		return;
 
-			for (var i = 0; i < courses.length; i++) {
+		// 	for (var i = 0; i < courses.length; i++) {
 
-				var notice = 0;
-				for (var j = 0; j < courses[i].posts.length; j++)
-					if (courses[i].posts[j].type == 'notice')
-						notice++;
+		// 		var notice = 0;
+		// 		for (var j = 0; j < courses[i].posts.length; j++)
+		// 			if (courses[i].posts[j].type == 'notice')
+		// 				notice++;
 
-				Courses
-				.update({ 
-					id: courses[i].id 
-				}, { 
-					students_count: courses[i].students.length,
-					clicker_usage: 0,
-					notice_usage: notice
-				}).exec(function callback(err, updated_courses) {
-					if (err || !updated_courses)
-						return console.log(err);
-					console.log(updated_courses);
-				});
-			}
-		});
+		// 		Courses
+		// 		.update({ 
+		// 			id: courses[i].id 
+		// 		}, { 
+		// 			students_count: courses[i].students.length,
+		// 			clicker_usage: 0,
+		// 			notice_usage: notice
+		// 		}).exec(function callback(err, updated_courses) {
+		// 			if (err || !updated_courses)
+		// 				return console.log(err);
+		// 			console.log(updated_courses);
+		// 		});
+		// 	}
+		// });
+
+		// Courses
+		// .findOneById(8)
+		// .populate('students')
+		// .populate('posts')
+		// .sort('id ASC')
+		// .exec(function callback(err, course) {
+		// 	if (err || !course)
+		// 		return;
+
+		// 	console.log(course.name);
+		// 	course.school = 11;
+		// 	course.name = "Optometry-1";
+		// 	course.number = "OP-1";
+		// 	course.save();
+		// });
+
+		// Users
+		// .findOneByUsername('galaxys2')
+		// .exec(function callback(err, user) {
+		// 	if (err || !user)
+		// 		return;
+
+		// 	var PasswordHash = require('password-hash');
+	 //    user.password = PasswordHash.generate('best0fv');
+	 //    user.save();
+
+	 //  	return res.send(user);
+		// });
+
+		// Courses
+		// .findOneById(10)
+		// .sort('id ASC')
+		// .exec(function callback(err, course) {
+		// 	if (err || !course)
+		// 		return;
+
+		// 	console.log(course.name);
+		// 	course.school = 1;
+		// 	course.name = "Jepil's course";
+		// 	course.number = "JP";
+		// 	course.save();
+		// });
 	}
 
 };
