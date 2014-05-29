@@ -33,7 +33,7 @@ module.exports = {
 				.populate('serials')
 				.populate('enrolled_schools')
 				.populate('identifications')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, users) {
 					if (err || !users) {
 						res.contentType('html');
@@ -72,7 +72,7 @@ module.exports = {
 				.populate('courses')
 				.populate('professors')
 				.populate('students')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, schools) {
 					if (err || !schools) {
 						res.contentType('html');
@@ -108,7 +108,7 @@ module.exports = {
 		  	.populate('managers')
 		  	.populate('students')
 		  	.populate('school')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, courses) {
 					if (err || !courses) {
 						res.contentType('html');
@@ -144,7 +144,7 @@ module.exports = {
 				.populate('course')
 				.populate('attendance')
 				.populate('clicker')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, posts) {
 					if (err || !posts) {
 						res.contentType('html');
@@ -177,7 +177,7 @@ module.exports = {
 				Devices
 				.find()
 				.populate('owner')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, devices) {
 					if (err || !devices) {
 						res.contentType('html');
@@ -208,7 +208,7 @@ module.exports = {
 				.find()
 				.populate('school')
 				.populate('owners')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, serials) {
 					if (err || !serials) {
 						res.contentType('html');
@@ -239,7 +239,7 @@ module.exports = {
 				Attendances
 				.find()
 				.populate('post')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, attendances) {
 					if (err || !attendances) {
 						res.contentType('html');
@@ -269,7 +269,7 @@ module.exports = {
 				Clickers
 				.find()
 				.populate('post')
-				.sort('id ASC')
+				.sort('id DESC')
 				.exec(function callback (err, clickers) {
 					if (err || !clickers) {
 						res.contentType('html');
@@ -294,6 +294,35 @@ module.exports = {
 				  	return res.send(clicker.toWholeObject());
 					}
 				});
+		} else if (model == 'tokens') {
+			if (id == 'all')
+				Tokens
+				.find()
+				.sort('id DESC')
+				.exec(function callback (err, tokens) {
+					if (err || !tokens) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < tokens.length; i++)
+							tokens[i] = tokens[i].toWholeObject();
+				  	return res.send(tokens);
+					}
+				});
+			else 
+				Tokens
+				.findOneById(Number(id))
+				.populate('post')
+				.exec(function callback (err, tokens) {
+					if (err || !tokens) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(tokens.toWholeObject());
+					}
+				});
 		} else {
 			res.contentType('html');
 			return res.forbidden('Check out your model parameter.');
@@ -311,7 +340,7 @@ module.exports = {
 		
 		Users
 		.find()
-		.sort('id ASC')
+		.sort('id DESC')
 		.exec(function callback (err, users) {
 			if (err || !users) {
 				res.contentType('html');

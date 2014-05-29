@@ -89,6 +89,10 @@ module.exports.policies = {
     verify: true
   },
 
+  SerialsController: {
+    request: true
+  },
+
   /*********** Old APIs Start **********/
   SerialController: {
   	validate: true,
