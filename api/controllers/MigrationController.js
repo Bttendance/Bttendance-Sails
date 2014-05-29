@@ -639,6 +639,11 @@ module.exports = {
 		// 	course.number = "JP";
 		// 	course.save();
 		// });
+
+		// Users.findOneById(1).populate('supervising_courses').exec(function (err, user) {
+		// 		user.supervising_courses.remove(1);
+		// 		user.save();
+		// })
 	}
 
 };

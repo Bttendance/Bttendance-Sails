@@ -86,7 +86,8 @@ module.exports.policies = {
   },
 
   TokensController: {
-    verify: true
+    verify: true,
+    update: true
   },
 
   SerialsController: {

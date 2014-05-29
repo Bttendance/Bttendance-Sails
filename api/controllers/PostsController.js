@@ -230,34 +230,31 @@ module.exports = {
 		});
 	},
 
-	// remove: function(req, res) {
-	// 	res.contentType('application/json; charset=utf-8');
-	// 	var post_id = req.param('post_id');
+	remove: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var post_id = req.param('post_id');
 
-	// 	Posts
-	// 	.findOneById(post_id)
-	// 	.exec(function callback(err, post) {
-	// 		if (err || !post)
- //    		return res.send(404, { message: "No Post Found Error" });
+		Posts
+		.findOneById(post_id)
+		.exec(function callback(err, post) {
+			if (err || !post)
+    		return res.send(404, { message: "No Post Found Error" });
 
- //    	Courses
- //    	.findOneById(post.course)
- //    	.populate('posts')
-	//   	.populate('managers')
-	//   	.populate('students')
-	//   	.populate('school')
- //    	.exec(function callback(err, course) {
-	// 			if (err || !course)
-	//     		return res.send(404, { message: "No Course Found Error" });
+    	Courses
+    	.findOneById(post.course)
+    	.populate('posts')
+    	.exec(function callback(err, course) {
+				if (err || !course)
+	    		return res.send(404, { message: "No Course Found Error" });
 
-	//     	course.posts.remove(post_id);
-	//     	course.save(function callback(err) {
-	//     		if (err)
-	//     			return res.send(404, { message: "Course Save Error" });
-	//     		else
-	//     			return res.send(course.toWholeObject());
-	//     	});
- //    	});
-	// 	});
-	// }
+	    	course.posts.remove(post_id);
+	    	course.save(function callback(err) {
+	    		if (err)
+	    			return res.send(404, { message: "Course Save Error" });
+	    		else
+	    			return res.send(course.toWholeObject());
+	    	});
+    	});
+		});
+	}
 };
