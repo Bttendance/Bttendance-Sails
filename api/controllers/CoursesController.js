@@ -83,12 +83,17 @@ module.exports = {
 		  			file = file.replace('#schoolname', school.name);
 		  			file = file.replace('#validationLink', link);
 
+						var guide = Path.resolve(__dirname, '../../assets/manual/guide_v3.pdf');
 						// setup e-mail data with unicode symbols
 						var mailOptions = {
 						    from: "Bttendance<no-reply@bttendance.com>", // sender address
 						    to: user.email, // list of receivers
 						    subject: "Course Creation Verification Email", // Subject line
 						    html: file, // plaintext body
+						    attachments: [{   // file on disk as an attachment
+            				fileName: "Bttendance 사용 가이드 V3.pdf",
+            				filePath: guide // stream this file
+        					}]
 						}
 
 						// send mail with defined transport object
