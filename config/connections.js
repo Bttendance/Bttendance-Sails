@@ -1,16 +1,17 @@
 /**
  * Connections
- * 
+ * (sails.config.connections)
+ *
  * `Connections` are like "saved settings" for your adapters.  What's the difference between
  * a connection and an adapter, you might ask?  An adapter (e.g. `sails-mysql`) is generic--
- * it needs some additional information to work (e.g. your database host, password, user, etc.) 
+ * it needs some additional information to work (e.g. your database host, password, user, etc.)
  * A `connection` is that additional information.
- * 
+ *
  * Each model must have a `connection` property (a string) which is references the name of one
  * of these connections.  If it doesn't, the default `connection` configured in `config/models.js`
  * will be applied.  Of course, a connection can (and usually is) shared by multiple models.
  * .
- * Note: If you're using version control, you should put your passwords/api keys 
+ * Note: If you're using version control, you should put your passwords/api keys
  * in `config/local.js`, environment variables, or use another strategy.
  * (this is to prevent you inadvertently sensitive credentials up to your repository.)
  *
@@ -43,20 +44,24 @@ module.exports.connections = {
   },
 
   // psql "dbname=postgres"
-  postgresLocal: {
-    module   : 'sails-postgresql',
-    host     : 'localhost',
-    port     : 5432,
-    user     : 'TheFinestArtist',
-    password : 'postgres',
-    database : 'postgres'
-  },
+  // postgresLocal: {
+  //   module   : 'sails-postgresql',
+  //   host     : 'localhost',
+  //   port     : 5432,
+  //   user     : 'TheFinestArtist',
+  //   password : 'postgres',
+  //   database : 'postgres'
+  // },
+
+  // memory: {
+  //   adapter: 'sails-memory'
+  // }
 
   // redis-cli -h pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com -p 15511 -a eBKknThiKi1VHZSe
   redisProduction: {
-  module   : 'sails-redis',
-  host     : 'pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com',
-  port     : 15511,
+    module   : 'sails-redis',
+    host     : 'pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com',
+    port     : 15511,
     options: {
       auth_pass: 'eBKknThiKi1VHZSe',
       parser: 'javascript',
@@ -92,9 +97,8 @@ exports.getPostgres = function() {
   else if (process.env.NODE_ENV == 'development')
     return 'postgresDevelopment';
   else 
-    return 'postgresLocal';
+    return 'postgresDevelopment';
 },
-
 
 exports.getRedis = function() {
     if (process.env.NODE_ENV == 'production')

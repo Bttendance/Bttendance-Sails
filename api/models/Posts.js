@@ -177,7 +177,7 @@ module.exports = {
     next();
   },
 
-  afterDestroy: function(next) {
+  afterDestroy: function(values, next) {
     next();
   }
 
