@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 ########################
 # sails
 ########################
@@ -26,12 +24,7 @@ pids
 logs
 results
 
-<<<<<<< HEAD
-npm-debug.log
 node_modules
-=======
-node_modules
-
 npm-debug.log
 
 
@@ -50,4 +43,3 @@ nbproject
 # local config
 ########################
 config/local.js
->>>>>>> First Commit

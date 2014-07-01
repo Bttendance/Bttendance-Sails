@@ -1,30 +1,32 @@
 /**
- * Session
- * 
- * Sails session integration leans heavily on the great work already done by Express, but also unifies 
- * Socket.io with the Connect session store. It uses Connect's cookie parser to normalize configuration
- * differences between Express and Socket.io and hooks into Sails' middleware interpreter to allow you
- * to access and auto-save to `req.session` with Socket.io the same way you would with Express.
+ * Session Configuration
+ * (sails.config.session)
+ *
+ * Sails session integration leans heavily on the great work already done by
+ * Express, but also unifies Socket.io with the Connect session store. It uses
+ * Connect's cookie parser to normalize configuration differences between Express
+ * and Socket.io and hooks into Sails' middleware interpreter to allow you to access
+ * and auto-save to `req.session` with Socket.io the same way you would with Express.
  *
  * For more information on configuring the session, check out:
- * http://sailsjs.org/#documentation
+ * http://links.sailsjs.org/docs/config/session
  */
 
 module.exports.session = {
 
   // Session secret is automatically generated when your new app is created
   // Replace at your own risk in production-- you will invalidate the cookies of your users,
-  // forcing them to log in again. 
-  secret: '1f5cc9ec246bb9cb17aa9eeb92758bf6',
+  // forcing them to log in again.
+  secret: '1595b1886e82336b5b946977a543847e',
 
 
   // Set the session cookie expire time
   // The maxAge is set by milliseconds, the example below is for 24 hours
   //
   // cookie: {
-  //   maxAge: 24 * 60 * 60 * 1000  
+  //   maxAge: 24 * 60 * 60 * 1000
   // }
-  
+
 
   // In production, uncomment the following lines to set up a shared redis session store
   // that can be shared across multiple Sails.js servers
@@ -33,11 +35,20 @@ module.exports.session = {
   // The following values are optional, if no options are set a redis instance running
   // on localhost is expected.
   // Read more about options at: https://github.com/visionmedia/connect-redis
+  //
+  // host: 'localhost',
+  // port: 6379,
+  // ttl: <redis session TTL in seconds>,
+  // db: 0,
+  // pass: <redis auth password>
+  // prefix: 'sess:'
+  
   adapter: 'redis',
   host: process.env.REDIS_HOST || 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
   port: process.env.REDIS_PORT || 15296,
   db:   process.env.REDIS_DB   || 'redis-app23178340',
   pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',
+
 
   // Uncomment the following lines to use your Mongo adapter as a session store
   // adapter: 'mongo',
@@ -59,3 +70,4 @@ module.exports.session = {
   // stringify: true
 
 };
+
