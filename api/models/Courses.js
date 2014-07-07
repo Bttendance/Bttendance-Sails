@@ -10,13 +10,14 @@ module.exports = {
 
   attributes: {
 
-    name: {
+    code: {
       type: 'string',
       required: true
     },
 
-    number: {
-      type: 'string'
+    name: {
+      type: 'string',
+      required: true
     },
 
     professor_name: {
@@ -87,35 +88,6 @@ module.exports = {
       obj.clicker_usage = this.clicker_usage;
       obj.notice_usage = this.notice_usage;
       return obj;
-    },
-
-    toOldObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.managers = this.managers;
-      obj.students = this.students;
-      obj.posts = this.posts;
-      obj.attdCheckedAt = this.attdCheckedAt;
-
-      obj.number = obj.number;
-      obj.school_name = obj.school.name;
-      obj.school = obj.school.id;
-
-      //attd_check_count
-      var checks = new Array();
-      var attd_check_count = 0;
-      for (var j = 0; j < obj.posts.length; j++)
-        if (obj.posts[j].type == "attendance")
-          attd_check_count++;
-      obj.attd_check_count = attd_check_count;
-
-      obj.managers = getIds(obj.managers);
-      obj.students = getIds(obj.students);
-      obj.posts = getIds(obj.posts);
-
-      return obj;
     }
     
   },
@@ -156,13 +128,3 @@ module.exports = {
   }
 
 };
-
-var getIds = function(jsonArray) {
-  if (!jsonArray)
-    return new Array();
-
-  var ids = new Array();
-  for (var i = 0; i < jsonArray.length; i++)
-    ids.push(jsonArray[i].id);
-  return ids;
-}

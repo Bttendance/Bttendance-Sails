@@ -52,14 +52,6 @@ before(function(done) {
     // console.log(sails.config);
 
     async.series([
-      // create school
-      function(callback){
-        Schools.create({
-          name: 'Bttendance',
-          website: 'http://www.bttendance.com',
-          type: 'public'
-        }).exec(callback);
-      },
       // create device
       function(callback){
         Devices.create({
@@ -82,6 +74,27 @@ before(function(done) {
         Devices.update({ id: 1 }, { owner: 1 })
         .exec(callback);
       },
+      // create school
+      function(callback){
+        Schools.create({
+          name: 'Bttendance',
+          website: 'http://www.bttendance.com',
+          type: 'public'
+        }).exec(callback);
+      },
+      // associate school - user
+      function(callback){
+        Users
+        .findOneById(1)
+        .populate('employed_schools')
+        .exec(function cb(err, user) {
+          console.log(user.employed_schools);
+          user.employed_schools.add(1);
+          user.save(function cb(err, user) {
+            callback();
+          });
+        });
+      },
       // create course
       function(callback){
         Courses.create({
@@ -102,9 +115,36 @@ before(function(done) {
         .populate('enrolled_schools')
         .populate('identifications')
         .exec(callback);
+      },
+      // get school
+      function(callback){
+        Schools
+        .findOneById(1)
+        .populate('serials')
+        .populate('courses')
+        .populate('professors')
+        .populate('students')
+        .exec(callback);
+      },
+      // get course
+      function(callback){
+        Courses
+        .findOneById(1)
+        .populate('posts')
+        .populate('managers')
+        .populate('students')
+        .populate('school')
+        .exec(callback);
       }
     ], function(err, results){  
-      userHH = results[4].toOldObject();
+      userHH = results[6].toOldObject();
+      schoolBT = results[7].toOldObject();
+      courseBT = results[8].toOldObject();
+      
+      console.log(userHH);
+      console.log(schoolBT);
+      console.log(courseBT);
+
       done(err, sails);
     });
   });

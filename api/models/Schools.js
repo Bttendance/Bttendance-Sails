@@ -31,12 +31,6 @@ module.exports = {
     },
 
     // One to Many
-    serials: {
-    	collection: 'Serials',
-    	via: 'school'
-    },
-
-    // One to Many
     courses: {
     	collection: 'Courses',
     	via: 'school'
@@ -70,24 +64,6 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      return obj;
-    },
-
-    toOldObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.serials = this.serials;
-      obj.students = this.students;
-      obj.professors = this.professors;
-      obj.courses = this.courses;
-
-      //Parsing
-      obj.serials = getIds(obj.serials);
-      obj.courses = getIds(obj.courses);
-      obj.professors = getIds(obj.professors);
-      obj.students = getIds(obj.students);
       return obj;
     }
     
@@ -126,13 +102,3 @@ module.exports = {
   }
 
 };
-
-var getIds = function(jsonArray) {
-  if (!jsonArray)
-    return new Array();
-
-  var ids = new Array();
-  for (var i = 0; i < jsonArray.length; i++)
-    ids.push(jsonArray[i].id);
-  return ids;
-}

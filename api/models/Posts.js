@@ -38,12 +38,17 @@ module.exports = {
       model: 'Clickers'
     },
 
+    notice: {
+      model: 'Notices'
+    },
+
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.attendance;
       delete obj.clicker;
+      delete obj.notice;
       return obj;
     },
 
@@ -54,36 +59,7 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.attendance = this.attendance;
       obj.clicker = this.clicker;
-      return obj;
-    },
-
-    toOldObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.attendance = this.attendance;
-      obj.clicker = this.clicker;
-
-      obj.title = obj.course.name;
-      obj.author_name = obj.author.full_name;
-      obj.course_name = obj.course.name;
-      obj.course_number = obj.course.name;
-
-      obj.author = obj.author.id;
-      obj.course = obj.course.id;
-
-      if (obj.type == 'attendance') {
-        obj.checks = obj.attendance.checked_students;
-        obj.clusters = obj.attendance.clusters;
-      } else {
-        obj.checks = new Array();
-        obj.clusters = new Array();
-      }
-
-      delete obj.attendance;
-      delete obj.clicker;
-
+      obj.notice = this.notice;
       return obj;
     }
   },
