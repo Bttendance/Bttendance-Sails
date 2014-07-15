@@ -27,7 +27,12 @@ module.exports = {
 		var choice_count = req.param('choice_count');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.exec(function callback(err, user) {
 			if(err || !user)
     		return res.send(404, { message: "User Found Error" });
@@ -49,6 +54,7 @@ module.exports = {
 	  		.populate('course')
 	  		.populate('attendance')
 	  		.populate('clicker')
+	  		.populate('notice')
 	  		.exec(function callback(err, post) {
 	  			if (err || !post)
 	  				return res.send(500, {message: "Post Find Error"});
@@ -95,7 +101,12 @@ module.exports = {
 		var course_id = req.param('course_id');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.exec(function callback(err, user) {
 			if(err || !user)
     		return res.send(404, { message: "User Found Error" });
@@ -115,6 +126,7 @@ module.exports = {
 	  		.populate('course')
 	  		.populate('attendance')
 	  		.populate('clicker')
+	  		.populate('notice')
 	  		.exec(function callback(err, post) {
 	  			if (err || !post)
 	  				return res.send(500, {message: "Post Find Error"});
@@ -170,7 +182,12 @@ module.exports = {
 		var message = req.param('message');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.exec(function callback(err, user) {
 			if (err || !user)
     		return res.send(404, { message: "User Found Error" });
@@ -190,6 +207,7 @@ module.exports = {
 	  		.populate('course')
 	  		.populate('attendance')
 	  		.populate('clicker')
+	  		.populate('notice')
 	  		.exec(function callback(err, post) {
 	  			if (err || !post)
 	  				return res.send(404, {message: "Post Found Error"});

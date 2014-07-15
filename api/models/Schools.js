@@ -10,21 +10,13 @@ module.exports = {
 
   attributes: {
 
+    // this has to be ENGLISH
     name: {
     	type: 'string',
     	required: true
     },
 
-    logo_image: {
-    	type: 'url'
-    },
-
-    website: {
-    	type: 'url',
-      required: true
-    },
-
-    // public, private
+    // university, school, institute, army
     type: {
       type: 'string',
       required: true
@@ -52,7 +44,6 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.serials;
       delete obj.students;
       delete obj.professors;
       delete obj.courses;

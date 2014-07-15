@@ -30,7 +30,6 @@ module.exports = {
 				.populate('supervising_courses')
 				.populate('attending_courses')
 				.populate('employed_schools')
-				.populate('serials')
 				.populate('enrolled_schools')
 				.populate('identifications')
 				.sort('id DESC')
@@ -52,7 +51,6 @@ module.exports = {
 				.populate('supervising_courses')
 				.populate('attending_courses')
 				.populate('employed_schools')
-				.populate('serials')
 				.populate('enrolled_schools')
 				.populate('identifications')
 				.exec(function callback (err, user) {
@@ -68,7 +66,6 @@ module.exports = {
 			if (id == 'all')
 				Schools
 				.find()
-				.populate('serials')
 				.populate('courses')
 				.populate('professors')
 				.populate('students')
@@ -87,7 +84,6 @@ module.exports = {
 			else 
 				Schools
 				.findOneById(Number(id))
-				.populate('serials')
 				.populate('courses')
 				.populate('professors')
 				.populate('students')
@@ -144,6 +140,7 @@ module.exports = {
 				.populate('course')
 				.populate('attendance')
 				.populate('clicker')
+				.populate('notice')
 				.sort('id DESC')
 				.exec(function callback (err, posts) {
 					if (err || !posts) {
@@ -163,6 +160,7 @@ module.exports = {
 				.populate('course')
 				.populate('attendance')
 				.populate('clicker')
+				.populate('notice')
 				.exec(function callback (err, post) {
 					if (err || !post) {
 						res.contentType('html');
@@ -200,38 +198,6 @@ module.exports = {
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(device.toWholeObject());
-					}
-				});
-		} else if (model == 'serials') {
-			if (id == 'all')
-				Serials
-				.find()
-				.populate('school')
-				.populate('owners')
-				.sort('id DESC')
-				.exec(function callback (err, serials) {
-					if (err || !serials) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < serials.length; i++)
-							serials[i] = serials[i].toWholeObject();
-				  	return res.send(serials);
-					}
-				});
-			else 
-				Serials
-				.findOneById(Number(id))
-				.populate('school')
-				.populate('owners')
-				.exec(function callback (err, serial) {
-					if (err || !serial) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-				  	return res.send(serial.toWholeObject());
 					}
 				});
 		} else if (model == 'attendances') {
@@ -294,33 +260,34 @@ module.exports = {
 				  	return res.send(clicker.toWholeObject());
 					}
 				});
-		} else if (model == 'tokens') {
+		} else if (model == 'notices') {
 			if (id == 'all')
-				Tokens
+				Notices
 				.find()
+				.populate('post')
 				.sort('id DESC')
-				.exec(function callback (err, tokens) {
-					if (err || !tokens) {
+				.exec(function callback (err, notices) {
+					if (err || !notices) {
 						res.contentType('html');
 						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < tokens.length; i++)
-							tokens[i] = tokens[i].toWholeObject();
-				  	return res.send(tokens);
+						for (var i = 0; i < notices.length; i++)
+							notices[i] = notices[i].toWholeObject();
+				  	return res.send(notices);
 					}
 				});
 			else 
-				Tokens
+				Notices
 				.findOneById(Number(id))
 				.populate('post')
-				.exec(function callback (err, tokens) {
-					if (err || !tokens) {
+				.exec(function callback (err, notice) {
+					if (err || !notice) {
 						res.contentType('html');
 						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
-				  	return res.send(tokens.toWholeObject());
+				  	return res.send(notice.toWholeObject());
 					}
 				});
 		} else {

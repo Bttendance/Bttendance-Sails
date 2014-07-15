@@ -41,7 +41,12 @@ module.exports = {
 		var query = QueryString.stringify(params);
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(404, Error.log("User doesn't exitst."));
@@ -114,12 +119,16 @@ module.exports = {
 		var course_id = req.param('course_id');
 		
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -149,12 +158,16 @@ module.exports = {
 			    	return res.send(500, { message: "User Save Error" });
 
 			    Users
-					.findOneByUsername(username)
+					.findOne({
+					  or : [
+					    { email: email },
+					    { username: username }
+					  ]
+					})
 					.populate('device')
 					.populate('supervising_courses')
 					.populate('attending_courses')
 					.populate('employed_schools')
-					.populate('serials')
 					.populate('enrolled_schools')
 					.populate('identifications')
 					.exec(function callback(err, user_new) {
@@ -174,12 +187,16 @@ module.exports = {
 		var course_id = req.param('course_id');
 		
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -209,12 +226,16 @@ module.exports = {
 			    	return res.send(500, { message: "User Save Error" });
 
 			    Users
-					.findOneByUsername(username)
+					.findOne({
+					  or : [
+					    { email: email },
+					    { username: username }
+					  ]
+					})
 					.populate('device')
 					.populate('supervising_courses')
 					.populate('attending_courses')
 					.populate('employed_schools')
-					.populate('serials')
 					.populate('enrolled_schools')
 					.populate('identifications')
 					.exec(function callback(err, user_new) {
@@ -235,7 +256,12 @@ module.exports = {
 		var page = req.param('page');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.exec(function callback(err, user) {
@@ -258,6 +284,7 @@ module.exports = {
 				.populate('course')
 				.populate('attendance')
 				.populate('clicker')
+				.populate('notice')
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
 	  				return res.send(404, { message: "Post Found Error" });
@@ -355,11 +382,15 @@ module.exports = {
         return res.send(404, Error.alert("Adding Manager Error", "User is already attending current course."));
 
       Users
-      .findOneByUsername(manager)
+			.findOne({
+			  or : [
+			    { email: email },
+			    { username: manager }
+			  ]
+			})
       .populate('device')
 			.populate('supervising_courses')
 			.populate('employed_schools')
-			.populate('serials')
       .exec(function callback(err, mang) {
         if (err || !mang)
 	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
@@ -367,38 +398,164 @@ module.exports = {
 	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
 	        return res.send(400, Error.alert("Add Manager", mang.full_name + " is already supervising current course."));
 
-			  Serials
-			  .findOne({
-			  	school: course.school.id
-			  })
-			  .exec(function callback(err, serial) {
-			  	if (err || !serial)
-		        return res.send(400, Error.alert("Adding Manager Error", "School of current course has no serial."));
+			  // Serials
+			  // .findOne({
+			  // 	school: course.school.id
+			  // })
+			  // .exec(function callback(err, serial) {
+			  // 	if (err || !serial)
+		   //      return res.send(400, Error.alert("Adding Manager Error", "School of current course has no serial."));
 
-				  var employed_schools = Arrays.getIds(mang.employed_schools);
-				  if (employed_schools.indexOf(Number(course.school.id)) == -1)
-				    mang.employed_schools.add(course.school.id);
+				 //  var employed_schools = Arrays.getIds(mang.employed_schools);
+				 //  if (employed_schools.indexOf(Number(course.school.id)) == -1)
+				 //    mang.employed_schools.add(course.school.id);
 
-				  var serials = Arrays.getIds(mang.serials);
-				  if (serials.indexOf(Number(serial.id)) == -1)
-				    mang.serials.add(serial.id);
+				 //  var serials = Arrays.getIds(mang.serials);
+				 //  if (serials.indexOf(Number(serial.id)) == -1)
+				 //    mang.serials.add(serial.id);
 
-				  mang.supervising_courses.add(course.id);
+				 //  mang.supervising_courses.add(course.id);
 
-					mang.save(function callback(err) {
-						console.log(err);
-						if (err)
-			        return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
+					// mang.save(function callback(err) {
+					// 	console.log(err);
+					// 	if (err)
+			  //       return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
 
-						Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
-		        return res.send(course.toWholeObject());
-					});
-			  });
+					// 	Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
+		   //      return res.send(course.toWholeObject());
+					// });
+			  // });
       });
     });
 	},
 
 	grades: function(req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var course_id = req.param('course_id');
+
+    Courses
+    .findOneById(course_id)
+    .populate('students')
+    .populate('posts')
+    .exec(function callback(err, course) {
+      if (err || !course)
+        return res.send(404, { message: "Course Found Error" });
+
+      Users
+      .findById(Arrays.getIds(course.students))
+  		.populate('identifications')
+      .sort('full_name DESC')
+      .exec(function callback(err, users) {
+        if (err || !users)
+          return res.send(400, Error.toast("Current course has no student."));
+
+	  		Posts
+	  		.findById(Arrays.getIds(course.posts))
+	  		.populate('attendance')
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err || !posts)
+	          return res.send(400, Error.toast("Current course has no post."));
+
+			  	var postsObject = new Array();
+					for (var index in posts)
+						if (posts[index].type == "attendance")
+							postsObject.push(posts[index]);
+
+					var total_grade = postsObject.length;
+	        for (var index in users) {
+	        	var grade = 0;
+	        	for (var i = 0; i < postsObject.length; i++) {
+	        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
+	        			if (postsObject[i].attendance.checked_students[j] == users[index].id)
+	        				grade++;
+	        		}
+	        	}
+	        
+	        	for (var i = 0; i < users[index].identifications.length; i++) 
+	        		if (users[index].identifications[i].school == course.school)
+	        			users[index].student_id = users[index].identifications[i].identity;
+	        	users[index].grade = grade + "/" + total_grade;
+	        }
+
+	        users.sort(function(a, b) {
+	        	if (!a.student_id)
+	        		return true;
+	        	if (!b.student_id)
+	        		return false;
+	        	return a.student_id.localeCompare(b.student_id);
+	        });
+
+	        return res.send(users);
+	  		});
+      });
+    });
+	},
+
+	attendance_grades: function(req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var course_id = req.param('course_id');
+
+    Courses
+    .findOneById(course_id)
+    .populate('students')
+    .populate('posts')
+    .exec(function callback(err, course) {
+      if (err || !course)
+        return res.send(404, { message: "Course Found Error" });
+
+      Users
+      .findById(Arrays.getIds(course.students))
+  		.populate('identifications')
+      .sort('full_name DESC')
+      .exec(function callback(err, users) {
+        if (err || !users)
+          return res.send(400, Error.toast("Current course has no student."));
+
+	  		Posts
+	  		.findById(Arrays.getIds(course.posts))
+	  		.populate('attendance')
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err || !posts)
+	          return res.send(400, Error.toast("Current course has no post."));
+
+			  	var postsObject = new Array();
+					for (var index in posts)
+						if (posts[index].type == "attendance")
+							postsObject.push(posts[index]);
+
+					var total_grade = postsObject.length;
+	        for (var index in users) {
+	        	var grade = 0;
+	        	for (var i = 0; i < postsObject.length; i++) {
+	        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
+	        			if (postsObject[i].attendance.checked_students[j] == users[index].id)
+	        				grade++;
+	        		}
+	        	}
+	        
+	        	for (var i = 0; i < users[index].identifications.length; i++) 
+	        		if (users[index].identifications[i].school == course.school)
+	        			users[index].student_id = users[index].identifications[i].identity;
+	        	users[index].grade = grade + "/" + total_grade;
+	        }
+
+	        users.sort(function(a, b) {
+	        	if (!a.student_id)
+	        		return true;
+	        	if (!b.student_id)
+	        		return false;
+	        	return a.student_id.localeCompare(b.student_id);
+	        });
+
+	        return res.send(users);
+	  		});
+      });
+    });
+	},
+
+	clicker_grades: function(req, res) {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
 
@@ -558,7 +715,14 @@ module.exports = {
 				  	]
 					});
 
-	        Users.findOneByUsername(username).exec(function callback(err, user) {
+	        Users
+					.findOne({
+					  or : [
+					    { email: email },
+					    { username: username }
+					  ]
+					})
+					.exec(function callback(err, user) {
 		        if (err || !user)
 		          return res.send(404, { message: "User Found Error" });
 

@@ -19,12 +19,26 @@ var Arrays = require('../utils/arrays');
 
 module.exports = {
 	
+	create: function(req, res) {
+		res.contentType('application/json; charset=utf-8');		
+
+		Schools
+		.find()
+		.populate('courses')
+		.populate('professors')
+		.populate('students')
+		.exec(function callback(err, schools) {
+			for (var i = 0; i < schools.length; i++)
+				schools[i] = schools[i].toWholeObject();
+	  	return res.send(schools);
+		});
+	},
+	
 	all: function(req, res) {
 		res.contentType('application/json; charset=utf-8');		
 
 		Schools
 		.find()
-		.populate('serials')
 		.populate('courses')
 		.populate('professors')
 		.populate('students')
@@ -79,12 +93,16 @@ module.exports = {
 		var student_id = req.param('student_id');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -110,12 +128,16 @@ module.exports = {
 			    user.enrolled_schools.add(school.id);
 					user.save(function callback(err) {
 				    Users
-						.findOneByUsername(username)
+						.findOne({
+						  or : [
+						    { email: email },
+						    { username: username }
+						  ]
+						})
 						.populate('device')
 						.populate('supervising_courses')
 						.populate('attending_courses')
 						.populate('employed_schools')
-						.populate('serials')
 						.populate('enrolled_schools')
 						.populate('identifications')
 						.exec(function callback(err, user_new) {

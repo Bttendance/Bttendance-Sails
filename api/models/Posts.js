@@ -30,14 +30,17 @@ module.exports = {
     	model: 'Courses'
     },
 
+    // One to One
     attendance: {
       model: 'Attendances'
     },
 
+    // One to One
     clicker: {
       model: 'Clickers'
     },
 
+    // One to One
     notice: {
       model: 'Notices'
     },
@@ -114,6 +117,15 @@ module.exports = {
         if (err || !clicker)
           next(err);
         values.clicker = clicker.id;
+        next();
+      });
+    } else if (values.type == 'notice') {
+      Notices
+      .create({
+      }).exec(function callback(err, notice) {
+        if (err || !notice)
+          next(err);
+        values.notice = notice.id;
         next();
       });
     } else

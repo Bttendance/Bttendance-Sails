@@ -12,12 +12,14 @@ module.exports = function hasDevice (req, res, next) {
 
 	// Params
 	var username = req.param('username');
+	var email = req.param('email');
 	var device_uuid = req.param('device_uuid');
 
-	if (!username || !device_uuid) {
-		console.log("hasDevice : Username and device uuid is required.");
-		return res.send(400, Error.log("Username and device uuid is required."));
-	}
+	if (!username && !email)
+		return res.send(400, Error.log("Username or Email is required."));
+
+	if (!device_uuid)
+		return res.send(400, Error.log("Device UUID is required."));
 
 	// Super Username Policy
 	if (username == "appletest0"
@@ -32,9 +34,26 @@ module.exports = function hasDevice (req, res, next) {
 		|| username == "appletest9")
 		return next();
 
-	// hasDevice Policy
+	// Super Email Policy
+	if (email == "apple0@apple.com"
+		|| email == "apple1@apple.com"
+		|| email == "apple2@apple.com"
+		|| email == "apple3@apple.com"
+		|| email == "apple4@apple.com"
+		|| email == "apple5@apple.com"
+		|| email == "apple6@apple.com"
+		|| email == "apple7@apple.com"
+		|| email == "apple8@apple.com"
+		|| email == "apple9@apple.com")
+		return next();
+
 	Users
-	.findOneByUsername(username)
+	.findOne({
+	  or : [
+	    { email: email },
+	    { username: username }
+	  ]
+	})
 	.populate('device')
 	.exec(function callback(err, user) {
 

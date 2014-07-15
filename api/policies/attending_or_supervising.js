@@ -13,17 +13,23 @@ module.exports = function attending_or_supervising (req, res, next) {
 
 	// Params
 	var username = req.param('username');
+	var email = req.param('email');
 	var password = req.param('password');
 	var course_id = req.param('course_id');
 
-	if (!username || !password || !course_id) {
-		console.log("Attending or Supervising : Username, password and course id is required.");
-		return res.send(400, Error.log("Username, password and course id is required."));
-	}
+	if (!username && !email)
+		return res.send(400, Error.log("Username or Email is required."));
 
-	// Attending or Supervising Policy
+	if (!password || !course_id)
+		return res.send(400, Error.log("Username, password and course id is required."));
+
 	Users
-	.findOneByUsername(username)
+	.findOne({
+	  or : [
+	    { email: email },
+	    { username: username }
+	  ]
+	})
 	.populate('supervising_courses')
 	.populate('attending_courses')
 	.exec(function callback(err, user) {

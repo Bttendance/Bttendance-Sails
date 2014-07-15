@@ -13,17 +13,23 @@ module.exports = function isUser (req, res, next) {
 
 	// Params
 	var username = req.param('username');
+	var email = req.param('email');
 	var password = req.param('password');
 	var school_id = req.param('school_id');
 
-	if (!username || !password || !school_id) {
-		console.log("isUser : Username, password and school id is required.");
-		return res.send(400, Error.log("Username, password and school id is required."));
-	}
+	if (!username && !email)
+		return res.send(400, Error.log("Username or Email is required."));
 
-	// isUser Policy
+	if (!password || !school_id)
+		return res.send(400, Error.log("Password and School ID is required."));
+
 	Users
-	.findOneByUsername(username)
+	.findOne({
+	  or : [
+	    { email: email },
+	    { username: username }
+	  ]
+	})
 	.populate('employed_schools')
 	.exec(function callback(err, user) {
 
@@ -46,7 +52,6 @@ module.exports = function isUser (req, res, next) {
 
 		// Found User
 	  } else {
-	  	// Haven't validated for deprecated serials.
 	  	return next();
 	  }
 	});

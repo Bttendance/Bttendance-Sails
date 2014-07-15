@@ -17,7 +17,12 @@ module.exports = {
 		var choice_number = req.param('choice_number');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.exec(function callback(err, user) { 
 			if (err || !user)
 		    return res.send(404, Error.log("User doesn't exitst."));

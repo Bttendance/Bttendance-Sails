@@ -24,6 +24,7 @@ var Nodemailer = require("nodemailer");
 var	FS = require('fs');
 var Path = require('path');
 var Moment = require('moment');
+var Validator = require('validator');
 
 module.exports = {
 
@@ -36,54 +37,41 @@ module.exports = {
 		var device_type = req.param('device_type');
 		var device_uuid = req.param('device_uuid');
 
-		if (!username) {
-			console.log("UserController : signin : Username or Email is required");
-			return res.send(400, Error.alert("Sign Up Error", "Username is required."));
-		}
+		if (!password) 
+			return res.send(400, Error.alert(req, "Sign Up Error", "Password is required."));
 
-		if (!password) {
-			console.log("UserController : signin : Password is required");
-			return res.send(400, Error.alert("Sign Up Error", "Password is required."));
-		}
+		if (password.length < 6) 
+			return res.send(400, Error.alert(req, "Sign Up Error", "Password is too short. (should be longer than 6 letters)"));
 
-		if (!email) {
-			console.log("UserController : signin : Email is required");
-			return res.send(400, Error.alert("Sign Up Error", "Email is required."));
-		}
+		if (!email)
+			return res.send(400, Error.alert(req, "Sign Up Error", "Email is required."));
 
-		if (!full_name) {
-			console.log("UserController : signin : Full Name is required");
-			return res.send(400, Error.alert("Sign Up Error", "Full Name is required."));
-		}
+		if (!Validator.isEmail(email))
+			return res.send(400, Error.alert(req, "Sign Up Error", "Email is wrong formed."));
 
-		if (!device_type) {
-			console.log("UserController : signin : Device Type is required");
-			return res.send(400, Error.alert("Sign Up Error", "Device Type is required."));
-		}
+		if (!full_name || full_name.length == 0)
+			return res.send(400, Error.alert(req, "Sign Up Error", "Full Name is required."));
 
-		if (!device_uuid) {
-			console.log("UserController : signin : UUID is required");
-			return res.send(400, Error.alert("Sign Up Error", "UUID is required."));
-		}
+		if (!device_type)
+			return res.send(400, Error.alert(req, "Sign Up Error", "Device Type is required."));
+
+		if (!device_uuid)
+			return res.send(400, Error.alert(req, "Sign Up Error", "Device ID is required."));
 
 		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
 			if (err)
-				return res.send(500, Error.log("Deivce Find Error"));
+				return res.send(500, Error.log(req, "Deivce Find Error"));
 
 		  if (device && device.owner)
-				return res.send(500, Error.alert("Sign Up Error", "Your deivce already has been registered."));
+				return res.send(500, Error.alert(req, "Sign Up Error", "Your deivce already has been registered."));
 
 		  Users
-		  .findOne({
-			  or: [{username_lower: username.toLowerCase()}, {email: email}]
-			})
+		  .findOneByEmail(email.toLowerCase())
 		  .exec(function callback(err, user) {
 		  	if (err && !user)
-					return res.send(500, Error.log("User Find Error"));
-			  if (user && user.username_lower == username.toLowerCase())
-					return res.send(500, Error.alert("Sign Up Error", "Username is already taken."));
+					return res.send(500, Error.log(req, "User Find Error"));
 			  if (user && user.email == email)
-					return res.send(500, Error.alert("Sign Up Error", "Email is already taken."));
+					return res.send(500, Error.alert(req, "Sign Up Error", "Email is already taken."));
 
 			  if (device) {
 					Users.create({
@@ -94,11 +82,11 @@ module.exports = {
 						device: device.id				
 					}).exec(function callback(err, new_user) {
 						if (err || !new_user)
-							return res.send(500, Error.log("User Create Error"));
+							return res.send(500, Error.alert(req, "Sign Up Error", "User Create Error. Please try sign up again."));
 
 					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 							if (err || !updated_device)
-								return res.send(500, Error.log("Deivce Save Error"));
+								return res.send(500, Error.alert(req, "Sign Up Error", "Deivce Save Error. Please try sign up again."));
 
 					    Users
 							.findOneById(new_user.id)
@@ -106,12 +94,11 @@ module.exports = {
 							.populate('supervising_courses')
 							.populate('attending_courses')
 							.populate('employed_schools')
-							.populate('serials')
 							.populate('enrolled_schools')
 							.populate('identifications')
 							.exec(function callback(err, user_new) {
 								if (err || !user_new)
-									return res.send(404, Error.log("No User Found Error"));
+									return res.send(404, Error.log(req, "No User Found Error"));
 
 						  	return res.send(user_new.toWholeObject());
 							});
@@ -123,7 +110,7 @@ module.exports = {
 						uuid: device_uuid
 					}).exec(function callback(err, new_device) {
 						if (err || !new_device)
-							return res.send(500, Error.log("Deivce Create Error"));
+							return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Create Error"));
 
 						Users.create({
 							username: username,
@@ -133,11 +120,11 @@ module.exports = {
 							device: new_device.id			
 						}).exec(function callback(err, new_user) {
 							if (err || !new_user)
-								return res.send(500, Error.log("User Create Error"));
+								return res.send(500, Error.alert(req, "Sign Up Error",  "User Create Error. Please try sign up again."));
 
 						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 								if (err || !updated_device)
-									return res.send(500, Error.log("Deivce Save Error"));
+									return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Save Error. Please try sign up again."));
 
 						    Users
 								.findOneById(new_user.id)
@@ -145,12 +132,11 @@ module.exports = {
 								.populate('supervising_courses')
 								.populate('attending_courses')
 								.populate('employed_schools')
-								.populate('serials')
 								.populate('enrolled_schools')
 								.populate('identifications')
 								.exec(function callback(err, user_new) {
 									if (err || !user_new)
-										return res.send(404, Error.log("No User Found Error"));
+										return res.send(404, Error.log(req, "No User Found Error"));
 
 							  	return res.send(user_new.toWholeObject());
 								});
@@ -168,18 +154,23 @@ module.exports = {
 	auto_signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
+		var email = req.param('email');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 		var device_type = req.param('device_type');
 		var app_version = req.param('app_version');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -201,35 +192,30 @@ module.exports = {
 	signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
+		var email = req.param('email');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 
-		if (!username) {
-			console.log("UserController : signin : Username or Email is required");
+		if (!username && !email)
 			return res.send(400, Error.alert("Sign In Error", "Username or Email is required."));
-		}
 
-		if (!password) {
-			console.log("UserController : signin : Password is required");
+		if (!password)
 			return res.send(400, Error.alert("Sign In Error", "Password is required."));
-		}
 
-		if (!device_uuid) {
-			console.log("UserController : signin : UUID is required");
+		if (!device_uuid) 
 			return res.send(400, Error.alert("Sign In Error", "Device ID is required."));
-		}
-
-		username = username.toLowerCase();
 
 		Users
 		.findOne({
-		  or: [{username_lower: username}, {email: username}]
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
 		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -245,7 +231,17 @@ module.exports = {
 		|| username == "appletest6"
 		|| username == "appletest7"
 		|| username == "appletest8"
-		|| username == "appletest9") {
+		|| username == "appletest9"
+		|| email == "apple0@apple.com"
+		|| email == "apple1@apple.com"
+		|| email == "apple2@apple.com"
+		|| email == "apple3@apple.com"
+		|| email == "apple4@apple.com"
+		|| email == "apple5@apple.com"
+		|| email == "apple6@apple.com"
+		|| email == "apple7@apple.com"
+		|| email == "apple8@apple.com"
+		|| email == "apple9@apple.com") {
 
 				Devices
 				.findOneByUuid(device_uuid)
@@ -302,7 +298,6 @@ module.exports = {
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -339,7 +334,7 @@ module.exports = {
 
 				user.save(function callback(err, user) {
 		  		if (err || !user)
-						return res.send(400, Error.alert("Password Recovery Error", "Updating password has been failed."));
+						return res.send(400, Error.alert("Password Recovery Error", "Password recovery has been failed."));
 
 					// send mail with defined transport object
 					smtpTransport.sendMail(mailOptions, function(error, response) {
@@ -352,51 +347,101 @@ module.exports = {
 		});
 	},
 
-	update_profile_image: function(req, res) {
+	update_password: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var profile_image = req.param('profile_image');
+		var email = req.param('email');
+		var password_old = req.param('password_old');
+		var password_new = req.param('password_new');
 
-		if (!profile_image)
-			return res.send(400, Error.alert("Update Profile Image Error", "Profile Image is required."));
+		if (!email)
+			return res.send(400, Error.alert("Password Update Error", "Email is required."));
+
+		if (!password_old)
+			return res.send(400, Error.alert("Password Update Error", "Old Password is required."));
+
+		if (!password_new)
+			return res.send(400, Error.alert("Password Update Error", "New password is required."));
+
+		if (password_new.length < 6) 
+			return res.send(400, Error.alert(req, "Password Update Error", "New Password is too short. (should be longer than 6 letters)"));
 
 		Users
-		.findOneByUsername(username)
+		.findOneByEmail(email)
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-				return res.send(404, Error.alert("Update Profile Image Error", "User doesn't exist."));
+				return res.send(404, Error.alert("Password Update Error", "User doesn't exist."));
 
-	  	user.profile_image = profile_image;
-	  	user.save(function callback(err, updated_user) {
-	  		if (err || !updated_user)
-					return res.send(400, Error.alert("Update Profile Image Error", "Updating profile image has been failed."));
-		  	return res.send(updated_user.toWholeObject());
-	  	});
+			if (!PasswordHash.verify(password_old, user.password))
+			  return res.send(404, Error.alert("Password Update Error", "Please check your old password again."));
+
+	    user.password = PasswordHash.generate(password_new);
+
+			// create reusable transport method (opens pool of SMTP connections)
+			var smtpTransport = Nodemailer.createTransport("SMTP",{
+			    service: "Gmail",
+			    auth: {
+			        user: "no-reply@bttendance.com",
+			        pass: "N0n0r2ply"
+			    }
+			});
+
+			var path = Path.resolve(__dirname, '../../assets/emails/update_password.html');
+			FS.readFile(path, 'utf8', function (err, file) {
+			  if (err)
+				  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+
+  			file = file.replace('#fullname', user.full_name);
+  			file = file.replace('#password', password_new);
+
+				// setup e-mail data with unicode symbols
+				var mailOptions = {
+				    from: "Bttendance<no-reply@bttendance.com>", // sender address
+				    to: user.email, // list of receivers
+				    subject: "Password Update", // Subject line
+				    html: file, // plaintext body
+				}
+
+				user.save(function callback(err, user) {
+		  		if (err || !user)
+						return res.send(400, Error.alert("Password Update Error", "Updating password has been failed."));
+
+					// send mail with defined transport object
+					smtpTransport.sendMail(mailOptions, function(error, response) {
+				    if(error || !response || !response.message)
+						  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+		        return res.send(Email.json(user.email));
+					});
+				});
+  		});
 		});
 	},
 
 	update_full_name: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
+		var email = req.param('email');
 		var full_name = req.param('full_name');
 
 		if (!full_name)
 			return res.send(400, Error.alert("FullName Update Error", "FullName is required."));
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
@@ -416,30 +461,55 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var email = req.param('email');
+		var email_new = req.param('email_new');
 
 		if (!email)
 			return res.send(400, Error.alert("Email Update Error", "Email is required."));
 
-		Users
-		.findOneByUsername(username)
-		.populate('device')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('serials')
-		.populate('enrolled_schools')
-		.populate('identifications')
-		.exec(function callback(err, user) {
-			if (err || !user)
-				return res.send(404, Error.alert("Email Update Error", "User doesn't exist."));
+		if (username) {
+			Users
+			.findOneByUsername(username)
+			.populate('device')
+			.populate('supervising_courses')
+			.populate('attending_courses')
+			.populate('employed_schools')
+			.populate('enrolled_schools')
+			.populate('identifications')
+			.exec(function callback(err, user) {
+				if (err || !user)
+					return res.send(404, Error.alert("Email Update Error", "User doesn't exist."));
 
-	  	user.email = email;
-	  	user.save(function callback(err, updated_user) {
-	  		if (err || !updated_user)
-					return res.send(400, Error.alert("Email Update Error", "Email already registered to other user."));
-		  	return res.send(updated_user.toWholeObject());
-	  	});
-		});
+		  	user.email = email;
+		  	user.save(function callback(err, updated_user) {
+		  		if (err || !updated_user)
+						return res.send(400, Error.alert("Email Update Error", "Email already registered to other user."));
+			  	return res.send(updated_user.toWholeObject());
+		  	});
+			});
+		} else {
+			if (!email_new)
+				return res.send(400, Error.alert("Email Update Error", "New email is required."));
+
+			Users
+			.findOneByEmail(email)
+			.populate('device')
+			.populate('supervising_courses')
+			.populate('attending_courses')
+			.populate('employed_schools')
+			.populate('enrolled_schools')
+			.populate('identifications')
+			.exec(function callback(err, user) {
+				if (err || !user)
+					return res.send(404, Error.alert("Email Update Error", "User doesn't exist."));
+
+		  	user.email = email_new;
+		  	user.save(function callback(err, updated_user) {
+		  		if (err || !updated_user)
+						return res.send(400, Error.alert("Email Update Error", "Email already registered to other user."));
+			  	return res.send(updated_user.toWholeObject());
+		  	});
+			});
+		}
 	},
 
 	feed: function(req, res) {
@@ -479,6 +549,7 @@ module.exports = {
 	  		.populate('course')
 	  		.populate('attendance')
 	  		.populate('clicker')
+	  		.populate('notice')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
@@ -530,7 +601,12 @@ module.exports = {
 		var username = req.param('username');
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.exec(function callback(err, user) {
@@ -566,6 +642,9 @@ module.exports = {
 						for (var i = 0; i < courses.length; i++) {
 							courses[i] = courses[i].toWholeObject();
 							courses[i].grade = 0;
+							courses[i].attendance_rate = 0;
+							courses[i].clicker_rate = 0;
+							courses[i].notice_unseen = 0;
 						}
 				  	return res.send(courses);
 	  			}
@@ -583,17 +662,25 @@ module.exports = {
 							}
 						}
 
-						var grade = 0;
-	  				if (supervising_courses.indexOf(courses[i].id) >= 0)
-							grade = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
-	  				else
-							grade = Number( (attd_checked_count / attd_check_count * 100).toFixed() );
+						var attendance_rate = 0;
+						var clicker_rate = 0;
+						var notice_unseen = 0;
 
-  					if (grade < 0 || attd_check_count == 0) grade = 0;
-  					if (grade > 100) grade = 100;
+	  				if (supervising_courses.indexOf(courses[i].id) >= 0) {
+							attendance_rate = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
+	  				} else {
+							attendance_rate = Number( (attd_checked_count / attd_check_count * 100).toFixed() );
+	  				}
+
+	  				// Attendance Rate >= 0 & < 100
+  					if (attendance_rate < 0 || attd_check_count == 0) attendance_rate = 0;
+  					if (attendance_rate > 100) attendance_rate = 100;
 
 						courses[i] = courses[i].toWholeObject();
   					courses[i].grade = grade;
+  					courses[i].attendance_rate = attendance_rate;
+  					courses[i].clicker_rate = attendance_rate;
+  					courses[i].notice_unseen = attendance_rate;
 					}
 			  	return res.send(courses);
 	  		});
@@ -605,6 +692,7 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var search_id = req.param('search_id');
 		var username = req.param('username');
+		var email = req.param('email');
 
 		if (!search_id)
 	    return res.send(400, Error.alert("Searching User Error", "Username or email is required." ));
@@ -618,14 +706,13 @@ module.exports = {
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(404, Error.alert("Searching User Error", "Fail to find a user \"" + search_id + "\".\nPlease check User ID of Email again."));
 
-		  if (user.username == username)
+		  if (user.username == username || user.email == email)
 		    return res.send(400, Error.alert("Busted", "HaHa, trying to find yourself? Got You! :)"));
 
 	  	return res.send(user);

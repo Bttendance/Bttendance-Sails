@@ -30,10 +30,63 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  /************* Users APIs ************/  
+  /************* Admin APIs ************/
+  '/api/admin/show': {
+    controller: 'admin',
+    action: 'show'
+  },
+
+  '/api/admin/emails': {
+    controller: 'admin',
+    action: 'emails'
+  },
+
+  '/api/admin/noti': {
+    controller: 'admin',
+    action: 'noti'
+  },
+
+  /************* Analytics APIs ************/
+  '/api/analytics/itunes': {
+    controller: 'analytics',
+    action: 'itunes'
+  },
+
+  '/api/analytics/playstore': {
+    controller: 'analytics',
+    action: 'playstore'
+  },
+
+  '/api/analytics/homepage': {
+    controller: 'analytics',
+    action: 'homepage'
+  },
+
+  /************* Migration APIs ************/
+  '/api/migration/migrate': {
+    controller: 'migration',
+    action: 'migrate'
+  },
+
+  '/api/migration/test': {
+    controller: 'migration',
+    action: 'test'
+  },
+
+  /************* Users API ************/  
+  'post /api/users/signup': {
+    controller: 'users',
+    action: 'signup'
+  },
+
   'get /api/users/auto/signin': {
     controller: 'users',
     action: 'auto_signin'
+  },
+
+  'get /api/users/signin': {
+    controller: 'users',
+    action: 'signin'
   },
 
   'put /api/users/forgot/password': {
@@ -41,9 +94,9 @@ module.exports.routes = {
     action: 'forgot_password'
   },
 
-  'put /api/users/update/profile_image': {
+  'put /api/users/update/password': {
     controller: 'users',
-    action: 'update_profile_image'
+    action: 'update_password'
   },
 
   'put /api/users/update/full_name': {
@@ -56,16 +109,83 @@ module.exports.routes = {
     action: 'update_email'
   },
 
-  /************* Devices APIs **********/  
+  'get /api/users/feed': {
+    controller: 'users',
+    action: 'feed'
+  },
+
+  'get /api/users/courses': {
+    controller: 'users',
+    action: 'courses'
+  },
+
+  'get /api/users/search': {
+    controller: 'users',
+    action: 'search'
+  },
+
+  /************* Devices API ************/  
   'put /api/devices/update/notification_key': {
     controller: 'devices',
     action: 'update_notification_key'
   },
 
-  /************* Courses APIs **********/  
+  /************* Identifications API ************/  
+  'put /api/identifications/update/identity': {
+    controller: 'identifications',
+    action: 'update_identity'
+  },
+
+  /************* Schools API ************/  
+  'post /api/schools/create': {
+    controller: 'schools',
+    action: 'create'
+  },
+
+  'get /api/schools/all': {
+    controller: 'schools',
+    action: 'all'
+  },
+
+  'get /api/schools/courses': {
+    controller: 'schools',
+    action: 'courses'
+  },
+
+  'put /api/schools/enroll': {
+    controller: 'schools',
+    action: 'enroll'
+  },
+
+  /************* Courses API ************/  
+  'post /api/courses/create': {
+    controller: 'courses',
+    action: 'create'
+  },
+
   'post /api/courses/create/request': {
     controller: 'courses',
     action: 'create_request'
+  },
+
+  'put /api/courses/attend': {
+    controller: 'courses',
+    action: 'attend'
+  },
+
+  'put /api/courses/dettend': {
+    controller: 'courses',
+    action: 'dettend'
+  },
+
+  'get /api/courses/feed': {
+    controller: 'courses',
+    action: 'feed'
+  },
+
+  'get /api/courses/students': {
+    controller: 'courses',
+    action: 'students'
   },
 
   'put /api/courses/add/manager': {
@@ -73,12 +193,27 @@ module.exports.routes = {
     action: 'add_manager'
   },
 
+  'get /api/courses/grades': {
+    controller: 'courses',
+    action: 'grades'
+  },
+
+  'get /api/courses/attendance/grades': {
+    controller: 'courses',
+    action: 'attendance_grades'
+  },
+
+  'get /api/courses/clicker/grades': {
+    controller: 'courses',
+    action: 'clicker_grades'
+  },
+
   'put /api/courses/export/grades': {
     controller: 'courses',
     action: 'export_grades'
   },
 
-  /************* Posts APIs ************/  
+  /************* Posts API ************/  
   'post /api/posts/start/attendance': {
     controller: 'posts',
     action: 'start_attendance'
@@ -94,7 +229,12 @@ module.exports.routes = {
     action: 'create_notice'
   },
 
-  /********* Attendances APIs **********/  
+  'put /api/posts/remove': {
+    controller: 'posts',
+    action: 'remove'
+  },
+
+  /************* Attendances API ************/  
   'get /api/attendances/from/courses': {
     controller: 'attendances',
     action: 'from_courses'
@@ -110,94 +250,38 @@ module.exports.routes = {
     action: 'check_manually'
   },
 
-  /********* Tokens APIs **********/  
+  'put /api/attendances/uncheck/manually': {
+    controller: 'attendances',
+    action: 'uncheck_manually'
+  },
+
+  /************* Clickers API ************/  
+  'put /api/clickers/connect': {
+    controller: 'clickers',
+    action: 'connect'
+  },
+
+  'put /api/clickers/click': {
+    controller: 'clickers',
+    action: 'click'
+  },
+
+  /************* Notices API ************/ 
+  'put /api/notices/seen': {
+    controller: 'notices',
+    action: 'seen'
+  },
+
+  'put /api/notices/resend': {
+    controller: 'notices',
+    action: 'resend'
+  },
+
+  /************* Tokens API ************/  
   '/verify/:token_key': {
     controller: 'tokens',
     action: 'verify'
   },
-  
-
-  /*********** Old APIs Start **********/
-  'get /api/user/auto/signin': {
-    controller: 'user',
-    action: 'auto_signin'
-  },
-
-  'put /api/user/forgot/password': {
-    controller: 'user',
-    action: 'forgot_password'
-  },
-
-  'put /api/user/update/notification_key': {
-    controller: 'user',
-    action: 'update_notification_key'
-  },
-
-  'put /api/user/update/profile_image': {
-    controller: 'user',
-    action: 'update_profile_image'
-  },
-
-  'put /api/user/update/full_name': {
-    controller: 'user',
-    action: 'update_full_name'
-  },
-
-  'put /api/user/update/email': {
-    controller: 'user',
-    action: 'update_email'
-  },
-
-  'put /api/user/attend/course': {
-    controller: 'user',
-    action: 'attend_course'
-  },
-
-  'put /api/user/employ/school': {
-    controller: 'user',
-    action: 'employ_school'
-  },
-
-  'put /api/user/enroll/school': {
-    controller: 'user',
-    action: 'enroll_school'
-  },
-
-  'get /api/user/search/user': {
-    controller: 'user',
-    action: 'search_user'
-  },
-
-  'put /api/course/add/manager': {
-    controller: 'course',
-    action: 'add_manager'
-  },
-
-  'post /api/post/attendance/start': {
-    controller: 'post',
-    action: 'attendance_start'
-  },
-
-  'put /api/post/attendance/found/device': {
-    controller: 'post',
-    action: 'attendance_found_device'
-  },
-
-  'put /api/post/attendance/check/manually': {
-    controller: 'post',
-    action: 'attendance_check_manually'
-  },
-
-  'post /api/post/create/notice': {
-    controller: 'post',
-    action: 'create_notice'
-  },
-
-  'get /api/post/:post_id': {
-    controller: 'post',
-    action: 'find_post'
-  }
-  /*********** Old APIs End **********/
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`

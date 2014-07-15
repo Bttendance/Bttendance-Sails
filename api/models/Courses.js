@@ -6,14 +6,11 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var Random = require('../utils/random');
+
 module.exports = {
 
   attributes: {
-
-    code: {
-      type: 'string',
-      required: true
-    },
 
     name: {
       type: 'string',
@@ -48,6 +45,17 @@ module.exports = {
     	via: 'course'
     },
 
+    code: {
+      type: 'string',
+      required: true,
+      unique:true
+    },
+
+    opened: {
+      type: 'boolean',
+      required: true
+    },
+
     students_count: {
       type: 'integer',
       defaultsTo: 0
@@ -72,6 +80,8 @@ module.exports = {
       delete obj.managers;
       delete obj.students;
       delete obj.posts;
+      delete obj.code;
+      delete obj.opened;
       delete obj.attdCheckedAt;
       delete obj.clicker_usage;
       delete obj.notice_usage;
@@ -83,8 +93,9 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.code = this.code;
+      obj.opened = this.opened;
       obj.attdCheckedAt = this.attdCheckedAt;
-      obj.students_count = this.students_count;
       obj.clicker_usage = this.clicker_usage;
       obj.notice_usage = this.notice_usage;
       return obj;
@@ -104,6 +115,8 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     values.students_count = 0;
+    values.opened = true;
+    values.code = Random.string(4);
     next();
   },
 

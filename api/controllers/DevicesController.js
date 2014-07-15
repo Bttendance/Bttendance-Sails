@@ -28,12 +28,16 @@ module.exports = {
 		}
 
 		Users
-		.findOneByUsername(username)
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
 		.populate('device')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
-		.populate('serials')
 		.populate('enrolled_schools')
 		.populate('identifications')
 		.exec(function callback(err, user) {

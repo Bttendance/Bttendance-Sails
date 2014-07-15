@@ -41,37 +41,37 @@ var employSchool = function(params, res) {
 	var school_id = params['school_id'];
 	var professor_name = params['professor_name'];
 	
-	Users
-	.findOneByUsername(username)
-	.populate('employed_schools')
-	.populate('serials')
-	.exec(function callback(err, user) {
-		if (err || !user)
-			return res.redirect('http://www.bttendance.com/verification-failed');
+	// Users
+	// .findOneByUsername(username)
+	// .populate('employed_schools')
+	// .populate('serials')
+	// .exec(function callback(err, user) {
+	// 	if (err || !user)
+	// 		return res.redirect('http://www.bttendance.com/verification-failed');
 
-	  Serials
-	  .findOne({
-	  	school: school_id
-	  })
-	  .exec(function callback(err, serial) {
-	  	if (err || !serial)
-				return res.redirect('http://www.bttendance.com/verification-failed');
+	//   Serials
+	//   .findOne({
+	//   	school: school_id
+	//   })
+	//   .exec(function callback(err, serial) {
+	//   	if (err || !serial)
+	// 			return res.redirect('http://www.bttendance.com/verification-failed');
 
-		  var employed_schools = Arrays.getIds(user.employed_schools);
-		  if (employed_schools.indexOf(Number(school_id)) == -1)
-		    user.employed_schools.add(school_id);
+	// 	  var employed_schools = Arrays.getIds(user.employed_schools);
+	// 	  if (employed_schools.indexOf(Number(school_id)) == -1)
+	// 	    user.employed_schools.add(school_id);
 
-		  var serials = Arrays.getIds(user.serials);
-		  if (serials.indexOf(Number(serial.id)) == -1)
-		    user.serials.add(serial.id);
+	// 	  var serials = Arrays.getIds(user.serials);
+	// 	  if (serials.indexOf(Number(serial.id)) == -1)
+	// 	    user.serials.add(serial.id);
 
-			user.save(function callback(err) {
-				if (err)
-					return res.redirect('http://www.bttendance.com/verification-failed');
-		  	return createCourse(params, res);
-			});
-	  });
-	});
+	// 		user.save(function callback(err) {
+	// 			if (err)
+	// 				return res.redirect('http://www.bttendance.com/verification-failed');
+	// 	  	return createCourse(params, res);
+	// 		});
+	//   });
+	// });
 }
 
 var createCourse = function(params, res) {

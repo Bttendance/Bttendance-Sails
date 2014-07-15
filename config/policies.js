@@ -17,7 +17,6 @@
 module.exports.policies = {
 
   // Default policy for all controllers and actions
-  // (`true` allows public access) 
   '*': 'isDev',
 
   AdminController: {
@@ -37,8 +36,7 @@ module.exports.policies = {
     auto_signin: true,
     signin: true,
     forgot_password: true,
-    signup: true,
-    update_profile_image: ['isUser', 'hasDevice'],
+    update_password: ['isUser', 'hasDevice'],
     update_full_name: ['isUser', 'hasDevice'],
     update_email: ['isUser', 'hasDevice'],
     feed: 'isUser',
@@ -50,14 +48,19 @@ module.exports.policies = {
     update_notification_key: ['isUser', 'hasDevice']
   },
 
+  IdentificationsController: {
+    update_identity: ['isUser', 'hasDevice']
+  },
+
   SchoolsController: {
-    create: true,
+    create: 'isUser',
     all: 'isUser',
     courses: 'isUser',
     enroll: 'isUser'
   },
 
   CoursesController: {
+    create: 'isUser',
     create_request: 'isUser',
     attend: 'isUser',
     dettend: 'attending',
@@ -65,6 +68,8 @@ module.exports.policies = {
     students: 'supervising',
     add_manager: 'supervising',
     grades: 'supervising',
+    attendance_grades: 'supervising',
+    clicker_grades: 'supervising',
     export_grades: 'supervising'
   },
 
@@ -78,95 +83,44 @@ module.exports.policies = {
   AttendancesController: {
     from_courses: 'isUser',
     found_device: true,
-    check_manually: 'isUser'
+    check_manually: 'isUser',
+    uncheck_manually: 'isUser'
   },
 
   ClickersController: {
-    '*': true,
-    click: true,
-    connect: true
+    connect: 'isUser',
+    click: 'isUser'
+  },
+
+  NoticesController: {
+    seen: 'isUser',
+    resend: 'isUser'
   },
 
   TokensController: {
     verify: true,
     update: true
-  },
-
-  SerialsController: {
-    request: true
-  },
-
-  /*********** Old APIs Start **********/
-  SerialController: {
-  	validate: true,
-    request: true
-  },
-
-  UserController: {
-    signup: true,
-    signin: 'hasDevice',
-    auto_signin: true,
-    forgot_password: true,
-  	update_type: 'isUser',
-  	join_school: 'isUser',
-  	join_course: 'isUser',
-    courses: 'isUser',
-    schools: 'isUser',
-    joinable_courses: 'isUser',
-    update_notification_key: ['isUser', 'hasDevice'],
-    update_profile_image: ['isUser', 'hasDevice'],
-    update_full_name: ['isUser', 'hasDevice'],
-    update_email: ['isUser', 'hasDevice'],
-    feed: 'isUser',
-    employ_school: 'isUser',
-    enroll_school: 'isUser',
-    attend_course: 'isUser',
-    search_user: 'isUser'
-  },
-
-  CourseController: {
-    create: 'isUser',
-    feed: 'isUser',
-    students: 'isUser',
-    grades: 'isUser',
-    add_manager: 'isUser',
-    remove: 'isDeV'
-  },
-
-  PostController: {
-    create: 'isUser',
-    attendance_start: 'isUser',
-    attendance_found_device: 'isUser',
-    attendance_check_manually: 'isUser',
-    create_notice: 'isUser',
-    find_post: 'isUser'
-  },
-
-  SchoolController: {
-    all: 'isUser',
-    courses: 'isUser'
   }
-  /*********** Old APIs End **********/
 
-  /*
-	// Here's an example of adding some policies to a controller
-	RabbitController: {
-
-		// Apply the `false` policy as the default for all of RabbitController's actions
-		// (`false` prevents all access, which ensures that nothing bad happens to our rabbits)
-		'*': false,
-
-		// For the action `nurture`, apply the 'isRabbitMother' policy 
-		// (this overrides `false` above)
-		nurture	: 'isRabbitMother',
-
-		// Apply the `isNiceToAnimals` AND `hasRabbitFood` policies
-		// before letting any users feed our rabbits
-		feed : ['isNiceToAnimals', 'hasRabbitFood']
-	}
-	*/
 };
 
+  /*
+  // Here's an example of adding some policies to a controller
+  RabbitController: {
+
+    // Apply the `false` policy as the default for all of RabbitController's actions
+    // (`false` prevents all access, which ensures that nothing bad happens to our rabbits)
+    '*': false,
+
+    // For the action `nurture`, apply the 'isRabbitMother' policy 
+    // (this overrides `false` above)
+    nurture : 'isRabbitMother',
+
+    // Apply the `isNiceToAnimals` AND `hasRabbitFood` policies
+    // before letting any users feed our rabbits
+    feed : ['isNiceToAnimals', 'hasRabbitFood']
+  }
+  */
 
 /**
  * Here's what the `isNiceToAnimals` policy from above might look like:

@@ -6,7 +6,7 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-var passwordHash = require('password-hash');
+var PasswordHash = require('password-hash');
 
 module.exports = {
 
@@ -14,7 +14,8 @@ module.exports = {
 
     username: {
       type: 'string',
-      required: false
+      required: false,
+      unique: true
     },
 
     email: {
@@ -31,10 +32,6 @@ module.exports = {
     full_name: {
       type: 'string',
       required: true
-    },
-
-    profile_image: {
-      type: 'url'
     },
 
     // One to One
@@ -117,7 +114,7 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.password = passwordHash.generate(values.password);
+    values.password = PasswordHash.generate(values.password);
     next();
   },
 
