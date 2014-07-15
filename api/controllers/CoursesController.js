@@ -49,20 +49,20 @@ module.exports = {
 		})
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, Error.log("User doesn't exitst."));
+		    return res.send(404, Error.log(req, "User doesn't exitst."));
 
 		  Schools
 		  .findOneById(school_id)
 		  .exec(function callback(err, school) {
 				if (err || !school) 
-			    return res.send(404, Error.log("School doesn't exitst."));
+			    return res.send(404, Error.log(req, "School doesn't exitst."));
 
 				Tokens.create({
 					action: 'createCourse',
 					params: query
 				}).exec(function callback(err, token) {
 					if (err || !token) 
-				    return res.send(404, Error.log("Token creation has been failed."));
+				    return res.send(404, Error.log(req, "Token creation has been failed."));
 
 				  var link = 'http://' + Url.parse(req.baseUrl).hostname + "/verify/" + token.key;
 
@@ -104,7 +104,7 @@ module.exports = {
 						// send mail with defined transport object
 						smtpTransport.sendMail(mailOptions, function(error, response) {
 					    if(error || !response || !response.message)
-							  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+							  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
 			        return res.send(Email.json(user.email));
 						});
 					});
@@ -373,13 +373,13 @@ module.exports = {
     .populate('posts')
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, Error.alert("Adding Manager Error", "Course doesn't exist."));
+        return res.send(404, Error.alert(req, "Adding Manager Error", "Course doesn't exist."));
  
       if (Arrays.getUsernames(course.managers).indexOf(username) == -1)
-        return res.send(404, Error.alert("Adding Manager Error", "You are not supervising current course."));
+        return res.send(404, Error.alert(req, "Adding Manager Error", "You are not supervising current course."));
 
       if (Arrays.getUsernames(course.students).indexOf(manager) >= 0)
-        return res.send(404, Error.alert("Adding Manager Error", "User is already attending current course."));
+        return res.send(404, Error.alert(req, "Adding Manager Error", "User is already attending current course."));
 
       Users
 			.findOne({
@@ -393,10 +393,10 @@ module.exports = {
 			.populate('employed_schools')
       .exec(function callback(err, mang) {
         if (err || !mang)
-	        return res.send(400, Error.alert("Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
+	        return res.send(400, Error.alert(req, "Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
 
 	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
-	        return res.send(400, Error.alert("Add Manager", mang.full_name + " is already supervising current course."));
+	        return res.send(400, Error.alert(req, "Add Manager", mang.full_name + " is already supervising current course."));
 
 			  // Serials
 			  // .findOne({
@@ -404,7 +404,7 @@ module.exports = {
 			  // })
 			  // .exec(function callback(err, serial) {
 			  // 	if (err || !serial)
-		   //      return res.send(400, Error.alert("Adding Manager Error", "School of current course has no serial."));
+		   //      return res.send(400, Error.alert(req, "Adding Manager Error", "School of current course has no serial."));
 
 				 //  var employed_schools = Arrays.getIds(mang.employed_schools);
 				 //  if (employed_schools.indexOf(Number(course.school.id)) == -1)
@@ -419,7 +419,7 @@ module.exports = {
 					// mang.save(function callback(err) {
 					// 	console.log(err);
 					// 	if (err)
-			  //       return res.send(400, Error.alert("Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
+			  //       return res.send(400, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
 
 					// 	Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
 		   //      return res.send(course.toWholeObject());
@@ -447,7 +447,7 @@ module.exports = {
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.toast("Current course has no student."));
+          return res.send(400, Error.toast(req, "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -455,7 +455,7 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.toast("Current course has no post."));
+	          return res.send(400, Error.toast(req, "Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -510,7 +510,7 @@ module.exports = {
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.toast("Current course has no student."));
+          return res.send(400, Error.toast(req, "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -518,7 +518,7 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.toast("Current course has no post."));
+	          return res.send(400, Error.toast(req, "Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -573,7 +573,7 @@ module.exports = {
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.toast("Current course has no student."));
+          return res.send(400, Error.toast(req, "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -581,7 +581,7 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.toast("Current course has no post."));
+	          return res.send(400, Error.toast(req, "Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -637,7 +637,7 @@ module.exports = {
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.alert("Export Grades Error", "Current course has no student."));
+          return res.send(400, Error.alert(req, "Export Grades Error", "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -645,7 +645,7 @@ module.exports = {
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.alert("Export Grades Error", "Current course has no post."));
+	          return res.send(400, Error.alert(req, "Export Grades Error", "Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -777,7 +777,7 @@ module.exports = {
 							// send mail with defined transport object
 							smtpTransport.sendMail(mailOptions, function(error, response) {
 							    if(error || !response || !response.message)
-									  return res.send(500, Error.alert("Sending Email Error", "Oh uh, error occurred. Please try it again."));
+									  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
 					        return res.send(Email.json(user.email));
 							});
 						});

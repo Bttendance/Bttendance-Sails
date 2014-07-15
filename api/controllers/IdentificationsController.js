@@ -13,7 +13,7 @@ module.exports = {
 		var full_name = req.param('full_name');
 
 		if (!full_name)
-			return res.send(400, Error.alert("FullName Update Error", "FullName is required."));
+			return res.send(400, Error.alert(req, "FullName Update Error", "FullName is required."));
 
 		Users
 		.findOne({
@@ -30,12 +30,12 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-				return res.send(404, Error.alert("FullName Update Error", "User doesn't exist."));
+				return res.send(404, Error.alert(req, "FullName Update Error", "User doesn't exist."));
 
 	  	user.full_name = full_name;
 	  	user.save(function callback(err, updated_user) {
 	  		if (err || !updated_user)
-					return res.send(400, Error.alert("FullName Update Error", "Updating full name has been failed."));
+					return res.send(400, Error.alert(req, "FullName Update Error", "Updating full name has been failed."));
 		  	return res.send(updated_user.toWholeObject());
 	  	});
 		});

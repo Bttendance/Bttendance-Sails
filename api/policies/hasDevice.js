@@ -16,10 +16,10 @@ module.exports = function hasDevice (req, res, next) {
 	var device_uuid = req.param('device_uuid');
 
 	if (!username && !email)
-		return res.send(400, Error.log("Username or Email is required."));
+		return res.send(400, Error.log(req, "Username or Email is required."));
 
 	if (!device_uuid)
-		return res.send(400, Error.log("Device UUID is required."));
+		return res.send(400, Error.log(req, "Device UUID is required."));
 
 	// Super Username Policy
 	if (username == "appletest0"
@@ -60,15 +60,15 @@ module.exports = function hasDevice (req, res, next) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, Error.log("Error in user find method."));
+	    return res.send(500, Error.log(req, "Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, Error.log("User doesn't exitst."));
+	    return res.send(404, Error.log(req, "User doesn't exitst."));
 
 	  // User Device Doesn't Match
 	  } else if (user.device.uuid != device_uuid) {
-		  return res.send(404, Error.log("Device uuid doesn't match."));
+		  return res.send(404, Error.log(req, "Device uuid doesn't match."));
 
 		// Found User
 	  } else {

@@ -18,10 +18,10 @@ module.exports = function attending (req, res, next) {
 	var course_id = req.param('course_id');
 
 	if (!username && !email)
-		return res.send(400, Error.log("Username or Email is required."));
+		return res.send(400, Error.log(req, "Username or Email is required."));
 
 	if (!password || !course_id)
-		return res.send(400, Error.log("Password and Course ID is required."));
+		return res.send(400, Error.log(req, "Password and Course ID is required."));
 
 	Users
 	.findOne({
@@ -36,19 +36,19 @@ module.exports = function attending (req, res, next) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, Error.log("Error in user find method."));
+	    return res.send(500, Error.log(req, "Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, Error.log("User doesn't exitst."));
+	    return res.send(404, Error.log(req, "User doesn't exitst."));
 
 	  // Password Doesn't Match
 	  } else if (user.password != password) {
-		  return res.send(404, Error.log("Password doesn't match."));
+		  return res.send(404, Error.log(req, "Password doesn't match."));
 
 		// User attending check
 		} else if (Arrays.getIds(user.attending_courses).indexOf(Number(course_id)) < 0) {
-		  return res.send(403, Error.log("User is not attending current course."));
+		  return res.send(403, Error.log(req, "User is not attending current course."));
 
 		// Found User
 	  } else {
