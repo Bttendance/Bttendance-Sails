@@ -123,7 +123,7 @@ module.exports = {
 		  			return res.send(500, Error.log(req, "Start Attendance Error", "Post doesn't exist."));
 
 		    	Courses
-		    	.findOneById(courses[0].id)
+		    	.findOneById(post.course.id)
 		    	.populateAll()
 			  	.exec(function callback(err, course) {
 		    		if (err || !course)
