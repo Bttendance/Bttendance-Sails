@@ -43,8 +43,7 @@ var employSchool = function(params, res) {
 
 	Users
 	.findOneByUsername(username)
-	.populate('employed_schools')
-	.populate('serials')
+	.populateAll()
 	.exec(function callback(err, user) {
 		if (err || !user)
 			return res.redirect('http://www.bttendance.com/verification-failed');
@@ -80,7 +79,7 @@ var createCourse = function(params, res) {
 
 		Users
 		.findOneByUsername(username)
-		.populate('device')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user) 
 				return res.redirect('http://www.bttendance.com/verification-failed');
