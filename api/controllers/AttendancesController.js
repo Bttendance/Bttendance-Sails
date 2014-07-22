@@ -265,6 +265,7 @@ module.exports = {
 				}
 
 				if (!has_user) {
+					checked_students.push(user.id);
 					attendance.checked_students = checked_students;
 					attendance.save(function callback(err) {
 						if (err)

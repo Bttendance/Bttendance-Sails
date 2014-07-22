@@ -26,28 +26,28 @@ module.exports = {
 		})
 		.exec(function callback(err, user) { 
 			if (err || !user)
-		    return res.send(500, Error.log(req, "User doesn't exitst."));
+		    return res.send(500, Error.log(req, "Clicker Click Error", "User doesn't exitst."));
 
 		  Clickers
 		  .findOneById(clicker_id)
 		  .populateAll()
 		  .exec(function callback(err, clicker) {
 		  	if (err || !clicker)
-			    return res.send(500, Error.log(req, "Clicker doesn't exitst."));
+			    return res.send(500, Error.log(req, "Clicker Click Error", "Clicker doesn't exitst."));
 
 		  	if (choice_number > clicker.choice_count)
-			    return res.send(500, Error.log(req, "Clicker choice is out of bound."));
+			    return res.send(500, Error.log(req, "Clicker Click Error", "Clicker choice is out of bound."));
 
 			  if (clicker.a_students.indexOf(user.id) != -1)
-			    return res.send(500, Error.toast(req, "You've already chosen A as a choice."));
+			    return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen A as a choice."));
 			  if (clicker.b_students.indexOf(user.id) != -1)
-			    return res.send(500, Error.toast(req, "You've already chosen B as a choice."));
+			    return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen B as a choice."));
 			  if (clicker.c_students.indexOf(user.id) != -1)
-			    return res.send(500, Error.toast(req, "You've already chosen C as a choice."));
+			    return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen C as a choice."));
 			  if (clicker.d_students.indexOf(user.id) != -1)
-			    return res.send(500, Error.toast(req, "You've already chosen D as a choice."));
+			    return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen D as a choice."));
 			  if (clicker.e_students.indexOf(user.id) != -1)
-			    return res.send(500, Error.toast(req, "You've already chosen E as a choice."));
+			    return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen E as a choice."));
 
 			  if(choice_number == 1)
 			  	clicker.a_students.push(user.id);
