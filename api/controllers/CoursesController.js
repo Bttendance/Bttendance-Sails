@@ -271,6 +271,7 @@ module.exports = {
 
 	feed: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var page = req.param('page');
