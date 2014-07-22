@@ -5,13 +5,14 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var Serialize = require('node-serialize');
 var Error = require('../utils/errors');
+var Serialize = require('node-serialize');
 
 module.exports = {
 
 	click: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
 		var username = req.param('username');
 		var clicker_id = req.param('clicker_id');
 		var choice_number = req.param('choice_number');
@@ -25,28 +26,28 @@ module.exports = {
 		})
 		.exec(function callback(err, user) { 
 			if (err || !user)
-		    return res.send(404, Error.log(req, "User doesn't exitst."));
+		    return res.send(500, Error.log(req, "User doesn't exitst."));
 
 		  Clickers
 		  .findOneById(clicker_id)
-		  .populate('post')
+		  .populateAll()
 		  .exec(function callback(err, clicker) {
 		  	if (err || !clicker)
-			    return res.send(404, Error.log(req, "Clicker doesn't exitst."));
+			    return res.send(500, Error.log(req, "Clicker doesn't exitst."));
 
 		  	if (choice_number > clicker.choice_count)
-			    return res.send(404, Error.log(req, "Clicker choice is out of bound."));
+			    return res.send(500, Error.log(req, "Clicker choice is out of bound."));
 
 			  if (clicker.a_students.indexOf(user.id) != -1)
-			    return res.send(404, Error.toast(req, "You've already chosen A as a choice."));
+			    return res.send(500, Error.toast(req, "You've already chosen A as a choice."));
 			  if (clicker.b_students.indexOf(user.id) != -1)
-			    return res.send(404, Error.toast(req, "You've already chosen B as a choice."));
+			    return res.send(500, Error.toast(req, "You've already chosen B as a choice."));
 			  if (clicker.c_students.indexOf(user.id) != -1)
-			    return res.send(404, Error.toast(req, "You've already chosen C as a choice."));
+			    return res.send(500, Error.toast(req, "You've already chosen C as a choice."));
 			  if (clicker.d_students.indexOf(user.id) != -1)
-			    return res.send(404, Error.toast(req, "You've already chosen D as a choice."));
+			    return res.send(500, Error.toast(req, "You've already chosen D as a choice."));
 			  if (clicker.e_students.indexOf(user.id) != -1)
-			    return res.send(404, Error.toast(req, "You've already chosen E as a choice."));
+			    return res.send(500, Error.toast(req, "You've already chosen E as a choice."));
 
 			  if(choice_number == 1)
 			  	clicker.a_students.push(user.id);
@@ -60,34 +61,9 @@ module.exports = {
 			  	clicker.e_students.push(user.id);
 			  clicker.save();
 
-			  Clickers.publishCreate(clicker.toWholeObject());
-
 			  return res.send(clicker.toWholeObject());
 		  });
 		});
-	},
-
-	connect: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var password = req.param('password');
-		var socket_id = req.param('socket_id');
-		var clicker_id = req.param('clicker_id');
-
-		var socket = sails.io.sockets.sockets[socket_id];
-		if (socket)
-  		Clickers.watch(socket);
-
-		Clickers
-		.findOneById(clicker_id)
-	  .populate('post')
-		.exec(function callback(err, clicker) {
-			if (err || !clicker)
-		    return res.send(404, Error.log(req, "Clicker doesn't exitst."));
-
-      // Clickers.subscribe(socket, clicker, ['update']);
-	  	return res.send(clicker.toWholeObject());
-    });
 	}
 	
 };

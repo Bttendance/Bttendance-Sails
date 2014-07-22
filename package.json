@@ -7,9 +7,10 @@
     "Bttendance"
   ],
   "dependencies": {
-    "sails": "0.10.0-rc7",
+    "sails": "0.10.0-rc8",
     "sails-postgresql": "0.10.0-rc4",
     "sails-redis": "0.10.0-rc2",
+    "connect-redis": "1.4.7",
     "sails-memory": "0.10.0-rc2",
     "memjs": "0.8.4",
     "rc": "~0.3.3",

@@ -18,8 +18,11 @@ module.exports = {
 
 		Courses
 		.findById(course_ids)
-		.populate('posts')
+		.populateAll()
 		.exec(function callback(err, courses) {
+			if (err || !courses)
+  			return res.send(500, Error.log(req, "Find attendance checking IDs Error", "Fail to find courses."));
+
 			var attendances = new Array();
 			if (err || !courses)
     		return res.send(attendances);
@@ -39,15 +42,16 @@ module.exports = {
 
 	found_device: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
 		var username = req.param('username');
 		var attendance_id = req.param('attendance_id');
 		var uuid = req.param('uuid');
 
-		Devices
+		Devices 
 		.findOneByUuid(uuid)
 		.exec(function callback(err, device) {
 			if (err || !device)
-    		return res.send(202, { message: "Found wrong device" });
+  			return res.send(500, Error.log(req, "Bttendance Error", "Wrong device."));
 
     	Users
     	.findOneById(device.owner)
@@ -55,7 +59,7 @@ module.exports = {
 			.populate('attending_courses')
     	.exec(function callback(err, user_uuid) {
 				if (err || !user_uuid)
-    			return res.send(404, { message: "User Found Error" });
+	  			return res.send(500, Error.log(req, "Bttendance Error", "Fail to find user."));
 
 				Users
 				.findOne({
@@ -68,24 +72,24 @@ module.exports = {
 				.populate('attending_courses')
 				.exec(function callback(err, user_api) {
 					if (err || !user_api)
-	    			return res.send(404, { message: "User Found Error" });
+		  			return res.send(500, Error.log(req, "Bttendance Error", "Fail to find user."));
 
 	    		if (user_uuid.id == user_api.id)
-	    			return res.send(400, { message: "User has found his own device somehow" });
+		  			return res.send(400, Error.log(req, "Bttendance Error", "User has found his own device somehow."));
 
 		    	Attendances
 		    	.findOneById(attendance_id)
 		    	.populate('post')
 		    	.exec(function callback(err, attendance) {
 						if (err || !attendance)
-			    		return res.send(404, { message: "Attendance Found Error" });
+			  			return res.send(500, Error.log(req, "Bttendance Error", "Attendance record doesn't exist."));
 
 			    	// Check whether users are in same courses(post)
 			    	if ((Arrays.getIds(user_api.supervising_courses).indexOf(attendance.post.course) == -1
 			    		&& Arrays.getIds(user_api.attending_courses).indexOf(attendance.post.course) == -1)
 			    		|| (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) == -1
 			    		&& Arrays.getIds(user_uuid.attending_courses).indexOf(attendance.post.course) == -1))
-			    		return res.send(204, { message: "User is not attending current course" });
+			  			return res.send(204, Error.log(req, "Bttendance Error", "User is not attending current course."));
 
 						var userids = new Array();
 						userids.push(user_api.id);
@@ -116,7 +120,7 @@ module.exports = {
 
 							// Case 3
 							if (a == b && a != -1)
-			    			return res.send(202, { message: "Users are already accepted" });
+				  			return res.send(202, Error.log(req, "Bttendance Error", "Users are already accepted."));
 
 			    		// Case 1
 			    		else if (a == b && a == -1)
@@ -239,42 +243,39 @@ module.exports = {
 
 		Users
 		.findOneById(user_id)
-		.populate('device')
-		.populate('supervising_courses')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-  			return res.send(404, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
+  			return res.send(500, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
 
   		Attendances
   		.findOneById(attendance_id)
-  		.populate('post')
+  		.populateAll()
   		.exec(function callback(err, attendance) {
 				if (err || !attendance)
-	  			return res.send(404, Error.alert(req, "Manual Check Error", "Attendance record doesn't exist."));
+	  			return res.send(500, Error.alert(req, "Manual Check Error", "Attendance record doesn't exist."));
 
 				var checked_students = new Array();
 				var has_user = false;
 				for (var i = 0; i < attendance.checked_students.length; i++) {
 					var id = attendance.checked_students[i];
-					checked_students.push(id);
 					if (id == user.id)
 						has_user = true;
+					checked_students.push(id);
 				}
 
 				if (!has_user) {
-					checked_students.push(user.id);
-
 					attendance.checked_students = checked_students;
 					attendance.save(function callback(err) {
 						if (err)
-			  			return res.send(404, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
+			  			return res.send(500, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
 
 						Posts
 						.findOneById(attendance.post.id)
-						.populate('course')
+						.populateAll()
 						.exec(function callback(err, post) {
 							if (err || !post)
-				  			return res.send(404, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
+				  			return res.send(500, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
 
 							Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
 					  	return res.send(attendance.toWholeObject());
@@ -295,18 +296,17 @@ module.exports = {
 
 		Users
 		.findOneById(user_id)
-		.populate('device')
-		.populate('supervising_courses')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-  			return res.send(404, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
+  			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Student doesn't exist."));
 
   		Attendances
   		.findOneById(attendance_id)
-  		.populate('post')
+  		.populateAll()
   		.exec(function callback(err, attendance) {
 				if (err || !attendance)
-	  			return res.send(404, Error.alert(req, "Manual Check Error", "Attendance record doesn't exist."));
+	  			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Attendance record doesn't exist."));
 
 				var checked_students = new Array();
 				var has_user = false;
@@ -315,24 +315,24 @@ module.exports = {
 					checked_students.push(id);
 					if (id == user.id)
 						has_user = true;
+					else
+						checked_students.push(id);
 				}
 
-				if (!has_user) {
-					checked_students.push(user.id);
-
+				if (has_user) {
 					attendance.checked_students = checked_students;
 					attendance.save(function callback(err) {
 						if (err)
-			  			return res.send(404, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
+			  			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Updating attendance record has been failed."));
 
 						Posts
 						.findOneById(attendance.post.id)
-						.populate('course')
+						.populateAll()
 						.exec(function callback(err, post) {
 							if (err || !post)
-				  			return res.send(404, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
+				  			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Manual attendance un-check failed. Please try again."));
 
-							Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
+							Noti.send(user, post.course.name, "Attendance has been un-checked manually", "attendance_unchecked");
 					  	return res.send(attendance.toWholeObject());
 						});
 					});

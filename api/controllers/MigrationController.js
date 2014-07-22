@@ -8,8 +8,12 @@
 // heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a121.dump' --app bttendance-dev
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
 
-// DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials, tokens;
+// DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials;
 // ALTER TABLE courses DROP COLUMN number CASCADE;
+// ALTER TABLE courses DROP COLUMN students_count CASCADE;
+// ALTER TABLE courses DROP COLUMN "attdCheckedAt" CASCADE;
+// ALTER TABLE courses DROP COLUMN clicker_usage CASCADE;
+// ALTER TABLE courses DROP COLUMN notice_usage CASCADE;
 // ALTER TABLE schools DROP COLUMN logo_image CASCADE;
 // ALTER TABLE schools DROP COLUMN website CASCADE;
 // ALTER TABLE users DROP COLUMN username_lower CASCADE;
@@ -19,8 +23,7 @@
 // sails lift (for auto migration)
 // call api for migration
 
-// comment in courses code as unique constraint
-// sails lift (for auto migration)
+// ALTER TABLE courses ADD CONSTRAINT courses_code_key UNIQUE (code);
 
 // uncomment for auto migration
 
@@ -51,6 +54,29 @@ module.exports = {
 			}, function (err) {
 				if (err == null)
 					console.log('Create Notices finished');
+				else
+					console.log(err);
+			});
+		});
+
+		//create Notification
+		Users.find().sort('id ASC').exec(function callback(err, users) {
+			if (err || !users)
+				return;
+
+			async.eachSeries(users, function (each_user, done) {
+				Notifications.create({
+					owner: each_user.id
+				}).exec(function callback(err, notification) {
+					if (err || !notification)
+						done(err);
+					Users.update({ id: notification.owner }, { notification: notification.id }).exec(function callback(err, updated_user) {
+							done();
+					});
+				});
+			}, function (err) {
+				if (err == null)
+					console.log('Create Notification finished');
 				else
 					console.log(err);
 			});

@@ -53,24 +53,8 @@ module.exports = {
 
     opened: {
       type: 'boolean',
-      required: true
-    },
-
-    students_count: {
-      type: 'integer',
-      defaultsTo: 0
-    },
-
-    attdCheckedAt: 'string',
-
-    clicker_usage: {
-      type: 'integer',
-      defaultsTo: 0
-    },
-
-    notice_usage: {
-      type: 'integer',
-      defaultsTo: 0
+      required: true,
+      defaultsTo: true
     },
 
     toJSON: function() {
@@ -81,10 +65,6 @@ module.exports = {
       delete obj.students;
       delete obj.posts;
       delete obj.code;
-      delete obj.opened;
-      delete obj.attdCheckedAt;
-      delete obj.clicker_usage;
-      delete obj.notice_usage;
       return obj;
     },
 
@@ -93,19 +73,18 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.managers_count = this.managers.length;
+      obj.students_count = this.students.length;
+      obj.posts_count = this.posts.length;
       obj.code = this.code;
-      obj.opened = this.opened;
-      obj.attdCheckedAt = this.attdCheckedAt;
-      obj.clicker_usage = this.clicker_usage;
-      obj.notice_usage = this.notice_usage;
       return obj;
     }
     
   },
 
   beforeValidate: function(values, next) {
-    if (values.school_id)
-      values.school = values.school_id;
+    if (!values.code)
+      values.code = Random.string(4);
     next();
   },
 
@@ -114,9 +93,6 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.students_count = 0;
-    values.opened = true;
-    values.code = Random.string(4);
     next();
   },
 

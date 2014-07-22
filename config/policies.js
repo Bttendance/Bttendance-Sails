@@ -36,20 +36,26 @@ module.exports.policies = {
     auto_signin: true,
     signin: true,
     forgot_password: true,
-    update_password: ['isUser', 'hasDevice'],
-    update_full_name: ['isUser', 'hasDevice'],
-    update_email: ['isUser', 'hasDevice'],
+    update_password: 'isUser',
+    update_full_name: 'isUser',
+    update_email: 'isUser',
     feed: 'isUser',
     courses: 'isUser',
     search: 'isUser'
   },
 
   DevicesController: {
-    update_notification_key: ['isUser', 'hasDevice']
+    update_notification_key: 'isUser'
+  },
+
+  NotificationsController: {
+    update_attendance: 'isUser',
+    update_clicker: 'isUser',
+    update_notice: 'isUser',
   },
 
   IdentificationsController: {
-    update_identity: ['isUser', 'hasDevice']
+    update_identity: 'isUser'
   },
 
   SchoolsController: {
@@ -60,14 +66,14 @@ module.exports.policies = {
   },
 
   CoursesController: {
-    create: 'isUser',
     create_request: 'isUser',
+    create_instant: 'isUser',
+    search: 'isUser',
     attend: 'isUser',
     dettend: 'attending',
     feed: 'attending_or_supervising',
     students: 'supervising',
     add_manager: 'supervising',
-    grades: 'supervising',
     attendance_grades: 'supervising',
     clicker_grades: 'supervising',
     export_grades: 'supervising'
@@ -88,18 +94,15 @@ module.exports.policies = {
   },
 
   ClickersController: {
-    connect: 'isUser',
     click: 'isUser'
   },
 
   NoticesController: {
-    seen: 'isUser',
-    resend: 'isUser'
+    seen: 'isUser'
   },
 
   TokensController: {
-    verify: true,
-    update: true
+    verify: true
   }
 
 };

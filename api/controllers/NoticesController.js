@@ -5,118 +5,64 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
+var Error = require('../utils/errors');
+
 module.exports = {
 	
 	seen: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var user_id = req.param('user_id');
-		var attendance_id = req.param('attendance_id');
+		var email = req.param('email');
+		var notice_id = req.param('notice_id');
 
 		Users
-		.findOneById(user_id)
-		.populate('device')
-		.populate('supervising_courses')
+		.findOneByEmail(email)
 		.exec(function callback(err, user) {
 			if (err || !user)
-  			return res.send(404, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
+  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find user."));
 
-  		Attendances
-  		.findOneById(attendance_id)
-  		.populate('post')
-  		.exec(function callback(err, attendance) {
-				if (err || !attendance)
-	  			return res.send(404, Error.alert(req, "Manual Check Error", "Attendance record doesn't exist."));
+			Notices
+			.findOneById(notice_id)
+			.populateAll()
+			.exec(function callback(err, notice) {
+				if (err || !notice)
+	  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find notice."));
 
-				var checked_students = new Array();
+			  var seen_students = Arrays.getIds(notice.seen_students);
+			  if (seen_students.indexOf(Number(notice_id)) != -1)
+			    return res.send(notice.toWholeObject());
+
+				var seen_students = new Array();
 				var has_user = false;
-				for (var i = 0; i < attendance.checked_students.length; i++) {
-					var id = attendance.checked_students[i];
-					checked_students.push(id);
+				for (var i = 0; i < notice.seen_students.length; i++) {
+					var id = notice.seen_students[i];
+					seen_students.push(id);
 					if (id == user.id)
 						has_user = true;
+					seen_students.push(id);
 				}
 
 				if (!has_user) {
-					checked_students.push(user.id);
-
-					attendance.checked_students = checked_students;
-					attendance.save(function callback(err) {
+					notice.seen_students = seen_students;
+					notice.save(function callback(err) {
 						if (err)
-			  			return res.send(404, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
+			  			return res.send(500, Error.log(req, "Notice Seen Error", "Updating notice record has been failed."));
 
-						Posts
-						.findOneById(attendance.post.id)
-						.populate('course')
-						.exec(function callback(err, post) {
-							if (err || !post)
-				  			return res.send(404, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
+				    Notices
+						.findOneById(notice_id)
+						.populateAll()
+						.exec(function callback(err, notice_new) {
+							if (err || !notice_new)
+				  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find updated notice record."));
 
-							Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
-					  	return res.send(attendance.toWholeObject());
+					  	return res.send(notice_new.toWholeObject());
 						});
 					});
 				} else {
-			  	return res.send(attendance.toWholeObject());
+			  	return res.send(notice.toWholeObject());
 				}
-
-  		})
-		})
-	},
-	
-	resend: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var user_id = req.param('user_id');
-		var attendance_id = req.param('attendance_id');
-
-		Users
-		.findOneById(user_id)
-		.populate('device')
-		.populate('supervising_courses')
-		.exec(function callback(err, user) {
-			if (err || !user)
-  			return res.send(404, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
-
-  		Attendances
-  		.findOneById(attendance_id)
-  		.populate('post')
-  		.exec(function callback(err, attendance) {
-				if (err || !attendance)
-	  			return res.send(404, Error.alert(req, "Manual Check Error", "Attendance record doesn't exist."));
-
-				var checked_students = new Array();
-				var has_user = false;
-				for (var i = 0; i < attendance.checked_students.length; i++) {
-					var id = attendance.checked_students[i];
-					checked_students.push(id);
-					if (id == user.id)
-						has_user = true;
-				}
-
-				if (!has_user) {
-					checked_students.push(user.id);
-
-					attendance.checked_students = checked_students;
-					attendance.save(function callback(err) {
-						if (err)
-			  			return res.send(404, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
-
-						Posts
-						.findOneById(attendance.post.id)
-						.populate('course')
-						.exec(function callback(err, post) {
-							if (err || !post)
-				  			return res.send(404, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
-
-							Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
-					  	return res.send(attendance.toWholeObject());
-						});
-					});
-				} else {
-			  	return res.send(attendance.toWholeObject());
-				}
-
-  		})
-		})
+			});
+		});
 	}
+
 };
 

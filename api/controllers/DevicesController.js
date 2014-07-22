@@ -15,17 +15,19 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var Error = require('../utils/errors');
+
 module.exports = {
 
 	update_notification_key: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
 		var username = req.param('username');
+		var device_uuid = req.param('device_uuid');
 		var notification_key = req.param('notification_key');
 
-		if (!notification_key) {
-			console.log("UserController : update_notification_key : Notification Key is required");
-			return res.send(400, { message: "Notification Key is required"});
-		}
+		if (!notification_key) 
+			return res.send(400, Error.log(req, "Notification Key Update Error", "Key is required."));
 
 		Users
 		.findOne({
@@ -35,6 +37,7 @@ module.exports = {
 		  ]
 		})
 		.populate('device')
+		.populate('notification')
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.populate('employed_schools')
@@ -42,12 +45,15 @@ module.exports = {
 		.populate('identifications')
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+				return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
+
+		  if (device_uuid != user.device.uuid)
+				return res.send(404, Error.log(req, "Notification Key Update Error", "Device doesn't match."));
 
 		  user.device.notification_key = notification_key;
 		  user.device.save(function callback(err) {
 		   	if (err)
-			    return res.send(500, { message: "Device Save Error" });
+					return res.send(500, Error.log(req, "Notification Key Update Error", "Updating notification key has been failed."));
 
 		  	return res.send(user.toWholeObject());
 	    });

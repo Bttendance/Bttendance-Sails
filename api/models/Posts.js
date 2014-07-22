@@ -149,6 +149,14 @@ module.exports = {
           next(err);
         next();
       });
+    } else if (values.type == 'notice') {
+      Notices
+      .update({id: values.notice}, {post: values.id})
+      .exec(function callback(err, notice) {
+        if (err || !notice)
+          next(err);
+        next();
+      });
     } else
       next();
   },

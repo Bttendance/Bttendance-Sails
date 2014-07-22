@@ -25,3 +25,13 @@ exports.getUsernames = function(jsonArray) {
   	ids.push(jsonArray[i].username);
 	return ids;
 }
+
+exports.getEmails = function(jsonArray) {
+	if (!jsonArray)
+		return new Array();
+
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+  	ids.push(jsonArray[i].email);
+	return ids;
+}

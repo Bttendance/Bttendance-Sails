@@ -11,9 +11,9 @@
  *	}
  */
 
-exports.log = function(req, message) {
+exports.log = function(req, title, message) {
 	var url = req.url;
-	sails.log.debug(url + ' : ' + message);
+	sails.log.debug(url + ' : ' + title + ' : ' + message);
 
 	var locale = req.param('locale');
 	if (!locale)
@@ -21,13 +21,14 @@ exports.log = function(req, message) {
 	
 	var json = {};
 	json.type = 'log';
+	json.title = sails.__({ phrase: title, locale: locale });
 	json.message = sails.__({ phrase: message, locale: locale });
 	return json;
 }
 
-exports.toast = function(req, message) {
+exports.toast = function(req, title, message) {
 	var url = req.url;
-	sails.log.warn(url + ' : ' + message);
+	sails.log.warn(url + ' : ' + title + ' : ' + message);
 
 	var locale = req.param('locale');
 	if (!locale)
@@ -35,6 +36,7 @@ exports.toast = function(req, message) {
 
 	var json = {};
 	json.type = 'toast';
+	json.title = sails.__({ phrase: title, locale: locale });
 	json.message = sails.__({ phrase: message, locale: locale });
 	return json;
 }

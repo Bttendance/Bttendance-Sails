@@ -41,28 +41,23 @@ module.exports = {
 		var query = QueryString.stringify(params);
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByUsername(username)
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, Error.log(req, "User doesn't exitst."));
+		    return res.send(500, Error.log(req, "Course Create Request Error", "User doesn't exist."));
 
 		  Schools
 		  .findOneById(school_id)
 		  .exec(function callback(err, school) {
 				if (err || !school) 
-			    return res.send(404, Error.log(req, "School doesn't exitst."));
+			    return res.send(500, Error.log(req, "Course Create Request Error", "School doesn't exist."));
 
 				Tokens.create({
 					action: 'createCourse',
 					params: query
 				}).exec(function callback(err, token) {
 					if (err || !token) 
-				    return res.send(404, Error.log(req, "Token creation has been failed."));
+				    return res.send(500, Error.log(req, "Course Create Request Error", "Token creation has been failed."));
 
 				  var link = 'http://' + Url.parse(req.baseUrl).hostname + "/verify/" + token.key;
 
@@ -78,7 +73,7 @@ module.exports = {
 					var path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
 					FS.readFile(path, 'utf8', function (err, file) {
 					  if (err)
-		  				return res.send(404, { message: "File Read Error" });
+		  				return res.send(500, { message: "File Read Error" });
 
 		  			file = file.replace('#fullname', user.full_name);
 		  			file = file.replace('#courseTitle', name);
@@ -88,17 +83,12 @@ module.exports = {
 		  			file = file.replace('#schoolname', school.name);
 		  			file = file.replace('#validationLink', link);
 
-						var guide = Path.resolve(__dirname, '../../assets/manual/guide_v3.pdf');
 						// setup e-mail data with unicode symbols
 						var mailOptions = {
 						    from: "Bttendance<no-reply@bttendance.com>", // sender address
 						    to: user.email, // list of receivers
 						    subject: "Course Creation Verification Email", // Subject line
 						    html: file, // plaintext body
-						    attachments: [{   // file on disk as an attachment
-            				fileName: "Bttendance 사용 가이드 V3.pdf",
-            				filePath: guide // stream this file
-        					}]
 						}
 
 						// send mail with defined transport object
@@ -113,8 +103,77 @@ module.exports = {
 		});
 	},
 
+	create_instant: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
+		var name = req.param('name');
+		var school_id = req.param('school_id');
+		var professor_name = req.param('professor_name');
+
+		Users
+		.findOneByEmail(email)
+		.populateAll()
+		.exec(function callback(err, user) {
+			if (err || !user)
+		    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
+
+		  Schools
+		  .findOneById(school_id)
+		  .exec(function callback(err, school) {
+				if (err || !school) 
+			    return res.send(500, Error.log(req, "Course Create Error", "School doesn't exist."));
+
+				Courses.create({
+					name: name,
+					school: school_id,
+					professor_name: professor_name
+				}).exec(function callback(err, course) {
+					if (err || !course) 
+				    return res.send(500, Error.log(req, "Course Create Error", "Fail to create a course."));
+
+				  var employed_schools = Arrays.getIds(user.employed_schools);
+				  if (employed_schools.indexOf(Number(school_id)) == -1)
+				    user.employed_schools.add(school_id);
+
+					user.supervising_courses.add(course.id);
+					user.save(function callback(err) {
+						if (err) 
+					    return res.send(500, Error.log(req, "Course Create Error", "User save error."));
+
+				    Users
+						.findOneByEmail(email)
+						.populateAll()
+						.exec(function callback(err, user_new) {
+							if (err || !user_new)
+						    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
+
+							Noti.send(user, "Bttendance", "Your course " + course.name + " has been created", "course_created");
+					  	return res.send(user_new.toWholeObject());
+						});
+					});
+				});
+		  });
+		});
+	},
+
+	search: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var course_code = req.param('course_code');
+
+		Courses
+		.findOneByCode(course_code)
+		.populateAll()
+		.exec(function callback(err, course) {
+			if (err || !course)
+		    return res.send(500, Error.log(req, "Course Find Error", "Course doesn't exist."));
+
+	  	return res.send(course.toWholeObject());
+		});
+	},
+
 	attend: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		
@@ -125,57 +184,37 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
-		.populate('device')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('enrolled_schools')
-		.populate('identifications')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+		    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
 
 		  var supervising_courses = Arrays.getIds(user.supervising_courses);
 		  if (supervising_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(404, { message: "User is supervising this course" });
+		    return res.send(500, Error.log(req, "Course Attend Error", "User is supervising this course."));
 
 		  var attending_courses = Arrays.getIds(user.attending_courses);
 		  if (attending_courses.indexOf(Number(course_id)) != -1)
 		    return res.send(user.toWholeObject());
 
-		  Courses.findOneById(course_id).exec(function callback(err, course) {
-		  	if (err || !course)
-		    	return res.send(404, { message: "No Course Found Error" });
+			user.attending_courses.add(course_id);
+			user.save(function callback(err) {
+				if (err)
+			    return res.send(500, Error.log(req, "Course Attend Error", "Fail to save user."));
 
-				Courses.update({ id: course.id }, { students_count: course.students_count + 1 }).exec(function callback(err, updated_courses) {
-					if (err || !updated_courses)
-						return console.log(err);
-				});
+		    Users
+				.findOne({
+				  or : [
+				    { email: email },
+				    { username: username }
+				  ]
+				})
+				.populateAll()
+				.exec(function callback(err, user_new) {
+					if (err || !user_new)
+				    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
 
-				user.attending_courses.add(course_id);
-				user.save(function callback(err) {
-					if (err)
-			    	return res.send(500, { message: "User Save Error" });
-
-			    Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
-					.populate('device')
-					.populate('supervising_courses')
-					.populate('attending_courses')
-					.populate('employed_schools')
-					.populate('enrolled_schools')
-					.populate('identifications')
-					.exec(function callback(err, user_new) {
-						if (err || !user_new)
-					    return res.send(404, { message: "No User Found Error" });
-
-				  	return res.send(user_new.toWholeObject());
-					});
+			  	return res.send(user_new.toWholeObject());
 				});
 		  });
 		});
@@ -183,6 +222,7 @@ module.exports = {
 
 	dettend: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		
@@ -193,57 +233,37 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
-		.populate('device')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('enrolled_schools')
-		.populate('identifications')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, { message: "No User Found Error" });
+		    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
 
 		  var supervising_courses = Arrays.getIds(user.supervising_courses);
 		  if (supervising_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(404, { message: "User is supervising this course" });
+		    return res.send(500, Error.log(req, "Course Unjoin Error", "User is supervising this course."));
 
 		  var attending_courses = Arrays.getIds(user.attending_courses);
 		  if (attending_courses.indexOf(Number(course_id)) == -1)
-		    return res.send(404, { message: "User is not attending this course" });
+		    return res.send(500, Error.log(req, "Course Unjoin Error", "User is not attending this course"));
 
-		  Courses.findOneById(course_id).exec(function callback(err, course) {
-		  	if (err || !course)
-		    	return res.send(404, { message: "No Course Found Error" });
+			user.attending_courses.remove(course_id);
+			user.save(function callback(err) {
+				if (err)
+			    return res.send(500, Error.log(req, "Course Unjoin Error", "Fail to save user."));
 
-				Courses.update({ id: course.id }, { students_count: course.students_count - 1 }).exec(function callback(err, updated_courses) {
-					if (err || !updated_courses)
-						return console.log(err);
-				});
+		    Users
+				.findOne({
+				  or : [
+				    { email: email },
+				    { username: username }
+				  ]
+				})
+				.populateAll()
+				.exec(function callback(err, user_new) {
+					if (err || !user_new)
+				    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
 
-				user.attending_courses.remove(course_id);
-				user.save(function callback(err) {
-					if (err)
-			    	return res.send(500, { message: "User Save Error" });
-
-			    Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
-					.populate('device')
-					.populate('supervising_courses')
-					.populate('attending_courses')
-					.populate('employed_schools')
-					.populate('enrolled_schools')
-					.populate('identifications')
-					.exec(function callback(err, user_new) {
-						if (err || !user_new)
-					    return res.send(404, { message: "No User Found Error" });
-
-				  	return res.send(user_new.toWholeObject());
-					});
+			  	return res.send(user_new.toWholeObject());
 				});
 		  });
 		});
@@ -266,7 +286,7 @@ module.exports = {
 		.populate('attending_courses')
 		.exec(function callback(err, user) {
 			if (err || !user) 
-		    return res.send(404, { message: "No User Found Error" });
+		    return res.send(500, Error.log(req, "Course Feed Error", "User doesn't exist."));
 
 	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
 
@@ -276,7 +296,7 @@ module.exports = {
 			.populate('students')
 			.exec(function callback(err, course) {
 				if (err || !course)
-	    		return res.send(404, { message: "Course Found Error" });
+		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
@@ -287,7 +307,7 @@ module.exports = {
 				.populate('notice')
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
-	  				return res.send(404, { message: "Post Found Error" });
+				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));
 
 					for (var i = 0; i < posts.length; i++) {
 
@@ -328,21 +348,21 @@ module.exports = {
    
     Courses
     .findOneById(course_id)
-    .populate('students')
+    .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, { message: "Course Found Error" });
+		    return res.send(500, Error.log(req, "Course Students Error", "Course doesn't exist."));
 
       Users
       .findById(Arrays.getIds(course.students))
-			.populate('identifications')
+			.populateAll()
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(404, { message: "User Found Error" });
+		    return res.send(500, Error.log(req, "Course Students Error", "User doesn't exist."));
 
         for (var index in users) {  
         	for (var i = 0; i < users[index].identifications.length; i++) 
-        		if (users[index].identifications[i].school == course.school)
+        		if (users[index].identifications[i].school == course.school.id)
         			users[index].student_id = users[index].identifications[i].identity;
       	}
 
@@ -362,132 +382,53 @@ module.exports = {
 	add_manager: function(req, res) {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
+    var email = req.param('email');
     var username = req.param('username');
     var manager = req.param('manager');
 
     Courses
     .findOneById(course_id)
-    .populate('school')
-  	.populate('managers')
-  	.populate('students')
-    .populate('posts')
+    .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, Error.alert(req, "Adding Manager Error", "Course doesn't exist."));
+        return res.send(500, Error.alert(req, "Adding Manager Error", "Course doesn't exist."));
  
-      if (Arrays.getUsernames(course.managers).indexOf(username) == -1)
-        return res.send(404, Error.alert(req, "Adding Manager Error", "You are not supervising current course."));
+      if (Arrays.getUsernames(course.managers).indexOf(username) == -1 && Arrays.getEmails(course.managers).indexOf(email) == -1)
+        return res.send(500, Error.alert(req, "Adding Manager Error", "You are not supervising current course."));
 
-      if (Arrays.getUsernames(course.students).indexOf(manager) >= 0)
-        return res.send(404, Error.alert(req, "Adding Manager Error", "User is already attending current course."));
+      if (Arrays.getUsernames(course.students).indexOf(manager) >= 0 || Arrays.getEmails(course.students).indexOf(manager) >= 0)
+        return res.send(500, Error.alert(req, "Adding Manager Error", "User is already attending current course."));
 
       Users
 			.findOne({
 			  or : [
-			    { email: email },
+			    { email: manager },
 			    { username: manager }
 			  ]
 			})
-      .populate('device')
-			.populate('supervising_courses')
-			.populate('employed_schools')
+      .populateAll()
       .exec(function callback(err, mang) {
         if (err || !mang)
-	        return res.send(400, Error.alert(req, "Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
+	        return res.send(500, Error.alert(req, "Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
 
 	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
-	        return res.send(400, Error.alert(req, "Add Manager", mang.full_name + " is already supervising current course."));
+	        return res.send(500, Error.alert(req, "Adding Manager Error", "Add Manager", mang.full_name + " is already supervising current course."));
 
-			  // Serials
-			  // .findOne({
-			  // 	school: course.school.id
-			  // })
-			  // .exec(function callback(err, serial) {
-			  // 	if (err || !serial)
-		   //      return res.send(400, Error.alert(req, "Adding Manager Error", "School of current course has no serial."));
+			  var employed_schools = Arrays.getIds(mang.employed_schools);
+			  if (employed_schools.indexOf(Number(course.school.id)) == -1)
+			    mang.employed_schools.add(course.school.id);
 
-				 //  var employed_schools = Arrays.getIds(mang.employed_schools);
-				 //  if (employed_schools.indexOf(Number(course.school.id)) == -1)
-				 //    mang.employed_schools.add(course.school.id);
+			  mang.supervising_courses.add(course.id);
 
-				 //  var serials = Arrays.getIds(mang.serials);
-				 //  if (serials.indexOf(Number(serial.id)) == -1)
-				 //    mang.serials.add(serial.id);
+				mang.save(function callback(err) {
+					console.log(err);
+					if (err)
+		        return res.send(500, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
 
-				 //  mang.supervising_courses.add(course.id);
+					Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
+	        return res.send(course.toWholeObject());
+				});
 
-					// mang.save(function callback(err) {
-					// 	console.log(err);
-					// 	if (err)
-			  //       return res.send(400, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
-
-					// 	Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
-		   //      return res.send(course.toWholeObject());
-					// });
-			  // });
-      });
-    });
-	},
-
-	grades: function(req, res) {
-    res.contentType('application/json; charset=utf-8');
-    var course_id = req.param('course_id');
-
-    Courses
-    .findOneById(course_id)
-    .populate('students')
-    .populate('posts')
-    .exec(function callback(err, course) {
-      if (err || !course)
-        return res.send(404, { message: "Course Found Error" });
-
-      Users
-      .findById(Arrays.getIds(course.students))
-  		.populate('identifications')
-      .sort('full_name DESC')
-      .exec(function callback(err, users) {
-        if (err || !users)
-          return res.send(400, Error.toast(req, "Current course has no student."));
-
-	  		Posts
-	  		.findById(Arrays.getIds(course.posts))
-	  		.populate('attendance')
-	  		.sort('id DESC')
-	  		.exec(function callback(err, posts) {
-	  			if (err || !posts)
-	          return res.send(400, Error.toast(req, "Current course has no post."));
-
-			  	var postsObject = new Array();
-					for (var index in posts)
-						if (posts[index].type == "attendance")
-							postsObject.push(posts[index]);
-
-					var total_grade = postsObject.length;
-	        for (var index in users) {
-	        	var grade = 0;
-	        	for (var i = 0; i < postsObject.length; i++) {
-	        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
-	        			if (postsObject[i].attendance.checked_students[j] == users[index].id)
-	        				grade++;
-	        		}
-	        	}
-	        
-	        	for (var i = 0; i < users[index].identifications.length; i++) 
-	        		if (users[index].identifications[i].school == course.school)
-	        			users[index].student_id = users[index].identifications[i].identity;
-	        	users[index].grade = grade + "/" + total_grade;
-	        }
-
-	        users.sort(function(a, b) {
-	        	if (!a.student_id)
-	        		return true;
-	        	if (!b.student_id)
-	        		return false;
-	        	return a.student_id.localeCompare(b.student_id);
-	        });
-
-	        return res.send(users);
-	  		});
       });
     });
 	},
@@ -498,27 +439,26 @@ module.exports = {
 
     Courses
     .findOneById(course_id)
-    .populate('students')
-    .populate('posts')
+    .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, { message: "Course Found Error" });
+        return res.send(500, Error.log(req, "Attendance Grades Error", "Course doesn't exist."));
 
       Users
       .findById(Arrays.getIds(course.students))
-  		.populate('identifications')
+	    .populateAll()
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.toast(req, "Current course has no student."));
+	        return res.send(500, Error.alert(req, "Attendance Grades Error", "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
-	  		.populate('attendance')
+		    .populateAll()
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.toast(req, "Current course has no post."));
+		        return res.send(500, Error.alert(req, "Attendance Grades Error", "Fail to load posts."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -526,6 +466,9 @@ module.exports = {
 							postsObject.push(posts[index]);
 
 					var total_grade = postsObject.length;
+					if (total_grade <= 0)
+		        return res.send(500, Error.alert(req, "Attendance Grades Error", "Current course has no attendance records."));
+
 	        for (var index in users) {
 	        	var grade = 0;
 	        	for (var i = 0; i < postsObject.length; i++) {
@@ -561,41 +504,54 @@ module.exports = {
 
     Courses
     .findOneById(course_id)
-    .populate('students')
-    .populate('posts')
+    .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, { message: "Course Found Error" });
+        return res.send(500, Error.log(req, "Clicker Grades Error", "Course doesn't exist."));
 
       Users
       .findById(Arrays.getIds(course.students))
-  		.populate('identifications')
+	    .populateAll()
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.toast(req, "Current course has no student."));
+	        return res.send(500, Error.alert(req, "Clicker Grades Error", "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
-	  		.populate('attendance')
+		    .populateAll()
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.toast(req, "Current course has no post."));
+		        return res.send(500, Error.alert(req, "Clicker Grades Error", "Fail to load posts."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
-						if (posts[index].type == "attendance")
+						if (posts[index].type == "clicker")
 							postsObject.push(posts[index]);
 
 					var total_grade = postsObject.length;
+					if (total_grade <= 0)
+		        return res.send(500, Error.alert(req, "Clicker Grades Error", "Current course has no clicker records."));
+
 	        for (var index in users) {
 	        	var grade = 0;
 	        	for (var i = 0; i < postsObject.length; i++) {
-	        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
-	        			if (postsObject[i].attendance.checked_students[j] == users[index].id)
+	        		for (var j = 0; j < postsObject[i].clicker.a_students.length; j++)
+	        			if (postsObject[i].clicker.a_students[j] == users[index].id)
 	        				grade++;
-	        		}
+	        		for (var j = 0; j < postsObject[i].clicker.b_students.length; j++)
+	        			if (postsObject[i].clicker.b_students[j] == users[index].id)
+	        				grade++;
+	        		for (var j = 0; j < postsObject[i].clicker.c_students.length; j++)
+	        			if (postsObject[i].clicker.c_students[j] == users[index].id)
+	        				grade++;
+	        		for (var j = 0; j < postsObject[i].clicker.d_students.length; j++)
+	        			if (postsObject[i].clicker.d_students[j] == users[index].id)
+	        				grade++;
+	        		for (var j = 0; j < postsObject[i].clicker.e_students.length; j++)
+	        			if (postsObject[i].clicker.e_students[j] == users[index].id)
+	        				grade++;
 	        	}
 	        
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
@@ -620,32 +576,32 @@ module.exports = {
 
 	export_grades: function(req, res) {
     res.contentType('application/json; charset=utf-8');
+    var email = req.param('email');
     var username = req.param('username');
     var course_id = req.param('course_id');
 
     Courses
     .findOneById(course_id)
-    .populate('students')
-    .populate('posts')
+    .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
-        return res.send(404, { message: "Course Found Error" });
+        return res.send(500, Error.alert(req, "Export Grades Error", "Fail to find current course."));
 
       Users
       .findById(Arrays.getIds(course.students))
-  		.populate('identifications')
+  		.populateAll()
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
-          return res.send(400, Error.alert(req, "Export Grades Error", "Current course has no student."));
+          return res.send(500, Error.alert(req, "Export Grades Error", "Current course has no student."));
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
-	  		.populate('attendance')
+	  		.populateAll()
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
-	          return res.send(400, Error.alert(req, "Export Grades Error", "Current course has no post."));
+	          return res.send(500, Error.alert(req, "Export Grades Error", "Current course has no post."));
 
 			  	var postsObject = new Array();
 					for (var index in posts)
@@ -724,7 +680,7 @@ module.exports = {
 					})
 					.exec(function callback(err, user) {
 		        if (err || !user)
-		          return res.send(404, { message: "User Found Error" });
+		          return res.send(500, Error.alert(req, "Export Grades Error", "Fail to find user."));
 
 						// create reusable transport method (opens pool of SMTP connections)
 						var smtpTransport = Nodemailer.createTransport("SMTP",{
@@ -738,7 +694,7 @@ module.exports = {
 						var path = Path.resolve(__dirname, '../../assets/emails/export_grades.html');
 						FS.readFile(path, 'utf8', function (err, file) {
 						  if (err)
-			  				return res.send(404, { message: "File Read Error" });
+			          return res.send(500, Error.alert(req, "Export Grades Error", "Fail to read email format file."));
 
 							var today = new Date();
 							var dd = today.getDate();

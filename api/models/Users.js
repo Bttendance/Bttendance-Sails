@@ -39,6 +39,11 @@ module.exports = {
       model: 'Devices'
     },
 
+    // One to One
+    notification: {
+      model: 'Notifications'
+    },
+
     // Many to Many
     supervising_courses: {
     	collection: 'Courses',
@@ -78,6 +83,7 @@ module.exports = {
       delete obj.updatedAt;
       delete obj.password;
       delete obj.device;
+      delete obj.notification;
       delete obj.supervising_courses;
       delete obj.attending_courses;
       delete obj.employed_schools;
@@ -93,6 +99,7 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.password = this.password;
       obj.device = this.device;
+      obj.notification = this.notification;
       obj.supervising_courses = this.supervising_courses;
       obj.attending_courses = this.attending_courses;
       obj.employed_schools = this.employed_schools;
@@ -115,11 +122,24 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     values.password = PasswordHash.generate(values.password);
-    next();
+    Notifications
+    .create()
+    .exec(function callback(err, notification) {
+      if (err || !notification)
+        done(err);
+      values.notification = notification.id;
+      next();
+    });
   },
 
   afterCreate: function(values, next) {
-    next();
+    Notifications
+    .update({id: values.notification}, {owner: values.id})
+    .exec(function callback(err, notification) {
+      if (err || !notification)
+        next(err);
+      next();
+    });
   },
 
   beforeUpdate: function(values, next) {

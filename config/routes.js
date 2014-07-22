@@ -130,6 +130,22 @@ module.exports.routes = {
     action: 'update_notification_key'
   },
 
+  /************* Notifications API ************/  
+  'put /api/notifications/update/attendance': {
+    controller: 'notifications',
+    action: 'update_attendance'
+  },  
+
+  'put /api/notifications/update/clicker': {
+    controller: 'notifications',
+    action: 'update_clicker'
+  },
+
+  'put /api/notifications/update/notice': {
+    controller: 'notifications',
+    action: 'update_notice'
+  },
+
   /************* Identifications API ************/  
   'put /api/identifications/update/identity': {
     controller: 'identifications',
@@ -158,14 +174,19 @@ module.exports.routes = {
   },
 
   /************* Courses API ************/  
-  'post /api/courses/create': {
-    controller: 'courses',
-    action: 'create'
-  },
-
   'post /api/courses/create/request': {
     controller: 'courses',
     action: 'create_request'
+  },  
+
+  'post /api/courses/create/instant': {
+    controller: 'courses',
+    action: 'create_instant'
+  },
+
+  'get /api/courses/search': {
+    controller: 'courses',
+    action: 'search'
   },
 
   'put /api/courses/attend': {
@@ -195,7 +216,7 @@ module.exports.routes = {
 
   'get /api/courses/grades': {
     controller: 'courses',
-    action: 'grades'
+    action: 'attendance_grades'
   },
 
   'get /api/courses/attendance/grades': {
@@ -255,12 +276,7 @@ module.exports.routes = {
     action: 'uncheck_manually'
   },
 
-  /************* Clickers API ************/  
-  'put /api/clickers/connect': {
-    controller: 'clickers',
-    action: 'connect'
-  },
-
+  /************* Clickers API ************/ 
   'put /api/clickers/click': {
     controller: 'clickers',
     action: 'click'
@@ -270,11 +286,6 @@ module.exports.routes = {
   'put /api/notices/seen': {
     controller: 'notices',
     action: 'seen'
-  },
-
-  'put /api/notices/resend': {
-    controller: 'notices',
-    action: 'resend'
   },
 
   /************* Tokens API ************/  

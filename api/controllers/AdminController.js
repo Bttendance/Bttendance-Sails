@@ -26,12 +26,7 @@ module.exports = {
 			if (id == 'all')
 				Users
 				.find()
-				.populate('device')
-				.populate('supervising_courses')
-				.populate('attending_courses')
-				.populate('employed_schools')
-				.populate('enrolled_schools')
-				.populate('identifications')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, users) {
 					if (err || !users) {
@@ -47,12 +42,7 @@ module.exports = {
 			else 
 				Users
 				.findOneById(Number(id))
-				.populate('device')
-				.populate('supervising_courses')
-				.populate('attending_courses')
-				.populate('employed_schools')
-				.populate('enrolled_schools')
-				.populate('identifications')
+				.populateAll()
 				.exec(function callback (err, user) {
 					if (err || !user) {
 						res.contentType('html');
@@ -66,9 +56,7 @@ module.exports = {
 			if (id == 'all')
 				Schools
 				.find()
-				.populate('courses')
-				.populate('professors')
-				.populate('students')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, schools) {
 					if (err || !schools) {
@@ -84,9 +72,7 @@ module.exports = {
 			else 
 				Schools
 				.findOneById(Number(id))
-				.populate('courses')
-				.populate('professors')
-				.populate('students')
+				.populateAll()
 				.exec(function callback (err, school) {
 					if (err || !school) {
 						res.contentType('html');
@@ -100,10 +86,7 @@ module.exports = {
 			if (id == 'all')
 				Courses
 				.find()
-				.populate('posts')
-		  	.populate('managers')
-		  	.populate('students')
-		  	.populate('school')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, courses) {
 					if (err || !courses) {
@@ -119,10 +102,7 @@ module.exports = {
 			else 
 				Courses
 				.findOneById(Number(id))
-				.populate('posts')
-		  	.populate('managers')
-		  	.populate('students')
-		  	.populate('school')
+				.populateAll()
 				.exec(function callback (err, course) {
 					if (err || !course) {
 						res.contentType('html');
@@ -136,11 +116,7 @@ module.exports = {
 			if (id == 'all')
 				Posts
 				.find()
-				.populate('author')
-				.populate('course')
-				.populate('attendance')
-				.populate('clicker')
-				.populate('notice')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, posts) {
 					if (err || !posts) {
@@ -156,11 +132,7 @@ module.exports = {
 			else 
 				Posts
 				.findOneById(Number(id))
-				.populate('author')
-				.populate('course')
-				.populate('attendance')
-				.populate('clicker')
-				.populate('notice')
+				.populateAll()
 				.exec(function callback (err, post) {
 					if (err || !post) {
 						res.contentType('html');
@@ -174,7 +146,7 @@ module.exports = {
 			if (id == 'all')
 				Devices
 				.find()
-				.populate('owner')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, devices) {
 					if (err || !devices) {
@@ -190,7 +162,7 @@ module.exports = {
 			else 
 				Devices
 				.findOneById(Number(id))
-				.populate('owner')
+				.populateAll()
 				.exec(function callback (err, device) {
 					if (err || !device) {
 						res.contentType('html');
@@ -200,11 +172,71 @@ module.exports = {
 				  	return res.send(device.toWholeObject());
 					}
 				});
+		} else if (model == 'notifications') {
+			if (id == 'all')
+				Notifications
+				.find()
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, notifications) {
+					if (err || !notifications) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < notifications.length; i++)
+							notifications[i] = notifications[i].toWholeObject();
+				  	return res.send(notifications);
+					}
+				});
+			else 
+				Notifications
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, notification) {
+					if (err || !notification) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(notification.toWholeObject());
+					}
+				});
+		} else if (model == 'identifications') {
+			if (id == 'all')
+				Identifications
+				.find()
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, identifications) {
+					if (err || !identifications) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < identifications.length; i++)
+							identifications[i] = identifications[i].toWholeObject();
+				  	return res.send(identifications);
+					}
+				});
+			else 
+				Identifications
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, identification) {
+					if (err || !identification) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(identification.toWholeObject());
+					}
+				});
 		} else if (model == 'attendances') {
 			if (id == 'all')
 				Attendances
 				.find()
-				.populate('post')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, attendances) {
 					if (err || !attendances) {
@@ -220,7 +252,7 @@ module.exports = {
 			else 
 				Attendances
 				.findOneById(Number(id))
-				.populate('post')
+				.populateAll()
 				.exec(function callback (err, attendance) {
 					if (err || !attendance) {
 						res.contentType('html');
@@ -234,7 +266,7 @@ module.exports = {
 			if (id == 'all')
 				Clickers
 				.find()
-				.populate('post')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, clickers) {
 					if (err || !clickers) {
@@ -250,7 +282,7 @@ module.exports = {
 			else 
 				Clickers
 				.findOneById(Number(id))
-				.populate('post')
+				.populateAll()
 				.exec(function callback (err, clicker) {
 					if (err || !clicker) {
 						res.contentType('html');
@@ -264,7 +296,7 @@ module.exports = {
 			if (id == 'all')
 				Notices
 				.find()
-				.populate('post')
+				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, notices) {
 					if (err || !notices) {
@@ -280,7 +312,7 @@ module.exports = {
 			else 
 				Notices
 				.findOneById(Number(id))
-				.populate('post')
+				.populateAll()
 				.exec(function callback (err, notice) {
 					if (err || !notice) {
 						res.contentType('html');
@@ -327,7 +359,7 @@ module.exports = {
 	noti: function(req, res) {
 		Users
 		.findOneByUsername('galaxys2')
-		.populate('device')
+		.populateAll()
 		.exec(function callback(err, user) {
 			var Noti = require('../utils/notifications');
 			Noti.send(user, "BTTENDANCE", "You have succeed to send a message.", "message");

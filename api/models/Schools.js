@@ -44,9 +44,9 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
+      delete obj.courses;
       delete obj.students;
       delete obj.professors;
-      delete obj.courses;
       return obj;
     },
 
@@ -55,41 +55,11 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.courses_count = this.courses.length;
+      obj.professors_count = this.professors.length;
+      obj.students_count = this.students.length;
       return obj;
-    }
-    
-  },
-
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
-  afterUpdate: function(values, next) {
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
+    } 
   }
 
 };
