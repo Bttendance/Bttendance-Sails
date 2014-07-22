@@ -63,7 +63,7 @@ module.exports = {
 			for (var i = 0; i < schools.length; i++) {
 				schools[i] = schools[i].toWholeObject();
 				// Will be Deprecated
-				schools[i].website = schools[i].courses_count + 'Courses/' + schools[i].professors_count + 'Professors/' + schools[i].students_count + 'Students';
+				schools[i].website = schools[i].courses_count + '_Courses,_' + schools[i].professors_count + '_Professors,_' + schools[i].students_count + '_Students';
 			}
 	  	return res.send(schools);
 		});
