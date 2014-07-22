@@ -19,6 +19,8 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
     // send back socketId to Client
     Clickers.watch(socket);
+    Attendances.watch(socket);
+    Notices.watch(socket);
     var socketID = sails.sockets.id(socket);
     sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
   },

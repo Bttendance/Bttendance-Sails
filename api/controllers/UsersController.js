@@ -622,42 +622,104 @@ module.exports = {
 					
 					for (var i = 0; i < courses.length; i++) {
 
-						var attendance_rate = 0;
-						var clicker_rate = 0;
-						var notice_unseen = 0;
-						var clicker_usage = 0;
-						var notice_usage = 0;
-
 						// Attendance
-						var checks = new Array();
-						var attd_check_count = 0;
-						var attd_checked_count = 0;
+						var attendance_rate = 0; //전체 출석률 or 본인의 출석률
+						var attd_last = undefined; //가장 마지막 attendance
+						var attd_checks = new Array(); //checked_students를 모두 합한 Array
+						var attd_usage = 0; //attd check을 여태까지 몇번했는지
+						var attd_checked_count = 0; //본인이 attd check이 몇번 되었는지 (강의자의 경우 attd check을 한것으로 인정)
+
+						// Clicker
+						var clicker_rate = 0; //전체 참여율 or 본인의 참여율
+						var clicker_last = undefined; //가장 마지막 clicker
+						var clicker_checks = new Array(); //a_students, b_students, c_students, d_students, e_students를 모두 합한 Array
+						var clicker_usage = 0; //clicker를 여태까지 몇번 사용 했는지
+						var clicker_checked_count = 0; //본인이 clicker를 몇번 참여했는지 (강의자의 경우 참여 안한 것으로 간주)
+
+						// Notice
+						var notice_unseen = 0;
+						var notice_last; //가장 마지막 attendance
+						var notice_usage = 0; //notice를 post한 횟수
+						var notice_seen_count = 0; //본인이 notice를 몇개 보았는지 (강의자의 경우 안본 것으로 간주)
+
 						for (var j = 0; j < posts.length; j++) {
-							if (posts[j].course == courses[i].id && posts[j].type == "attendance") {
+
+							// Attendance Count
+							if (posts[j].course.id == courses[i].id && posts[j].type == "attendance") {
 								if (posts[j].attendance.checked_students.indexOf(user.id) >= 0)
 									attd_checked_count++;
-								checks = checks.concat(posts[j].attendance.checked_students);
-								attd_check_count++;
+
+								if (!attd_last)
+									attd_last = posts[j].attendance;
+
+								attd_checks = attd_checks.concat(posts[j].attendance.checked_students);
+
+								attd_usage++;
+							}
+
+							// Clicker Count
+							if (posts[j].course.id == courses[i].id && posts[j].type == "clicker") {
+								if (posts[j].clicker.a_students.indexOf(user.id) >= 0)
+									clicker_checked_count++;
+								if (posts[j].clicker.b_students.indexOf(user.id) >= 0)
+									clicker_checked_count++;
+								if (posts[j].clicker.c_students.indexOf(user.id) >= 0)
+									clicker_checked_count++;
+								if (posts[j].clicker.d_students.indexOf(user.id) >= 0)
+									clicker_checked_count++;
+								if (posts[j].clicker.e_students.indexOf(user.id) >= 0)
+									clicker_checked_count++;
+
+								clicker_checks = clicker_checks.concat(posts[j].clicker.a_students);
+								clicker_checks = clicker_checks.concat(posts[j].clicker.b_students);
+								clicker_checks = clicker_checks.concat(posts[j].clicker.c_students);
+								clicker_checks = clicker_checks.concat(posts[j].clicker.d_students);
+								clicker_checks = clicker_checks.concat(posts[j].clicker.e_students);
+
+								clicker_usage++;
+							}
+
+							// Notice Count
+							if (posts[j].course.id == courses[i].id && posts[j].type == "notice") {
+								if (posts[j].notice.seen_students.indexOf(user.id) >= 0)
+									notice_seen_count++;
+
+								if (!notice_last)
+									notice_last = posts[j].notice;
+
+								notice_usage++;
 							}
 						}
 
 	  				if (supervising_courses.indexOf(courses[i].id) >= 0) {
-							attendance_rate = Number( ( (checks.length - attd_check_count) / attd_check_count / courses[i].students.length * 100).toFixed() );
+							attendance_rate = Number( ( (attd_checks.length - attd_usage) / attd_usage / courses[i].students.length * 100).toFixed() );
+							clicker_rate = Number( ( clicker_checks.length / clicker_usage / courses[i].students.length * 100).toFixed() );
+							if (notice_last)
+								notice_unseen = courses[i].students.length - notice_last.seen_students.length;
 	  				} else {
-							attendance_rate = Number( (attd_checked_count / attd_check_count * 100).toFixed() );
+							attendance_rate = Number( (attd_checked_count / attd_usage * 100).toFixed() );
+							clicker_rate = Number( (clicker_checked_count / clicker_usage * 100).toFixed() );
+							notice_unseen = notice_usage - notice_seen_count;
 	  				}
 
 	  				// Attendance Rate >= 0 & < 100
-  					if (attendance_rate < 0 || attd_check_count == 0) attendance_rate = 0;
+  					if (attendance_rate < 0 || attd_usage == 0 || isNaN(attendance_rate)) attendance_rate = 0;
   					if (attendance_rate > 100) attendance_rate = 100;
+
+	  				// Attendance Rate >= 0 & < 100
+  					if (clicker_rate < 0 || clicker_usage == 0 || isNaN(clicker_rate)) clicker_rate = 0;
+  					if (clicker_rate > 100) clicker_rate = 100;
 
 						courses[i] = courses[i].toWholeObject();
   					courses[i].grade = attendance_rate;
   					courses[i].attendance_rate = attendance_rate;
-  					courses[i].clicker_rate = attendance_rate;
-  					courses[i].notice_unseen = attendance_rate;
+  					courses[i].clicker_rate = clicker_rate;
+  					courses[i].notice_unseen = notice_unseen;
   					courses[i].clicker_usage = clicker_usage;
   					courses[i].notice_usage = notice_usage;
+  					if (attd_last)
+	  					courses[i].attdCheckedAt = attd_last.createdAt;
+
 					}
 			  	return res.send(courses);
 	  		});
