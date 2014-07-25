@@ -547,7 +547,7 @@ module.exports = {
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
-		  					message = "Attendance rate : " + grade + "% (" + (posts[i].attendance.checked_students.length - 1) + "/" + course.students.length;
+		  					message = "Attendance rate : " + grade + "% ( " + (posts[i].attendance.checked_students.length - 1) + "/" + course.students.length + " )";
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
 		  						message = "Attendance Checked";
