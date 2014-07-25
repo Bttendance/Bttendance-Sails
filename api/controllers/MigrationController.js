@@ -95,7 +95,7 @@ module.exports = {
 		Schools.update({ name: 'MIT' }, { type: 'university' }).exec(function callback(err, school){});
 		Schools.update({ name: 'Gang Dong University' }, { type: 'university' }).exec(function callback(err, school){});
 		Schools.update({ name: 'Seoul Science High School' }, { type: 'school' }).exec(function callback(err, school){});
-		Schools.update({ name: 'ROKAF_ATC' }, { type: 'army' }).exec(function callback(err, school){});
+		Schools.update({ name: 'ROKAF_ATC' }, { type: 'etc' }).exec(function callback(err, school){});
 
 		// Add Opened/Code for all Courses
 		Courses.find().sort('id ASC').exec(function callback(err, courses) {

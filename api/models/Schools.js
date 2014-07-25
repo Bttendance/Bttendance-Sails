@@ -16,7 +16,7 @@ module.exports = {
     	required: true
     },
 
-    // university, school, institute, army
+    // university, school, institute, etc
     type: {
       type: 'string',
       required: true
