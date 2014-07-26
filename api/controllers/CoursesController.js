@@ -62,7 +62,7 @@ module.exports = {
 				  var link = 'http://' + Url.parse(req.baseUrl).hostname + "/verify/" + token.key;
 
 					// create reusable transport method (opens pool of SMTP connections)
-					var smtpTransport = Nodemailer.createTransport("SMTP",{
+					var smtpTransport = Nodemailer.createTransport({
 					    service: "Gmail",
 					    auth: {
 					        user: "no-reply@bttendance.com",
@@ -92,8 +92,8 @@ module.exports = {
 						}
 
 						// send mail with defined transport object
-						smtpTransport.sendMail(mailOptions, function(error, response) {
-					    if(error || !response || !response.message)
+						smtpTransport.sendMail(mailOptions, function(error, info) {
+					    if(error)
 							  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
 			        return res.send(Email.json(user.email));
 						});
@@ -684,7 +684,7 @@ module.exports = {
 		          return res.send(500, Error.alert(req, "Export Grades Error", "Fail to find user."));
 
 						// create reusable transport method (opens pool of SMTP connections)
-						var smtpTransport = Nodemailer.createTransport("SMTP",{
+						var smtpTransport = Nodemailer.createTransport({
 						    service: "Gmail",
 						    auth: {
 						        user: "no-reply@bttendance.com",
@@ -732,8 +732,8 @@ module.exports = {
 							}
 
 							// send mail with defined transport object
-							smtpTransport.sendMail(mailOptions, function(error, response) {
-							    if(error || !response || !response.message)
+							smtpTransport.sendMail(mailOptions, function(error, info) {
+							    if(error)
 									  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
 					        return res.send(Email.json(user.email));
 							});

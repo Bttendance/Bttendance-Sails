@@ -283,7 +283,7 @@ module.exports = {
 		  user.password = PasswordHash.generate(password);
 
 			// create reusable transport method (opens pool of SMTP connections)
-			var smtpTransport = Nodemailer.createTransport("SMTP",{
+			var smtpTransport = Nodemailer.createTransport({
 			    service: "Gmail",
 			    auth: {
 			        user: "no-reply@bttendance.com",
@@ -312,8 +312,8 @@ module.exports = {
 						return res.send(400, Error.alert(req, "Password Recovery Error", "Password recovery has been failed."));
 
 					// send mail with defined transport object
-					smtpTransport.sendMail(mailOptions, function(error, response) {
-				    if(error || !response || !response.message)
+					smtpTransport.sendMail(mailOptions, function(error, info) {
+				    if(error)
 						  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
 		        return res.send(Email.json(user.email));
 					});
@@ -353,7 +353,7 @@ module.exports = {
 	    user.password = PasswordHash.generate(password_new);
 
 			// create reusable transport method (opens pool of SMTP connections)
-			var smtpTransport = Nodemailer.createTransport("SMTP",{
+			var smtpTransport = Nodemailer.createTransport({
 			    service: "Gmail",
 			    auth: {
 			        user: "no-reply@bttendance.com",
@@ -382,8 +382,8 @@ module.exports = {
 						return res.send(400, Error.alert(req, "Password Update Error", "Updating password has been failed."));
 
 					// send mail with defined transport object
-					smtpTransport.sendMail(mailOptions, function(error, response) {
-				    if(error || !response || !response.message)
+					smtpTransport.sendMail(mailOptions, function(error, info) {
+				    if(error)
 						  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
 		        return res.send(user.toWholeObject());
 					});
