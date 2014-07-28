@@ -200,7 +200,7 @@ module.exports = {
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your username of email address again."));
+		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your USERNAME or EMAIL address again."));
 
 			if (username == "appletest0"
 		|| username == "appletest1" 
@@ -258,7 +258,7 @@ module.exports = {
 				});
 			} else {
 				if (!PasswordHash.verify(password, user.password)) {
-				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your password again."));
+				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
 			  } else if (user.device.uuid != device_uuid) {
 				  return res.send(500, Error.alert(req, "Sign In Error", "We doesn't support multi devices for now. If you have changed your phone, please contact us via contact@bttendance.com."));
 			  } else {

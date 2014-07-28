@@ -191,11 +191,11 @@ module.exports = {
 
 		  var supervising_courses = Arrays.getIds(user.supervising_courses);
 		  if (supervising_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(500, Error.log(req, "Course Attend Error", "User is supervising this course."));
+		    return res.send(500, Error.log(req, "Course Attend Error", "You are already supervising current course."));
 
 		  var attending_courses = Arrays.getIds(user.attending_courses);
 		  if (attending_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(user.toWholeObject());
+		    return res.send(500, Error.log(req, "Course Attend Error", "You are already attending current course."));
 
 			user.attending_courses.add(course_id);
 			user.save(function callback(err) {
