@@ -28,62 +28,71 @@ module.exports = {
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.exec(function callback(err, user) {
-			if(err || !user)
-  			return res.send(500, Error.log(req, "Start Clicker Error", "User doesn't exist."));
 
-			Posts
-			.create({
-			  author: user.id,
-			  course: course_id,
-			  message: message,
-			  type: 'clicker',
-			  choice_count: choice_count
-			}).exec(function callback(err, post) {
-				if (err || !post)
-	  			return res.send(500, Error.alert(req, "Start Clicker Error", "Fail to create a post."));
+		Courses.findOneById(course_id).exec(function callback(err, course) {
+			if (err || !course)
+			    return res.send(500, Error.log(req, "Start Clicker Error", "Course doesn't exist."));
 
-	    	Posts
-	    	.findOneById(post.id)
-	    	.populateAll()
-	  		.exec(function callback(err, post) {
-	  			if (err || !post)
-		  			return res.send(500, Error.log(req, "Start Clicker Error", "Post doesn't exist."));
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Start Clicker Error", "Current course is closed."));
 
-		    	Courses
-		    	.findOneById(post.course.id)
+			Users
+			.findOne({
+			  or : [
+			    { email: email },
+			    { username: username }
+			  ]
+			})
+			.exec(function callback(err, user) {
+				if(err || !user)
+	  			return res.send(500, Error.log(req, "Start Clicker Error", "User doesn't exist."));
+
+				Posts
+				.create({
+				  author: user.id,
+				  course: course_id,
+				  message: message,
+				  type: 'clicker',
+				  choice_count: choice_count
+				}).exec(function callback(err, post) {
+					if (err || !post)
+		  			return res.send(500, Error.alert(req, "Start Clicker Error", "Fail to create a post."));
+
+		    	Posts
+		    	.findOneById(post.id)
 		    	.populateAll()
-			  	.exec(function callback(err, course) {
-		    		if (err || !course)
-			  			return res.send(500, Error.log(req, "Start Clicker Error", "Course doesn't exist."));
+		  		.exec(function callback(err, post) {
+		  			if (err || !post)
+			  			return res.send(500, Error.log(req, "Start Clicker Error", "Post doesn't exist."));
 
-				  	// Send notification about post to Prof & Std
-				  	var notiUsers = new Array();
-				  	for (var i = 0; i < course.students.length; i++)
-				  		notiUsers.push(course.students[i].id);
-				  	for (var i = 0; i < course.managers.length; i++)
-				  		notiUsers.push(course.managers[i].id);
-				  	
-			  		Users
-			  		.findById(notiUsers)
-						.populate('device')
-			  		.sort('id DESC')
-			  		.exec(function callback(err, users) {
-			  			for (var j = 0; j < users.length; j++)
-			  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
-			  		});
+			    	Courses
+			    	.findOneById(post.course.id)
+			    	.populateAll()
+				  	.exec(function callback(err, course) {
+			    		if (err || !course)
+				  			return res.send(500, Error.log(req, "Start Clicker Error", "Course doesn't exist."));
 
-			  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
+					  	// Send notification about post to Prof & Std
+					  	var notiUsers = new Array();
+					  	for (var i = 0; i < course.students.length; i++)
+					  		notiUsers.push(course.students[i].id);
+					  	for (var i = 0; i < course.managers.length; i++)
+					  		notiUsers.push(course.managers[i].id);
+					  	
+				  		Users
+				  		.findById(notiUsers)
+							.populate('device')
+				  		.sort('id DESC')
+				  		.exec(function callback(err, users) {
+				  			for (var j = 0; j < users.length; j++)
+				  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
+				  		});
 
-				  	return res.send(post.toWholeObject());
-			  	});
+				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
+
+					  	return res.send(post.toWholeObject());
+				  	});
+					});
 				});
 			});
 		});
@@ -95,62 +104,70 @@ module.exports = {
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.exec(function callback(err, user) {
-			if(err || !user)
-  			return res.send(500, Error.log(req, "Start Attendance Error", "User doesn't exist."));
+		Courses.findOneById(course_id).exec(function callback(err, course) {
+			if (err || !course)
+			    return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
 
-			Posts
-			.create({
-			  author: user.id,
-			  course: course_id,
-			  type: 'attendance'
-			}).exec(function callback(err, post) {
-				if (err || !post)
-	  			return res.send(500, Error.alert(req, "Start Attendance Error", "Fail to create a post."));
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Start Attendance Error", "Current course is closed."));
 
-	    	Posts
-	    	.findOneById(post.id)
-	    	.populateAll()
-	  		.exec(function callback(err, post) {
-	  			if (err || !post)
-		  			return res.send(500, Error.log(req, "Start Attendance Error", "Post doesn't exist."));
+			Users
+			.findOne({
+			  or : [
+			    { email: email },
+			    { username: username }
+			  ]
+			})
+			.exec(function callback(err, user) {
+				if(err || !user)
+	  			return res.send(500, Error.log(req, "Start Attendance Error", "User doesn't exist."));
 
-		    	Courses
-		    	.findOneById(post.course.id)
+				Posts
+				.create({
+				  author: user.id,
+				  course: course_id,
+				  type: 'attendance'
+				}).exec(function callback(err, post) {
+					if (err || !post)
+		  			return res.send(500, Error.alert(req, "Start Attendance Error", "Fail to create a post."));
+
+		    	Posts
+		    	.findOneById(post.id)
 		    	.populateAll()
-			  	.exec(function callback(err, course) {
-		    		if (err || !course)
-			  			return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
+		  		.exec(function callback(err, post) {
+		  			if (err || !post)
+			  			return res.send(500, Error.log(req, "Start Attendance Error", "Post doesn't exist."));
 
-				  	// Send notification about post to Prof & Std
-				  	var notiUsers = new Array();
-				  	for (var i = 0; i < course.students.length; i++)
-				  		notiUsers.push(course.students[i].id);
-				  	for (var i = 0; i < course.managers.length; i++)
-				  		notiUsers.push(course.managers[i].id);
-				  	
-			  		Users
-			  		.findById(notiUsers)
-						.populate('device')
-			  		.sort('id DESC')
-			  		.exec(function callback(err, users) {
-			  			for (var j = 0; j < users.length; j++)
-			  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
-			  		});
+			    	Courses
+			    	.findOneById(post.course.id)
+			    	.populateAll()
+				  	.exec(function callback(err, course) {
+			    		if (err || !course)
+				  			return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
 
-			  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 40000);
-			  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
-			  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
+					  	// Send notification about post to Prof & Std
+					  	var notiUsers = new Array();
+					  	for (var i = 0; i < course.students.length; i++)
+					  		notiUsers.push(course.students[i].id);
+					  	for (var i = 0; i < course.managers.length; i++)
+					  		notiUsers.push(course.managers[i].id);
+					  	
+				  		Users
+				  		.findById(notiUsers)
+							.populate('device')
+				  		.sort('id DESC')
+				  		.exec(function callback(err, users) {
+				  			for (var j = 0; j < users.length; j++)
+				  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
+				  		});
 
-				  	return res.send(post.toWholeObject());
-			  	});
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 40000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
+
+					  	return res.send(post.toWholeObject());
+				  	});
+					});
 				});
 			});
 		});
@@ -163,60 +180,68 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.exec(function callback(err, user) {
-			if (err || !user)
-  			return res.send(500, Error.log(req, "Post Notice Error", "User doesn't exist."));
+		Courses.findOneById(course_id).exec(function callback(err, course) {
+			if (err || !course)
+			    return res.send(500, Error.log(req, "Start Notice Error", "Course doesn't exist."));
 
-			Posts.create({
-			  author: user.id,
-			  course: course_id,
-			  message: message,
-			  type: 'notice'
-			}).exec(function callback(err, post) {
-				if (err || !post)
-	  			return res.send(500, Error.alert(req, "Post Notice Error", "Fail to create a post."));
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Start Notice Error", "Current course is closed."));
 
-    		Posts
-    		.findOneById(post.id)
-	    	.populateAll()
-	  		.exec(function callback(err, post) {
-	  			if (err || !post)
-		  			return res.send(500, Error.log(req, "Post Notice Error", "Post doesn't exist."));
+			Users
+			.findOne({
+			  or : [
+			    { email: email },
+			    { username: username }
+			  ]
+			})
+			.exec(function callback(err, user) {
+				if (err || !user)
+	  			return res.send(500, Error.log(req, "Post Notice Error", "User doesn't exist."));
 
-		    	Courses
-		    	.findOneById(post.course.id)
+				Posts.create({
+				  author: user.id,
+				  course: course_id,
+				  message: message,
+				  type: 'notice'
+				}).exec(function callback(err, post) {
+					if (err || !post)
+		  			return res.send(500, Error.alert(req, "Post Notice Error", "Fail to create a post."));
+
+	    		Posts
+	    		.findOneById(post.id)
 		    	.populateAll()
-			  	.exec(function callback(err, course) {
-		    		if (err || !course)
-			  			return res.send(500, Error.log(req, "Post Notice Error", "Course doesn't exist."));
+		  		.exec(function callback(err, post) {
+		  			if (err || !post)
+			  			return res.send(500, Error.log(req, "Post Notice Error", "Post doesn't exist."));
 
-				  	// Send notification about post to Prof & Std
-				  	var notiUsers = new Array();
-				  	for (var i = 0; i < course.students.length; i++)
-				  		notiUsers.push(course.students[i].id);
-				  	for (var i = 0; i < course.managers.length; i++)
-				  		notiUsers.push(course.managers[i].id);
-				  	
-			  		Users
-			  		.findById(notiUsers)
-			  		.populate('device')
-			  		.sort('id DESC')
-			  		.exec(function callback(err, users) {
-			  			for (var j = 0; j < users.length; j++)
-			  				Noti.send(users[j], post.course.name, message, "notice");
-			  		});
+			    	Courses
+			    	.findOneById(post.course.id)
+			    	.populateAll()
+				  	.exec(function callback(err, course) {
+			    		if (err || !course)
+				  			return res.send(500, Error.log(req, "Post Notice Error", "Course doesn't exist."));
 
-				  	return res.send(post.toWholeObject());
-		    	});
-			  });
-	  	});
+					  	// Send notification about post to Prof & Std
+					  	var notiUsers = new Array();
+					  	for (var i = 0; i < course.students.length; i++)
+					  		notiUsers.push(course.students[i].id);
+					  	for (var i = 0; i < course.managers.length; i++)
+					  		notiUsers.push(course.managers[i].id);
+					  	
+				  		Users
+				  		.findById(notiUsers)
+				  		.populate('device')
+				  		.sort('id DESC')
+				  		.exec(function callback(err, users) {
+				  			for (var j = 0; j < users.length; j++)
+				  				Noti.send(users[j], post.course.name, message, "notice");
+				  		});
+
+					  	return res.send(post.toWholeObject());
+			    	});
+				  });
+		  	});
+			});
 		});
 	},
 
@@ -236,6 +261,9 @@ module.exports = {
     	.exec(function callback(err, course) {
 				if (err || !course)
 	  			return res.send(500, Error.log(req, "Delete Post Error", "Course doesn't exist."));
+	  		
+				if (!course.opened)
+				    return res.send(500, Error.alert(req, "Delete Post  Error", "Current course is closed."));
 
 	    	course.posts.remove(post_id);
 	    	course.save(function callback(err) {

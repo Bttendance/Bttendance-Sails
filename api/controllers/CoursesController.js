@@ -147,7 +147,6 @@ module.exports = {
 							if (err || !user_new)
 						    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
 
-							Noti.send(user, "Bttendance", "Your course " + course.name + " has been created", "course_created");
 					  	return res.send(user_new.toWholeObject());
 						});
 					});
@@ -176,47 +175,55 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
+
+		Courses.findOneById(course_id).exec(function callback(err, course) {
+			if (err || !course)
+			    return res.send(500, Error.log(req, "Course Attend Error", "Course doesn't exist."));
+
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Course Attend Error", "Current course is closed."));
 		
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.populateAll()
-		.exec(function callback(err, user) {
-			if (err || !user)
-		    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
+			Users
+			.findOne({
+			  or : [
+			    { email: email },
+			    { username: username }
+			  ]
+			})
+			.populateAll()
+			.exec(function callback(err, user) {
+				if (err || !user)
+			    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
 
-		  var supervising_courses = Arrays.getIds(user.supervising_courses);
-		  if (supervising_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(500, Error.alert(req, "Course Attend Error", "You are already supervising current course."));
+			  var supervising_courses = Arrays.getIds(user.supervising_courses);
+			  if (supervising_courses.indexOf(Number(course_id)) != -1)
+			    return res.send(500, Error.alert(req, "Course Attend Error", "You are already supervising current course."));
 
-		  var attending_courses = Arrays.getIds(user.attending_courses);
-		  if (attending_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(500, Error.alert(req, "Course Attend Error", "You are already attending current course."));
+			  var attending_courses = Arrays.getIds(user.attending_courses);
+			  if (attending_courses.indexOf(Number(course_id)) != -1)
+			    return res.send(500, Error.alert(req, "Course Attend Error", "You are already attending current course."));
 
-			user.attending_courses.add(course_id);
-			user.save(function callback(err) {
-				if (err)
-			    return res.send(500, Error.log(req, "Course Attend Error", "Fail to save user."));
+				user.attending_courses.add(course_id);
+				user.save(function callback(err) {
+					if (err)
+				    return res.send(500, Error.log(req, "Course Attend Error", "Fail to save user."));
 
-		    Users
-				.findOne({
-				  or : [
-				    { email: email },
-				    { username: username }
-				  ]
-				})
-				.populateAll()
-				.exec(function callback(err, user_new) {
-					if (err || !user_new)
-				    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
+			    Users
+					.findOne({
+					  or : [
+					    { email: email },
+					    { username: username }
+					  ]
+					})
+					.populateAll()
+					.exec(function callback(err, user_new) {
+						if (err || !user_new)
+					    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
 
-			  	return res.send(user_new.toWholeObject());
-				});
-		  });
+				  	return res.send(user_new.toWholeObject());
+					});
+			  });
+			});
 		});
 	},
 
@@ -225,47 +232,55 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
+
+		Courses.findOneById(course_id).exec(function callback(err, course) {
+			if (err || !course)
+			    return res.send(500, Error.log(req, "Course Unjoin Error", "Course doesn't exist."));
+
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Course Unjoin Error", "Current course is closed."));
 		
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.populateAll()
-		.exec(function callback(err, user) {
-			if (err || !user)
-		    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
+			Users
+			.findOne({
+			  or : [
+			    { email: email },
+			    { username: username }
+			  ]
+			})
+			.populateAll()
+			.exec(function callback(err, user) {
+				if (err || !user)
+			    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
 
-		  var supervising_courses = Arrays.getIds(user.supervising_courses);
-		  if (supervising_courses.indexOf(Number(course_id)) != -1)
-		    return res.send(500, Error.log(req, "Course Unjoin Error", "User is supervising this course."));
+			  var supervising_courses = Arrays.getIds(user.supervising_courses);
+			  if (supervising_courses.indexOf(Number(course_id)) != -1)
+			    return res.send(500, Error.log(req, "Course Unjoin Error", "User is supervising this course."));
 
-		  var attending_courses = Arrays.getIds(user.attending_courses);
-		  if (attending_courses.indexOf(Number(course_id)) == -1)
-		    return res.send(500, Error.log(req, "Course Unjoin Error", "User is not attending this course"));
+			  var attending_courses = Arrays.getIds(user.attending_courses);
+			  if (attending_courses.indexOf(Number(course_id)) == -1)
+			    return res.send(500, Error.log(req, "Course Unjoin Error", "User is not attending this course"));
 
-			user.attending_courses.remove(course_id);
-			user.save(function callback(err) {
-				if (err)
-			    return res.send(500, Error.log(req, "Course Unjoin Error", "Fail to save user."));
+				user.attending_courses.remove(course_id);
+				user.save(function callback(err) {
+					if (err)
+				    return res.send(500, Error.log(req, "Course Unjoin Error", "Fail to save user."));
 
-		    Users
-				.findOne({
-				  or : [
-				    { email: email },
-				    { username: username }
-				  ]
-				})
-				.populateAll()
-				.exec(function callback(err, user_new) {
-					if (err || !user_new)
-				    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
+			    Users
+					.findOne({
+					  or : [
+					    { email: email },
+					    { username: username }
+					  ]
+					})
+					.populateAll()
+					.exec(function callback(err, user_new) {
+						if (err || !user_new)
+					    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
 
-			  	return res.send(user_new.toWholeObject());
-				});
-		  });
+				  	return res.send(user_new.toWholeObject());
+					});
+			  });
+			});
 		});
 	},
 
@@ -393,6 +408,9 @@ module.exports = {
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(500, Error.alert(req, "Adding Manager Error", "Course doesn't exist."));
+
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Adding Manager Error", "Current course is closed."));
  
       if (Arrays.getUsernames(course.managers).indexOf(username) == -1 && Arrays.getEmails(course.managers).indexOf(email) == -1)
         return res.send(500, Error.alert(req, "Adding Manager Error", "You are not supervising current course."));
