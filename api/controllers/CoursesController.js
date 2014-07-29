@@ -180,6 +180,8 @@ module.exports = {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Course Attend Error", "Course doesn't exist."));
 
+			console.log('attend : ' + course.opened);
+
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Course Attend Error", "Current course is closed."));
 		
