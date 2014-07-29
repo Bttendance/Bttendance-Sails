@@ -261,9 +261,9 @@ module.exports = {
     	.exec(function callback(err, course) {
 				if (err || !course)
 	  			return res.send(500, Error.log(req, "Delete Post Error", "Course doesn't exist."));
-	  		
+
 				if (!course.opened)
-				    return res.send(500, Error.alert(req, "Delete Post  Error", "Current course is closed."));
+				    return res.send(500, Error.alert(req, "Delete Post Error", "Current course is closed."));
 
 	    	course.posts.remove(post_id);
 	    	course.save(function callback(err) {

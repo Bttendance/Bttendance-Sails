@@ -158,9 +158,15 @@ module.exports = {
 	search: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var course_code = req.param('course_code');
+		var course_id = req.param('course_id');
 
 		Courses
-		.findOneByCode(course_code)
+		.findOne({
+		  or : [
+		    { id: course_id },
+		    { code: course_code }
+		  ]
+		})
 		.populateAll()
 		.exec(function callback(err, course) {
 			if (err || !course)
@@ -179,8 +185,6 @@ module.exports = {
 		Courses.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Course Attend Error", "Course doesn't exist."));
-
-			console.log('attend : ' + course.opened);
 
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Course Attend Error", "Current course is closed."));
@@ -358,6 +362,52 @@ module.exports = {
 	  		});
 			});
 		});
+	},
+
+	open: function(req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var email = req.param('email');
+    var course_id = req.param('course_id');
+
+    Courses
+    .update({ id : course_id }, { opened : true })
+    .exec(function callback(err, course) {
+      if (err || !course)
+		    return res.send(500, Error.alert(req, "Course Open Error", "Course update error."));
+
+		  Users
+		  .findOneByEmail(email)
+		  .populateAll()
+		  .exec(function callback(err, user) {
+	      if (err || !user)
+			    return res.send(500, Error.log(req, "Course Open Error", "Fail to find user."));
+
+			  	return res.send(user.toWholeObject());
+		  });
+    });
+	},
+
+	close: function(req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var email = req.param('email');
+    var course_id = req.param('course_id');
+
+    Courses
+    .update({ id : course_id }, { opened : false })
+    .exec(function callback(err, course) {
+      if (err || !course)
+		    return res.send(500, Error.alert(req, "Course Open Error", "Course update error."));
+
+		  Users
+		  .findOneByEmail(email)
+		  .populateAll()
+		  .exec(function callback(err, user) {
+	      if (err || !user)
+			    return res.send(500, Error.log(req, "Course Open Error", "Fail to find user."));
+
+			  	return res.send(user.toWholeObject());
+		  });
+    });
 	},
 
 	students: function(req, res) {

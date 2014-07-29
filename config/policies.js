@@ -72,6 +72,8 @@ module.exports.policies = {
     attend: 'isUser',
     dettend: 'attending',
     feed: 'attending_or_supervising',
+    open: 'supervising',
+    close: 'supervising',
     students: 'supervising',
     add_manager: 'supervising',
     attendance_grades: 'supervising',

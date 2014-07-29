@@ -204,6 +204,16 @@ module.exports.routes = {
     action: 'feed'
   },
 
+  'put /api/courses/open': {
+    controller: 'courses',
+    action: 'open'
+  },
+
+  'put /api/courses/close': {
+    controller: 'courses',
+    action: 'close'
+  },
+
   'get /api/courses/students': {
     controller: 'courses',
     action: 'students'
