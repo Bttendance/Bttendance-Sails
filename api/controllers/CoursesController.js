@@ -165,7 +165,7 @@ module.exports = {
 		.populateAll()
 		.exec(function callback(err, course) {
 			if (err || !course)
-		    return res.send(500, Error.log(req, "Course Find Error", "Course doesn't exist."));
+		    return res.send(500, Error.alert(req, "Course Find Error", "Course doesn't exist."));
 
 	  	return res.send(course.toWholeObject());
 		});
