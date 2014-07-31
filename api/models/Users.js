@@ -78,7 +78,7 @@ module.exports = {
     },
 
     questions: {
-      collection: 'Identifications',
+      collection: 'Questions',
       via: 'owner'
     },
 

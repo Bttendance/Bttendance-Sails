@@ -232,6 +232,36 @@ module.exports = {
 				  	return res.send(identification.toWholeObject());
 					}
 				});
+		} else if (model == 'questions') {
+			if (id == 'all')
+				Questions
+				.find()
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, questions) {
+					if (err || !questions) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < questions.length; i++)
+							questions[i] = questions[i].toWholeObject();
+				  	return res.send(questions);
+					}
+				});
+			else 
+				Questions
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, question) {
+					if (err || !question) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(question.toWholeObject());
+					}
+				});
 		} else if (model == 'attendances') {
 			if (id == 'all')
 				Attendances

@@ -31,6 +31,10 @@ module.exports.policies = {
     '*': true
   },
 
+  SocketsController: {
+    'connect': 'isUser'
+  },
+
   UsersController: {
     signup: true,
     auto_signin: true,
@@ -99,7 +103,8 @@ module.exports.policies = {
     from_courses: 'isUser',
     found_device: true,
     check_manually: 'isUser',
-    uncheck_manually: 'isUser'
+    uncheck_manually: 'isUser',
+    toggle_manually: 'isUser'
   },
 
   ClickersController: {

@@ -55,6 +55,14 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
+    
+    Notices
+    .findOneById(values.id)
+    .populateAll()
+    .exec(function callback(err, notice) {
+      sails.sockets.broadcast('room#'+notice.post.course, notice.toWholeObject());
+    });
+
     next();
   },
 

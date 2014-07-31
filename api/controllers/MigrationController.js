@@ -33,10 +33,10 @@ module.exports = {
 
 	migrate: function(req, res) {
 
-		//create Notice && add late_students
+		//create Notice
 		Posts
 		.find()
-		.populateAll();
+		.populate('attendance')
 		.sort('id ASC')
 		.exec(function callback(err, posts) {
 			if (err || !posts)
@@ -53,14 +53,6 @@ module.exports = {
 								done();
 						});
 					});
-				} else if (each_post.type == 'attendance') {
-					each_post.attendance.late_students = new Array();
-					each_post.save(function callback(err) {
-						if (err)
-							done(err);
-						else
-							done();
-					});
 				} else
 					done();
 			}, function (err) {
@@ -69,6 +61,20 @@ module.exports = {
 				else
 					console.log(err);
 			});
+		});
+
+		//create late_students
+		Attendances
+		.find()
+		.sort('id ASC')
+		.exec(function callback(err, attendances) {
+			if (err || !attendances)
+				return;
+
+			for (var i = 0; i < attendances.length; i++) {
+				attendances[i].late_students = new Array();
+				attendances[i].save();
+			}
 		});
 
 		//create Setting
@@ -108,6 +114,7 @@ module.exports = {
 		Schools.update({ name: 'Gang Dong University' }, { type: 'university' }).exec(function callback(err, school){});
 		Schools.update({ name: 'Seoul Science High School' }, { type: 'school' }).exec(function callback(err, school){});
 		Schools.update({ name: 'ROKAF_ATC' }, { type: 'etc' }).exec(function callback(err, school){});
+		Schools.update({ name: 'Institute of Technical Education' }, { type: 'university' }).exec(function callback(err, school){});
 
 		// Add Opened/Code for all Courses
 		Courses.find().sort('id ASC').exec(function callback(err, courses) {

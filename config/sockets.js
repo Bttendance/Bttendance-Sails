@@ -17,17 +17,11 @@ module.exports.sockets = {
   // Keep in mind that Sails' RESTful simulation for sockets
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
-    // send back socketId to Client
-    Clickers.watch(socket);
-    Attendances.watch(socket);
-    Notices.watch(socket);
-    var socketID = sails.sockets.id(socket);
-    sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
+    // By default: do nothing.
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects
   onDisconnect: function(session, socket) {
-
     // By default: do nothing.
   },
 

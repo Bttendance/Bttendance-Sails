@@ -73,6 +73,12 @@ module.exports.routes = {
     action: 'test'
   },
 
+  /************* Sockets API ************/  
+  'put /api/sockets/connect': {
+    controller: 'sockets',
+    action: 'connect'
+  },
+
   /************* Users API ************/  
   'post /api/users/signup': {
     controller: 'users',
@@ -305,6 +311,11 @@ module.exports.routes = {
   'put /api/attendances/uncheck/manually': {
     controller: 'attendances',
     action: 'uncheck_manually'
+  },
+
+  'put /api/attendances/toggle/manually': {
+    controller: 'attendances',
+    action: 'toggle_manually'
   },
 
   /************* Clickers API ************/ 
