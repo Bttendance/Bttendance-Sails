@@ -322,11 +322,7 @@ module.exports = {
 
 	  		Posts
 	  		.findById(Arrays.getIds(course.posts))
-				.populate('author')
-				.populate('course')
-				.populate('attendance')
-				.populate('clicker')
-				.populate('notice')
+				.populateAll()
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
 				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));

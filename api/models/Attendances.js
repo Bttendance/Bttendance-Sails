@@ -9,9 +9,13 @@ module.exports = {
 
 	attributes: {
 
-		checked_students: {
+    checked_students: {
       type: 'json'
-		},
+    },
+
+    late_students: {
+      type: 'json'
+    },
 
 		clusters: {
 			type: 'json'
@@ -50,6 +54,8 @@ module.exports = {
   beforeCreate: function(values, next) {
     if (!values.checked_students)
       values.checked_students = new Array();
+    if (!values.late_students)
+      values.late_students = new Array();
     if (!values.clusters)
       values.clusters = new Array();
     next();

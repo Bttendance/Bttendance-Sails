@@ -208,8 +208,9 @@ module.exports = {
 											Users
 											.findOneById(notiable[j])
 											.populate('device')
+											.populate('setting')
 											.exec(function callback(err, user) {
-												if (user) {
+												if (user && user.setting.attendance) {
 													Courses
 													.findOneById(attendance.post.course)
 													.exec(function callback(err, course) {
@@ -278,7 +279,8 @@ module.exports = {
 							if (err || !post)
 				  			return res.send(500, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
 
-							Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
+							if (user.setting.attendance)
+								Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
 					  	return res.send(attendance.toWholeObject());
 						});
 					});
@@ -333,7 +335,8 @@ module.exports = {
 							if (err || !post)
 				  			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Manual attendance un-check failed. Please try again."));
 
-							Noti.send(user, post.course.name, "Attendance has been un-checked manually", "attendance_unchecked");
+							if (user.setting.attendance)
+								Noti.send(user, post.course.name, "Attendance has been un-checked manually", "attendance_unchecked");
 					  	return res.send(attendance.toWholeObject());
 						});
 					});
@@ -344,5 +347,60 @@ module.exports = {
   		})
 		})
 	}
+
+	late_manually: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var user_id = req.param('user_id');
+		var attendance_id = req.param('attendance_id');
+
+		Users
+		.findOneById(user_id)
+		.populateAll()
+		.exec(function callback(err, user) {
+			if (err || !user)
+  			return res.send(500, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
+
+  		Attendances
+  		.findOneById(attendance_id)
+  		.populateAll()
+  		.exec(function callback(err, attendance) {
+				if (err || !attendance)
+	  			return res.send(500, Error.alert(req, "Manual Check Error", "Attendance record doesn't exist."));
+
+				var checked_students = new Array();
+				var has_user = false;
+				for (var i = 0; i < attendance.checked_students.length; i++) {
+					var id = attendance.checked_students[i];
+					if (id == user.id)
+						has_user = true;
+					checked_students.push(id);
+				}
+
+				if (!has_user) {
+					checked_students.push(user.id);
+					attendance.checked_students = checked_students;
+					attendance.save(function callback(err) {
+						if (err)
+			  			return res.send(500, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
+
+						Posts
+						.findOneById(attendance.post.id)
+						.populateAll()
+						.exec(function callback(err, post) {
+							if (err || !post)
+				  			return res.send(500, Error.alert(req, "Manual Check Error", "Manual attendance check failed. Please try again."));
+
+							if (user.setting.attendance)
+								Noti.send(user, post.course.name, "Attendance has been checked manually", "attendance_checked");
+					  	return res.send(attendance.toWholeObject());
+						});
+					});
+				} else {
+			  	return res.send(attendance.toWholeObject());
+				}
+
+  		})
+		})
+	},
 
 };

@@ -63,7 +63,7 @@ module.exports = {
 			for (var i = 0; i < schools.length; i++) {
 				schools[i] = schools[i].toWholeObject();
 				// Will be Deprecated
-				schools[i].website = schools[i].courses_count + '_Courses,_' + schools[i].professors_count + '_Professors,_' + schools[i].students_count + '_Students';
+				schools[i].website = schools[i].courses_count + '_Courses';
 			}
 	  	return res.send(schools);
 		});
@@ -120,13 +120,7 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
-		.populate('device')
-		.populate('notification')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('enrolled_schools')
-		.populate('identifications')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
 				return res.send(500, Error.log(req, "Enroll School Error", "User Find Error"));
@@ -160,13 +154,7 @@ module.exports = {
 						    { username: username }
 						  ]
 						})
-						.populate('device')
-						.populate('notification')
-						.populate('supervising_courses')
-						.populate('attending_courses')
-						.populate('employed_schools')
-						.populate('enrolled_schools')
-						.populate('identifications')
+						.populateAll()
 						.exec(function callback(err, user_new) {
 							if (err || !user_new)
 								return res.send(500, Error.log(req, "Enroll School Error", "User Find Error"));

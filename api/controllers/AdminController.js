@@ -172,34 +172,34 @@ module.exports = {
 				  	return res.send(device.toWholeObject());
 					}
 				});
-		} else if (model == 'notifications') {
+		} else if (model == 'settings') {
 			if (id == 'all')
-				Notifications
+				Settings
 				.find()
 				.populateAll()
 				.sort('id DESC')
-				.exec(function callback (err, notifications) {
-					if (err || !notifications) {
+				.exec(function callback (err, settings) {
+					if (err || !settings) {
 						res.contentType('html');
 						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < notifications.length; i++)
-							notifications[i] = notifications[i].toWholeObject();
-				  	return res.send(notifications);
+						for (var i = 0; i < settings.length; i++)
+							settings[i] = settings[i].toWholeObject();
+				  	return res.send(settings);
 					}
 				});
 			else 
-				Notifications
+				Settings
 				.findOneById(Number(id))
 				.populateAll()
-				.exec(function callback (err, notification) {
-					if (err || !notification) {
+				.exec(function callback (err, setting) {
+					if (err || !setting) {
 						res.contentType('html');
 						return res.notFound();
 					} else {
 						res.contentType('application/json; charset=utf-8');
-				  	return res.send(notification.toWholeObject());
+				  	return res.send(setting.toWholeObject());
 					}
 				});
 		} else if (model == 'identifications') {

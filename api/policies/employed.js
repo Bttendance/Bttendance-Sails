@@ -18,10 +18,10 @@ module.exports = function isUser (req, res, next) {
 	var school_id = req.param('school_id');
 
 	if (!username && !email)
-		return res.send(400, Error.log(req, "Username or Email is required."));
+		return res.send(400, Error.alert(req, "Employed Policy Error", "Username or Email is required."));
 
 	if (!password || !school_id)
-		return res.send(400, Error.log(req, "Password and School ID is required."));
+		return res.send(400, Error.alert(req, "Employed Policy Error", "Password and School ID is required."));
 
 	Users
 	.findOne({
@@ -36,19 +36,19 @@ module.exports = function isUser (req, res, next) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, Error.log(req, "Error in user find method."));
+	    return res.send(500, Error.log(req, "Employed Policy Error", "Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, Error.log(req, "User doesn't exitst."));
+	    return res.send(404, Error.log(req, "Employed Policy Error", "User doesn't exitst."));
 
 	  // Password Doesn't Match
 	  } else if (user.password != password) {
-		  return res.send(404, Error.log(req, "Password doesn't match."));
+		  return res.send(404, Error.log(req, "Employed Policy Error", "Password doesn't match."));
 
 		// User attending check
 		} else if (Arrays.getIds(user.employed_schools).indexOf(Number(school_id)) < 0) {
-		  return res.send(403, Error.log(req, "User is not employed current school."));
+		  return res.send(403, Error.log(req, "Employed Policy Error", "User is not employed current school."));
 
 		// Found User
 	  } else {

@@ -19,13 +19,7 @@ module.exports = {
 			return res.send(400, Error.log(req, "Identity Update Error", "Identity is required."));
 
 		Users.findOneByEmail(email)
-		.populate('device')
-		.populate('notification')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('enrolled_schools')
-		.populate('identifications')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
 				return res.send(500, Error.log(req, "Identity Update Error", "User doesn't exist."));

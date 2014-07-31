@@ -33,8 +33,12 @@ module.exports = {
 
 	migrate: function(req, res) {
 
-		//create Notice
-		Posts.find().sort('id ASC').exec(function callback(err, posts) {
+		//create Notice && add late_students
+		Posts
+		.find()
+		.populateAll();
+		.sort('id ASC')
+		.exec(function callback(err, posts) {
 			if (err || !posts)
 				return;
 
@@ -49,6 +53,14 @@ module.exports = {
 								done();
 						});
 					});
+				} else if (each_post.type == 'attendance') {
+					each_post.attendance.late_students = new Array();
+					each_post.save(function callback(err) {
+						if (err)
+							done(err);
+						else
+							done();
+					});
 				} else
 					done();
 			}, function (err) {
@@ -59,24 +71,24 @@ module.exports = {
 			});
 		});
 
-		//create Notification
+		//create Setting
 		Users.find().sort('id ASC').exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
 			async.eachSeries(users, function (each_user, done) {
-				Notifications.create({
+				Settings.create({
 					owner: each_user.id
-				}).exec(function callback(err, notification) {
-					if (err || !notification)
+				}).exec(function callback(err, setting) {
+					if (err || !setting)
 						done(err);
-					Users.update({ id: notification.owner }, { notification: notification.id }).exec(function callback(err, updated_user) {
+					Users.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
 							done();
 					});
 				});
 			}, function (err) {
 				if (err == null)
-					console.log('Create Notification finished');
+					console.log('Create Setting finished');
 				else
 					console.log(err);
 			});

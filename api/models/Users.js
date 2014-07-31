@@ -40,8 +40,8 @@ module.exports = {
     },
 
     // One to One
-    notification: {
-      model: 'Notifications'
+    setting: {
+      model: 'Settings'
     },
 
     // Many to Many
@@ -77,18 +77,24 @@ module.exports = {
       via: 'owner'
     },
 
+    questions: {
+      collection: 'Identifications',
+      via: 'owner'
+    },
+
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.password;
       delete obj.device;
-      delete obj.notification;
+      delete obj.setting;
       delete obj.supervising_courses;
       delete obj.attending_courses;
       delete obj.employed_schools;
       delete obj.enrolled_schools;
       delete obj.identifications;
+      delete obj.questions;
       return obj;
     },
 
@@ -99,12 +105,13 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.password = this.password;
       obj.device = this.device;
-      obj.notification = this.notification;
+      obj.setting = this.setting;
       obj.supervising_courses = this.supervising_courses;
       obj.attending_courses = this.attending_courses;
       obj.employed_schools = this.employed_schools;
       obj.enrolled_schools = this.enrolled_schools;
       obj.identifications = this.identifications;
+      obj.questions_count = this.questions.length;
       return obj;
     }
     
@@ -122,21 +129,21 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     values.password = PasswordHash.generate(values.password);
-    Notifications
+    Settings
     .create()
-    .exec(function callback(err, notification) {
-      if (err || !notification)
+    .exec(function callback(err, setting) {
+      if (err || !setting)
         done(err);
-      values.notification = notification.id;
+      values.setting = setting.id;
       next();
     });
   },
 
   afterCreate: function(values, next) {
-    Notifications
-    .update({id: values.notification}, {owner: values.id})
-    .exec(function callback(err, notification) {
-      if (err || !notification)
+    Settings
+    .update({id: values.setting}, {owner: values.id})
+    .exec(function callback(err, setting) {
+      if (err || !setting)
         next(err);
       next();
     });

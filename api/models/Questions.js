@@ -1,37 +1,32 @@
 /**
-* Tokens.js
+* Questions.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
-var UUID = require('node-uuid');
-
 module.exports = {
 
-	attributes: {
+  attributes: {
 
-    key: {
-      type: 'string'
-    },
+		message: {
+			type: 'string',
+			required: true
+		},
 
-    action: {
-    	type: 'string'
-    },
+		choice_count: {
+			type: 'integer'
+		},
 
-    params: {
-      type: 'string'
-    },
-
-    expired: {
-      type: 'boolean',
-      defaultsTo: false
-    },
+		owner: {
+			model: 'Users'
+		},
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
+      delete obj.owner;
       return obj;
     },
 
@@ -40,10 +35,11 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.owner = this.owner;
       return obj;
     }
 
-	},
+  },
 
   beforeValidate: function(values, next) {
     next();
@@ -54,7 +50,13 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.key = UUID.v1();
+    if (!values.choice_count)
+      values.choice_count = 4;
+    if (values.choice_count < 2)
+      values.choice_count = 2;
+    if (values.choice_count > 5)
+      values.choice_count = 5;
+
     next();
   },
 
@@ -77,6 +79,5 @@ module.exports = {
   afterDestroy: function(values, next) {
     next();
   }
-
 };
 

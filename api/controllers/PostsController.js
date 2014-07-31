@@ -82,10 +82,12 @@ module.exports = {
 				  		Users
 				  		.findById(notiUsers)
 							.populate('device')
+							.populate('setting')
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
+				  				if (users[i].setting.clicker)
+					  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
 				  		});
 
 				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
@@ -155,15 +157,15 @@ module.exports = {
 				  		Users
 				  		.findById(notiUsers)
 							.populate('device')
+							.populate('setting')
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
+				  				if (users[i].setting.attendance)
+					  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
 				  		});
 
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 40000);
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 75000);
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 120000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 30000);
 
 					  	return res.send(post.toWholeObject());
 				  	});
@@ -231,10 +233,12 @@ module.exports = {
 				  		Users
 				  		.findById(notiUsers)
 				  		.populate('device')
+							.populate('setting')
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				Noti.send(users[j], post.course.name, message, "notice");
+				  				if (users[i].setting.notice)
+					  				Noti.send(users[j], post.course.name, message, "notice");
 				  		});
 
 					  	return res.send(post.toWholeObject());
@@ -242,6 +246,48 @@ module.exports = {
 				  });
 		  	});
 			});
+		});
+	},
+
+	update_message: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var post_id = req.param('post_id');
+		var message = req.param('message');
+
+		if (!message)
+			return res.send(500, Error.alert(req, "Update Post Error", "Please write any message."));
+
+		Posts
+		.findOneById(post_id)
+		.exec(function callback(err, post) {
+			if (err || !post)
+  			return res.send(500, Error.log(req, "Update Post Error", "Post doesn't exist."));
+
+    	Courses
+    	.findOneById(post.course)
+    	.exec(function callback(err, course) {
+				if (err || !course)
+	  			return res.send(500, Error.log(req, "Update Post Error", "Course doesn't exist."));
+
+				if (!course.opened)
+				    return res.send(500, Error.alert(req, "Update Post Error", "Current course is closed."));
+
+				post.message = message;
+	    	post.save(function callback(err) {
+	    		if (err)
+		  			return res.send(500, Error.alert(req, "Update Post Error", "Fail to update post."));
+
+					Posts
+					.findOneById(post_id)
+					.populateAll()
+					.exec(function callback(err, post) {
+						if (err || !post)
+			  			return res.send(500, Error.log(req, "Update Post Error", "Post doesn't exist."));
+
+	    			return res.send(post.toWholeObject());
+			  	});
+	    	});
+    	});
 		});
 	},
 
@@ -257,7 +303,7 @@ module.exports = {
 
     	Courses
     	.findOneById(post.course)
-    	.populateAll()
+    	.populate('posts')
     	.exec(function callback(err, course) {
 				if (err || !course)
 	  			return res.send(500, Error.log(req, "Delete Post Error", "Course doesn't exist."));
@@ -270,15 +316,15 @@ module.exports = {
 	    		if (err)
 		  			return res.send(500, Error.alert(req, "Delete Post Error", "Fail to update course."));
 
-	    		Courses
-	    		.findOneById(post.course)
-	    		.populateAll()
-	    		.exec(function callback(err, course) {
-		    		if (err || !course)
-			  			return res.send(500, Error.log(req, "Delete Post Error", "Course doesn't exist."));
+					Posts
+					.findOneById(post_id)
+					.populateAll()
+					.exec(function callback(err, post) {
+						if (err || !post)
+			  			return res.send(500, Error.log(req, "Delete Post Error", "Post doesn't exist."));
 
-	    			return res.send(course.toWholeObject());
-	    		});
+	    			return res.send(post.toWholeObject());
+			  	});
 	    	});
     	});
 		});

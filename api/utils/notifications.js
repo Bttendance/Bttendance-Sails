@@ -129,12 +129,14 @@ exports.resendAttedance = function(attendance_id) {
   		Users
   		.findById(unchecked)
   		.populate('device')
+  		.populate('setting')
   		.sort('id DESC').exec(function(err, users) {
   			if (err || !users)
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-				  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_on_going");
+  				if (users[i].setting.attendance)
+					  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_on_going");
   		});
 		});
 	});
@@ -193,12 +195,14 @@ exports.resendClicker = function(clicker_id) {
   		Users
   		.findById(unchecked)
   		.populate('device')
+  		.populate('setting')
   		.sort('id DESC').exec(function(err, users) {
   			if (err || !users)
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-				  exports.send(users[i], course.name, "Clicker is on-going", "clicker_on_going");
+  				if (users[i].setting.clicker)
+					  exports.send(users[i], course.name, "Clicker is on-going", "clicker_on_going");
   		});
 		});
 	});

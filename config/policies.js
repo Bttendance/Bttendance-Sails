@@ -48,10 +48,16 @@ module.exports.policies = {
     update_notification_key: 'isUser'
   },
 
-  NotificationsController: {
+  SettingsController: {
     update_attendance: 'isUser',
     update_clicker: 'isUser',
     update_notice: 'isUser',
+  },
+
+  QuestionsController: {
+    mine: 'isUser',
+    create: 'isUser',
+    remove: 'isUser'
   },
 
   IdentificationsController: {
@@ -85,6 +91,7 @@ module.exports.policies = {
     start_attendance: 'supervising',
     start_clicker: 'supervising',
     create_notice: 'supervising',
+    update_message: 'supervising',
     remove: 'supervising'
   },
 

@@ -130,20 +130,36 @@ module.exports.routes = {
     action: 'update_notification_key'
   },
 
-  /************* Notifications API ************/  
-  'put /api/notifications/update/attendance': {
-    controller: 'notifications',
+  /************* Settings API ************/  
+  'put /api/settings/update/attendance': {
+    controller: 'settings',
     action: 'update_attendance'
   },  
 
-  'put /api/notifications/update/clicker': {
-    controller: 'notifications',
+  'put /api/settings/update/clicker': {
+    controller: 'settings',
     action: 'update_clicker'
   },
 
-  'put /api/notifications/update/notice': {
-    controller: 'notifications',
+  'put /api/settings/update/notice': {
+    controller: 'settings',
     action: 'update_notice'
+  },
+
+  /************* Questions API ************/  
+  'get /api/questions/mine': {
+    controller: 'questions',
+    action: 'mine'
+  },  
+
+  'post /api/questions/create': {
+    controller: 'questions',
+    action: 'create'
+  },
+
+  'delete /api/questions/remove': {
+    controller: 'questions',
+    action: 'remove'
   },
 
   /************* Identifications API ************/  
@@ -260,7 +276,12 @@ module.exports.routes = {
     action: 'create_notice'
   },
 
-  'put /api/posts/remove': {
+  'put /api/posts/update/message': {
+    controller: 'posts',
+    action: 'update_message'
+  },
+
+  'delete /api/posts/remove': {
     controller: 'posts',
     action: 'remove'
   },
