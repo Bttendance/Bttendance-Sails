@@ -105,6 +105,7 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
+		var manual = req.param('manual');
 
 		Courses.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)

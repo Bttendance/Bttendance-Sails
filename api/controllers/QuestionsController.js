@@ -72,6 +72,30 @@ module.exports = {
 		});
 	},
 
+	edit: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var question_id = req.param('question_id');
+		var message = req.param('message');
+		var choice_count = req.param('choice_count');
+
+		Questions
+		.findOneById(question_id)
+		.populateAll()
+		.exec(function callback(err, question) {
+			if (err || !question)
+				return res.send(500, Error.alert(req, "Update Questions Error", "Fail to fine current question."));
+
+			question.message = message;
+			question.choice_count = choice_count;
+			question.save(function callback(err) {
+				if (err)
+					return res.send(500, Error.alert(req, "Update Questions Error", "Fail to save question."));
+
+		  	return res.send(question.toWholeObject());
+			});
+		});
+	},
+
 	remove: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
@@ -100,7 +124,6 @@ module.exports = {
 	  		});
 			});
 		});
-
 	}
 	
 };

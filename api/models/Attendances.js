@@ -9,6 +9,12 @@ module.exports = {
 
 	attributes: {
 
+    // auto, manual
+    type: {
+      type: 'string',
+      required: true
+    },
+
     checked_students: {
       type: 'json'
     },
@@ -75,7 +81,8 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, attendance) {
-      sails.sockets.broadcast('room#' + attendance.post.course, attendance.toWholeObject());
+      if (attendance.post && attendance.post.course)
+        sails.sockets.broadcast('room#' + attendance.post.course, attendance.toWholeObject());
     });
     
     next();

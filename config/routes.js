@@ -163,6 +163,11 @@ module.exports.routes = {
     action: 'create'
   },
 
+  'put /api/questions/edit': {
+    controller: 'questions',
+    action: 'edit'
+  },
+
   'delete /api/questions/remove': {
     controller: 'questions',
     action: 'remove'

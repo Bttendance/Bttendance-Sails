@@ -5,8 +5,20 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
+// For Develop (Drop all table and add new)
+// drop schema public cascade;
+// create schema public;
 // heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a121.dump' --app bttendance-dev
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
+
+// For Production
+// heroku maintenance:on
+// heroku ps:scale worker=0
+
+// Do work
+
+// heroku ps:scale worker=1
+// heroku maintenance:off
 
 // DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials;
 // ALTER TABLE courses DROP COLUMN number CASCADE;
@@ -63,7 +75,7 @@ module.exports = {
 			});
 		});
 
-		//create late_students
+		//create type, late_students
 		Attendances
 		.find()
 		.sort('id ASC')
@@ -72,6 +84,7 @@ module.exports = {
 				return;
 
 			for (var i = 0; i < attendances.length; i++) {
+				attendances[i].type = 'auto';
 				attendances[i].late_students = new Array();
 				attendances[i].save();
 			}

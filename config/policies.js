@@ -61,6 +61,7 @@ module.exports.policies = {
   QuestionsController: {
     mine: 'isUser',
     create: 'isUser',
+    edit: 'isUser',
     remove: 'isUser'
   },
 

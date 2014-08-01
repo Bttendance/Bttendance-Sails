@@ -11,6 +11,10 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 
+    Clickers.unwatch(req.socket);
+    Attendances.unwatch(req.socket);
+    Notices.unwatch(req.socket);
+
 		Users
 		.findOneByEmail(email)
 		.populateAll()
