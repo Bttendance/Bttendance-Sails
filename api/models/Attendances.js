@@ -75,7 +75,7 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, attendance) {
-      sails.sockets.broadcast('room#'+attendance.post.course, attendance.toWholeObject());
+      sails.sockets.broadcast('room#' + attendance.post.course, attendance.toWholeObject());
     });
     
     next();

@@ -91,7 +91,7 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, clicker) {
-      sails.sockets.broadcast('room#'+clicker.post.course, clicker.toWholeObject());
+      sails.sockets.broadcast('room#' + clicker.post.course, clicker.toWholeObject());
     });
 
     next();
