@@ -61,7 +61,7 @@ module.exports = {
     .populateAll()
     .exec(function callback(err, notice) {
       if (notice && notice.post && notice.post.course)
-        sails.sockets.broadcast('Course#' + notice.post.course, notice.toWholeObject());
+        sails.sockets.broadcast('Course#' + notice.post.course, 'notices', notice.toWholeObject());
     });
 
     next();

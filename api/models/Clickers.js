@@ -91,12 +91,8 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, clicker) {
-      if (clicker && clicker.post && clicker.post.course) {
-        sails.log.warn(clicker.toWholeObject());
-        sails.log.warn(clicker.post.course);
-        sails.log.warn(sails.sockets.subscribers('Course#' + clicker.post.course));
-        sails.sockets.broadcast('Course#' + clicker.post.course, clicker.toWholeObject());
-      }
+      if (clicker && clicker.post && clicker.post.course)
+        sails.sockets.broadcast('Course#' + clicker.post.course, 'clickers', clicker.toWholeObject());
     });
 
     next();
