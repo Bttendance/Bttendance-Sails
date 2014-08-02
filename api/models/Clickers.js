@@ -97,7 +97,6 @@ module.exports = {
         sails.log.warn(sails.sockets.subscribers('Course#' + clicker.post.course));
         sails.sockets.broadcast('Course#' + clicker.post.course, clicker.toWholeObject());
       }
-      }
     });
 
     next();
