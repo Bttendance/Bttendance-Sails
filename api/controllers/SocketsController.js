@@ -8,7 +8,6 @@
 module.exports = {
 
 	connect: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 
 		console.log('Socket Connect Called : ' + email);
