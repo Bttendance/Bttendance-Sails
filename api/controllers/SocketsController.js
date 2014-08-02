@@ -12,7 +12,7 @@ module.exports = {
 
 		console.log('Socket Connect Called : ' + email);
 
-		console.log(req.socket);
+		console.log(req);
 
     Clickers.unwatch(req.socket);
     Attendances.unwatch(req.socket);
