@@ -23,12 +23,12 @@ module.exports = {
 			if (err || !user)
 				return res.send(500, Error.log(req, "Socket Connect Error", "User Find Error"));
 
-			for (var i = 0; i < user.supervising_courses; i++) {
+			for (var i = 0; i < user.supervising_courses.length; i++) {
 		    sails.sockets.join(req.socket, 'Course#' + user.supervising_courses[i].id);
 		    console.log(sails.sockets.subscribers('Course#' + user.supervising_courses[i].id));
 			}
 
-			for (var i = 0; i < user.attending_courses; i++) {
+			for (var i = 0; i < user.attending_courses.length; i++) {
 		    sails.sockets.join(req.socket, 'Course#' + user.attending_courses[i].id);
 		    console.log(sails.sockets.subscribers('Course#' + user.attending_courses[i].id));
 			}
