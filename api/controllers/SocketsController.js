@@ -25,12 +25,12 @@ module.exports = {
 
 			for (var i = 0; i < user.supervising_courses; i++) {
 		    sails.sockets.join(req.socket, 'Course#' + user.supervising_courses[i].id);
-		    sails.sockets.subscribers('Course#' + user.supervising_courses[i].id);
+		    console.log(sails.sockets.subscribers('Course#' + user.supervising_courses[i].id));
 			}
 
 			for (var i = 0; i < user.attending_courses; i++) {
 		    sails.sockets.join(req.socket, 'Course#' + user.attending_courses[i].id);
-		    sails.sockets.subscribers('Course#' + user.attending_courses[i].id);
+		    console.log(sails.sockets.subscribers('Course#' + user.attending_courses[i].id));
 			}
 		  
 	  	return res.ok();
