@@ -92,7 +92,7 @@ module.exports = {
     .populateAll()
     .exec(function callback(err, clicker) {
       if (clicker.post && clicker.post.course)
-        sails.sockets.broadcast('room#' + clicker.post.course, clicker.toWholeObject());
+        sails.sockets.broadcast('Course#' + clicker.post.course, clicker.toWholeObject());
     });
 
     next();
