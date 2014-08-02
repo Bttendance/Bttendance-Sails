@@ -28,8 +28,6 @@ module.exports = {
 				if (err || !questions)
 					return res.send(500, Error.log(req, "Get Questions Error", "Questions doesn't exist."));
 
-				console.log(questions);
-
 				for (var i = 0; i < questions.length; i++)
   				questions[i] = questions[i].toWholeObject();
 
