@@ -60,7 +60,7 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, notice) {
-      if (notice.post && notice.post.course)
+      if (notice && notice.post && notice.post.course)
         sails.sockets.broadcast('Course#' + notice.post.course, notice.toWholeObject());
     });
 

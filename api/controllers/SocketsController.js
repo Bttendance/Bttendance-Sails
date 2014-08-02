@@ -12,6 +12,8 @@ module.exports = {
 
 		console.log('Socket Connect Called : ' + email);
 
+		console.log(req.socket);
+
     Clickers.unwatch(req.socket);
     Attendances.unwatch(req.socket);
     Notices.unwatch(req.socket);
