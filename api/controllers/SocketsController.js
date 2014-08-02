@@ -12,8 +12,6 @@ module.exports = {
 
 		console.log('Socket Connect Called : ' + email);
 
-		console.log(req);
-
     Clickers.unwatch(req.socket);
     Attendances.unwatch(req.socket);
     Notices.unwatch(req.socket);
@@ -25,11 +23,15 @@ module.exports = {
 			if (err || !user)
 				return res.send(500, Error.log(req, "Socket Connect Error", "User Find Error"));
 
-			for (var i = 0; i < user.supervising_courses; i++)
+			for (var i = 0; i < user.supervising_courses; i++) {
 		    sails.sockets.join(req.socket, 'Course#' + user.supervising_courses[i].id);
+		    sails.sockets.subscribers('Course#' + user.supervising_courses[i].id);
+			}
 
-			for (var i = 0; i < user.attending_courses; i++)
+			for (var i = 0; i < user.attending_courses; i++) {
 		    sails.sockets.join(req.socket, 'Course#' + user.attending_courses[i].id);
+		    sails.sockets.subscribers('Course#' + user.attending_courses[i].id);
+			}
 		  
 	  	return res.ok();
 		});
