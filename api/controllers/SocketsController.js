@@ -30,7 +30,7 @@ module.exports = {
 			for (var i = 0; i < user.attending_courses; i++)
 		    sails.sockets.join(req.socket, 'Course#' + user.attending_courses[i].id);
 		  
-	  	return res.send(user.toWholeObject());
+	  	return res.ok();
 		});
 	}
 	
