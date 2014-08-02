@@ -91,8 +91,11 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, clicker) {
-      if (clicker && clicker.post && clicker.post.course)
-        sails.sockets.broadcast('Course#' + clicker.post.course, 'clickers', clicker.toWholeObject());
+      if (clicker && clicker.post && clicker.post.course) {
+        var data = {};
+        data.data = notice.toWholeObject();
+        sails.sockets.broadcast('Course#' + clicker.post.course, 'clickers', data);
+      }
     });
 
     next();
