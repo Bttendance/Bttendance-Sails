@@ -81,11 +81,8 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, attendance) {
-      if (attendance && attendance.post && attendance.post.course) {
-        var data = {};
-        data.data = attendance.toWholeObject();
-        sails.sockets.broadcast('Course#' + attendance.post.course, 'attendances', data);
-      }
+      if (attendance && attendance.post && attendance.post.course) 
+        sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
     });
     
     next();
