@@ -83,7 +83,7 @@ module.exports = {
     .exec(function callback(err, attendance) {
       if (attendance && attendance.post && attendance.post.course) {
         var data = {};
-        data.data = notice.toWholeObject();
+        data.data = attendance.toWholeObject();
         sails.sockets.broadcast('Course#' + attendance.post.course, 'attendances', data);
       }
     });

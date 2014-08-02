@@ -93,7 +93,7 @@ module.exports = {
     .exec(function callback(err, clicker) {
       if (clicker && clicker.post && clicker.post.course) {
         var data = {};
-        data.data = notice.toWholeObject();
+        data.data = clicker.toWholeObject();
         sails.sockets.broadcast('Course#' + clicker.post.course, 'clickers', data);
       }
     });
