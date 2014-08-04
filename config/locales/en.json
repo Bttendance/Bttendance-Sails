@@ -1,9 +1,8 @@
 // 일단 리스트업 후 수정
 
 {
-  	"Welcome": "Welcome",
-  //Title
-  	// Alert
+
+    //Title
   	"Manual Check Error": "Attendance Check Failed",
 	"Manual Un-Check Error": "Attendance Check Failed",
 	"Sending Email Error": "Sending Email Failed",
@@ -41,8 +40,7 @@
 	"User Find Error": "Finding User Failed",
 	"Deivce Create Error": "Creating Deivce Failed",
 
-  // Message
-  	// Alert
+    // Message
   	"Student doesn't exist.": "Student doesn't exist.",
   	"Attendance record doesn't exist.": "Attendance record doesn't exist.",
   	"Updating attendance record has been failed.": "Updating attendance record has been failed.",
@@ -55,7 +53,7 @@
     "Course update error.": "Updating course has been failed.",
     "You are not supervising current course.": "You are not supervising current course.",
     "User is already attending current course.": "The User is already attending current course.",
-    "Fail to add a user %s as a manager.\nPlease check User ID of Email again.": "Adding a user %s as a manager has been failed.\nPlease check User ID or Email again.", //일단 보류
+    "Fail to add a user %s as a manager.\nPlease check User ID of Email again.": "Adding a user %s as a manager has been failed.\nPlease check User ID or Email again.",
     "%s is already supervising current course.": "%s is already supervising current course.",
     "Oh uh, fail to save %s as a manager.\nPlease try again.": "Oh uh, saving %s as a manager has been failed.\nPlease try again.",
     "Current course has no student.": "Current course has no student.",
@@ -123,12 +121,14 @@
 	"User is not supervising current course.": "User is not supervising current course.",
 	"Error in post find method.": "Error in post find method.",
 	"Post doesn't exitst.": "Post doesn't exist.",
+
 	// toast
 	"You've already chosen A as a choice.": "You've already chosen A as a choice.",
 	"You've already chosen B as a choice.": "You've already chosen B as a choice.",
 	"You've already chosen C as a choice.": "You've already chosen C as a choice.",
 	"You've already chosen D as a choice.": "You've already chosen D as a choice.",
 	"You've already chosen E as a choice.": "You've already chosen E as a choice.",
+
 	// Noti
 	"You have succeed to send a message.": "You have succeed to send a message.",
 	"Attendance has been checked": "Attendance has been checked",
@@ -136,11 +136,12 @@
 	"Clicker has been started": "Clicker has been started",
 	"Attendance check has been started": "Attendance check has been started",
 	"Your course %s has been created": "Your course %s has been created",
+
 	// Feed
 	"%s/%s (%s%) students has been attended.": "%s/%s (%s%) students has been attended.",
 	"Attendance Checked": "Attendance is Confirmed",
 	"Attendance Checking": "Attendance Check is in progress",
 	"Attendance Failed": "Absence from class", 
 	"Attendance Late": "Lateness to class."
-    
+
 }

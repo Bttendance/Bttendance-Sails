@@ -1,7 +1,5 @@
 {
-	"Welcome": "환영합니다",	
-  //Title
-  	// Alert
+    //Title
   	"Manual Check Error": "출석 체크 오류",
 	"Manual Un-Check Error": "출석 체크 오류",
 	"Sending Email Error": "Email 발송 실패",
@@ -39,8 +37,7 @@
 	"User Find Error": "사용자 탐색 실패",
 	"Deivce Create Error": "기기 등록 실패",
 
-  // Message
-  	// Alert
+    // Message
   	"Student doesn't exist.": "학생이 존재하지 않습니다.",
   	"Attendance record doesn't exist.": "출석 기록이 존재하지 않습니다.",
   	"Updating attendance record has been failed.": "출석 기록 수정이 실패하였습니다.",
@@ -117,12 +114,14 @@
 	"User is not supervising current course.": "강의를 관리할 수 있는 권한을 갖지 않았습니다.",
 	"Error in post find method.": "포스트 탐색 메소드에 문제가 발생하였습니다.",
 	"Post doesn't exitst.": "포스트가 존재하지 않습니다.",
+
 	// toast
 	"You've already chosen A as a choice.": "이미 선택지 A를 선택했습니다.",
 	"You've already chosen B as a choice.": "이미 선택지 B를 선택했습니다.",
 	"You've already chosen C as a choice.": "이미 선택지 C를 선택했습니다.",
 	"You've already chosen D as a choice.": "이미 선택지 D를 선택했습니다.",
 	"You've already chosen E as a choice.": "이미 선택지 E를 선택했습니다.",
+
 	// Noti
 	"You have succeed to send a message.": "메시지를 성공적으로 전송하였습니다.",
 	"Attendance has been checked": "출석이 확인되었습니다.",
@@ -130,10 +129,12 @@
 	"Clicker has been started": "설문하기가 시작했습니다.",
 	"Attendance check has been started": "출석 체크가 시작했습니다",
 	"Your course %s has been created": "당신의 강의 %s 가 생성되었습니다.",
+
 	// Feed
 	"%s/%s (%s%) students has been attended.": "%s/%s (%s%) 학생이 출석하였습니다.",
 	"Attendance Checked": "출석이 확인되었습니다.",
 	"Attendance Checking": "출석 체크가 진행 중입니다.",
 	"Attendance Failed": "결석으로 처리되었습니다.", 
 	"Attendance Late": "지각으로 처리되었습니다."
+    
 }
