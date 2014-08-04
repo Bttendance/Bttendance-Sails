@@ -23,6 +23,7 @@ module.exports = {
 
   		Questions
   		.findById(Arrays.getIds(user.questions))
+			.sort('id DESC')
   		.populateAll()
   		.exec(function callback(err, questions) {
 				if (err || !questions)

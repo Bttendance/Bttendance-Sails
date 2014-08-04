@@ -585,7 +585,7 @@ module.exports = {
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user) 
-		    return res.send(500, { message: "No User Found Error" });
+				return res.send(500, Error.log(req, "Courses Error", "User doesn't exist."));
 
 	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
 	  	var attending_courses = Arrays.getIds(user.attending_courses);
