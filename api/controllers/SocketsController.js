@@ -10,6 +10,7 @@ module.exports = {
 	connect: function(req, res) {
 		var email = req.param('email');
 
+		// For Beta
     Clickers.unwatch(req.socket);
     Attendances.unwatch(req.socket);
     Notices.unwatch(req.socket);

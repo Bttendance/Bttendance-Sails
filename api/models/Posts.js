@@ -102,7 +102,8 @@ module.exports = {
       Attendances
       .create({
         checked_students: checked_students,
-        clusters: clusters
+        clusters: clusters,
+        type: values.attendance_type
       }).exec(function callback(err, attendance) {
         if (err || !attendance)
           next(err);

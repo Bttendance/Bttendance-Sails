@@ -105,7 +105,8 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
-		var manual = req.param('manual');
+		var type = req.param('type');
+		if (!type) type = 'auto';
 
 		Courses.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
@@ -129,7 +130,8 @@ module.exports = {
 				.create({
 				  author: user.id,
 				  course: course_id,
-				  type: 'attendance'
+				  type: 'attendance',
+				  attendance_type: type
 				}).exec(function callback(err, post) {
 					if (err || !post)
 		  			return res.send(500, Error.alert(req, "Start Attendance Error", "Fail to create a post."));
