@@ -159,6 +159,7 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var course_code = req.param('course_code');
 		var course_id = req.param('course_id');
+		course_code = course_code.toLowerCase();
 
 		Courses
 		.findOne({
