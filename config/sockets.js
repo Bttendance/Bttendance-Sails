@@ -101,7 +101,7 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
 
-  adapter: 'redis',
+  adapter: 'sails-redis',
   host: process.env.REDIS_HOST || 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
   port: process.env.REDIS_PORT || 15296,
   db:   process.env.REDIS_DB   || 'redis-app23178340',
