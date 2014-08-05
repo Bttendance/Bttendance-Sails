@@ -8,7 +8,7 @@
   ],
   "dependencies": {
     "sails": "0.10.1",
-    "sails-postgresql": "0.10.5",
+    "sails-postgresql": "0.10.1",
     "sails-redis": "0.10.2",
     "connect-redis": "1.4.7",
     "sails-memory": "0.10.1",
