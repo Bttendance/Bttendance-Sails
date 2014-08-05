@@ -1,4 +1,5 @@
 {
+    //Title
     "Manual Check Error": "Attendance Check Failed",
 	"Manual Un-Check Error": "Attendance Check Failed",
 	"Sending Email Error": "Sending Email Failed",
@@ -36,6 +37,7 @@
 	"User Find Error": "Finding User Failed",
 	"Deivce Create Error": "Creating Deivce Failed",
 
+    // Message
   	"Student doesn't exist.": "Student doesn't exist.",
   	"Attendance record doesn't exist.": "Attendance record doesn't exist.",
   	"Updating attendance record has been failed.": "Updating attendance record has been failed.",
@@ -117,12 +119,14 @@
 	"Error in post find method.": "Error in post find method.",
 	"Post doesn't exitst.": "Post doesn't exist.",
 
+    // Clicker
 	"You've already chosen A as a choice.": "You've already chosen A as a choice.",
 	"You've already chosen B as a choice.": "You've already chosen B as a choice.",
 	"You've already chosen C as a choice.": "You've already chosen C as a choice.",
 	"You've already chosen D as a choice.": "You've already chosen D as a choice.",
 	"You've already chosen E as a choice.": "You've already chosen E as a choice.",
 
+    // Noti
 	"You have succeed to send a message.": "You have succeed to send a message.",
 	"Attendance has been checked": "Attendance has been checked",
 	"You have been added as a manager.": "You have been added as a manager.",
@@ -130,6 +134,7 @@
 	"Attendance check has been started": "Attendance check has been started",
 	"Your course %s has been created": "Your course %s has been created",
 
+    // Feed
 	"%s/%s (%s%) students has been attended.": "%s/%s (%s%) students has been attended.",
 	"Attendance Checked": "Attendance is Confirmed",
 	"Attendance Checking": "Attendance Check is in progress",
