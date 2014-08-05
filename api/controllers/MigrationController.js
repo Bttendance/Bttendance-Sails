@@ -113,6 +113,17 @@ module.exports = {
 			});
 		});
 
+		//user locale
+		Users.find().sort('id ASC').exec(function callback(err, users) {
+			if (err || !users)
+				return;
+
+			for (var i = 0; i < users.length; i++) {
+				users[i].locale = 'en';
+				users[i].save();
+			}
+		});
+
 		//Update School Type
 		Schools.update({ name: 'BTTENDANCE' }, { type: 'institute' }).exec(function callback(err, school){});
 		Schools.update({ name: 'KAIST' }, { type: 'university' }).exec(function callback(err, school){});

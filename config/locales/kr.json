@@ -1,5 +1,8 @@
 {
-    //Title
+    "BTTENDANCE": "비텐던스",
+    "Bttendance": "비텐던스",
+    "bttendance": "비텐던스",
+
   	"Manual Check Error": "출석 체크 오류",
 	"Manual Un-Check Error": "출석 체크 오류",
 	"Sending Email Error": "Email 발송 실패",
@@ -30,14 +33,13 @@
 	"FullName Update Error": "이름 수정 실패",
 	"Email Update Error": "Email 수정 실패",
 	"Searching User Error": "사용자 검색 실패",
-	"Busted": "꽝!",
+	"Busted": "음...",
 	"Employed Policy Error": "유효하지 않은 계정",
 	"User Policy Error": "유효하지 않은 계정",
 	"Supervising Policy Error": "유효하지 않은 계정",
 	"User Find Error": "사용자 탐색 실패",
 	"Deivce Create Error": "기기 등록 실패",
 
-    // Message
   	"Student doesn't exist.": "학생이 존재하지 않습니다.",
   	"Attendance record doesn't exist.": "출석 기록이 존재하지 않습니다.",
   	"Updating attendance record has been failed.": "출석 기록 수정이 실패하였습니다.",
@@ -49,8 +51,8 @@
   	"You are already attending current course.": "이미 이 강의를 수강하는 중입니다.",
     "Course update error.": "강의 수정이 실패하였습니다.",
     "You are not supervising current course.": "이 강의를 관리할 권한이 없습니다.",
-    "User is already attending current course.": "이 사용자는 이미 이 강의를 수강하고 있습니다.",//??
-    "Fail to add a user %s as a manager.\nPlease check User ID of Email again.": "%s를 관리자로 추가하지 못했습니다.\n 사용자 ID나 Email을 다시 확인해 주세요.", //일단 보류
+    "User is already attending current course.": "이 사용자는 이미 이 강의를 수강하고 있습니다.",
+    "Fail to add a user %s as a manager.\nPlease check User ID of Email again.": "%s를 관리자로 추가하지 못했습니다.\n 사용자 ID나 Email을 다시 확인해 주세요.",
     "%s is already supervising current course.": "%s는 이미 이 강의를 관리하고 있습니다.",
     "Oh uh, fail to save %s as a manager.\nPlease try again.": "%s를 강의자로 저장하는데 실패했습니다.\n 다시 시도해주세요.",
     "Current course has no student.": "이 강의에는 학생이 아무도 등록하지 않았습니다.",
@@ -81,7 +83,7 @@
     "Full Name is required.": "이름이 필요합니다.",
     "Device Type is required.": "기기 종류가 필요합니다.",
     "Device ID is required.": "기기 ID가 필요합니다.",
-    "Your deivce already has been registered.": "당신의 기기가 이미 등록되었습니다.",    
+    "Your deivce already has been registered.": "현재 기기가 이미 등록되었습니다.",    
     "Email is already taken.": "이미 등록된 Email입니다.",
     "User Create Error. Please try sign up again.": "사용자를 등록하는 데 실패했습니다. 다시 가입 절차를 진행해주세요.",
     "Deivce Save Error. Please try sign up again.": "기기를 등록하는 데 실패했습니다. 다시 가입 절차를 진행해주세요.",
@@ -106,7 +108,7 @@
     "Email already registered to other user.": "이미 다른 사용자가 등록한 Email 주소입니다.",
     "New email is required.": "새로운 Email을 입력해주세요.",
     "Fail to find a user \"%s\".\nPlease check User ID of Email again.": "사용자 \"%s\"를 찾는 데 실패하였습니다.\n사용자 ID나 Email 주소를 다시 확인해주세요.",
-    "HaHa, trying to find yourself? Got You! :)": "하하, 당신 스스로를 찾으시게요? 바로 여기 있습니다! :)",
+    "HaHa, trying to find yourself? Got You! :)": "본인 스스로를 찾으셨나용? 다른 유저로 다시 시도해 주세요 :)",
 	"Password and School ID is required.": "비밀번호와 기관 ID가 필요합니다.",
 	"Course ID or Post ID is required.": "강의 ID나 포스트 ID가 필요합니다",
 	"Error in user find method.": "사용자 탐색 메소드에 문제가 발생하였습니다.",
@@ -115,14 +117,12 @@
 	"Error in post find method.": "포스트 탐색 메소드에 문제가 발생하였습니다.",
 	"Post doesn't exitst.": "포스트가 존재하지 않습니다.",
 
-	// toast
-	"You've already chosen A as a choice.": "이미 선택지 A를 선택했습니다.",
-	"You've already chosen B as a choice.": "이미 선택지 B를 선택했습니다.",
-	"You've already chosen C as a choice.": "이미 선택지 C를 선택했습니다.",
-	"You've already chosen D as a choice.": "이미 선택지 D를 선택했습니다.",
-	"You've already chosen E as a choice.": "이미 선택지 E를 선택했습니다.",
+	"You've already chosen A as a choice.": "이미 A를 선택하였습니다.",
+	"You've already chosen B as a choice.": "이미 B를 선택하였습니다.",
+	"You've already chosen C as a choice.": "이미 C를 선택하였습니다.",
+	"You've already chosen D as a choice.": "이미 D를 선택하였습니다.",
+	"You've already chosen E as a choice.": "이미 E를 선택하였습니다.",
 
-	// Noti
 	"You have succeed to send a message.": "메시지를 성공적으로 전송하였습니다.",
 	"Attendance has been checked": "출석이 확인되었습니다.",
 	"You have been added as a manager.": "관리자로 추가되었습니다.",
@@ -130,11 +130,9 @@
 	"Attendance check has been started": "출석 체크가 시작했습니다",
 	"Your course %s has been created": "당신의 강의 %s 가 생성되었습니다.",
 
-	// Feed
 	"%s/%s (%s%) students has been attended.": "%s/%s (%s%) 학생이 출석하였습니다.",
 	"Attendance Checked": "출석이 확인되었습니다.",
 	"Attendance Checking": "출석 체크가 진행 중입니다.",
 	"Attendance Failed": "결석으로 처리되었습니다.", 
 	"Attendance Late": "지각으로 처리되었습니다."
-    
 }

@@ -477,10 +477,10 @@ module.exports = {
       .populateAll()
       .exec(function callback(err, mang) {
         if (err || !mang)
-	        return res.send(500, Error.alert(req, "Adding Manager Error", "Fail to add a user " + manager + " as a manager.\nPlease check User ID of Email again."));
+	        return res.send(500, Error.alert(req, "Adding Manager Error", "Fail to add a user %s as a manager.\nPlease check User ID of Email again.", manager));
 
 	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
-	        return res.send(500, Error.alert(req, "Adding Manager Error", "Add Manager", mang.full_name + " is already supervising current course."));
+	        return res.send(500, Error.alert(req, "Adding Manager Error", "%s is already supervising current course.", mang.full_name));
 
 			  var employed_schools = Arrays.getIds(mang.employed_schools);
 			  if (employed_schools.indexOf(Number(course.school.id)) == -1)
@@ -491,7 +491,7 @@ module.exports = {
 				mang.save(function callback(err) {
 					console.log(err);
 					if (err)
-		        return res.send(500, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save " + mang.full_name + " as a manager.\nPlease try again."));
+		        return res.send(500, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save %s as a manager.\nPlease try again.", mang.full_name));
 
 					Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
 	        return res.send(course.toWholeObject());

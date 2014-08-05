@@ -34,6 +34,11 @@ module.exports = {
       required: true
     },
 
+    locale: {
+      type: 'string',
+      defaultsTo: 'en'
+    },
+
     // One to One
     device: {
       model: 'Devices'

@@ -146,6 +146,7 @@ module.exports = {
 		var username = req.param('username');
 		var email = req.param('email');
 		var password = req.param('password');
+		var locale = req.param('locale');
 		var device_uuid = req.param('device_uuid');
 		var device_type = req.param('device_type');
 		var app_version = req.param('app_version');
@@ -170,6 +171,9 @@ module.exports = {
 
 	    // return res.send(441, Error.alert(req, "Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
 	    // return res.send(442, Error.alert(req, "Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
+	    
+	    user.locale = locale;
+	    user.save();
 	  	return res.send(user.toWholeObject());
 		});
 	},
@@ -484,7 +488,7 @@ module.exports = {
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(404, Error.alert(req, "Searching User Error", "Fail to find a user \"" + search_id + "\".\nPlease check User ID of Email again."));
+		    return res.send(404, Error.alert(req, "Searching User Error", "Fail to find a user \"%s\".\nPlease check User ID of Email again.", search_id));
 
 		  if (user.username == username || user.email == email)
 		    return res.send(400, Error.alert(req, "Busted", "HaHa, trying to find yourself? Got You! :)"));
