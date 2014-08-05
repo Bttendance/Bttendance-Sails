@@ -61,7 +61,7 @@ exports.alert = function(req, title, message, param1, param2, param3) {
 
 exports.log = function(req, title, message, param1, param2, param3, param4) {
 	var url = req.url;
-	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + params);
+	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
 
 	var locale = req.param('locale');
 	if (!locale)
@@ -76,7 +76,7 @@ exports.log = function(req, title, message, param1, param2, param3, param4) {
 
 exports.toast = function(req, title, message, param1, param2, param3, param4) {
 	var url = req.url;
-	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + params);
+	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
 
 	var locale = req.param('locale');
 	if (!locale)
@@ -91,7 +91,7 @@ exports.toast = function(req, title, message, param1, param2, param3, param4) {
 
 exports.alert = function(req, title, message, param1, param2, param3, param4) {
 	var url = req.url;
-	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + params);
+	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
 
 	var locale = req.param('locale');
 	if (!locale)

@@ -1,8 +1,4 @@
 {
-    "BTTENDANCE": "비텐던스",
-    "Bttendance": "비텐던스",
-    "bttendance": "비텐던스",
-
   	"Manual Check Error": "출석 체크 오류",
 	"Manual Un-Check Error": "출석 체크 오류",
 	"Sending Email Error": "Email 발송 실패",

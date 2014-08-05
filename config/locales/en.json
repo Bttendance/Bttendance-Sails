@@ -1,8 +1,4 @@
 {
-    "BTTENDANCE": "BTTENDANCE",
-    "Bttendance": "Bttendance",
-    "bttendance": "bttendance",
-
     "Manual Check Error": "Attendance Check Failed",
 	"Manual Un-Check Error": "Attendance Check Failed",
 	"Sending Email Error": "Sending Email Failed",

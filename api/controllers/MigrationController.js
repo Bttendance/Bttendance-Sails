@@ -8,18 +8,19 @@
 // For Develop (Drop all table and add new)
 // drop schema public cascade;
 // create schema public;
-// heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a121.dump' --app bttendance-dev
+// heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a156.dump' --app bttendance-dev
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
 
 // For Production
 // heroku maintenance:on
 // heroku ps:scale worker=0
 
-// Do work
+/**** Do work ****/
 
 // heroku ps:scale worker=1
 // heroku maintenance:off
 
+// 1.
 // DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials;
 // ALTER TABLE courses DROP COLUMN number CASCADE;
 // ALTER TABLE courses DROP COLUMN students_count CASCADE;
@@ -31,13 +32,17 @@
 // ALTER TABLE users DROP COLUMN username_lower CASCADE;
 // ALTER TABLE users DROP COLUMN profile_image CASCADE;
 
-// comment out courses code as unique constraint
-// sails lift (for auto migration)
+// 2.
+// comment out courses.code unique & models migrate.safe
+// sails lift
+// uncomment courses.code unique & models migrate.safe
+
+// 3.
+// sails lift
 // call api for migration
 
+// 4.
 // ALTER TABLE courses ADD CONSTRAINT courses_code_key UNIQUE (code);
-
-// uncomment for auto migration
 
 var Random = require('../utils/random');
 
