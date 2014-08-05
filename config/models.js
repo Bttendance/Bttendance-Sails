@@ -8,6 +8,8 @@
  * For more info on Sails models, see:
  * http://sailsjs.org/#/documentation/concepts/ORM
  */
+ 
+var connections = require('./connections');
 
 module.exports.models = {
 
@@ -19,7 +21,7 @@ module.exports.models = {
   ***************************************************************************/
 
   // connection: 'localDiskDb',
-  // connection: connections.getPostgres(),
+  connection: connections.getPostgres(),
 
   // When sails lift it migrate whole database from server to local 
   // and create and update database as model 
