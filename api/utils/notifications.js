@@ -20,6 +20,11 @@ exports.send = function(user, title, message, type) {
 	if (!user.device.notification_key)
 		return;
 
+	var locale = user.locale;
+	if (!locale)
+		locale = 'en';
+	message = sails.__({ phrase: message, locale: locale });
+
 	if (user.device.type == 'android') {
 
 		var msg = new gcm.Message({
@@ -135,8 +140,12 @@ exports.resendAttedance = function(attendance_id) {
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-  				if (users[i].setting.attendance)
-					  exports.send(users[i], course.name, "Attendance check is on-going", "attendance_on_going");
+  				if (users[i].setting.attendance) {
+  					var locale = users[i].locale;
+  					if (!locale)
+  						locale = 'en';
+					  exports.send(users[i], course.name, sails.__({ phrase: "Attendance check is on-going", locale: locale }), "attendance_on_going");
+  				}
   		});
 		});
 	});
@@ -201,8 +210,12 @@ exports.resendClicker = function(clicker_id) {
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-  				if (users[i].setting.clicker)
-					  exports.send(users[i], course.name, "Clicker is on-going", "clicker_on_going");
+  				if (users[i].setting.clicker) {
+  					var locale = users[i].locale;
+  					if (!locale)
+  						locale = 'en';
+					  exports.send(users[i], course.name, sails.__({ phrase: "Clicker is on-going", locale: locale }), "clicker_on_going");
+  				}
   		});
 		});
 	});
