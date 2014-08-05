@@ -161,8 +161,6 @@ module.exports.connections = {
 exports.getPostgres = function() {
   if (process.env.NODE_ENV == 'production')
     return 'postgresProduction';
-  else if (process.env.NODE_ENV == 'development')
-    return 'postgresDevelopment';
   else 
     return 'postgresDevelopment';
 }

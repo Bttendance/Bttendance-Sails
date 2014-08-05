@@ -20,7 +20,6 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  // connection: 'localDiskDb',
   connection: connections.getPostgres(),
 
   // When sails lift it migrate whole database from server to local 
