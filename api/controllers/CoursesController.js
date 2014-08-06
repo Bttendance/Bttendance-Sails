@@ -330,14 +330,6 @@ module.exports = {
 
 					for (var i = 0; i < posts.length; i++) {
 
-						var students_count = 0;
-						for (var j = 0; j < courses.length; j++) {
-							if (courses[j].id == posts[i].course.id) {
-								students_count = courses[j].students.length;
-			  				posts[i].school_name = courses[j].school.name;
-							}
-						}
-
 						var grade;
 						var message;
 						if (posts[i].type == 'attendance') {
@@ -345,7 +337,7 @@ module.exports = {
 							if (!locale)
 								locale = 'en';
 
-							grade = Number(( (posts[i].attendance.checked_students.length - 1) / students_count * 100).toFixed());
+							grade = Number(( (posts[i].attendance.checked_students.length - 1) / course.students.length * 100).toFixed());
 		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
