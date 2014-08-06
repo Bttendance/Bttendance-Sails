@@ -16,10 +16,10 @@ module.exports = function isUser (req, res, next) {
 	var password = req.param('password');
 
 	if (!username && !email)
-		return res.send(400, Error.policy(req, "User Policy Error", "Username or Email is required."));
+		return res.send(400, Error.alert(req, "User Policy Error", "Username or Email is required."));
 
 	if (!password)
-		return res.send(400, Error.policy(req, "User Policy Error", "Password is required."));
+		return res.send(400, Error.alert(req, "User Policy Error", "Password is required."));
 
 	// Super Username Policy
 	if (username == "appletest0"
@@ -59,15 +59,15 @@ module.exports = function isUser (req, res, next) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, Error.policy(req, "User Policy Error", "Error in user find method."));
+	    return res.send(500, Error.log(req, "User Policy Error", "Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, Error.policy(req, "User Policy Error", "User doesn't exitst."));
+	    return res.send(404, Error.log(req, "User Policy Error", "User doesn't exitst."));
 
 	  // Password Doesn't Match
 	  } else if (user.password != password) {
-		  return res.send(404, Error.policy(req, "User Policy Error", "Password doesn't match."));
+		  return res.send(404, Error.log(req, "User Policy Error", "Password doesn't match."));
 
 		// Found User
 	  } else {

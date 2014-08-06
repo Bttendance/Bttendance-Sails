@@ -17,6 +17,6 @@ module.exports = function isDev (req, res, next) {
 	// isDev Policy
 	if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == 'staging')
 		return next();
-	
-	return res.send(403, Error.policy(req, "Develop Policy Error", "Forbidden in production mode."));
+
+	return res.send(403, Error.log(req, "Develop Policy Error", "Forbidden in production mode."));
 };

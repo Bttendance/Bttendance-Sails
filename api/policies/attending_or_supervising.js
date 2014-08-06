@@ -18,10 +18,10 @@ module.exports = function attending_or_supervising (req, res, next) {
 	var course_id = req.param('course_id');
 
 	if (!username && !email)
-		return res.send(400, Error.policy(req, "Course Policy Error", "Username or Email is required."));
+		return res.send(400, Error.log(req, "Course Policy Error", "Username or Email is required."));
 
 	if (!password || !course_id)
-		return res.send(400, Error.policy(req, "Course Policy Error", "Username, password and course id is required."));
+		return res.send(400, Error.log(req, "Course Policy Error", "Username, password and course id is required."));
 
 	Users
 	.findOne({
@@ -37,20 +37,20 @@ module.exports = function attending_or_supervising (req, res, next) {
 		// Error handling
 		if (err) {
 	    console.log(err);
-	    return res.send(500, Error.policy(req, "Course Policy Error", "Error in user find method."));
+	    return res.send(500, Error.log(req, "Course Policy Error", "Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, Error.policy(req, "Course Policy Error", "User doesn't exitst."));
+	    return res.send(404, Error.log(req, "Course Policy Error", "User doesn't exitst."));
 
 	  // Password Doesn't Match
 	  } else if (user.password != password) {
-		  return res.send(404, Error.policy(req, "Course Policy Error", "Password doesn't match."));
+		  return res.send(404, Error.log(req, "Course Policy Error", "Password doesn't match."));
 
 		// User attending check
 		} else if (Arrays.getIds(user.attending_courses).indexOf(Number(course_id)) < 0
 			&& Arrays.getIds(user.supervising_courses).indexOf(Number(course_id)) < 0) {
-		  return res.send(403, Error.policy(req, "Course Policy Error", "User is not attending or supervising current course."));
+		  return res.send(403, Error.log(req, "Course Policy Error", "User is not attending or supervising current course."));
 
 		// Found User
 	  } else {
