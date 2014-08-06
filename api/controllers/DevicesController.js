@@ -49,7 +49,15 @@ module.exports = {
 		   	if (err)
 					return res.send(500, Error.log(req, "Notification Key Update Error", "Updating notification key has been failed."));
 
-		  	return res.send(user.toWholeObject());
+				Users
+				.findOneByEmail(user.email)
+				.populateAll()
+				.exec(function callback(err, user) {
+					if (err || !user)
+						return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
+
+			  	return res.send(user.toWholeObject());
+				});
 	    });
 		});
 	}
