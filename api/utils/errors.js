@@ -59,6 +59,17 @@ exports.alert = function(req, title, message, param1, param2, param3) {
 	return alert(req, title, message, param1, param2, param3, undefined);
 }
 
+exports.policy = function(req, title, message) {
+	var url = req.url;
+	sails.log.error(url + ' : ' + title + ' : ' + message);
+	
+	var json = {};
+	json.type = 'log';
+	json.title = title;
+	json.message = message;
+	return json;
+}
+
 exports.log = function(req, title, message, param1, param2, param3, param4) {
 	var url = req.url;
 	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
@@ -76,7 +87,7 @@ exports.log = function(req, title, message, param1, param2, param3, param4) {
 
 exports.toast = function(req, title, message, param1, param2, param3, param4) {
 	var url = req.url;
-	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
+	sails.log.warn(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
 
 	var locale = req.param('locale');
 	if (!locale)
@@ -91,7 +102,7 @@ exports.toast = function(req, title, message, param1, param2, param3, param4) {
 
 exports.alert = function(req, title, message, param1, param2, param3, param4) {
 	var url = req.url;
-	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
+	sails.log.error(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2 + ' : ' + param3 + ' : ' + param4);
 
 	var locale = req.param('locale');
 	if (!locale)

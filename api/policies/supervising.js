@@ -19,13 +19,13 @@ module.exports = function supervising (req, res, next) {
 	var post_id = req.param('post_id');
 
 	if (!username && !email)
-		return res.send(400, Error.alert(req, "Supervising Policy Error", "Username or Email is required."));
+		return res.send(400, Error.policy(req, "Supervising Policy Error", "Username or Email is required."));
 
 	if (!course_id && !post_id)
-		return res.send(400, Error.alert(req, "Supervising Policy Error", "Course ID or Post ID is required."));
+		return res.send(400, Error.policy(req, "Supervising Policy Error", "Course ID or Post ID is required."));
 
 	if (!password)
-		return res.send(400, Error.alert(req, "Supervising Policy Error", "Password is required."));
+		return res.send(400, Error.policy(req, "Supervising Policy Error", "Password is required."));
 
 	Users
 	.findOne({
@@ -39,19 +39,19 @@ module.exports = function supervising (req, res, next) {
 
 		// Error handling
 		if (err) {
-	    return res.send(500, Error.alert(req, "Supervising Policy Error", "Error in user find method."));
+	    return res.send(500, Error.policy(req, "Supervising Policy Error", "Error in user find method."));
 
 	  // No User found
 	  } else if (!user) {
-	    return res.send(404, Error.alert(req, "Supervising Policy Error", "User doesn't exitst."));
+	    return res.send(404, Error.policy(req, "Supervising Policy Error", "User doesn't exitst."));
 
 	  // Password Doesn't Match
 	  } else if (user.password != password) {
-		  return res.send(404, Error.alert(req, "Supervising Policy Error", "Password doesn't match."));
+		  return res.send(404, Error.policy(req, "Supervising Policy Error", "Password doesn't match."));
 
 		// User attending check
 		} else if (course_id && Arrays.getIds(user.supervising_courses).indexOf(Number(course_id)) < 0) {
-		  return res.send(403, Error.alert(req, "Supervising Policy Error", "User is not supervising current course."));
+		  return res.send(403, Error.policy(req, "Supervising Policy Error", "User is not supervising current course."));
 
 		// Found User
 	  } else if (post_id) {
@@ -62,14 +62,14 @@ module.exports = function supervising (req, res, next) {
 
 				// Error handling
 				if (err) {
-			    return res.send(500, Error.alert(req, "Supervising Policy Error", "Error in post find method."));
+			    return res.send(500, Error.policy(req, "Supervising Policy Error", "Error in post find method."));
 
 			  // No Post found
 			  } else if (!post) {
-			    return res.send(404, Error.alert(req, "Supervising Policy Error", "Post doesn't exitst."));
+			    return res.send(404, Error.policy(req, "Supervising Policy Error", "Post doesn't exitst."));
 			  
 			  } else if (Arrays.getIds(user.supervising_courses).indexOf(Number(post.course)) < 0) {
-				  return res.send(403, Error.alert(req, "Supervising Policy Error", "User is not supervising current course."));
+				  return res.send(403, Error.policy(req, "Supervising Policy Error", "User is not supervising current course."));
 
 			  } else {
 			  	return next();
