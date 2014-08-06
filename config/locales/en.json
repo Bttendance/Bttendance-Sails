@@ -32,6 +32,7 @@
     "Searching User Error": "Searching User Failed",
     "Busted": "Busted",
     "Employed Policy Error": "Not Valid Account",
+    "Course Policy Error": "Not Valid Account",
     "User Policy Error": "Not Valid Account",
     "Supervising Policy Error": "Not Valid Account",
     "User Find Error": "Finding User Failed",

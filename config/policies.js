@@ -32,7 +32,7 @@ module.exports.policies = {
   },
 
   SocketsController: {
-    'connect': 'isUser'
+    'connect': true
   },
 
   UsersController: {
