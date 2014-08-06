@@ -330,6 +330,14 @@ module.exports = {
 
 					for (var i = 0; i < posts.length; i++) {
 
+						var students_count = 0;
+						for (var j = 0; j < courses.length; j++) {
+							if (courses[j].id == posts[i].course.id) {
+								students_count = courses[j].students.length;
+			  				posts[i].school_name = courses[j].school.name;
+							}
+						}
+
 						var grade;
 						var message;
 						if (posts[i].type == 'attendance') {
