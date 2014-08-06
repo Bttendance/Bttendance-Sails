@@ -92,6 +92,7 @@ module.exports = {
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.password;
+      delete obj.locale;
       delete obj.device;
       delete obj.setting;
       delete obj.supervising_courses;
@@ -109,6 +110,7 @@ module.exports = {
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.password = this.password;
+      obj.locale = this.locale;
       obj.device = this.device;
       obj.setting = this.setting;
       obj.supervising_courses = this.supervising_courses;
