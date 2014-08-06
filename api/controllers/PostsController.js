@@ -86,7 +86,7 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				if (users[i].setting.clicker)
+				  				if (users[i].setting && users[i].setting.clicker)
 					  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
 				  		});
 
@@ -164,7 +164,7 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				if (users[i].setting.attendance)
+				  				if (users[i].setting && users[i].setting.attendance)
 					  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
 				  		});
 
@@ -240,7 +240,7 @@ module.exports = {
 				  		.sort('id DESC')
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
-				  				if (users[i].setting.notice)
+				  				if (users[i].setting && users[i].setting.notice)
 					  				Noti.send(users[j], post.course.name, message, "notice");
 				  		});
 
