@@ -1,5 +1,4 @@
 {
-    //Title
     "Manual Check Error": "출석 체크 오류",
     "Manual Un-Check Error": "출석 체크 오류",
     "Sending Email Error": "Email 발송 오류",
@@ -38,7 +37,6 @@
     "User Find Error": "사용자 탐색 오류",
     "Deivce Create Error": "기기 등록 오류",
 
-    // Alert
     "Student doesn't exist.": "학생이 존재하지 않습니다.",
     "Attendance record doesn't exist.": "출석 기록이 존재하지 않습니다.",
     "Updating attendance record has been failed.": "출석 기록을 수정하지 못했습니다.",
@@ -116,14 +114,12 @@
     "Error in post find method.": "포스트 탐색 메소드에 문제가 발생하였습니다.",
     "Post doesn't exitst.": "포스트가 존재하지 않습니다.",
 
-    // Toast
     "You've already chosen A as a choice.": "이미 A를 선택하였습니다.",
     "You've already chosen B as a choice.": "이미 B를 선택하였습니다.",
     "You've already chosen C as a choice.": "이미 C를 선택하였습니다.",
     "You've already chosen D as a choice.": "이미 D를 선택하였습니다.",
     "You've already chosen E as a choice.": "이미 E를 선택하였습니다.",
 
-    // Noti
     "You have succeed to send a message.": "메시지를 성공적으로 전송하였습니다.",
     "Attendance has been checked": "출석이 확인되었습니다.",
     "You have been added as a manager.": "관리자로 추가되었습니다.",
@@ -133,7 +129,6 @@
     "Clicker is on-going": "설문 하기가 진행 중입니다.",
     "Attendance check is on-going": "출석 체크가 진행 중입니다.",
 
-    // Feed
     "students has been attended.": "학생들이 출석하였습니다.",
     "Attendance Checked": "출석이 확인되었습니다.",
     "Attendance Checking": "출석 체크가 진행 중입니다.",
