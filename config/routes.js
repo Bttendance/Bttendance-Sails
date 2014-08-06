@@ -68,6 +68,11 @@ module.exports.routes = {
     action: 'migrate'
   },
 
+  '/api/migration/migrate2': {
+    controller: 'migration',
+    action: 'migrate2'
+  },
+
   '/api/migration/test': {
     controller: 'migration',
     action: 'test'

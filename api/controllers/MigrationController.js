@@ -6,10 +6,10 @@
  */
 
 // For Develop (Drop all table and add new)
+// psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
 // drop schema public cascade;
 // create schema public;
 // heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a156.dump' --app bttendance-dev
-// psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
 
 // For Production
 // heroku maintenance:on
@@ -22,15 +22,7 @@
 
 // 1.
 // DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials;
-// ALTER TABLE courses DROP COLUMN number CASCADE;
-// ALTER TABLE courses DROP COLUMN students_count CASCADE;
-// ALTER TABLE courses DROP COLUMN "attdCheckedAt" CASCADE;
-// ALTER TABLE courses DROP COLUMN clicker_usage CASCADE;
-// ALTER TABLE courses DROP COLUMN notice_usage CASCADE;
-// ALTER TABLE schools DROP COLUMN logo_image CASCADE;
-// ALTER TABLE schools DROP COLUMN website CASCADE;
-// ALTER TABLE users DROP COLUMN username_lower CASCADE;
-// ALTER TABLE users DROP COLUMN profile_image CASCADE;
+// ALTER TABLE courses DROP COLUMN number CASCADE; ALTER TABLE courses DROP COLUMN students_count CASCADE; ALTER TABLE courses DROP COLUMN "attdCheckedAt" CASCADE; ALTER TABLE courses DROP COLUMN clicker_usage CASCADE; ALTER TABLE courses DROP COLUMN notice_usage CASCADE; ALTER TABLE schools DROP COLUMN logo_image CASCADE; ALTER TABLE schools DROP COLUMN website CASCADE; ALTER TABLE users DROP COLUMN username_lower CASCADE; ALTER TABLE users DROP COLUMN profile_image CASCADE;
 
 // 2.
 // comment out courses.code unique & models migrate.safe
@@ -80,21 +72,6 @@ module.exports = {
 			});
 		});
 
-		//create type, late_students
-		Attendances
-		.find()
-		.sort('id ASC')
-		.exec(function callback(err, attendances) {
-			if (err || !attendances)
-				return;
-
-			for (var i = 0; i < attendances.length; i++) {
-				attendances[i].type = 'auto';
-				attendances[i].late_students = new Array();
-				attendances[i].save();
-			}
-		});
-
 		//create Setting
 		Users.find().sort('id ASC').exec(function callback(err, users) {
 			if (err || !users)
@@ -116,6 +93,25 @@ module.exports = {
 				else
 					console.log(err);
 			});
+		});
+
+	},
+
+	migrate2: function(req, res) {
+
+		//create type, late_students
+		Attendances
+		.find()
+		.sort('id ASC')
+		.exec(function callback(err, attendances) {
+			if (err || !attendances)
+				return;
+
+			for (var i = 0; i < attendances.length; i++) {
+				attendances[i].type = 'auto';
+				attendances[i].late_students = new Array();
+				attendances[i].save();
+			}
 		});
 
 		//user locale
