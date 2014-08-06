@@ -61,7 +61,6 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.managers;
       delete obj.students;
       delete obj.posts;
       delete obj.code;
@@ -73,7 +72,6 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.managers_count = this.managers.length;
       obj.students_count = this.students.length;
       obj.posts_count = this.posts.length;
       obj.code = this.code;
