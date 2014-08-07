@@ -16,11 +16,81 @@
  * (this is to prevent you inadvertently sensitive credentials up to your repository.)
  *
  * For more information on configuration, check out:
- * http://links.sailsjs.org/docs/config/connections
+ * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.connections.html
  */
 
 module.exports.connections = {
 
+  /***************************************************************************
+  *                                                                          *
+  * Local disk storage for DEVELOPMENT ONLY                                  *
+  *                                                                          *
+  * Installed by default.                                                    *
+  *                                                                          *
+  ***************************************************************************/
+  localDiskDb: {
+    adapter: 'sails-disk'
+  },
+
+  /***************************************************************************
+  *                                                                          *
+  * MySQL is the world's most popular relational database.                   *
+  * http://en.wikipedia.org/wiki/MySQL                                       *
+  *                                                                          *
+  * Run: npm install sails-mysql                                             *
+  *                                                                          *
+  ***************************************************************************/
+  someMysqlServer: {
+    adapter: 'sails-mysql',
+    host: 'YOUR_MYSQL_SERVER_HOSTNAME_OR_IP_ADDRESS',
+    user: 'YOUR_MYSQL_USER',
+    password: 'YOUR_MYSQL_PASSWORD',
+    database: 'YOUR_MYSQL_DB'
+  },
+
+  /***************************************************************************
+  *                                                                          *
+  * MongoDB is the leading NoSQL database.                                   *
+  * http://en.wikipedia.org/wiki/MongoDB                                     *
+  *                                                                          *
+  * Run: npm install sails-mongo                                             *
+  *                                                                          *
+  ***************************************************************************/
+  someMongodbServer: {
+    adapter: 'sails-mongo',
+    host: 'localhost',
+    port: 27017,
+    // user: 'username',
+    // password: 'password',
+    // database: 'your_mongo_db_name_here'
+  },
+
+  /***************************************************************************
+  *                                                                          *
+  * PostgreSQL is another officially supported relational database.          *
+  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
+  *                                                                          *
+  * Run: npm install sails-postgresql                                        *
+  *                                                                          *
+  *                                                                          *
+  ***************************************************************************/
+  somePostgresqlServer: {
+    adapter: 'sails-postgresql',
+    host: 'YOUR_POSTGRES_SERVER_HOSTNAME_OR_IP_ADDRESS',
+    user: 'YOUR_POSTGRES_USER',
+    password: 'YOUR_POSTGRES_PASSWORD',
+    database: 'YOUR_POSTGRES_DB'
+  },
+
+  /***************************************************************************
+  *                                                                          *
+  * PostgreSQL is another officially supported relational database.          *
+  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
+  *                                                                          *
+  * Run: npm install sails-postgresql                                        *
+  *                                                                          *
+  *                                                                          *
+  ***************************************************************************/
   // psql "dbname=d8n4i2f6q5clp2 host=ec2-54-225-88-13.compute-1.amazonaws.com user=u7nsa3j4q3ng05 password=pf3koh48m9br384km90u7kng962 port=5642 sslmode=require"
   postgresProduction: {
     module   : 'sails-postgresql',
@@ -32,6 +102,15 @@ module.exports.connections = {
     ssl      : true
   },
 
+  /***************************************************************************
+  *                                                                          *
+  * PostgreSQL is another officially supported relational database.          *
+  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
+  *                                                                          *
+  * Run: npm install sails-postgresql                                        *
+  *                                                                          *
+  *                                                                          *
+  ***************************************************************************/
   // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
   postgresDevelopment: {
     module   : 'sails-postgresql',
@@ -42,6 +121,13 @@ module.exports.connections = {
     database : 'd9vocafm0kncoe',
     ssl      : true
   },
+
+
+  /***************************************************************************
+  *                                                                          *
+  * More adapters: https://github.com/balderdashy/sails                      *
+  *                                                                          *
+  ***************************************************************************/
 
   // psql "dbname=postgres"
   // postgresLocal: {
