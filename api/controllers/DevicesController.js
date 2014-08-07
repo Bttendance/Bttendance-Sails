@@ -44,6 +44,7 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 				return res.send(404, Error.log(req, "Notification Key Update Error", "Device doesn't match."));
 
+		  sails.log.error(user.toWholeObject());
 		  user.device.notification_key = notification_key;
 		  user.device.save();
 		  sails.log.error(user.toWholeObject());
