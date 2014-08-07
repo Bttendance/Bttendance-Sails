@@ -551,7 +551,7 @@ module.exports = {
 	        	}
 	        
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
-	        		if (users[index].identifications[i].school == course.school)
+	        		if (users[index].identifications[i].school == course.school.id)
 	        			users[index].student_id = users[index].identifications[i].identity;
 	        	users[index].grade = grade + "/" + total_grade;
 	        }
@@ -627,7 +627,7 @@ module.exports = {
 	        	}
 	        
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
-	        		if (users[index].identifications[i].school == course.school)
+	        		if (users[index].identifications[i].school == course.school.id)
 	        			users[index].student_id = users[index].identifications[i].identity;
 	        	users[index].grade = grade + "/" + total_grade;
 	        }
