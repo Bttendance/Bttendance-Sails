@@ -6,7 +6,6 @@
  */
 
 var Error = require('../utils/errors');
-var Serialize = require('node-serialize');
 
 module.exports = {
 
