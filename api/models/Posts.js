@@ -167,6 +167,15 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
+    
+    Posts
+    .findOneById(values.id)
+    .populateAll()
+    .exec(function callback(err, post) {
+      if (post && post.course) 
+        sails.sockets.broadcast('Course#' + post.course.id, 'post', post.toWholeObject());
+    });
+
     next();
   },
 

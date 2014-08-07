@@ -28,6 +28,7 @@ module.exports.sockets = {
     Clickers.watch(socket);
     Attendances.watch(socket);
     Notices.watch(socket);
+    Posts.watch(socket);
 
     var socketID = sails.sockets.id(socket);
     sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
@@ -47,6 +48,7 @@ module.exports.sockets = {
     Clickers.unwatch(socket);
     Attendances.unwatch(socket);
     Notices.unwatch(socket);
+    Posts.unwatch(socket);
   },
 
 

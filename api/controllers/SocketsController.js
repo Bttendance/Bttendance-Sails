@@ -14,6 +14,7 @@ module.exports = {
     Clickers.unwatch(req.socket);
     Attendances.unwatch(req.socket);
     Notices.unwatch(req.socket);
+    Posts.unwatch(req.socket);
 
 		Users
 		.findOneByEmail(email)
