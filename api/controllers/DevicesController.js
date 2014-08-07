@@ -46,6 +46,7 @@ module.exports = {
 
 		  user.device.notification_key = notification_key;
 		  user.device.save();
+		  sails.log.error(user.toWholeObject());
 	  	return res.send(user.toWholeObject());
 		});
 	}
