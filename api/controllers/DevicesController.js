@@ -36,14 +36,7 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
-		.populate('device')
-		.populate('setting')
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.populate('employed_schools')
-		.populate('enrolled_schools')
-		.populate('identifications')
-		.populate('questions')
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
 				return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
