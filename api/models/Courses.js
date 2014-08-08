@@ -74,7 +74,6 @@ module.exports = {
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.managers = this.managers;
-      obj.students = this.students;
       obj.students_count = this.students.length;
       obj.posts_count = this.posts.length;
       obj.code = this.code;
