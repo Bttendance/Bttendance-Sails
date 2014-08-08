@@ -317,6 +317,7 @@ module.exports = {
 			.findOneById(course_id)
 			.populate('posts')
 			.populate('students')
+			.populate('managers')
 			.exec(function callback(err, course) {
 				if (err || !course)
 		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
@@ -338,14 +339,9 @@ module.exports = {
 								locale = 'en';
 
 							var included = 0;
-							for (var j = 0; j < courses.length; j++) {
-								if (courses[j].id == posts[i].course.id) {
-									for (var k = 0; k < courses[j].managers.length; k++) {
-										if (posts[i].attendance.checked_students.indexOf(courses[j].managers[k]) != -1)
-											included++;
-									}
-								}	
-							}
+							for (var k = 0; k < course.managers.length; k++)
+								if (posts[i].attendance.checked_students.indexOf(course.managers[k]) != -1)
+									included++;
 
 							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length - included) / course.students.length * 100).toFixed());
 		  				if (grade < 0 || isNaN(grade)) grade = 0;
