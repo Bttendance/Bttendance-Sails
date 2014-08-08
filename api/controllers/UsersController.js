@@ -676,9 +676,9 @@ module.exports = {
 								attd_checks = attd_checks.concat(posts[j].attendance.checked_students);
 								attd_checks = attd_checks.concat(posts[j].attendance.late_students);
 
-								for (var k = 0; k < courses[i].managers.length; k++)
-									if (posts[j].attendance.checked_students.indexOf(courses[i].managers[k]) != -1)
-										manager_included_count++;
+								// for (var k = 0; k < courses[i].managers.length; k++)
+								// 	if (posts[j].attendance.checked_students.indexOf(courses[i].managers[k]) != -1)
+								// 		manager_included_count++;
 
 								attd_usage++;
 							}
