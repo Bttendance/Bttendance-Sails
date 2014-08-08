@@ -89,10 +89,7 @@ module.exports = {
 
   		Courses
   		.findById(courses)
-			.populate('posts')
-	  	.populate('managers')
-	  	.populate('students')
-	  	.populate('school')
+  		.populateAll()
   		.exec(function callback(err, courses) {
   			if (err || !courses)
 	    		return res.send(JSON.stringify(new Array()));
