@@ -36,7 +36,15 @@ module.exports = {
     				attendances.push(courses[i].posts[j].attendance);
     		}
     	}
-  		return res.send(attendances);
+
+    	Attendances
+    	.find(attendances)
+    	.exec(function callback(err, attendances) {
+    		if (err || !attendances)
+	  			return res.send(500, Error.log(req, "Find attendance checking IDs Error", "Fail to find attendances."));
+
+	  		return res.send(Arrays.getIds(attendances));
+    	});
 		});
 	},
 
@@ -205,17 +213,24 @@ module.exports = {
 												noti = false;
 
 										if (noti) {
-											Users
-											.findOneById(notiable[j])
-											.populate('device')
-											.populate('setting')
-											.exec(function callback(err, user) {
-												if (user && user.setting.attendance) {
-													Courses
-													.findOneById(attendance.post.course)
-													.exec(function callback(err, course) {
-														Noti.send(user, course.name, "Attendance has been checked", "attendance_checked");
-													});
+											Courses
+											.findOneById(attendance.post.course)
+											.populate('managers')
+											.exec(function callback(err, course) {
+												if (!err && course && Arrays.getIds(course.managers).indexOf(notiable[j]) == -1) {
+													Users
+													.findOneById(notiable[j])
+													.populate('device')
+													.populate('setting')
+													.exec(function callback(err, user) {
+														if (user && user.setting.attendance) {
+															Courses
+															.findOneById(attendance.post.course)
+															.exec(function callback(err, course) {
+																Noti.send(user, course.name, "Attendance has been checked", "attendance_checked");
+															});
+														}
+													});	
 												}
 											});
 										}
