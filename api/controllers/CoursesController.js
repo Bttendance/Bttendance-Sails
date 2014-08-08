@@ -340,7 +340,7 @@ module.exports = {
 
 							var included = 0;
 							for (var k = 0; k < course.managers.length; k++)
-								if (posts[i].attendance.checked_students.indexOf(course.managers[k]) != -1)
+								if (posts[i].attendance.checked_students.indexOf(course.managers[k].id) != -1)
 									included++;
 
 							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length - included) / course.students.length * 100).toFixed());

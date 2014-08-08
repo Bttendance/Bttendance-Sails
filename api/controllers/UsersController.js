@@ -554,7 +554,7 @@ module.exports = {
 							for (var j = 0; j < courses.length; j++) {
 								if (courses[j].id == posts[i].course.id) {
 									for (var k = 0; k < courses[j].managers.length; k++) {
-										if (posts[i].attendance.checked_students.indexOf(courses[j].managers[k]) != -1)
+										if (posts[i].attendance.checked_students.indexOf(courses[j].managers[k].id) != -1)
 											included++;
 									}
 								}	
@@ -677,7 +677,7 @@ module.exports = {
 								attd_checks = attd_checks.concat(posts[j].attendance.late_students);
 
 								for (var k = 0; k < courses[i].managers.length; k++)
-									if (posts[j].attendance.checked_students.indexOf(courses[i].managers[k]) != -1)
+									if (posts[j].attendance.checked_students.indexOf(courses[i].managers[k].id) != -1)
 										manager_included_count++;
 
 								attd_usage++;
