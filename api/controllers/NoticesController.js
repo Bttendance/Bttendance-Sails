@@ -28,39 +28,12 @@ module.exports = {
 				if (err || !notice)
 	  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find notice."));
 
-			  var seen_students = Arrays.getIds(notice.seen_students);
-			  if (seen_students.indexOf(Number(notice_id)) != -1)
-			    return res.send(notice.toWholeObject());
+	  		if (notice.seen_students.indexOf(user.id) != -1)
+				  return res.send(notice.toWholeObject());
 
-				var seen_students = new Array();
-				var has_user = false;
-				for (var i = 0; i < notice.seen_students.length; i++) {
-					var id = notice.seen_students[i];
-					seen_students.push(id);
-					if (id == user.id)
-						has_user = true;
-					seen_students.push(id);
-				}
-
-				if (!has_user) {
-					notice.seen_students = seen_students;
-					notice.save(function callback(err) {
-						if (err)
-			  			return res.send(500, Error.log(req, "Notice Seen Error", "Updating notice record has been failed."));
-
-				    Notices
-						.findOneById(notice_id)
-						.populateAll()
-						.exec(function callback(err, notice_new) {
-							if (err || !notice_new)
-				  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find updated notice record."));
-
-					  	return res.send(notice_new.toWholeObject());
-						});
-					});
-				} else {
-			  	return res.send(notice.toWholeObject());
-				}
+				notice.seen_students.push(user.id);
+				notice.save();
+			  return res.send(notice.toWholeObject());
 			});
 		});
 	}
