@@ -429,7 +429,7 @@ module.exports = {
 				for (var i = 0; i < attendance.checked_students.length; i++) {
 					var id = attendance.checked_students[i];
 					if (id == user.id)
-						check_user = false;
+						check_user = true;
 					else
 						checked_students.push(id);
 				}
