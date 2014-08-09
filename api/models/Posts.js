@@ -91,9 +91,6 @@ module.exports = {
     if (values.type == 'attendance') {
       values.message = 'Attendance';
 
-      var checked_students = new Array();
-      checked_students.push(values.author);
-
       var clusters = new Array();
       var prof = new Array();
       prof.push(values.author);
@@ -101,7 +98,6 @@ module.exports = {
 
       Attendances
       .create({
-        checked_students: checked_students,
         clusters: clusters,
         type: values.attendance_type
       }).exec(function callback(err, attendance) {

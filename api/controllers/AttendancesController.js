@@ -32,7 +32,7 @@ module.exports = {
     		for (var j = 0; j < courses[i].posts.length; j++) {
     			var createdAt = Moment(courses[i].posts[j].createdAt);
     			var diff = now.diff(createdAt);
-    			if (diff < 3 * 60 * 1000 && courses[i].posts[j].type == 'attendance')
+    			if (diff < 65 * 1000 && courses[i].posts[j].type == 'attendance')
     				attendances.push(courses[i].posts[j].attendance);
     		}
     	}
@@ -43,7 +43,11 @@ module.exports = {
     		if (err || !attendances)
 	  			return res.send(500, Error.log(req, "Find attendance checking IDs Error", "Fail to find attendances."));
 
-	  		return res.send(Arrays.getIds(attendances));
+	  		var autoAttds = new Array();
+	  		for (var k = 0; k < attendances.length; j++)
+	  			if (attendances[k].type == 'auto')
+	  				autoAttds.push(attendances[k]);
+	  		return res.send(Arrays.getIds(autoAttds));
     	});
 		});
 	},
@@ -99,6 +103,14 @@ module.exports = {
 			    		&& Arrays.getIds(user_uuid.attending_courses).indexOf(attendance.post.course) == -1))
 			  			return res.send(204, Error.log(req, "Bttendance Error", "User is not attending current course."));
 
+			  		if (Arrays.getIds(user_api.supervising_courses).indexOf(attendance.post.course) == -1
+			  			&& user_api.id != attendance.post.author)
+			  			return res.send(204, Error.log(req, "Bttendance Error", "Manager around who is not author."));
+
+			  		if (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) == -1
+			  			&& user_uuid.id != attendance.post.author)
+			  			return res.send(204, Error.log(req, "Bttendance Error", "Manager around who is not author."));
+
 						var userids = new Array();
 						userids.push(user_api.id);
 						userids.push(user_uuid.id);
@@ -109,8 +121,8 @@ module.exports = {
 						// Case 2 : One included => Add other to the cluster
 						// Case 3 : Both included Same => Do nothing
 						// Case 4 : Both included Diff => Merge two cluster
+						var clusters = new Array();
 						{
-							var clusters = new Array();
 							for (var i = 0; i < attendance.clusters.length; i++)
 								clusters.push(attendance.clusters[i]);
 
@@ -157,10 +169,10 @@ module.exports = {
 			    		}
 						}
 
-						// Found if any cluster has more than 4 users
+						// Found if any cluster has more than 3 users
 						{
-							var a = -1;	// cluster which has more than 4 users
-							var b = -1; // cluster which prof is included
+							var a = -1;	// cluster which has more than 3 users
+							var b = -1; // cluster which author is included
 							for (var i = 0; i < clusters.length; i++)
 								for (var j = 0; j < clusters[i].length; j++)
 									if (clusters[i][j] == attendance.post.author)
@@ -240,8 +252,13 @@ module.exports = {
 							}
 						}
 						
+						var updating_checkes = new Array();
+						for (var i = 0; i < notiable.length; i++)
+							if (attendance.post.author != notiable[i])
+								updating_checkes.push(notiable[i]);
+
 						// Update Checks & Clusters
-						attendance.checked_students = notiable;
+						attendance.checked_students = updating_checkes;
 						attendance.clusters = clusters;
 						attendance.save(function(err) {
 					  	return res.send(attendance.toWholeObject());

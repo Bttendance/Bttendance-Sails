@@ -550,22 +550,12 @@ module.exports = {
 							if (!locale)
 								locale = 'en';
 
-							var included = 0;
-							for (var j = 0; j < courses.length; j++) {
-								if (courses[j].id == posts[i].course.id) {
-									for (var k = 0; k < courses[j].managers.length; k++) {
-										if (posts[i].attendance.checked_students.indexOf(courses[j].managers[k].id) != -1)
-											included++;
-									}
-								}	
-							}
-
-							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length - included) / students_count * 100).toFixed());
+							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / students_count * 100).toFixed());
 		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
-		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length - included) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
+		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
 		  						message = sails.__({ phrase: "Attendance Checked", locale: locale })
@@ -646,7 +636,6 @@ module.exports = {
 						var attendance_rate = 0; //전체 출석률 or 본인의 출석률
 						var attd_last = undefined; //가장 마지막 attendance
 						var attd_checks = new Array(); //checked_students late_students를 모두 합한 Array
-						var manager_included_count = 0; //checked_students에 manager가 몇번이나 들어갔는지
 						var attd_usage = 0; //attd check을 여태까지 몇번했는지
 						var attd_checked_count = 0; //본인이 attd check이 몇번 되었는지 (강의자의 경우 attd check을 한것으로 인정)
 
@@ -675,10 +664,6 @@ module.exports = {
 
 								attd_checks = attd_checks.concat(posts[j].attendance.checked_students);
 								attd_checks = attd_checks.concat(posts[j].attendance.late_students);
-
-								for (var k = 0; k < courses[i].managers.length; k++)
-									if (posts[j].attendance.checked_students.indexOf(courses[i].managers[k].id) != -1)
-										manager_included_count++;
 
 								attd_usage++;
 							}
@@ -718,7 +703,7 @@ module.exports = {
 						}
 
 	  				if (supervising_courses.indexOf(courses[i].id) >= 0) {
-							attendance_rate = Number( ( (attd_checks.length - manager_included_count) / attd_usage / courses[i].students.length * 100).toFixed() );
+							attendance_rate = Number( ( attd_checks.length / attd_usage / courses[i].students.length * 100).toFixed() );
 							clicker_rate = Number( ( clicker_checks.length / clicker_usage / courses[i].students.length * 100).toFixed() );
 							if (notice_last)
 								notice_unseen = courses[i].students.length - notice_last.seen_students.length;

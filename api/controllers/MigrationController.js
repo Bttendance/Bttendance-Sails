@@ -7,8 +7,6 @@
 
 // For Develop (Drop all table and add new)
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
-// drop schema public cascade;
-// create schema public;
 // heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a156.dump' --app bttendance-dev
 
 // For Production
@@ -62,11 +60,33 @@ module.exports = {
 								done();
 						});
 					});
+				} else if(each_post.type == 'attendance') {
+					Courses
+					.findOneById(each_post.course)
+					.populate('managers')
+					.exec(function callback(err, course) {
+						if (err || !course)
+							done(err);
+
+						var checked_students = new Array();
+						for (var i = 0; i < each_post.attendance.checked_students.length; i++) {
+							var has_manager = false;
+							for (var j = 0; j < course.managers.length; j++)
+								if (course.managers[j].id == each_post.attendance.checked_students[i])
+									has_manager = true;
+
+							if (!has_manager)
+								checked_students.push(each_post.attendance.checked_students[i]);
+						}
+						each_post.attendance.checked_students = checked_students;
+						each_post.attendance.save();
+						done();
+					});
 				} else
 					done();
 			}, function (err) {
 				if (err == null)
-					console.log('Create Notices finished');
+					console.log('Create Notices && remove manager from attendance finished');
 				else
 					console.log(err);
 			});

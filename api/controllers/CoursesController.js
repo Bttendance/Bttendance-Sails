@@ -338,17 +338,12 @@ module.exports = {
 							if (!locale)
 								locale = 'en';
 
-							var included = 0;
-							for (var k = 0; k < course.managers.length; k++)
-								if (posts[i].attendance.checked_students.indexOf(course.managers[k].id) != -1)
-									included++;
-
-							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length - included) / course.students.length * 100).toFixed());
+							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / course.students.length * 100).toFixed());
 		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
-		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length - included) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
+		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
 		  						message = sails.__({ phrase: "Attendance Checked", locale: locale })
