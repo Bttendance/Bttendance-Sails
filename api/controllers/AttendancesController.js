@@ -421,7 +421,8 @@ module.exports = {
 					var id = attendance.late_students[i];
 					if (id == user.id)
 						late_user = true;
-					late_students.push(id);
+					else
+						late_students.push(id);
 				}
 				
 				var check_user = false;
@@ -435,7 +436,7 @@ module.exports = {
 				}
 
 				// check => late
-				if (check_user && !late_user)
+				if (check_user)
 					late_students.push(user.id);
 
 				// late => uncheck (do nothing)
