@@ -435,7 +435,7 @@ module.exports = {
 				}
 
 				// check => late
-				if (check_user)
+				if (check_user && !late_user)
 					late_students.push(user.id);
 
 				// late => uncheck (do nothing)
