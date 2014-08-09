@@ -35,6 +35,7 @@
 // ALTER TABLE courses ADD CONSTRAINT courses_code_key UNIQUE (code);
 
 var Random = require('../utils/random');
+var Arrays = require('../utils/arrays');
 
 module.exports = {
 
@@ -56,8 +57,20 @@ module.exports = {
 					}).exec(function callback(err, notice) {
 						if (err || !notice)
 							done(err);
-						Posts.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
-								done();
+
+						Courses
+						.findOneById(each_post.course)
+						.populate('students')
+						.exec(function callback(err, course) {
+							if (err || !course)
+								done(err);
+
+							notice.seen_students = Arrays.getIds(course.students);
+							notice.save();
+
+							Posts.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
+									done();
+							});
 						});
 					});
 				} else if(each_post.type == 'attendance') {

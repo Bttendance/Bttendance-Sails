@@ -6,6 +6,7 @@
  */
 
 var Error = require('../utils/errors');
+var Arrays = require('../utils/arrays');
 
 module.exports = {
 	
