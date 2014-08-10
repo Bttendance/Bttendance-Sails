@@ -90,7 +90,7 @@ module.exports = {
 					  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
 				  		});
 
-				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 30000);
+				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 33000);
 
 					  	return res.send(post.toWholeObject());
 				  	});
@@ -168,7 +168,7 @@ module.exports = {
 					  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
 				  		});
 
-				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 30000);
+				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 33000);
 
 					  	return res.send(post.toWholeObject());
 				  	});

@@ -799,8 +799,8 @@ module.exports = {
 							    attachments: [
 								    {   
 								    	// binary buffer as an attachment
-						          fileName: course.name + " Grade " + today + ".xlsx",
-						          contents: buffer
+						          filename: course.name + " Grade " + today + ".xlsx",
+						          content: buffer
 						        }
 							    ]
 							}
