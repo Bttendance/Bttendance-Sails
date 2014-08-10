@@ -58,20 +58,24 @@ module.exports = {
 						if (err || !notice)
 							done(err);
 
-						Courses
-						.findOneById(each_post.course)
-						.populate('students')
-						.exec(function callback(err, course) {
-							if (err || !course)
-								done(err);
+						if (each_post.course == null || !each_post.course || each_post.course == 'null')
+							done();
+						else {
+							Courses
+							.findOneById(each_post.course)
+							.populate('students')
+							.exec(function callback(err, course) {
+								if (err || !course)
+									done(err);
 
-							notice.seen_students = Arrays.getIds(course.students);
-							notice.save();
+								notice.seen_students = Arrays.getIds(course.students);
+								notice.save();
 
-							Posts.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
-									done();
+								Posts.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
+										done();
+								});
 							});
-						});
+						}
 					});
 				} else if(each_post.type == 'attendance') {
 					Courses
@@ -84,16 +88,22 @@ module.exports = {
 						var checked_students = new Array();
 						for (var i = 0; i < each_post.attendance.checked_students.length; i++) {
 							var has_manager = false;
-							for (var j = 0; j < course.managers.length; j++)
-								if (course.managers[j].id == each_post.attendance.checked_students[i])
+							for (var j = 0; j < course.managers.length; j++) {
+								if (course.managers[j].id == each_post.attendance.checked_students[i]) {
 									has_manager = true;
+								}
+							}
 
-							if (!has_manager)
+							if (!has_manager) {
 								checked_students.push(each_post.attendance.checked_students[i]);
+							} else {
+								console.log(each_post.attendance.checked_students[i]);
+							}
 						}
 						each_post.attendance.checked_students = checked_students;
-						each_post.attendance.save();
-						done();
+						each_post.attendance.save(function callback(err) {
+							done();
+						});
 					});
 				} else
 					done();
@@ -181,18 +191,6 @@ module.exports = {
 
 			for ( index = 0; index < courses.length; index++) 
 				Courses.update({ id: courses[index].id }, { opened: false, code: Random.string(4) }).exec(function callback(err, course){});
-		});
-	},
-
-	test: function(req, res) {
-		var undef;
-		Users.findOne({
-		  or : [
-		    { username: undef },
-		    { email: 'apple1@apple.com' }
-		  ]
-		}).exec(function callback(err, user) {
-			console.log(user);
 		});
 	}
 	

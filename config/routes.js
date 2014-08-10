@@ -78,11 +78,6 @@ module.exports.routes = {
     action: 'migrate2'
   },
 
-  '/api/migration/test': {
-    controller: 'migration',
-    action: 'test'
-  },
-
   /************* Sockets API ************/  
   'put /api/sockets/connect': {
     controller: 'sockets',

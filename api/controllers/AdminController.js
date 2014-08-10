@@ -392,7 +392,7 @@ module.exports = {
 		.populateAll()
 		.exec(function callback(err, user) {
 			var Noti = require('../utils/notifications');
-			Noti.send(user, "BTTENDANCE", "You have succeed to send a message.", "message");
+			Noti.send(user, "BTTENDANCE", "You have succeed to send a message.", "message", 0);
 			return res.send(user.toWholeObject());
 		});
 	}

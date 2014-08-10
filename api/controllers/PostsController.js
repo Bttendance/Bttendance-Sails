@@ -87,7 +87,7 @@ module.exports = {
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
 				  				if (users[j].setting && users[j].setting.clicker)
-					  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started");
+					  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started", course.id);
 				  		});
 
 				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 33000);
@@ -165,7 +165,7 @@ module.exports = {
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
 				  				if (users[j].setting && users[j].setting.attendance)
-					  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started");
+					  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id);
 				  		});
 
 				  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 33000);
@@ -241,7 +241,7 @@ module.exports = {
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
 				  				if (users[j].setting && users[j].setting.notice)
-					  				Noti.send(users[j], post.course.name, message, "notice");
+					  				Noti.send(users[j], post.course.name, message, "notice", course.id);
 				  		});
 
 					  	return res.send(post.toWholeObject());

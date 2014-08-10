@@ -500,7 +500,7 @@ module.exports = {
 					if (err)
 		        return res.send(500, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save %s as a manager.\nPlease try again.", mang.full_name));
 
-					Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager");
+					Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager", course.id);
 	        return res.send(course.toWholeObject());
 				});
 

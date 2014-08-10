@@ -16,7 +16,7 @@ var apn = require('apn');
 
 // Function to get id list
 // user.populate('device')
-exports.send = function(user, title, message, type) {
+exports.send = function(user, title, message, type, course_id) {
 	if (!user.device.notification_key)
 		return;
 
@@ -34,7 +34,8 @@ exports.send = function(user, title, message, type) {
 		    data: {
 		    	title: title,
 		      message: message,
-		      type: type
+		      type: type,
+		      course_id: course_id
 		    }
 		});
 
@@ -96,9 +97,9 @@ exports.send = function(user, title, message, type) {
 		note.sound = "ping.aiff";
 		note.alert = alert;
 		note.payload = {
-			'title' 	: title,
-			'message' : message,
-			'type' 		: type 
+			'title' 		: title,
+			'type' 			: type,
+			'course_id' : course_id
 		};
 		apnConnection.pushNotification(note, myDevice);
 		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
@@ -140,11 +141,11 @@ exports.resendAttedance = function(attendance_id) {
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-  				if (users[i].setting.attendance) {
+  				if (users[i].setting && users[i].setting.attendance) {
   					var locale = users[i].locale;
   					if (!locale)
   						locale = 'en';
-					  exports.send(users[i], course.name, sails.__({ phrase: "Attendance check is on-going", locale: locale }), "attendance_on_going");
+					  exports.send(users[i], course.name, sails.__({ phrase: "Attendance check is on-going", locale: locale }), "attendance_on_going", course.id);
   				}
   		});
 		});
@@ -210,11 +211,11 @@ exports.resendClicker = function(clicker_id) {
   				return;
   			
   			for (var i = 0; i < users.length; i++)
-  				if (users[i].setting.clicker) {
+  				if (users[i].setting && users[i].setting.clicker) {
   					var locale = users[i].locale;
   					if (!locale)
   						locale = 'en';
-					  exports.send(users[i], course.name, sails.__({ phrase: "Clicker is on-going", locale: locale }), "clicker_on_going");
+					  exports.send(users[i], course.name, sails.__({ phrase: "Clicker is on-going", locale: locale }), "clicker_on_going", course.id);
   				}
   		});
 		});

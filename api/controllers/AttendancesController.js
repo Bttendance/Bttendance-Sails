@@ -235,11 +235,11 @@ module.exports = {
 													.populate('device')
 													.populate('setting')
 													.exec(function callback(err, user) {
-														if (user && user.setting.attendance) {
+														if (user && users[i].setting && user.setting.attendance) {
 															Courses
 															.findOneById(attendance.post.course)
 															.exec(function callback(err, course) {
-																Noti.send(user, course.name, "Attendance has been checked", "attendance_checked");
+																Noti.send(user, course.name, "Attendance has been checked", "attendance_checked", course.id);
 															});
 														}
 													});	
