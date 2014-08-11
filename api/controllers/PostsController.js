@@ -150,7 +150,6 @@ module.exports = {
 			    		if (err || !course)
 				  			return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
 
-				  		if (type == 'auto') {
 						  	// Send notification about post to Prof & Std
 						  	var notiUsers = new Array();
 						  	for (var i = 0; i < course.students.length; i++)
@@ -164,13 +163,18 @@ module.exports = {
 								.populate('setting')
 					  		.sort('id DESC')
 					  		.exec(function callback(err, users) {
-					  			for (var j = 0; j < users.length; j++)
-					  				if (users[j].setting && users[j].setting.attendance)
-						  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id);
+					  			for (var j = 0; j < users.length; j++) {
+					  				if (users[j].setting && users[j].setting.attendance) {
+								  		if (type == 'auto')
+							  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id, true);
+							  			else
+							  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id, false);
+					  				}
+					  			}
 					  		});
 
+				  		if (type == 'auto')
 					  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 33000);
-				  		}
 
 					  	return res.send(post.toWholeObject());
 				  	});

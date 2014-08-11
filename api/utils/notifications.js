@@ -14,9 +14,13 @@
 var gcm = require('node-gcm');
 var apn = require('apn');
 
+exports.send = function(user, title, message, type, course_id) {
+	exports.send(user, title, message, type, course_id, true);
+}
+
 // Function to get id list
 // user.populate('device')
-exports.send = function(user, title, message, type, course_id) {
+exports.send = function(user, title, message, type, course_id, sound) {
 	if (!user.device.notification_key)
 		return;
 
@@ -91,11 +95,13 @@ exports.send = function(user, title, message, type, course_id) {
 		var alert = "Notification from " + title;
 		if (message)
 			alert = title + " : " + message;
+		note.alert = alert;
 
 		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-		note.badge = 1;
-		note.sound = "ping.aiff";
-		note.alert = alert;
+		if (sound) {
+			note.badge = 1;
+			note.sound = "ping.aiff";
+		}
 		note.payload = {
 			'type' 			: type,
 			'course_id' : course_id,
