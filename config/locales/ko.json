@@ -135,8 +135,8 @@
     "Attendance Failed": "결석으로 처리되었습니다.", 
     "Attendance Late": "지각으로 처리되었습니다.",
 
-    "Password Recovery": "Password Recovery",
-    "Password Update": "Password Update",
-    "Course %s Creation Finished": "Course %s Creation Finished",
-    "Grade of %s": "Grade of %s"
+    "Password Recovery": "회원님의 BTTENDANCE 비밀번호가 복구되었습니다.",
+    "Password Update": "회원님의 BTTENDANCE 비밀번호가 수정되었습니다.",
+    "Course %s Creation Finished": "%s 강의가 BTTENDANCE에 개설되었습니다.",
+    "Grade of %s": "요청하신 %s 강의의 출결 기록과 설문 기록입니다."
 }

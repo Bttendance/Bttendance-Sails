@@ -130,17 +130,17 @@
     "Clicker has been started": "Clicker has been started",
     "Attendance check has been started": "Attendance check has been started",
     "Your course has been created": "Your course has been created",
-    "Clicker is on-going": "Clicker is on-going",
-    "Attendance check is on-going": "Attendance check is on-going",
+    "Clicker is on-going": "Clicker is ongoing",
+    "Attendance check is on-going": "Attendance check is ongoing",
 
     "students has been attended.": "students has been attended.",
-    "Attendance Checked": "Attendance is Confirmed",
-    "Attendance Checking": "Attendance Check is in progress",
-    "Attendance Failed": "Absence from class", 
-    "Attendance Late": "Lateness to class.",
+    "Attendance Checked": "Attendance checked",
+    "Attendance Checking": "Attendance Check is Ongoing",
+    "Attendance Failed": "Recorded as absent", 
+    "Attendance Late": "Recorded as tardy",
 
-    "Password Recovery": "Password Recovery",
-    "Password Update": "Password Update",
-    "Course %s Creation Finished": "Course %s Creation Finished",
-    "Grade of %s": "Grade of %s"
+    "Password Recovery": "Your BTTENDANCE password has been recovered.",
+    "Password Update": "Your BTTENDANCE password has been changed.",
+    "Course %s Creation Finished": "Course %s has been created in BTTENDANCE. ",
+    "Grade of %s": "Attendance and Clicker record of the course %s has been exported."
 }
