@@ -102,8 +102,8 @@ exports.send = function(user, title, message, type, course_id, sound) {
 			note.badge = 1;
 			note.sound = "ping.aiff";
 		} else {
-			note.badge = null;
-			note.sound = null;
+			note.badge = 0;
+			note.sound = "0.aiff";
 		}
 		note.payload = {
 			'type' 			: type,
