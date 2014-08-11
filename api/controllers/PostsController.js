@@ -166,9 +166,7 @@ module.exports = {
 					  			for (var j = 0; j < users.length; j++) {
 					  				if (users[j].setting && users[j].setting.attendance) {
 								  		if (type == 'auto')
-							  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id, true);
-							  			else
-							  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id, false);
+							  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id);
 					  				}
 					  			}
 					  		});
