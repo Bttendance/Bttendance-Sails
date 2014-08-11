@@ -18,7 +18,7 @@ module.exports = {
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
-			if (err || !user)
+			if (err || !user || !user.setting)
 				return res.send(500, Error.alert(req, "Update Setting Error", "Attendance notification setting update has some error."));
 
 			if (attendance == 'false' || attendance == 'NO')
@@ -43,7 +43,7 @@ module.exports = {
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
-			if (err || !user)
+			if (err || !user || !user.setting)
 				return res.send(500, Error.alert(req, "Update Setting Error", "Poll notification setting update has some error."));
 
 			if (clicker == 'false' || clicker == 'NO')
@@ -68,7 +68,7 @@ module.exports = {
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
-			if (err || !user)
+			if (err || !user || !user.setting)
 				return res.send(500, Error.alert(req, "Update Setting Error", "Notice notification setting update has some error."));
 
 			if (notice == 'false' || notice == 'NO')
