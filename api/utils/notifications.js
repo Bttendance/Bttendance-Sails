@@ -109,7 +109,7 @@ exports.send = function(user, title, message, type, course_id, sound) {
 			'message'   : message
 		};
 		apnConnection.pushNotification(note, myDevice);
-		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
+		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ") with sound : " + sound);
 	}
 }
 

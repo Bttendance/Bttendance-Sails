@@ -407,7 +407,7 @@ module.exports = {
 		  						message = sails.__({ phrase: "Attendance Checked", locale: locale })
 		  					else if (posts[i].attendance.late_students.indexOf(user.id) >= 0)
 		  						message = sails.__({ phrase: "Attendance Late", locale: locale })
-		  					else if (Moment().diff(Moment(posts[i].createdAt)) < 60 * 1000) 
+		  					else if (Moment().diff(Moment(posts[i].createdAt)) < 60 * 1000 && posts[i].attendance.type == 'auto') 
 		  					 	message = sails.__({ phrase: "Attendance Checking", locale: locale })
 	  						else
 		  					 	message = sails.__({ phrase: "Attendance Failed", locale: locale })
