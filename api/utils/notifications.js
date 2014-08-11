@@ -32,10 +32,10 @@ exports.send = function(user, title, message, type, course_id) {
 		    delayWhileIdle: false,
 		    timeToLive: 4,
 		    data: {
-		    	title: title,
-		      message: message,
 		      type: type,
-		      course_id: course_id
+		      course_id: course_id,
+		    	title: title,
+		      message: message
 		    }
 		});
 
@@ -97,9 +97,10 @@ exports.send = function(user, title, message, type, course_id) {
 		note.sound = "ping.aiff";
 		note.alert = alert;
 		note.payload = {
-			'title' 		: title,
 			'type' 			: type,
-			'course_id' : course_id
+			'course_id' : course_id,
+			'title' 		: title,
+			'message'   : message
 		};
 		apnConnection.pushNotification(note, myDevice);
 		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
