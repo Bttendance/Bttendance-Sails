@@ -1,0 +1,39 @@
+@media only screen and (max-width: 480px) {
+			.logo, .row { clear: both; width: 320px !important; }
+			.explanation { clear: both; width: 280px !important; }
+			.side { clear: both; width: 75px !important; }
+}
+body {
+	font-family:  "Helvetica Neue", "NanumGothic", "malgun gothic", "dotum", "Arial", "sans-serif";
+}
+.logo {
+	width: 500px;
+} 
+.row {
+	width: 500px;
+}
+.row {
+	margin-left: auto;
+	margin-right: auto;
+}
+.side {
+	width: 150px;
+}
+.content {
+	text-align: center;
+}
+.title {
+	color: #0072B0;
+}
+.spacer {
+	min-height: 33px;
+}
+.line {
+	height: 2px;
+	background: #0072B0;
+}
+.explanation {
+	width: 440px;
+	margin-left: auto;
+	margin-right: auto;
+}

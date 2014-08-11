@@ -126,6 +126,10 @@ module.exports.policies = {
 
   TokensController: {
     verify: true
+  },
+
+  TutorialController: {
+    '*': true
   }
 
 };

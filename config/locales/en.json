@@ -137,5 +137,10 @@
     "Attendance Checked": "Attendance is Confirmed",
     "Attendance Checking": "Attendance Check is in progress",
     "Attendance Failed": "Absence from class", 
-    "Attendance Late": "Lateness to class."
+    "Attendance Late": "Lateness to class.",
+
+    "Password Recovery": "Password Recovery",
+    "Password Update": "Password Update",
+    "Course %s Creation Finished": "Course %s Creation Finished",
+    "Grade of %s": "Grade of %s"
 }

@@ -109,7 +109,7 @@ module.exports = {
 			  			return res.send(204, Error.log(req, "Bttendance Error", "Manager around who is not author."));
 
 			  		if (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) == -1
-			  			&& user_api.id != attendance.post.author
+			  			&& user_api.id != attendance.post.authorg
 			  			&& user_uuid.id != attendance.post.author)
 			  			return res.send(204, Error.log(req, "Bttendance Error", "Manager around who is not author."));
 

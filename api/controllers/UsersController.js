@@ -275,6 +275,9 @@ module.exports = {
 	forgot_password: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
+		var locale = req.param('locale');
+		if (!locale)
+			locale = 'en';
 
 		Users
 		.findOneByEmail(email)
@@ -295,7 +298,12 @@ module.exports = {
 			    }
 			});
 
-			var path = Path.resolve(__dirname, '../../assets/emails/change_password.html');
+			var path;
+			if(locale == 'kr')
+				path = Path.resolve(__dirname, '../../assets/emails/forgot_password.html');
+			else
+				path = Path.resolve(__dirname, '../../assets/emails/forgot_password_en.html');
+
 			FS.readFile(path, 'utf8', function (err, file) {
 			  if (err)
 				  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
@@ -307,7 +315,7 @@ module.exports = {
 				var mailOptions = {
 				    from: "Bttendance<no-reply@bttendance.com>", // sender address
 				    to: user.email, // list of receivers
-				    subject: "Password Recovery", // Subject line
+				    subject: sails.__({ phrase: "Password Recovery", locale: locale }), // Subject line
 				    html: file, // plaintext body
 				}
 
@@ -331,6 +339,9 @@ module.exports = {
 		var email = req.param('email');
 		var password_old = req.param('password_old');
 		var password_new = req.param('password_new');
+		var locale = req.param('locale');
+		if (!locale)
+			locale = 'en';
 
 		if (!email)
 			return res.send(400, Error.alert(req, "Password Update Error", "Email is required."));
@@ -365,7 +376,12 @@ module.exports = {
 			    }
 			});
 
-			var path = Path.resolve(__dirname, '../../assets/emails/update_password.html');
+			var path;
+			if(locale == 'kr')
+				path = Path.resolve(__dirname, '../../assets/emails/update_password.html');
+			else
+				path = Path.resolve(__dirname, '../../assets/emails/update_password_en.html');
+
 			FS.readFile(path, 'utf8', function (err, file) {
 			  if (err)
 				  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
@@ -377,7 +393,7 @@ module.exports = {
 				var mailOptions = {
 				    from: "Bttendance<no-reply@bttendance.com>", // sender address
 				    to: user.email, // list of receivers
-				    subject: "Password Update", // Subject line
+				    subject: sails.__({ phrase: "Password Update", locale: locale }), // Subject line
 				    html: file, // plaintext body
 				}
 

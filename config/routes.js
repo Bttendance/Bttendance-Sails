@@ -346,6 +346,22 @@ module.exports.routes = {
     action: 'verify'
   },
 
+  /************* Tutorial Views ************/  
+  '/tutorial/clicker': {
+    controller: 'tutorial',
+    action: 'clicker'
+  },
+
+  '/tutorial/attendance': {
+    controller: 'tutorial',
+    action: 'attendance'
+  },
+
+  '/tutorial/notice': {
+    controller: 'tutorial',
+    action: 'notice'
+  }
+
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
   // for configuration options and examples.

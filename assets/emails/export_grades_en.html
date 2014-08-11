@@ -9,6 +9,13 @@
 		@media only screen and (max-width: 480px) {
 	    	/* mobile-specific CSS styles go here */
 	        table[class=email], table[class=email-content]{clear: both; width: 320px !important; }
+    }    
+    .footer-link {
+    	font-size: 15px; 
+    	color: #F1F1FF; 
+    	font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; 
+    	text-decoration: underline; 
+    	line-height: 120%;
     }
 	</style>
 	<body>
@@ -57,20 +64,19 @@
 												<tr>
 													<td align="left" style="font-size: 16px; color: #556; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 140%;">
 														<p>
-															안녕하세요, #fullname 고객님.
+															Dear #fullname.
 														</p>
-														<p> 
-															고객님의 새로운 비밀번호는 다음과 같습니다.
+														<p>
+															Excel file cotaining the clicker record and attendance record from #firstdate to #lastdate are attached.
 														</p>
-														<p style="font-weight:bold">
-															#password
+														<p>
+															If you have some questions, please feel free to contact us. <a href="mailto:support@bttendance.com" style="color: #0072B0; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">support@bttendance.com</a>
 														</p>
-														<p>	
-															꼭 본인이 기억할 수 있는 번호로 재설정해주시길 바랍니다.<br>
-															혹시, 요청하신 적이 없으시다면 <a href="mailto:support@bttendance.com" style="color: #0072B0; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">support@bttendance.com</a>으로 문의해주시기 바랍니다.
+														<p>
+															Yours sincerely,
 														</p>
 														<p align="right" style="font-weight:bold">
-															Team Bttendance 드림.
+															Team Bttendance.
 														</p>
 													</td>
 												</tr>
@@ -92,13 +98,15 @@
 							<td align="center" valign="top">
 								<table class="email-content" align="center"  border="0" width="600" bgcolor="#0072B0" cellpadding="0" cellspacing="0">
 									<tr>
-										<td width="540" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 120%; padding-right:30px; padding-left:30px; padding-top:20px; padding-bottom:30px;">
+										<td width="540" style="font-size: 15px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 120%; padding-right:30px; padding-left:30px; padding-top:20px; padding-bottom:30px;">
 											<p style="text-decoration:none">
-												BTTENDANCE 홈페이지: <a target="_blank" href="http://www.bttendance.com" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">www.bttendance.com</a><br> 
-												이 종류의 메일 수신을 더이상 원하지 않으신다면 <a target="_blank" href="http://www.bttendance.com/unsubscribe" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">여기</a>를 눌러주세요.
+												If you want to unsubscribe, click <a class="footer-link" target="_blank" href="http://www.bttendance.com/unsubscribe">HERE</a>.
 											</p>
 											<p>
-												사업자번호: 144-81-10243 | 통신판매업신고: 제 2014-경기성남-0306호 | 대표자: 김태환 | 경기도 성남시 분당구 판교역로 100, 606-601 주식회사 비텐던스 | 문의메일: <a href="mailto:contact@bttendance.com" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">contact@bttendance.com</a>
+												BTTENDANCE homepage: <a class="footer-link" target="_blank" href="http://www.bttendance.com">www.bttendance.com</a>
+											</p>
+											<p>
+												Contact: <a href="mailto:contact@bttendance.com" class="footer-link">contact@bttendance.com</a>
 											</p>
 										</td>
 									</tr>

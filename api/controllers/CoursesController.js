@@ -70,7 +70,7 @@ module.exports = {
 					    }
 					});
 
-					var path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
+					var path = Path.resolve(__dirname, '../../assets/emails/create_course_verification.html');
 					FS.readFile(path, 'utf8', function (err, file) {
 					  if (err)
 		  				return res.send(500, { message: "File Read Error" });
@@ -109,6 +109,9 @@ module.exports = {
 		var name = req.param('name');
 		var school_id = req.param('school_id');
 		var professor_name = req.param('professor_name');
+		var locale = req.param('locale');
+		if (!locale)
+			locale = 'en';
 
 		Users
 		.findOneByEmail(email)
@@ -146,6 +149,61 @@ module.exports = {
 						.exec(function callback(err, user_new) {
 							if (err || !user_new)
 						    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
+
+						  Courses
+						  .findOneById(course.id)
+						  .populateAll()
+						  .exec(function callback(err, course) {
+
+								// create reusable transport method (opens pool of SMTP connections)
+								var smtpTransport = Nodemailer.createTransport({
+								    service: "Gmail",
+								    auth: {
+								        user: "support@bttendance.com",
+								        pass: "W2lcom2t0"
+								    }
+								});
+
+								var path;
+								if(locale == 'kr')
+									path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
+								else
+									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
+
+								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user.deivce.type + '&locale=' + locale;
+								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user.deivce.type + '&locale=' + locale;
+								var noticelink = 'http://www.bttd.co/tutorial/notice?device_type=' + user.deivce.type + '&locale=' + locale;
+
+								FS.readFile(path, 'utf8', function (err, file) {
+								  if (err)
+					  				return res.send(500, { message: "File Read Error" });
+
+					  			file = file.replace('#fullname', user.full_name);
+					  			file = file.replace('#schoolname', course.school.name);
+					  			file = file.replace('#courseTitle', course.name);
+					  			file = file.replace('#classCode', course.code);
+					  			file = file.replace('#profname', course.professor_name);
+					  			file = file.replace('#schoolname', course.school.name);
+					  			file = file.replace('#ClickerTutorialLink', clickerlink);
+					  			file = file.replace('#AttendanceTutorialLink', attendancelink);
+					  			file = file.replace('#NoticeTutorialLink', noticelink);
+
+									// setup e-mail data with unicode symbols
+									var mailOptions = {
+									    from: "Bttendance<no-reply@bttendance.com>", // sender address
+									    to: user.email, // list of receivers
+									    subject: sails.__({ phrase: "Course %s Creation Finished", locale: locale }, course.name), // Subject line
+									    html: file, // plaintext body
+									}
+
+									// send mail with defined transport object
+									smtpTransport.sendMail(mailOptions, function(error, info) {
+								    if(error)
+										  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
+						        return res.send(Email.json(user.email));
+									});
+								});
+						  });
 
 					  	return res.send(user_new.toWholeObject());
 						});
@@ -654,6 +712,9 @@ module.exports = {
     var email = req.param('email');
     var username = req.param('username');
     var course_id = req.param('course_id');
+		var locale = req.param('locale');
+		if (!locale)
+			locale = 'en';
 
     Courses
     .findOneById(course_id)
@@ -766,7 +827,12 @@ module.exports = {
 						    }
 						});
 
-						var path = Path.resolve(__dirname, '../../assets/emails/export_grades.html');
+						var path;
+						if(locale == 'kr')
+							path = Path.resolve(__dirname, '../../assets/emails/export_grades.html');
+						else
+							path = Path.resolve(__dirname, '../../assets/emails/export_grades_en.html');
+
 						FS.readFile(path, 'utf8', function (err, file) {
 						  if (err)
 			          return res.send(500, Error.alert(req, "Export Grades Error", "Fail to read email format file."));
@@ -794,7 +860,7 @@ module.exports = {
 							var mailOptions = {
 							    from: "Bttendance<no-reply@bttendance.com>", // sender address
 							    to: user.email, // list of receivers
-							    subject: "Grade of " + course.name, // Subject line
+							    subject: sails.__({ phrase: "Grade of %s", locale: locale }, course.name), // Subject line
 							    html: file,
 							    attachments: [
 								    {   

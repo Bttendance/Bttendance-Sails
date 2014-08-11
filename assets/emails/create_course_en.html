@@ -9,7 +9,7 @@
 		@media only screen and (max-width: 480px) {
 	    	/* mobile-specific CSS styles go here */
 	        table[class=email], table[class=email-content]{clear: both; width: 320px !important; }
-    }    
+    }
     .link {
     	font-size: 14px; 
     	color: #0072B0; 
@@ -17,6 +17,13 @@
     	text-decoration: underline; 
     	line-height: 120%;
     	text-align: center;
+    }    
+    .footer-link {
+    	font-size: 15px; 
+    	color: #F1F1FF; 
+    	font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; 
+    	text-decoration: underline; 
+    	line-height: 120%;
     }
 	</style>
 	<body>
@@ -65,10 +72,10 @@
 												<tr>
 													<td align="left" style="font-size: 16px; color: #556; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 140%;">
 														<p>
-															안녕하세요, #fullname 고객님.
+															Dear #fullname.
 														</p>
 														<p>
-															고객님의 강의가 #schoolname school에 다음과 같이 생성되었습니다.
+															Your course has been created in #schoolname institution.
 														</p>
 														<table align="center" border="0" style="font-size: 16px; color: #556; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 140%;" width="400">
 															<tr>
@@ -97,16 +104,16 @@
 															</tr>
 															<tr>
 																<td align="center" bgcolor="#0072B0" style="color:#F1F1FF">
-																	School
+																	Institution
 																</td>
 																<td align="center" bgcolor="#F1F1FF" >
-																	#schoolname
+																	#institutionName
 																</td>
 															</tr>
 														</table>
 														<p align="center">
-															BTTENDANCE가 처음이시라구요?<br>
-															쉽고 자세한 기능별 튜토리얼이 준비되어 있습니다.
+															Is it your first time using BTTENDANCE?<br>
+															We are providing easy tutorials to prepare your courses.
 														</p>
 														<p class="link">
 															#ClickerTutorialLink
@@ -117,8 +124,8 @@
 														<p class="link">
 															#NoticeTutorialLink
 														</p>
-														<p>
-															BTTENDANCE와 함께 새로운 강의를 시작하세요!
+														<p align="center">
+															Make your lecture interactive with BTTENDANCE!
 														</p>
 													</td>
 												</tr>
@@ -140,13 +147,15 @@
 							<td align="center" valign="top">
 								<table class="email-content" align="center"  border="0" width="600" bgcolor="#0072B0" cellpadding="0" cellspacing="0">
 									<tr>
-										<td width="540" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 120%; padding-right:30px; padding-left:30px; padding-top:20px; padding-bottom:30px;">
+										<td width="540" style="font-size: 15px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; line-height: 120%; padding-right:30px; padding-left:30px; padding-top:20px; padding-bottom:30px;">
 											<p style="text-decoration:none">
-												BTTENDANCE 홈페이지: <a target="_blank" href="http://www.bttendance.com" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">www.bttendance.com</a><br> 
-												이 종류의 메일 수신을 더이상 원하지 않으신다면 <a target="_blank" href="http://www.bttendance.com/unsubscribe" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">여기</a>를 눌러주세요.
+												If you want to unsubscribe, click <a class="footer-link" target="_blank" href="http://www.bttendance.com/unsubscribe">HERE</a>.
 											</p>
 											<p>
-												사업자번호: 144-81-10243 | 통신판매업신고: 제 2014-경기성남-0306호 | 대표자: 김태환 | 경기도 성남시 분당구 판교역로 100, 606-601 주식회사 비텐던스 | 문의메일: <a href="mailto:contact@bttendance.com" style="font-size: 13px; color: #F1F1FF; font-family: Helvetica Neue, NanumGothic, Malgun Gothic, Arial, sans-serif; text-decoration: underline; line-height: 120%;">contact@bttendance.com</a>
+												BTTENDANCE homepage: <a class="footer-link" target="_blank" href="http://www.bttendance.com">www.bttendance.com</a>
+											</p>
+											<p>
+												Contact: <a href="mailto:contact@bttendance.com" class="footer-link">contact@bttendance.com</a>
 											</p>
 										</td>
 									</tr>
