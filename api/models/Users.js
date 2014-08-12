@@ -141,6 +141,7 @@ module.exports = {
     .exec(function callback(err, setting) {
       if (err || !setting)
         next(err);
+      console.log(setting);
       values.setting = setting.id;
       next();
     });
