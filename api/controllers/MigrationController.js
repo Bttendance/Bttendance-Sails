@@ -7,6 +7,7 @@
 
 // For Develop (Drop all table and add new)
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
+// DROP TABLE attendances, clickers, courses, courses_managers__users_supervising_courses, courses_students__users_attending_courses, devices, identifications, notices, posts, questions, schools, schools_professors__users_employed_schools, schools_students__users_enrolled_schools, settings, tokens, users;
 // heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a156.dump' --app bttendance-dev
 
 // For Production
@@ -114,6 +115,9 @@ module.exports = {
 					console.log(err);
 			});
 		});
+	},
+
+	migrate1: function(req, res) {
 
 		//create Setting
 		Users.find().sort('id ASC').exec(function callback(err, users) {
@@ -121,15 +125,18 @@ module.exports = {
 				return;
 
 			async.eachSeries(users, function (each_user, done) {
-				Settings.create({
-					owner: each_user.id
-				}).exec(function callback(err, setting) {
-					if (err || !setting)
-						done(err);
-					Users.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
-							done();
+				if (!each_user.setting) {
+					Settings.create({
+						owner: each_user.id
+					}).exec(function callback(err, setting) {
+						if (err || !setting)
+							done(err);
+						Users.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
+								done();
+						});
 					});
-				});
+				} else
+					done();
 			}, function (err) {
 				if (err == null)
 					console.log('Create Setting finished');
@@ -137,7 +144,6 @@ module.exports = {
 					console.log(err);
 			});
 		});
-
 	},
 
 	migrate2: function(req, res) {

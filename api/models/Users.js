@@ -139,12 +139,9 @@ module.exports = {
     Settings
     .create({})
     .exec(function callback(err, setting) {
-      sails.log.error(err);
-      sails.log.error(setting);
       if (err || !setting)
         next(err);
       else {
-        sails.log.error(setting);
         values.setting = setting.id;
         next();
       }

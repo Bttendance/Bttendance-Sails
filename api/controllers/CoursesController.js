@@ -170,15 +170,15 @@ module.exports = {
 								else
 									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
 
-								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user.deivce.type + '&locale=' + locale;
-								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user.deivce.type + '&locale=' + locale;
-								var noticelink = 'http://www.bttd.co/tutorial/notice?device_type=' + user.deivce.type + '&locale=' + locale;
+								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user_new.deivce.type + '&locale=' + locale;
+								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user_new.deivce.type + '&locale=' + locale;
+								var noticelink = 'http://www.bttd.co/tutorial/notice?device_type=' + user_new.deivce.type + '&locale=' + locale;
 
 								FS.readFile(path, 'utf8', function (err, file) {
 								  if (err)
 					  				return res.send(500, { message: "File Read Error" });
 
-					  			file = file.replace('#fullname', user.full_name);
+					  			file = file.replace('#fullname', user_new.full_name);
 					  			file = file.replace('#schoolname', course.school.name);
 					  			file = file.replace('#courseTitle', course.name);
 					  			file = file.replace('#classCode', course.code);

@@ -366,10 +366,16 @@ module.exports = {
 			res.contentType('html');
 			return res.forbidden('Your password doesn\'t match.');
 		}
+
+		var type = req.param('type'); //non-student, student, professor, non-professor, all
+		if (!type)
+			type = 'all';
 		
 		Users
 		.find()
 		.sort('id DESC')
+		.populate('supervising_courses')
+		.populate('attending_courses')
 		.exec(function callback (err, users) {
 			if (err || !users) {
 				res.contentType('html');
@@ -377,8 +383,30 @@ module.exports = {
 			} else {
 				res.contentType('application/json; charset=utf-8');
 				var emails = new Array();
-				for (var i = 0; i < users.length; i++)
-					emails.push(users[i].email);
+				if (type == 'all')
+					for (var i = 0; i < users.length; i++)
+						emails.push(users[i].email);
+
+				if (type == 'non-student')
+					for (var i = 0; i < users.length; i++)
+						if (users[i].attending_courses.length == 0)
+							emails.push(users[i].email);
+
+				if (type == 'student')
+					for (var i = 0; i < users.length; i++)
+						if (users[i].attending_courses.length > 0)
+							emails.push(users[i].email);
+
+				if (type == 'professor')
+					for (var i = 0; i < users.length; i++)
+						if (users[i].supervising_courses.length > 0)
+							emails.push(users[i].email);
+
+				if (type == 'non-professor')
+					for (var i = 0; i < users.length; i++)
+						if (users[i].supervising_courses.length == 0)
+							emails.push(users[i].email);
+
 				var json = {};
 				json.emails = emails;
 		  	return res.send(json);
