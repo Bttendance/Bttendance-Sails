@@ -150,8 +150,6 @@ module.exports = {
 							if (err || !user_new)
 						    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
 
-						  console.log(user_new);
-
 						  Courses
 						  .findOneById(course.id)
 						  .populateAll()
@@ -172,9 +170,9 @@ module.exports = {
 								else
 									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
 
-								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user_new.deivce.type + '&locale=' + locale;
-								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user_new.deivce.type + '&locale=' + locale;
-								var noticelink = 'http://www.bttd.co/tutorial/notice?device_type=' + user_new.deivce.type + '&locale=' + locale;
+								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user_new.device.type + '&locale=' + locale;
+								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user_new.device.type + '&locale=' + locale;
+								var noticelink = 'http://www.bttd.co/tutorial/notice?device_type=' + user_new.device.type + '&locale=' + locale;
 
 								FS.readFile(path, 'utf8', function (err, file) {
 								  if (err)
