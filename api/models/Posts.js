@@ -77,7 +77,8 @@ module.exports = {
       }).done(function(err, user) {
         if (user)
           values.author = user.id;
-        next();
+        else
+          next();
       });
     } else
       next();
@@ -103,8 +104,10 @@ module.exports = {
       }).exec(function callback(err, attendance) {
         if (err || !attendance)
           next(err);
-        values.attendance = attendance.id;
-        next();
+        else {
+          values.attendance = attendance.id;
+          next();
+        }
       });
     } else if (values.type == 'clicker') {
       Clickers
@@ -113,8 +116,10 @@ module.exports = {
       }).exec(function callback(err, clicker) {
         if (err || !clicker)
           next(err);
-        values.clicker = clicker.id;
-        next();
+        else {
+          values.clicker = clicker.id;
+          next();
+        }
       });
     } else if (values.type == 'notice') {
       Notices
@@ -122,8 +127,10 @@ module.exports = {
       }).exec(function callback(err, notice) {
         if (err || !notice)
           next(err);
-        values.notice = notice.id;
-        next();
+        else {
+          values.notice = notice.id;
+          next();
+        }
       });
     } else
       next();
@@ -136,7 +143,8 @@ module.exports = {
       .exec(function callback(err, attendance) {
         if (err || !attendance)
           next(err);
-        next();
+        else
+          next();
       });
     } else if (values.type == 'clicker') {
       Clickers
@@ -144,7 +152,8 @@ module.exports = {
       .exec(function callback(err, clicker) {
         if (err || !clicker)
           next(err);
-        next();
+        else
+          next();
       });
     } else if (values.type == 'notice') {
       Notices
@@ -152,7 +161,8 @@ module.exports = {
       .exec(function callback(err, notice) {
         if (err || !notice)
           next(err);
-        next();
+        else
+          next();
       });
     } else
       next();

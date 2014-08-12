@@ -141,9 +141,11 @@ module.exports = {
     .exec(function callback(err, setting) {
       if (err || !setting)
         next(err);
-      console.log(setting);
-      values.setting = setting.id;
-      next();
+      else {
+        sails.log.error(setting);
+        values.setting = setting.id;
+        next();
+      }
     });
   },
 
@@ -153,7 +155,8 @@ module.exports = {
     .exec(function callback(err, setting) {
       if (err || !setting)
         next(err);
-      next();
+      else
+        next();
     });
   },
 
