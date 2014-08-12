@@ -137,7 +137,7 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.password = PasswordHash.generate(values.password);
     Settings
-    .create()
+    .create({})
     .exec(function callback(err, setting) {
       if (err || !setting)
         next(err);
