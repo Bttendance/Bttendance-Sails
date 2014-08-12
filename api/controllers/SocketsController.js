@@ -9,6 +9,8 @@ module.exports = {
 
 	connect: function(req, res) {
 		var email = req.param('email');
+		if (!email)
+			return res..badRequest();
 
 		// For Beta
     Clickers.unwatch(req.socket);
