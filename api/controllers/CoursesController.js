@@ -150,6 +150,8 @@ module.exports = {
 							if (err || !user_new)
 						    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
 
+						  console.log(user_new);
+
 						  Courses
 						  .findOneById(course.id)
 						  .populateAll()
@@ -199,7 +201,7 @@ module.exports = {
 									// send mail with defined transport object
 									smtpTransport.sendMail(mailOptions, function(error, info) {
 									});
-									
+
 							  	return res.send(user_new.toWholeObject());
 								});
 						  });
