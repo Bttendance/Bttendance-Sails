@@ -140,7 +140,7 @@ module.exports = {
     .create()
     .exec(function callback(err, setting) {
       if (err || !setting)
-        done(err);
+        next(err);
       values.setting = setting.id;
       next();
     });
