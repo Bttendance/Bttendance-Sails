@@ -198,8 +198,9 @@ module.exports = {
 
 									// send mail with defined transport object
 									smtpTransport.sendMail(mailOptions, function(error, info) {
-								  	return res.send(user_new.toWholeObject());
 									});
+									
+							  	return res.send(user_new.toWholeObject());
 								});
 						  });
 						});
