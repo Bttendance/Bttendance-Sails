@@ -198,14 +198,10 @@ module.exports = {
 
 									// send mail with defined transport object
 									smtpTransport.sendMail(mailOptions, function(error, info) {
-								    if(error)
-										  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
-						        return res.send(Email.json(user.email));
+								  	return res.send(user_new.toWholeObject());
 									});
 								});
 						  });
-
-					  	return res.send(user_new.toWholeObject());
 						});
 					});
 				});
