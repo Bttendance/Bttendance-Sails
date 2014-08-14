@@ -723,6 +723,8 @@ module.exports = {
 							clicker_rate = Number( ( clicker_checks.length / clicker_usage / courses[i].students.length * 100).toFixed() );
 							if (notice_last)
 								notice_unseen = courses[i].students.length - notice_last.seen_students.length;
+							else
+								notice_unseen = courses[i].students.length;
 	  				} else {
 							attendance_rate = Number( (attd_checked_count / attd_usage * 100).toFixed() );
 							clicker_rate = Number( (clicker_checked_count / clicker_usage * 100).toFixed() );
