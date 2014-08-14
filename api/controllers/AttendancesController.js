@@ -18,36 +18,34 @@ module.exports = {
 
 		Courses
 		.findById(course_ids)
-		.populateAll()
+		.populate('posts')
 		.exec(function callback(err, courses) {
 			if (err || !courses)
-  			return res.send(500, Error.log(req, "Find attendance checking IDs Error", "Fail to find courses."));
+    		return res.send(new Array());
 
-			var attendances = new Array();
-			if (err || !courses)
-    		return res.send(attendances);
-    	
+			var postsWithAttendances = new Array();
 			var now = Moment();
     	for (var i = 0; i < courses.length; i++) {
     		for (var j = 0; j < courses[i].posts.length; j++) {
     			var createdAt = Moment(courses[i].posts[j].createdAt);
     			var diff = now.diff(createdAt);
     			if (diff < 65 * 1000 && courses[i].posts[j].type == 'attendance')
-    				attendances.push(courses[i].posts[j].attendance);
+    				postsWithAttendances.push(courses[i].posts[j].id);
     		}
     	}
 
-    	Attendances
-    	.find(attendances)
-    	.exec(function callback(err, attendances) {
-    		if (err || !attendances)
-	  			return res.send(500, Error.log(req, "Find attendance checking IDs Error", "Fail to find attendances."));
+    	Posts
+    	.findById(postsWithAttendances)
+			.populate('attendance')
+    	.exec(function callback(err, posts) {
+    		if (err || !posts)
+	    		return res.send(new Array());
 
 	  		var autoAttds = new Array();
-	  		for (var k = 0; k < attendances.length; j++)
-	  			if (attendances[k].type == 'auto')
-	  				autoAttds.push(attendances[k]);
-	  		return res.send(Arrays.getIds(autoAttds));
+	  		for (var i = 0; i < posts.length; i++)
+	  			if (posts[i].attendance.type == 'auto')
+	  				autoAttds.push(posts[i].attendance.id);
+	  		return res.send(autoAttds);
     	});
 		});
 	},
@@ -96,20 +94,22 @@ module.exports = {
 						if (err || !attendance)
 			  			return res.send(500, Error.log(req, "Bttendance Error", "Attendance record doesn't exist."));
 
+			  		// Attendance Type Auto
+			  		if (attendance.type != 'auto')
+			  			return res.send(204, Error.log(req, "Bttendance Error", "Attendance type is not auto."));
+
 			    	// Check whether users are in same courses(post)
 			    	if ((Arrays.getIds(user_api.supervising_courses).indexOf(attendance.post.course) == -1
 			    		&& Arrays.getIds(user_api.attending_courses).indexOf(attendance.post.course) == -1)
 			    		|| (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) == -1
 			    		&& Arrays.getIds(user_uuid.attending_courses).indexOf(attendance.post.course) == -1))
-			  			return res.send(204, Error.log(req, "Bttendance Error", "User is not attending current course."));
+			  			return res.send(204, Error.log(req, "Bttendance Error", "User is not attending of supervising current course."));
 
-			  		if (Arrays.getIds(user_api.supervising_courses).indexOf(attendance.post.course) == -1
-			  			&& user_api.id != attendance.post.author
-			  			&& user_uuid.id != attendance.post.author)
+			  		if (Arrays.getIds(user_api.supervising_courses).indexOf(attendance.post.course) != -1
+			  			&& user_api.id != attendance.post.author)
 			  			return res.send(204, Error.log(req, "Bttendance Error", "Manager around who is not author."));
 
-			  		if (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) == -1
-			  			&& user_api.id != attendance.post.authorg
+			  		if (Arrays.getIds(user_uuid.supervising_courses).indexOf(attendance.post.course) != -1
 			  			&& user_uuid.id != attendance.post.author)
 			  			return res.send(204, Error.log(req, "Bttendance Error", "Manager around who is not author."));
 
@@ -219,11 +219,15 @@ module.exports = {
 									for (var j = 0; j < clusters[i].length; j++)
 										notiable.push(clusters[i][j]);
 
-									for (var j = 0; j < notiable.length; j++) {
+									for (var m = 0; m < notiable.length; m++) {
+
+										console.log(notiable + ' : ' + notiable.length);
+										console.log(checks);
+										console.log(m);
 
 										var noti = true;
 										for (var k = 0; k < checks.length; k++)
-											if (notiable[j] == checks[k])
+											if (notiable[m] == checks[k])
 												noti = false;
 
 										if (noti) {
@@ -231,19 +235,15 @@ module.exports = {
 											.findOneById(attendance.post.course)
 											.populate('managers')
 											.exec(function callback(err, course) {
-												if (!err && course && Arrays.getIds(course.managers).indexOf(notiable[j]) == -1) {
+												if (!err && course && Arrays.getIds(course.managers).indexOf(notiable[m]) == -1) {
+													console.log(m + ' : ' + notiable[m]);
 													Users
-													.findOneById(notiable[j])
+													.findOneById(notiable[m])
 													.populate('device')
 													.populate('setting')
 													.exec(function callback(err, user) {
-														if (user && users[i].setting && user.setting.attendance) {
-															Courses
-															.findOneById(attendance.post.course)
-															.exec(function callback(err, course) {
+														if (user && users[i].setting && user.setting.attendance)
 																Noti.send(user, course.name, "Attendance has been checked", "attendance_checked", course.id);
-															});
-														}
 													});	
 												}
 											});
