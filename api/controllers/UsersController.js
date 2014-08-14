@@ -664,7 +664,7 @@ module.exports = {
 
 						// Notice
 						var notice_unseen = 0;
-						var notice_last; //가장 마지막 attendance
+						var notice_last = undefined; //가장 마지막 attendance
 						var notice_usage = 0; //notice를 post한 횟수
 						var notice_seen_count = 0; //본인이 notice를 몇개 보았는지 (강의자의 경우 안본 것으로 간주)
 
