@@ -203,27 +203,25 @@ module.exports = {
 							var checks = new Array();
 							for (var i = 0; i < attendance.checked_students.length; i++)
 								checks.push(attendance.checked_students[i]);
+							checks.push(attendance.post.author);
 
 							for (var i = 0; i < clusters.length; i++) {
 
-								var has_prof = false;
+								var has_author = false;
 								for (var j = 0; j < clusters[i].length; j++) {
 									if (clusters[i][j] == attendance.post.author) {
-										has_prof = true;
+										has_author = true;
 										break;
 									}
 								}
 
-								if (has_prof) {
+								if (has_author) {
 									var notiable = new Array();
-									for (var j = 0; j < clusters[i].length; j++)
+									for (var j = 0; j < clusters[i].length; j++) {
 										notiable.push(clusters[i][j]);
+									}
 
 									for (var m = 0; m < notiable.length; m++) {
-
-										console.log(notiable + ' : ' + notiable.length);
-										console.log(checks);
-										console.log(m);
 
 										var noti = true;
 										for (var k = 0; k < checks.length; k++)
@@ -231,24 +229,23 @@ module.exports = {
 												noti = false;
 
 										if (noti) {
-											Courses
-											.findOneById(attendance.post.course)
-											.populate('managers')
-											.exec(function callback(err, course) {
-												if (!err && course && Arrays.getIds(course.managers).indexOf(notiable[m]) == -1) {
-													console.log(m + ' : ' + notiable[m]);
-													Users
-													.findOneById(notiable[m])
-													.populate('device')
-													.populate('setting')
-													.exec(function callback(err, user) {
-														if (user && users[i].setting && user.setting.attendance)
-																Noti.send(user, course.name, "Attendance has been checked", "attendance_checked", course.id);
-													});	
+											Users
+											.findOneById(notiable[m])
+											.populate('device')
+											.populate('setting')
+											.exec(function callback(err, user) {
+												if (user && user.setting && user.setting.attendance) {
+													Courses
+													.findOneById(attendance.post.course)
+													.exec(function callback(err, course) {
+														if (course)
+															Noti.send(user, course.name, "Attendance has been checked", "attendance_checked", course.id);
+													})
 												}
-											});
+											});	
 										}
 									}
+
 									break;
 								}
 							}
