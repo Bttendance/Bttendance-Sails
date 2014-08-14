@@ -385,27 +385,27 @@ module.exports = {
 				var emails = new Array();
 				if (type == 'all')
 					for (var i = 0; i < users.length; i++)
-						emails.push(users[i].email);
+						emails.push(users[i].toJSON());
 
 				if (type == 'non-student')
 					for (var i = 0; i < users.length; i++)
 						if (users[i].attending_courses.length == 0)
-							emails.push(users[i].email);
+							emails.push(users[i].toJSON());
 
 				if (type == 'student')
 					for (var i = 0; i < users.length; i++)
 						if (users[i].attending_courses.length > 0)
-							emails.push(users[i].email);
+							emails.push(users[i].toJSON());
 
 				if (type == 'professor')
 					for (var i = 0; i < users.length; i++)
 						if (users[i].supervising_courses.length > 0)
-							emails.push(users[i].email);
+							emails.push(users[i].toJSON());
 
 				if (type == 'non-professor')
 					for (var i = 0; i < users.length; i++)
 						if (users[i].supervising_courses.length == 0)
-							emails.push(users[i].email);
+							emails.push(users[i].toJSON());
 
 				var json = {};
 				json.emails = emails;

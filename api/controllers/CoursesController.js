@@ -165,7 +165,7 @@ module.exports = {
 								});
 
 								var path;
-								if(locale == 'kr')
+								if(locale == 'ko')
 									path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
 								else
 									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
@@ -825,7 +825,7 @@ module.exports = {
 						});
 
 						var path;
-						if(locale == 'kr')
+						if(locale == 'ko')
 							path = Path.resolve(__dirname, '../../assets/emails/export_grades.html');
 						else
 							path = Path.resolve(__dirname, '../../assets/emails/export_grades_en.html');

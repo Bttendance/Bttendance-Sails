@@ -181,7 +181,7 @@ module.exports = {
 	signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
-		var email = req.param('email');
+		var email = req.param('email');git 
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 
@@ -299,7 +299,7 @@ module.exports = {
 			});
 
 			var path;
-			if(locale == 'kr')
+			if(locale == 'ko')
 				path = Path.resolve(__dirname, '../../assets/emails/forgot_password.html');
 			else
 				path = Path.resolve(__dirname, '../../assets/emails/forgot_password_en.html');
@@ -377,7 +377,7 @@ module.exports = {
 			});
 
 			var path;
-			if(locale == 'kr')
+			if(locale == 'ko')
 				path = Path.resolve(__dirname, '../../assets/emails/update_password.html');
 			else
 				path = Path.resolve(__dirname, '../../assets/emails/update_password_en.html');
