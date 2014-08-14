@@ -181,7 +181,7 @@ module.exports = {
 	signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
-		var email = req.param('email');git 
+		var email = req.param('email');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 
