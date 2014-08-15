@@ -221,6 +221,8 @@ module.exports = {
 										notiable.push(clusters[i][j]);
 									}
 
+									sails.log.error(notiable);
+
 									for (var m = 0; m < notiable.length; m++) {
 
 										var noti = true;

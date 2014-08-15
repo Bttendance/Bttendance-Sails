@@ -52,7 +52,7 @@ exports.send = function(user, title, message, type, course_id) {
 			if (err)
 				console.log(err);
 			else
-    		console.log("Android notification has been sent to " + user.full_name + " (" + user.username + ")");
+    		console.log("Android notification has been sent to " + user.full_name + " (" + user.email + ")");
 		});
 
 	} else if (user.device.type == 'iphone') {
@@ -103,7 +103,7 @@ exports.send = function(user, title, message, type, course_id) {
 			'message'   : message
 		};
 		apnConnection.pushNotification(note, myDevice);
-		console.log("iOS notification has been sent to " + user.full_name + " (" + user.username + ")");
+		console.log("iOS notification has been sent to " + user.full_name + " (" + user.email + ")");
 	}
 }
 
