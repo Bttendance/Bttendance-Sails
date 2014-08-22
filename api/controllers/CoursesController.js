@@ -26,6 +26,7 @@ var Url = require('url');
 var QueryString = require('querystring');
 var	FS = require('fs');
 var Path = require('path');
+var Random = require('../utils/random');
 
 module.exports = {
 
@@ -126,10 +127,12 @@ module.exports = {
 				if (err || !school) 
 			    return res.send(500, Error.log(req, "Course Create Error", "School doesn't exist."));
 
+			  var code = Random.string(4);
 				Courses.create({
 					name: name,
 					school: school_id,
-					professor_name: professor_name
+					professor_name: professor_name,
+					code: code
 				}).exec(function callback(err, course) {
 					if (err || !course) 
 				    return res.send(500, Error.log(req, "Course Create Error", "Fail to create a course."));

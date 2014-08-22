@@ -8,6 +8,7 @@
 var QueryString = require('querystring');
 var Arrays = require('../utils/arrays');
 var Noti = require('../utils/notifications');
+var Random = require('../utils/random');
 
 module.exports = {
 
@@ -68,11 +69,13 @@ var createCourse = function(params, res) {
 	var school_id = params['school_id'];
 	var professor_name = params['professor_name'];
 
+  var code = Random.string(4);
 	Courses.create({
 		name: name,
 		number: number,
 		school: school_id,
-		professor_name: professor_name
+		professor_name: professor_name,
+		code: code
 	}).exec(function callback(err, course) {
 		if (err || !course) 
 			return res.redirect('http://www.bttendance.com/verification-failed');

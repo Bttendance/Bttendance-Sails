@@ -6,8 +6,6 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-var Random = require('../utils/random');
-
 module.exports = {
 
   attributes: {
@@ -83,8 +81,6 @@ module.exports = {
   },
 
   beforeValidate: function(values, next) {
-    if (!values.code)
-      values.code = Random.string(4);
     next();
   },
 
