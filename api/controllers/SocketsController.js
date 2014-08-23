@@ -12,6 +12,8 @@ module.exports = {
 		if (!email)
 			return res.badRequest();
 
+		sails.log.error(email);
+
 		// For Beta
     Clickers.unwatch(req.socket);
     Attendances.unwatch(req.socket);
