@@ -1,39 +1,49 @@
-@media only screen and (max-width: 480px) {
-			.logo, .row { clear: both; width: 320px !important; }
-			.explanation { clear: both; width: 280px !important; }
-			.side { clear: both; width: 75px !important; }
-}
-body {
-	font-family:  "Helvetica Neue", "NanumGothic", "malgun gothic", "dotum", "Arial", "sans-serif";
-}
-.logo {
-	width: 500px;
-} 
-.row {
-	width: 500px;
-}
-.row {
-	margin-left: auto;
-	margin-right: auto;
-}
-.side {
-	width: 150px;
-}
-.content {
-	text-align: center;
-}
-.title {
-	color: #0072B0;
-}
-.spacer {
-	min-height: 33px;
-}
-.line {
-	height: 2px;
-	background: #0072B0;
-}
-.explanation {
-	width: 440px;
-	margin-left: auto;
-	margin-right: auto;
-}
+		body {
+			font-family:  "Helvetica Neue", "NanumGothic", "malgun gothic", "dotum", "Arial", "sans-serif";
+			background: #F1F1FF;
+			color: #191927;
+		}
+		.content {
+			text-align: center;
+		}
+		.spacer35 {
+			height: 35px;
+		}
+		.spacer56 {
+			height: 56px;
+		}
+		.spacer47 {
+			height: 47px;
+		}		
+		.spacer70 {
+			height: 70px;
+		}		
+		.spacer74 {
+			height: 74px;
+		}
+		.logo {
+			width: 225px;
+		}
+		.description {
+			font-size: 14pt;
+			line-height: 18pt;
+		}
+		.bold {
+			font-weight: bold;
+		}
+		.smallfont {
+			font-size: 12pt;
+		}
+		.pointhand {
+			width: 34px;
+		}
+		.explanation {
+			font-size: 13pt;
+			line-height: 18pt;
+		}
+		.bblue {
+			color: #0072B0;
+		}
+		.screenshot {
+			width: 250px;
+		}
