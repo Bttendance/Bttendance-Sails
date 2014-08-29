@@ -139,5 +139,24 @@
     "Password Recovery": "회원님의 BTTENDANCE 비밀번호가 복구되었습니다.",
     "Password Update": "회원님의 BTTENDANCE 비밀번호가 수정되었습니다.",
     "Course %s Creation Finished": "%s 강의가 BTTENDANCE에 개설되었습니다.",
-    "Grade of %s": "요청하신 %s 강의의 출결 기록과 설문 기록입니다."
+    "Grade of %s": "요청하신 %s 강의의 설문, 출석 및 공지 기록입니다.",
+
+    "Clicker": "설문하기",
+    "Attendance": "출석체크",
+    "Notice": "공지하기",
+    "Student Name": "학생 이름",
+    "Student Identity": "학생 번호",
+    "Attendance Type": "출석 방식",
+    "Auto Check": "자동 체크",
+    "Manual Check": "수동 체크",
+    "Choice Count": "설문 형식",
+    "%s Choice": "%s 중 고르기",
+    "Clicker Message": "질문",
+    "Notice Message": "공지 사항",
+    "Present": "출석",
+    "Tardy": "지각",
+    "Absent": "결석",
+    "Didn't Participated": "참여하지 않음",
+    "Read": "읽음",
+    "Unread": "읽지 않음"
 }

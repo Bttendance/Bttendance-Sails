@@ -19,7 +19,7 @@ var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
 var Noti = require('../utils/notifications');
 var Email = require('../utils/email');
-var Xlsx = require('xlsx');
+var Xlsx = require('node-xlsx');
 var Nodemailer = require("nodemailer");
 var Moment = require('moment');
 var Url = require('url');
@@ -202,7 +202,7 @@ module.exports = {
 									    subject: sails.__({ phrase: "Course %s Creation Finished", locale: locale }, course.name), // Subject line
 									    html: file, // plaintext body
 									    attachments: [{   // file on disk as an attachment
-		            				filename: "Bttendance Manual Version 1.0.pdf",
+		            				filename: "Bttendance Manual Version 1.0 (for Prof).pdf",
 		            				path: guide // stream this file
 		        					}]
 									}
@@ -747,84 +747,288 @@ module.exports = {
 	  			if (err || !posts)
 	          return res.send(500, Error.alert(req, "Export Grades Error", "Current course has no post."));
 
-			  	var postsObject = new Array();
-					for (var index in posts)
-						if (posts[index].type == "attendance")
-							postsObject.push(posts[index]);
+	        var data_clicker = new Array();
+	        {
+				  	var postsObject = new Array();
+						for (var index in posts)
+							if (posts[index].type == "clicker")
+								postsObject.push(posts[index]);
 
-					var total_grade = postsObject.length;
+		        // empty, empty, empty, message#1, message#2, ... , message#n
+		        var message = new Array();
+		        message.push(sails.__({ phrase: "Clicker Message", locale: locale })); // empty
+		        message.push(""); // empty
+		        message.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+			        	message.push(postsObject[i].message);
+		        data_clicker.push(message);
 
-	        // var data = new Array();
+		        // empty, empty, empty, choice_count#1, choice_count#2, ... , choice_count#n
+		        var choice_count = new Array();
+		        choice_count.push(sails.__({ phrase: "Choice Count", locale: locale })); // empty
+		        choice_count.push(""); // empty
+		        choice_count.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+			        	choice_count.push(sails.__({ phrase: "%s Choice", locale: locale }, postsObject[i].clicker.choice_count));
+		        data_clicker.push(choice_count);
 
-	        // // Student Name, Student ID, username, date#1, date#2, ... , date#n, Total Grade
-	        // var headline = new Array();
-	        // headline.push("Students Name");
-	        // headline.push("Students ID");
-	        // headline.push("username");
-	        // for (var i = 0; i < postsObject.length; i++)
-	        // 	headline.push(Moment(postsObject[i].createdAt).format("YYYY/MM/DD"));
-	        // headline.push("Total Grade");
+		        // Student Name, Student Identity, empty, date#1, date#2, ... , date#n
+		        var headline = new Array();
+		        headline.push(sails.__({ phrase: "Student Name", locale: locale }));
+		        headline.push(sails.__({ phrase: "Student Identity", locale: locale }));
+		        headline.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+		        	headline.push(Moment(postsObject[i].createdAt).format("YYYY-MM-DD hh:mm"));
+		        data_clicker.push(headline);
 
-	        // data.push(headline);
+		        var grades = new Array();
+		        for (var index in users) {
+		        	var gradeObject = new Array();
+		        	gradeObject.push(users[index].full_name); // Student Name
+		        	for (var i = 0; i < users[index].identifications.length; i++) 
+		        		if (users[index].identifications[i].school == course.school.id)
+		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
 
-	        // var grades = new Array();
-	        // for (var index in users) {
-	        // 	var gradeObject = new Array();
-	        // 	gradeObject.push(users[index].full_name); // Student Name
-	        // 	for (var i = 0; i < users[index].identifications.length; i++) 
-	        // 		if (users[index].identifications[i].school == course.school)
-	        // 			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+		        	if (gradeObject.length < 2)
+		        		gradeObject.push("Student has no ID");
+		        	gradeObject.push(""); // empty
 
-	        // 	if (gradeObject.length < 2)
-	        // 		gradeObject.push("Student has no ID");
+		        	for (var i = 0; i < postsObject.length; i++) {
 
-	        // 	gradeObject.push(users[index].username); // Username
+		        		var choice = 0;
 
-	        // 	var grade = 0;
-	        // 	for (var i = 0; i < postsObject.length; i++) {
-	        // 		var check = 0;
-	        // 		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
-	        // 			if (postsObject[i].attendance.checked_students[j] == users[index].id) {
-	        // 				grade++;
-	        // 				check++;
-	        // 			}
-	        // 		}
-	        // 		gradeObject.push(check);
-	        // 	}
+		        		for (var j = 0; j < postsObject[i].clicker.a_students.length; j++)
+		        			if (postsObject[i].clicker.a_students[j] == users[index].id)
+		        				choice = 1;
 
-	        // 	gradeObject.push(grade + "/" + total_grade);
-	        //   grades.push(gradeObject);
-	        // }
+		        		for (var j = 0; j < postsObject[i].clicker.b_students.length; j++)
+		        			if (postsObject[i].clicker.b_students[j] == users[index].id)
+		        				choice = 2;
 
-	        // grades.sort(function(a, b) {
-	        // 	if (!a[1])
-	        // 		return true;
-	        // 	if (!b[1])
-	        // 		return false;
-	        // 	return a[1].localeCompare(b[1]);
-	        // });
+		        		for (var j = 0; j < postsObject[i].clicker.c_students.length; j++)
+		        			if (postsObject[i].clicker.c_students[j] == users[index].id)
+		        				choice = 3;
 
-	        // data = data.concat(grades);
+		        		for (var j = 0; j < postsObject[i].clicker.d_students.length; j++)
+		        			if (postsObject[i].clicker.d_students[j] == users[index].id)
+		        				choice = 4;
 
-	        function Workbook() {
-						if(!(this instanceof Workbook)) return new Workbook();
-						this.SheetNames = [];
-						this.Sheets = {};
-					}
+		        		for (var j = 0; j < postsObject[i].clicker.e_students.length; j++)
+		        			if (postsObject[i].clicker.e_students[j] == users[index].id)
+		        				choice = 5;
 
-	        /* add workbook */
-	        var wb = new Workbook();
-					wb.SheetNames = [];
-					wb.Sheets = {};
+		        		if (choice == 0)
+			        		gradeObject.push(sails.__({ phrase: "Didn't Participated", locale: locale }));
+			        	else if (choice == 1)
+			        		gradeObject.push("A");
+			        	else if (choice == 2)
+			        		gradeObject.push("B");
+			        	else if (choice == 3)
+			        		gradeObject.push("C");
+			        	else if (choice == 4)
+			        		gradeObject.push("D");
+			        	else
+			        		gradeObject.push("E");
+		        	}
 
-					var ws_name = 'test';
+		          grades.push(gradeObject);
+		        }
 
-					/* add worksheet to workbook */
-					wb.SheetNames.push(ws_name);
-					wb.Sheets[ws_name] = {};
+		        grades.sort(function(a, b) {
+		        	if (!a[1])
+		        		return true;
+		        	if (!b[1])
+		        		return false;
+		        	return a[1].localeCompare(b[1]);
+		        });
 
-					/* write file */
-					var buffer = Xlsx.writeFile(wb, 'test.xlsx');
+		        data_clicker = data_clicker.concat(grades);
+		      }
+
+	        var data_attendance = new Array();
+	        {
+				  	var postsObject = new Array();
+						for (var index in posts)
+							if (posts[index].type == "attendance")
+								postsObject.push(posts[index]);
+
+		        // empty, empty, empty, type#1, type#2, ... , type#n
+		        var info = new Array();
+		        info.push(sails.__({ phrase: "Attendance Type", locale: locale })); // empty
+		        info.push(""); // empty
+		        info.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+		        	if (postsObject[i].attendance.type == "auto")
+			        	info.push(sails.__({ phrase: "Auto Check", locale: locale }));
+			        else
+			        	info.push(sails.__({ phrase: "Manual Check", locale: locale }));
+		        data_attendance.push(info);
+
+		        // Student Name, Student Identity, empty, date#1, date#2, ... , date#n, empty, Present, Tardy, Absent
+		        var headline = new Array();
+		        headline.push(sails.__({ phrase: "Student Name", locale: locale }));
+		        headline.push(sails.__({ phrase: "Student Identity", locale: locale }));
+		        headline.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+		        	headline.push(Moment(postsObject[i].createdAt).format("YYYY-MM-DD hh:mm"));
+		        headline.push("");
+		        headline.push(sails.__({ phrase: "Present", locale: locale }));
+		        headline.push(sails.__({ phrase: "Tardy", locale: locale }));
+		        headline.push(sails.__({ phrase: "Absent", locale: locale }));
+		        data_attendance.push(headline);
+
+		        var grades = new Array();
+		        for (var index in users) {
+		        	var gradeObject = new Array();
+		        	gradeObject.push(users[index].full_name); // Student Name
+		        	for (var i = 0; i < users[index].identifications.length; i++) 
+		        		if (users[index].identifications[i].school == course.school.id)
+		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+
+		        	if (gradeObject.length < 2)
+		        		gradeObject.push("Student has no ID");
+		        	gradeObject.push(""); // empty
+
+		        	var present = 0;
+		        	var tardy = 0;
+		        	var absent = 0;
+		        	for (var i = 0; i < postsObject.length; i++) {
+
+		        		var check = 0;
+
+		        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
+		        			if (postsObject[i].attendance.checked_students[j] == users[index].id) {
+		        				present++;
+		        				check = 1;
+		        			}
+		        		}
+
+		        		for (var j = 0; j < postsObject[i].attendance.late_students.length; j++) {
+		        			if (postsObject[i].attendance.late_students[j] == users[index].id) {
+		        				tardy++;
+		        				check = 2;
+		        			}
+		        		}
+
+		        		if (check == 0) {
+			        		gradeObject.push(sails.__({ phrase: "Absent", locale: locale }));
+			        		absent++;
+		        		} else if (check == 1)
+			        		gradeObject.push(sails.__({ phrase: "Present", locale: locale }));
+			        	else
+			        		gradeObject.push(sails.__({ phrase: "Tardy", locale: locale }));
+		        	}
+
+		        	gradeObject.push(""); // empty
+		        	gradeObject.push(present); // Present
+		        	gradeObject.push(tardy); // Tardy
+		        	gradeObject.push(absent); // Absent
+		          grades.push(gradeObject);
+		        }
+
+		        grades.sort(function(a, b) {
+		        	if (!a[1])
+		        		return true;
+		        	if (!b[1])
+		        		return false;
+		        	return a[1].localeCompare(b[1]);
+		        });
+
+		        data_attendance = data_attendance.concat(grades);
+		      }
+
+	        var data_notice = new Array();
+	        {
+				  	var postsObject = new Array();
+						for (var index in posts)
+							if (posts[index].type == "notice")
+								postsObject.push(posts[index]);
+
+		        // empty, empty, empty, type#1, type#2, ... , type#n
+		        var info = new Array();
+		        info.push(sails.__({ phrase: "Notice Message", locale: locale })); // empty
+		        info.push(""); // empty
+		        info.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+		        	info.push(postsObject[i].message);
+		        data_notice.push(info);
+
+		        // Student Name, Student Identity, empty, date#1, date#2, ... , date#n, empty, Read, Unread
+		        var headline = new Array();
+		        headline.push(sails.__({ phrase: "Student Name", locale: locale }));
+		        headline.push(sails.__({ phrase: "Student Identity", locale: locale }));
+		        headline.push(""); // empty
+		        for (var i = 0; i < postsObject.length; i++)
+		        	headline.push(Moment(postsObject[i].createdAt).format("YYYY-MM-DD hh:mm"));
+		        headline.push("");
+		        headline.push(sails.__({ phrase: "Read", locale: locale }));
+		        headline.push(sails.__({ phrase: "Unread", locale: locale }));
+		        data_notice.push(headline);
+
+		        var grades = new Array();
+		        for (var index in users) {
+		        	var gradeObject = new Array();
+		        	gradeObject.push(users[index].full_name); // Student Name
+		        	for (var i = 0; i < users[index].identifications.length; i++) 
+		        		if (users[index].identifications[i].school == course.school.id)
+		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+
+		        	if (gradeObject.length < 2)
+		        		gradeObject.push("Student has no ID");
+		        	gradeObject.push(""); // empty
+
+		        	var read = 0;
+		        	var unread = 0;
+		        	for (var i = 0; i < postsObject.length; i++) {
+
+		        		var seen = false;
+		        		for (var j = 0; j < postsObject[i].notice.seen_students.length; j++)
+		        			if (postsObject[i].notice.seen_students[j] == users[index].id)
+		        				seen = true;
+
+
+		        		if (seen) {
+			        		gradeObject.push(sails.__({ phrase: "Read", locale: locale }));
+			        		read++;
+		        		} else {
+			        		gradeObject.push(sails.__({ phrase: "Unread", locale: locale }));
+			        		unread++;
+		        		}
+		        	}
+
+		        	gradeObject.push(""); // empty
+		        	gradeObject.push(read); // Read
+		        	gradeObject.push(unread); // Unread
+		          grades.push(gradeObject);
+		        }
+
+		        grades.sort(function(a, b) {
+		        	if (!a[1])
+		        		return true;
+		        	if (!b[1])
+		        		return false;
+		        	return a[1].localeCompare(b[1]);
+		        });
+
+		        data_notice = data_notice.concat(grades);
+		      }
+
+	        var buffer = Xlsx.build({
+        		worksheets: [
+				  		{
+				  			"name": sails.__({ phrase: "Clicker", locale: locale }), 
+				  			"data": data_clicker
+				  		},
+				  		{
+				  			"name": sails.__({ phrase: "Attendance", locale: locale }), 
+				  			"data": data_attendance
+				  		},
+				  		{
+				  			"name": sails.__({ phrase: "Notice", locale: locale }), 
+				  			"data": data_notice
+				  		}
+				  	]
+					});
 
 	        Users
 					.findOne({
@@ -869,11 +1073,14 @@ module.exports = {
 							    mm='0'+mm
 							} 
 
-							today = yyyy+'/'+mm+'/'+dd;
+							var todayDate = yyyy+'/'+mm+'/'+dd;
+							var todayDate_ = yyyy+'_'+mm+'_'+dd;
 
 			  			file = file.replace('#fullname', user.full_name);
 			  			file = file.replace('#firstdate', Moment(course.createdAt).format("YYYY/MM/DD"));
-			  			file = file.replace('#lastdate', today);
+			  			file = file.replace('#lastdate', todayDate);
+
+			  			var filename = course.name + " Records " + todayDate_ + ".xlsx";
 
 							// setup e-mail data with unicode symbols
 							var mailOptions = {
@@ -882,7 +1089,7 @@ module.exports = {
 							    subject: sails.__({ phrase: "Grade of %s", locale: locale }, course.name), // Subject line
 							    html: file,
 							    attachments: [{   
-						          filename: course.name + " Grade " + today + ".xlsx",
+						          filename: filename,
 						          content: buffer
 					        }]
 							}

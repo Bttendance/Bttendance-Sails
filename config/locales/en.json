@@ -143,5 +143,24 @@
     "Password Recovery": "Your BTTENDANCE password has been recovered.",
     "Password Update": "Your BTTENDANCE password has been changed.",
     "Course %s Creation Finished": "Course %s has been created in BTTENDANCE. ",
-    "Grade of %s": "Attendance and Clicker record of the course %s has been exported."
+    "Grade of %s": "Clicker, Attendance and Notice records of the course %s has been exported.",
+
+    "Clicker": "Clicker",
+    "Attendance": "Attendance",
+    "Notice": "Notice",
+    "Student Name": "Student Name",
+    "Student Identity": "Student Identity",
+    "Auto Check": "Auto Check",
+    "Manual Check": "Manual Check",
+    "Attendance Type": "Attendance Type",
+    "Choice Count": "Choices",
+    "%s Choice": "%s Choices",
+    "Clicker Message": "Question",
+    "Notice Message": "Notice",
+    "Present": "Present",
+    "Tardy": "Trady",
+    "Absent": "Absent",
+    "Didn't Participated": "Didn't Participated",
+    "Read": "Read",
+    "Unread": "Unread"
 }
