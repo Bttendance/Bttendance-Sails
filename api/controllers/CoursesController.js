@@ -168,10 +168,14 @@ module.exports = {
 								});
 
 								var path;
-								if(locale == 'ko')
+								var guide;
+								if(locale == 'ko') {
 									path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
-								else
+									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_kr.pdf');
+								} else {
 									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
+									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_en.pdf');
+								}
 
 								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user_new.device.type + '&locale=' + locale;
 								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user_new.device.type + '&locale=' + locale;
@@ -197,6 +201,10 @@ module.exports = {
 									    to: user.email, // list of receivers
 									    subject: sails.__({ phrase: "Course %s Creation Finished", locale: locale }, course.name), // Subject line
 									    html: file, // plaintext body
+									    attachments: [{   // file on disk as an attachment
+		            				fileName: "Bttendance Manual Version 1.0.pdf",
+		            				filePath: guide // stream this file
+		        					}]
 									}
 
 									// send mail with defined transport object
