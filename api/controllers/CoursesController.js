@@ -202,8 +202,8 @@ module.exports = {
 									    subject: sails.__({ phrase: "Course %s Creation Finished", locale: locale }, course.name), // Subject line
 									    html: file, // plaintext body
 									    attachments: [{   // file on disk as an attachment
-		            				fileName: "Bttendance Manual Version 1.0.pdf",
-		            				filePath: guide // stream this file
+		            				filename: "Bttendance Manual Version 1.0.pdf",
+		            				path: guide // stream this file
 		        					}]
 									}
 
