@@ -169,8 +169,11 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 		    return res.send(401, Error.alert(req, "Auto Sign Out", "User has been signed-in other device."));
 
-	    // return res.send(441, Error.alert(req, "Update Available", "New version of Bttendance has been updated. Please update the app for new features."));
-	    return res.send(442, Error.alert(req, sails.__({ phrase: "Update Available", locale: locale }), sails.__({ phrase: "New version of Bttendance has been updated. Please update the app for new features.", locale: locale })));
+	    if (parseFloat(app_version) < 1)
+		    return res.send(442, Error.alert(req, sails.__({ phrase: "Update Available", locale: locale }), sails.__({ phrase: "New version of Bttendance has been updated. Please update the app for new features.", locale: locale })));
+	    
+	    // if (device_type == 'android' && parseFloat(app_version) < 1.1)
+		   //  return res.send(441, Error.alert(req, sails.__({ phrase: "Update Available", locale: locale }), sails.__({ phrase: "New version of Bttendance has been updated. Please update the app for new features.", locale: locale })));
 	    
 	    user.locale = locale;
 	    user.save();
