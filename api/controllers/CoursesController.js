@@ -171,7 +171,7 @@ module.exports = {
 								var guide;
 								if(locale == 'ko') {
 									path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
-									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_kr.pdf');
+									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_ko.pdf');
 								} else {
 									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
 									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_en.pdf');
@@ -881,13 +881,10 @@ module.exports = {
 							    to: user.email, // list of receivers
 							    subject: sails.__({ phrase: "Grade of %s", locale: locale }, course.name), // Subject line
 							    html: file,
-							    attachments: [
-								    {   
-								    	// binary buffer as an attachment
+							    attachments: [{   
 						          filename: course.name + " Grade " + today + ".xlsx",
 						          content: buffer
-						        }
-							    ]
+					        }]
 							}
 
 							// send mail with defined transport object
