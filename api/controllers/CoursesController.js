@@ -19,7 +19,7 @@ var Error = require('../utils/errors');
 var Arrays = require('../utils/arrays');
 var Noti = require('../utils/notifications');
 var Email = require('../utils/email');
-var Xlsx = require('node-xlsx');
+var Xlsx = require('xlsx');
 var Nodemailer = require("nodemailer");
 var Moment = require('moment');
 var Url = require('url');
@@ -162,8 +162,8 @@ module.exports = {
 								var smtpTransport = Nodemailer.createTransport({
 								    service: "Gmail",
 								    auth: {
-								        user: "support@bttendance.com",
-								        pass: "W2lcom2t0"
+								        user: "no-reply@bttendance.com",
+								        pass: "N0n0r2ply"
 								    }
 								});
 
@@ -746,66 +746,77 @@ module.exports = {
 
 					var total_grade = postsObject.length;
 
-	        var data = new Array();
+	        // var data = new Array();
 
-	        // Student Name, Student ID, username, date#1, date#2, ... , date#n, Total Grade
-	        var headline = new Array();
-	        headline.push("Students Name");
-	        headline.push("Students ID");
-	        headline.push("username");
-	        for (var i = 0; i < postsObject.length; i++)
-	        	headline.push(Moment(postsObject[i].createdAt).format("YYYY/MM/DD"));
-	        headline.push("Total Grade");
+	        // // Student Name, Student ID, username, date#1, date#2, ... , date#n, Total Grade
+	        // var headline = new Array();
+	        // headline.push("Students Name");
+	        // headline.push("Students ID");
+	        // headline.push("username");
+	        // for (var i = 0; i < postsObject.length; i++)
+	        // 	headline.push(Moment(postsObject[i].createdAt).format("YYYY/MM/DD"));
+	        // headline.push("Total Grade");
 
-	        data.push(headline);
+	        // data.push(headline);
 
-	        var grades = new Array();
-	        for (var index in users) {
-	        	var gradeObject = new Array();
-	        	gradeObject.push(users[index].full_name); // Student Name
-	        	for (var i = 0; i < users[index].identifications.length; i++) 
-	        		if (users[index].identifications[i].school == course.school)
-	        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+	        // var grades = new Array();
+	        // for (var index in users) {
+	        // 	var gradeObject = new Array();
+	        // 	gradeObject.push(users[index].full_name); // Student Name
+	        // 	for (var i = 0; i < users[index].identifications.length; i++) 
+	        // 		if (users[index].identifications[i].school == course.school)
+	        // 			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
 
-	        	if (gradeObject.length < 2)
-	        		gradeObject.push("Student has no ID");
+	        // 	if (gradeObject.length < 2)
+	        // 		gradeObject.push("Student has no ID");
 
-	        	gradeObject.push(users[index].username); // Username
+	        // 	gradeObject.push(users[index].username); // Username
 
-	        	var grade = 0;
-	        	for (var i = 0; i < postsObject.length; i++) {
-	        		var check = 0;
-	        		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
-	        			if (postsObject[i].attendance.checked_students[j] == users[index].id) {
-	        				grade++;
-	        				check++;
-	        			}
-	        		}
-	        		gradeObject.push(check);
-	        	}
+	        // 	var grade = 0;
+	        // 	for (var i = 0; i < postsObject.length; i++) {
+	        // 		var check = 0;
+	        // 		for (var j = 0; j < postsObject[i].attendance.checked_students.length; j++) {
+	        // 			if (postsObject[i].attendance.checked_students[j] == users[index].id) {
+	        // 				grade++;
+	        // 				check++;
+	        // 			}
+	        // 		}
+	        // 		gradeObject.push(check);
+	        // 	}
 
-	        	gradeObject.push(grade + "/" + total_grade);
-	          grades.push(gradeObject);
-	        }
+	        // 	gradeObject.push(grade + "/" + total_grade);
+	        //   grades.push(gradeObject);
+	        // }
 
-	        grades.sort(function(a, b) {
-	        	if (!a[1])
-	        		return true;
-	        	if (!b[1])
-	        		return false;
-	        	return a[1].localeCompare(b[1]);
-	        });
+	        // grades.sort(function(a, b) {
+	        // 	if (!a[1])
+	        // 		return true;
+	        // 	if (!b[1])
+	        // 		return false;
+	        // 	return a[1].localeCompare(b[1]);
+	        // });
 
-	        data = data.concat(grades);
+	        // data = data.concat(grades);
 
-	        var buffer = Xlsx.build({
-        		worksheets: [
-				  		{
-				  			"name": course.name, 
-				  			"data": data
-				  		}
-				  	]
-					});
+	        function Workbook() {
+						if(!(this instanceof Workbook)) return new Workbook();
+						this.SheetNames = [];
+						this.Sheets = {};
+					}
+
+	        /* add workbook */
+	        var wb = new Workbook();
+					wb.SheetNames = [];
+					wb.Sheets = {};
+
+					var ws_name = 'test';
+
+					/* add worksheet to workbook */
+					wb.SheetNames.push(ws_name);
+					wb.Sheets[ws_name] = {};
+
+					/* write file */
+					var buffer = Xlsx.writeFile(wb, 'test.xlsx');
 
 	        Users
 					.findOne({
