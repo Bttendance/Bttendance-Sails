@@ -170,16 +170,12 @@ module.exports = {
 								var path;
 								var guide;
 								if(locale == 'ko') {
-									path = Path.resolve(__dirname, '../../assets/emails/create_course.html');
+									path = Path.resolve(__dirname, '../../assets/emails/CreateCourse_KO.html');
 									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_ko.pdf');
 								} else {
-									path = Path.resolve(__dirname, '../../assets/emails/create_course_en.html');
+									path = Path.resolve(__dirname, '../../assets/emails/CreateCourse_EN.html');
 									guide = Path.resolve(__dirname, '../../assets/manual/manual_prof_en.pdf');
 								}
-
-								var clickerlink = 'http://www.bttd.co/tutorial/clicker?device_type=' + user_new.device.type + '&locale=' + locale;
-								var attendancelink = 'http://www.bttd.co/tutorial/attendance?device_type=' + user_new.device.type + '&locale=' + locale;
-								var noticelink = 'http://www.bttd.co/tutorial/notice?device_type=' + user_new.device.type + '&locale=' + locale;
 
 								FS.readFile(path, 'utf8', function (err, file) {
 								  if (err)
@@ -191,9 +187,6 @@ module.exports = {
 					  			file = file.replace('#classCode', course.code);
 					  			file = file.replace('#profname', course.professor_name);
 					  			file = file.replace('#schoolname', course.school.name);
-					  			file = file.replace('#ClickerTutorialLink', clickerlink);
-					  			file = file.replace('#AttendanceTutorialLink', attendancelink);
-					  			file = file.replace('#NoticeTutorialLink', noticelink);
 
 									// setup e-mail data with unicode symbols
 									var mailOptions = {
@@ -202,7 +195,7 @@ module.exports = {
 									    subject: sails.__({ phrase: "Course %s Creation Finished", locale: locale }, course.name), // Subject line
 									    html: file, // plaintext body
 									    attachments: [{   // file on disk as an attachment
-		            				filename: "Bttendance Manual Version 1.0 (for Prof).pdf",
+		            				filename: sails.__({ phrase: "Bttendance Manual (for Prof).pdf", locale: locale }),
 		            				path: guide // stream this file
 		        					}]
 									}
@@ -248,8 +241,14 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 		var course_id = req.param('course_id');
+		var locale = req.param('locale');
+		if (!locale)
+			locale = 'en';
 
-		Courses.findOneById(course_id).exec(function callback(err, course) {
+		Courses
+		.findOneById(course_id)
+		.populateAll()
+		.exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Course Attend Error", "Course doesn't exist."));
 
@@ -293,7 +292,61 @@ module.exports = {
 						if (err || !user_new)
 					    return res.send(500, Error.log(req, "Course Attend Error", "User doesn't exist."));
 
-				  	return res.send(user_new.toWholeObject());
+					  // create reusable transport method (opens pool of SMTP connections)
+						var smtpTransport = Nodemailer.createTransport({
+						    service: "Gmail",
+						    auth: {
+						        user: "no-reply@bttendance.com",
+						        pass: "N0n0r2ply"
+						    }
+						});
+
+						var path;
+						var guide;
+						if(locale == 'ko') {
+							path = Path.resolve(__dirname, '../../assets/emails/AttendCourse_KO.html');
+							guide = Path.resolve(__dirname, '../../assets/manual/manual_std_ko.pdf');
+						} else {
+							path = Path.resolve(__dirname, '../../assets/emails/AttendCourse_EN.html');
+							guide = Path.resolve(__dirname, '../../assets/manual/manual_std_en.pdf');
+						}
+
+						FS.readFile(path, 'utf8', function (err, file) {
+						  if (err)
+			  				return res.send(500, { message: "File Read Error" });
+
+			  			var studentID = '';
+			  			for (var i = 0; i < user.identifications.length; i++)
+			  				if (user.identifications[i].school == course.school.id)
+			  					studentID = user.identifications[i].identity;
+
+			  			file = file.replace('#fullname', user_new.full_name);
+			  			file = file.replace('#courseTitle', course.name);
+			  			file = file.replace('#courseTitle', course.name);
+			  			file = file.replace('#classCode', course.code);
+			  			file = file.replace('#profName', course.professor_name);
+			  			file = file.replace('#schoolName', course.school.name);
+			  			file = file.replace('#schoolName', course.school.name);
+			  			file = file.replace('#studentID', studentID);
+
+							// setup e-mail data with unicode symbols
+							var mailOptions = {
+							    from: "Bttendance<no-reply@bttendance.com>", // sender address
+							    to: user.email, // list of receivers
+							    subject: sails.__({ phrase: "You are successfully registered in course %s!", locale: locale }, course.name), // Subject line
+							    html: file, // plaintext body
+							    attachments: [{   // file on disk as an attachment
+            				filename: sails.__({ phrase: "Bttendance Manual (for Std).pdf", locale: locale }),
+            				path: guide // stream this file
+        					}]
+							}
+
+							// send mail with defined transport object
+							smtpTransport.sendMail(mailOptions, function(error, info) {
+							});
+
+					  	return res.send(user_new.toWholeObject());
+						});
 					});
 			  });
 			});
@@ -1052,9 +1105,9 @@ module.exports = {
 
 						var path;
 						if(locale == 'ko')
-							path = Path.resolve(__dirname, '../../assets/emails/export_grades.html');
+							path = Path.resolve(__dirname, '../../assets/emails/ExportGrades_KO.html');
 						else
-							path = Path.resolve(__dirname, '../../assets/emails/export_grades_en.html');
+							path = Path.resolve(__dirname, '../../assets/emails/ExportGrades_EN.html');
 
 						FS.readFile(path, 'utf8', function (err, file) {
 						  if (err)

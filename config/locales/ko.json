@@ -136,10 +136,14 @@
     "Attendance Failed": "결석으로 처리되었습니다.", 
     "Attendance Late": "지각으로 처리되었습니다.",
 
+    "Welcome to BTTENDANCE!": "BTTENDANCE에 가입하신 걸 환영합니다!",
     "Password Recovery": "회원님의 BTTENDANCE 비밀번호가 복구되었습니다.",
     "Password Update": "회원님의 BTTENDANCE 비밀번호가 수정되었습니다.",
-    "Course %s Creation Finished": "%s 강의가 BTTENDANCE에 개설되었습니다.",
-    "Grade of %s": "요청하신 %s 강의의 설문, 출석 및 공지 기록입니다.",
+    "Course %s Creation Finished": "\"%s\" 강의가 개설되었습니다.",
+    "You are successfully registered in course %s!": "강의 \"%s\"에 성공적으로 등록되었습니다!",
+    "Grade of %s": "요청하신 \"%s\" 강의의 설문, 출석 및 공지 기록입니다.",
+    "Bttendance Manual (for Prof).pdf": "Bttendance Manual for Professor.pdf",
+    "Bttendance Manual (for Std).pdf": "Bttendance Manual for Student.pdf",
 
     "Clicker": "설문하기",
     "Attendance": "출석체크",

@@ -140,10 +140,14 @@
     "Attendance Failed": "Recorded as absent", 
     "Attendance Late": "Recorded as tardy",
 
+    "Welcome to BTTENDANCE!": "Welcome to BTTENDANCE!",
     "Password Recovery": "Your BTTENDANCE password has been recovered.",
     "Password Update": "Your BTTENDANCE password has been changed.",
-    "Course %s Creation Finished": "Course %s has been created in BTTENDANCE. ",
-    "Grade of %s": "Clicker, Attendance and Notice records of the course %s has been exported.",
+    "Course %s Creation Finished": "Course \"%s\" has been created.",
+    "You are successfully registered in course %s!": "You are successfully registered in course \"%s\"!",
+    "Grade of %s": "Clicker, Attendance and Notice records of the course \"%s\" has been exported.",
+    "Bttendance Manual (for Prof).pdf": "Bttendance Manual for Professor.pdf",
+    "Bttendance Manual (for Std).pdf": "Bttendance Manual for Student.pdf",
 
     "Clicker": "Clicker",
     "Attendance": "Attendance",

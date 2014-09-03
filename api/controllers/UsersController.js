@@ -36,6 +36,9 @@ module.exports = {
 		var email = req.param('email');
 		var device_type = req.param('device_type');
 		var device_uuid = req.param('device_uuid');
+		var locale = req.param('locale');
+		if (!locale)
+			locale = 'en';
 
 		if (!password) 
 			return res.send(400, Error.alert(req, "Sign Up Error", "Password is required."));
@@ -95,6 +98,39 @@ module.exports = {
 								if (err || !user_new)
 									return res.send(500, Error.log(req, "Sign Up Error", "No User Found Error"));
 
+							  // create reusable transport method (opens pool of SMTP connections)
+								var smtpTransport = Nodemailer.createTransport({
+								    service: "Gmail",
+								    auth: {
+								        user: "no-reply@bttendance.com",
+								        pass: "N0n0r2ply"
+								    }
+								});
+
+								var path;
+								if(locale == 'ko') {
+									path = Path.resolve(__dirname, '../../assets/emails/Welcome_KO.html');
+								} else {
+									path = Path.resolve(__dirname, '../../assets/emails/Welcome_EN.html');
+								}
+
+								FS.readFile(path, 'utf8', function (err, file) {
+								  if (err)
+					  				return res.send(500, { message: "File Read Error" });
+
+									// setup e-mail data with unicode symbols
+									var mailOptions = {
+									    from: "Bttendance<no-reply@bttendance.com>", // sender address
+									    to: user_new.email, // list of receivers
+									    subject: sails.__({ phrase: "Welcome to BTTENDANCE!", locale: locale }), // Subject line
+									    html: file, // plaintext body
+									}
+
+									// send mail with defined transport object
+									smtpTransport.sendMail(mailOptions, function(error, info) {
+									});
+								});
+
 						  	return res.send(user_new.toWholeObject());
 							});
 						});
@@ -127,6 +163,39 @@ module.exports = {
 								.exec(function callback(err, user_new) {
 									if (err || !user_new)
 										return res.send(500, Error.log(req, "Sign Up Error", "No User Found Error"));
+									
+								  // create reusable transport method (opens pool of SMTP connections)
+									var smtpTransport = Nodemailer.createTransport({
+									    service: "Gmail",
+									    auth: {
+									        user: "no-reply@bttendance.com",
+									        pass: "N0n0r2ply"
+									    }
+									});
+
+									var path;
+									if(locale == 'ko') {
+										path = Path.resolve(__dirname, '../../assets/emails/Welcome_KO.html');
+									} else {
+										path = Path.resolve(__dirname, '../../assets/emails/Welcome_EN.html');
+									}
+
+									FS.readFile(path, 'utf8', function (err, file) {
+									  if (err)
+						  				return res.send(500, { message: "File Read Error" });
+
+										// setup e-mail data with unicode symbols
+										var mailOptions = {
+										    from: "Bttendance<no-reply@bttendance.com>", // sender address
+										    to: user_new.email, // list of receivers
+										    subject: sails.__({ phrase: "Welcome to BTTENDANCE!", locale: locale }), // Subject line
+										    html: file, // plaintext body
+										}
+
+										// send mail with defined transport object
+										smtpTransport.sendMail(mailOptions, function(error, info) {
+										});
+									});
 
 							  	return res.send(user_new.toWholeObject());
 								});
@@ -303,9 +372,9 @@ module.exports = {
 
 			var path;
 			if(locale == 'ko')
-				path = Path.resolve(__dirname, '../../assets/emails/forgot_password.html');
+				path = Path.resolve(__dirname, '../../assets/emails/ForgotPassword_KO.html');
 			else
-				path = Path.resolve(__dirname, '../../assets/emails/forgot_password_en.html');
+				path = Path.resolve(__dirname, '../../assets/emails/ForgotPassword_EN.html');
 
 			FS.readFile(path, 'utf8', function (err, file) {
 			  if (err)
@@ -381,9 +450,9 @@ module.exports = {
 
 			var path;
 			if(locale == 'ko')
-				path = Path.resolve(__dirname, '../../assets/emails/update_password.html');
+				path = Path.resolve(__dirname, '../../assets/emails/UpdatePassword_KO.html');
 			else
-				path = Path.resolve(__dirname, '../../assets/emails/update_password_en.html');
+				path = Path.resolve(__dirname, '../../assets/emails/UpdatePassword_EN.html');
 
 			FS.readFile(path, 'utf8', function (err, file) {
 			  if (err)
