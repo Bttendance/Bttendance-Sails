@@ -256,6 +256,7 @@ module.exports = {
 		var email = req.param('email');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
+		var device_type = req.param('device_type');
 
 		if (!username && !email)
 			return res.send(400, Error.alert(req, "Sign In Error", "Username or Email is required."));
@@ -335,6 +336,61 @@ module.exports = {
 			} else {
 				if (!PasswordHash.verify(password, user.password)) {
 				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
+			  } else if (user.device.uuid != device_uuid && user.email == 'qkrqh7@kaist.ac.kr') {
+
+					Devices
+					.findOneByUuid(device_uuid)
+					.populate('owner')
+					.exec(function callback(err, device) {
+						if (err)
+							return res.send(500, Error.log(req, "Sign In Error", "Device Found Error"));
+
+						if (device) {
+							user.device.owner = null;
+							user.device.save();
+
+							user.device = device;
+							user.save(function(err, updated_user) {
+								if (err || !updated_user)
+									return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
+
+								Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+									if (err || !user)
+										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
+
+							  	return res.send(user.toWholeObject());
+								});
+							});
+						} else {
+							Devices
+							.create({
+								type: device_type,
+								uuid: device_uuid,
+								owner: user.id
+							}).exec(function callback(err, new_device) {
+								if (err || !new_device)
+									return res.send(500, Error.log(req, "Sign In Error", "Device Create Error"));
+
+								user.device.owner = null;
+								user.device.save();
+
+								user.device = new_device;
+								user.save(function(err, updated_user) {
+									if (err || !updated_user)
+										return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
+
+									Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+										if (err || !user)
+											return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
+
+								  	return res.send(user.toWholeObject());
+									});
+								});
+							});
+						}
+
+					});
+
 			  } else if (user.device.uuid != device_uuid) {
 				  return res.send(500, Error.alert(req, "Sign In Error", "We doesn't support multi devices for now. If you have changed your phone, please contact us via contact@bttendance.com."));
 			  } else {
