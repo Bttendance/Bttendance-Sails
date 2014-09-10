@@ -8,7 +8,7 @@
 // For Develop (Drop all table and add new)
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
 // DROP TABLE attendances, clickers, courses, courses_managers__users_supervising_courses, courses_students__users_attending_courses, devices, identifications, notices, posts, questions, schools, schools_professors__users_employed_schools, schools_students__users_enrolled_schools, settings, tokens, users;
-// heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a156.dump' --app bttendance-dev
+// heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a190.dump' --app bttendance-dev
 
 // For Production
 // heroku maintenance:on

@@ -77,11 +77,13 @@ module.exports = {
       dominant: true
     },
 
+    // Many to One
     identifications: {
       collection: 'Identifications',
       via: 'owner'
     },
 
+    // Many to One
     questions: {
       collection: 'Questions',
       via: 'owner'
