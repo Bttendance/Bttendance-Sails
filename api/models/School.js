@@ -24,19 +24,19 @@ module.exports = {
 
     // One to Many
     courses: {
-    	collection: 'Courses',
+    	collection: 'Course',
     	via: 'school'
     },
 
     // Many to Many
     professors: {
-    	collection: 'Users',
+    	collection: 'User',
     	via: 'employed_schools'
     },
 
     // Many to Many
     students: {
-    	collection: 'Users',
+    	collection: 'User',
     	via: 'enrolled_schools'
     },
 

@@ -22,24 +22,24 @@ module.exports = {
 
     // One to Many
     school: {
-    	model: 'Schools'
+    	model: 'School'
     },
 
     // Many to Many
     managers: {
-    	collection: 'Users',
+    	collection: 'User',
     	via: 'supervising_courses'
     },
     
     // Many to Many
     students: {
-    	collection: 'Users',
+    	collection: 'User',
     	via: 'attending_courses'
     },
 
     // One to Many
     posts: {
-    	collection: 'Posts',
+    	collection: 'Post',
     	via: 'course'
     },
 

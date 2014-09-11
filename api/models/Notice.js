@@ -14,7 +14,7 @@ module.exports = {
 		},
 
 		post: {
-			model: 'Posts'
+			model: 'Post'
 		},
 
     toJSON: function() {

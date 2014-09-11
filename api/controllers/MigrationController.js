@@ -6,34 +6,11 @@
  */
 
 // For Develop (Drop all table and add new)
-// psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
-// DROP TABLE attendances, clickers, courses, courses_managers__users_supervising_courses, courses_students__users_attending_courses, devices, identifications, notices, posts, questions, schools, schools_professors__users_employed_schools, schools_students__users_enrolled_schools, settings, tokens, users;
 // heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a190.dump' --app bttendance-dev
-
-// For Production
-// heroku maintenance:on
-// heroku ps:scale worker=0
-
-/**** Do work ****/
-
-// heroku ps:scale worker=1
-// heroku maintenance:off
-
-// 1.
-// DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials;
-// ALTER TABLE courses DROP COLUMN number CASCADE; ALTER TABLE courses DROP COLUMN students_count CASCADE; ALTER TABLE courses DROP COLUMN "attdCheckedAt" CASCADE; ALTER TABLE courses DROP COLUMN clicker_usage CASCADE; ALTER TABLE courses DROP COLUMN notice_usage CASCADE; ALTER TABLE schools DROP COLUMN logo_image CASCADE; ALTER TABLE schools DROP COLUMN website CASCADE; ALTER TABLE users DROP COLUMN username_lower CASCADE; ALTER TABLE users DROP COLUMN profile_image CASCADE;
-
-// 2.
-// comment out courses.code unique & models migrate.safe
-// sails lift
-// uncomment courses.code unique & models migrate.safe
-
-// 3.
-// sails lift
-// call api for migration
-
-// 4.
-// ALTER TABLE courses ADD CONSTRAINT courses_code_key UNIQUE (code);
+// psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
+// ALTER TABLE attendances RENAME TO attendance; ALTER TABLE clickers RENAME TO clicker; ALTER TABLE courses RENAME TO course; ALTER TABLE devices RENAME TO device; ALTER TABLE identifications RENAME TO identification; ALTER TABLE notices RENAME TO notice; ALTER TABLE posts RENAME TO post; ALTER TABLE questions RENAME TO question; ALTER TABLE schools RENAME TO school; ALTER TABLE settings RENAME TO setting; ALTER TABLE users RENAME TO "user";
+// ALTER TABLE courses_managers__users_supervising_courses RENAME TO course_managers__user_supervising_courses; ALTER TABLE courses_students__users_attending_courses RENAME TO course_students__user_attending_courses; ALTER TABLE schools_professors__users_employed_schools RENAME TO school_professors__user_employed_schools; ALTER TABLE schools_students__users_enrolled_schools RENAME TO school_students__user_enrolled_schools;
+// DROP TABLE tokens;
 
 var Random = require('../utils/random');
 var Arrays = require('../utils/arrays');

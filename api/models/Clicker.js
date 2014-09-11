@@ -1,32 +1,46 @@
 /**
-* Questions.js
-*
-* @description :: TODO: You might write a short summary of how this model works and what it represents here.
-* @docs        :: http://sailsjs.org/#!documentation/models
-*/
+ * Polls.js
+ *
+ * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @docs		:: http://sailsjs.org/#!documentation/models
+ */
 
 module.exports = {
 
-  attributes: {
-
-		message: {
-			type: 'string',
-			required: true
-		},
+	attributes: {
 
 		choice_count: {
 			type: 'integer'
 		},
 
-		owner: {
-			model: 'Users'
+		a_students: {
+			type: 'json'
+		},
+
+		b_students: {
+			type: 'json'
+		},
+
+		c_students: {
+			type: 'json'
+		},
+
+		d_students: {
+			type: 'json'
+		},
+
+		e_students: {
+			type: 'json'
+		},
+
+		post: {
+			model: 'Post'
 		},
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.owner;
       return obj;
     },
 
@@ -35,11 +49,9 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.owner = this.owner;
       return obj;
     }
-
-  },
+	},
 
   beforeValidate: function(values, next) {
     next();
@@ -56,7 +68,12 @@ module.exports = {
       values.choice_count = 2;
     if (values.choice_count > 5)
       values.choice_count = 5;
-
+    
+    values.a_students = new Array();
+    values.b_students = new Array();
+    values.c_students = new Array();
+    values.d_students = new Array();
+    values.e_students = new Array();
     next();
   },
 
@@ -69,6 +86,17 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
+    
+    Clickers
+    .findOneById(values.id)
+    .populateAll()
+    .exec(function callback(err, clicker) {
+      if (clicker && clicker.post && clicker.post.course) {
+        sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+        Clickers.publishCreate(clicker.toWholeObject()); //For Beta
+      }
+    });
+
     next();
   },
 
@@ -80,4 +108,3 @@ module.exports = {
     next();
   }
 };
-

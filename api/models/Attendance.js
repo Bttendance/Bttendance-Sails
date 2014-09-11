@@ -1,5 +1,5 @@
 /**
- * Polls.js
+ * Attendances.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs		:: http://sailsjs.org/#!documentation/models
@@ -9,38 +9,33 @@ module.exports = {
 
 	attributes: {
 
-		choice_count: {
-			type: 'integer'
-		},
+    // auto, manual
+    type: {
+      type: 'string',
+      required: true
+    },
 
-		a_students: {
-			type: 'json'
-		},
+    checked_students: {
+      type: 'json'
+    },
 
-		b_students: {
-			type: 'json'
-		},
+    late_students: {
+      type: 'json'
+    },
 
-		c_students: {
-			type: 'json'
-		},
-
-		d_students: {
-			type: 'json'
-		},
-
-		e_students: {
+		clusters: {
 			type: 'json'
 		},
 
 		post: {
-			model: 'Posts'
+			model: 'Post'
 		},
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
+      delete obj.clusters;
       return obj;
     },
 
@@ -49,6 +44,7 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.clusters = this.clusters;
       return obj;
     }
 	},
@@ -62,18 +58,12 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    if (!values.choice_count)
-      values.choice_count = 4;
-    if (values.choice_count < 2)
-      values.choice_count = 2;
-    if (values.choice_count > 5)
-      values.choice_count = 5;
-    
-    values.a_students = new Array();
-    values.b_students = new Array();
-    values.c_students = new Array();
-    values.d_students = new Array();
-    values.e_students = new Array();
+    if (!values.checked_students)
+      values.checked_students = new Array();
+    if (!values.late_students)
+      values.late_students = new Array();
+    if (!values.clusters)
+      values.clusters = new Array();
     next();
   },
 
@@ -87,16 +77,14 @@ module.exports = {
 
   afterUpdate: function(values, next) {
     
-    Clickers
+    Attendances
     .findOneById(values.id)
     .populateAll()
-    .exec(function callback(err, clicker) {
-      if (clicker && clicker.post && clicker.post.course) {
-        sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
-        Clickers.publishCreate(clicker.toWholeObject()); //For Beta
-      }
+    .exec(function callback(err, attendance) {
+      if (attendance && attendance.post && attendance.post.course) 
+        sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
     });
-
+    
     next();
   },
 
@@ -107,4 +95,5 @@ module.exports = {
   afterDestroy: function(values, next) {
     next();
   }
+
 };

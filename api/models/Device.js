@@ -1,41 +1,48 @@
 /**
- * Attendances.js
+ * Devices
  *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @module      :: Model
+ * @description :: A short summary of how this model works and what it represents.
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
 module.exports = {
 
-	attributes: {
+  attributes: {
 
-    // auto, manual
+    //iphone, android, window, blackberry, etc
     type: {
       type: 'string',
       required: true
     },
 
-    checked_students: {
-      type: 'json'
+    // uuid for iphone, mac address for android
+    uuid: {
+      type: 'string',
+      required: true,
+      unique: true
     },
 
-    late_students: {
-      type: 'json'
+    // mac address
+    mac_address: {
+      type: 'string'
     },
 
-		clusters: {
-			type: 'json'
-		},
+    notification_key: {
+      type: 'string'
+    },
 
-		post: {
-			model: 'Posts'
-		},
+    // One to One
+    owner: {
+    	model: 'User'
+    },
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.clusters;
+      delete obj.mac_address;
+      delete obj.owner;
       return obj;
     },
 
@@ -44,10 +51,12 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.clusters = this.clusters;
+      obj.mac_address = this.mac_address;
+      obj.owner = this.owner;
       return obj;
     }
-	},
+    
+  },
 
   beforeValidate: function(values, next) {
     next();
@@ -58,12 +67,8 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    if (!values.checked_students)
-      values.checked_students = new Array();
-    if (!values.late_students)
-      values.late_students = new Array();
-    if (!values.clusters)
-      values.clusters = new Array();
+    if (values.type == 'android')
+      values.mac_address = values.uuid;
     next();
   },
 
@@ -76,15 +81,6 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
-    
-    Attendances
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, attendance) {
-      if (attendance && attendance.post && attendance.post.course) 
-        sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
-    });
-    
     next();
   },
 

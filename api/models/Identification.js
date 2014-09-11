@@ -14,11 +14,11 @@ module.exports = {
 		},
 
 		owner: {
-			model: 'Users'
+			model: 'User'
 		},
 
 		school: {
-			model: 'Schools'
+			model: 'School'
 		},
 
     toJSON: function() {

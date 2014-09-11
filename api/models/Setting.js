@@ -29,7 +29,7 @@ module.exports = {
 
     // One to One
     owner: {
-    	model: 'Users'
+    	model: 'User'
     },
 
     toJSON: function() {

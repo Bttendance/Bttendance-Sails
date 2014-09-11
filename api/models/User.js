@@ -41,51 +41,51 @@ module.exports = {
 
     // One to One
     device: {
-      model: 'Devices'
+      model: 'Device'
     },
 
     // One to One
     setting: {
-      model: 'Settings'
+      model: 'Setting'
     },
 
     // Many to Many
     supervising_courses: {
-    	collection: 'Courses',
+    	collection: 'Course',
     	via: 'managers',
     	dominant: true
     },
 
     // Many to Many
     attending_courses: {
-    	collection: 'Courses',
+    	collection: 'Course',
     	via: 'students',
     	dominant: true
     },
 
     // Many to Many
     employed_schools: {
-      collection: 'Schools',
+      collection: 'School',
       via: 'professors',
       dominant: true
     },
 
     // Many to Many
     enrolled_schools: {
-      collection: 'Schools',
+      collection: 'School',
       via: 'students',
       dominant: true
     },
 
     // Many to One
     identifications: {
-      collection: 'Identifications',
+      collection: 'Identification',
       via: 'owner'
     },
 
     // Many to One
     questions: {
-      collection: 'Questions',
+      collection: 'Question',
       via: 'owner'
     },
 

@@ -22,27 +22,27 @@ module.exports = {
 
     // One Way
     author: {
-    	model: 'Users'
+    	model: 'User'
     },
 
     // One to Many
     course: {
-    	model: 'Courses'
+    	model: 'Course'
     },
 
     // One to One
     attendance: {
-      model: 'Attendances'
+      model: 'Attendance'
     },
 
     // One to One
     clicker: {
-      model: 'Clickers'
+      model: 'Clicker'
     },
 
     // One to One
     notice: {
-      model: 'Notices'
+      model: 'Notice'
     },
 
     toJSON: function() {
