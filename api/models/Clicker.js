@@ -9,33 +9,54 @@ module.exports = {
 
 	attributes: {
 
-		choice_count: {
-			type: 'integer'
-		},
-
 		a_students: {
-			type: 'json'
+			type: 'json',
+      required: true
 		},
 
 		b_students: {
-			type: 'json'
+			type: 'json',
+      required: true
 		},
 
 		c_students: {
-			type: 'json'
+			type: 'json',
+      required: true
 		},
 
 		d_students: {
-			type: 'json'
+			type: 'json',
+      required: true
 		},
 
 		e_students: {
-			type: 'json'
+			type: 'json',
+      required: true
 		},
 
 		post: {
 			model: 'Post'
 		},
+
+    choice_count: {
+      type: 'integer',
+      required: true
+    },
+
+    progress_time: {  // sec
+      type: 'integer',
+      required: true
+    },
+
+    detail_privacy: { //all, professor, none
+      type: 'string',
+      required: true
+    },
+
+    show_info_on_select: {
+      type: 'boolean',
+      required: true
+    },
 
     toJSON: function() {
       var obj = this.toObject();
@@ -62,13 +83,6 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    if (!values.choice_count)
-      values.choice_count = 4;
-    if (values.choice_count < 2)
-      values.choice_count = 2;
-    if (values.choice_count > 5)
-      values.choice_count = 5;
-    
     values.a_students = new Array();
     values.b_students = new Array();
     values.c_students = new Array();

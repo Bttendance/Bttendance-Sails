@@ -9,6 +9,11 @@ module.exports = {
 
   attributes: {
 
+    // One to One
+    owner: {
+      model: 'User'
+    },
+
     attendance: {
       type: 'boolean',
       required: true,
@@ -27,9 +32,28 @@ module.exports = {
       defaultsTo: true
     },
 
-    // One to One
-    owner: {
-    	model: 'User'
+    locale: {
+      type: 'string',
+      required: true,
+      defaultsTo: 'en'
+    },
+
+    clicker_progress_time: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 90
+    },
+
+    clicker_detail_privacy: {
+      type: 'string',
+      required: true,
+      defaultsTo: 'professor'
+    },
+
+    clicker_show_info_on_select: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
     },
 
     toJSON: function() {

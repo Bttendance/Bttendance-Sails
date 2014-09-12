@@ -23,7 +23,7 @@ module.exports = function attending_or_supervising (req, res, next) {
 	if (!password || !course_id)
 		return res.send(400, Error.log(req, "Course Policy Error", "Username, password and course id is required."));
 
-	Users
+	User
 	.findOne({
 	  or : [
 	    { email: email },

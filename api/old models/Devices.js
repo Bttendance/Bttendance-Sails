@@ -10,33 +10,21 @@ module.exports = {
 
   attributes: {
 
-    // One to One
-    owner: {
-      model: 'User'
-    },
-
-    //iOS, Android, MIUI, etc
-    os: {
+    //iphone, android, window, blackberry, etc
+    type: {
       type: 'string',
       required: true
     },
 
-    // uuid for iphone, Pseudo-Unique ID for android
-    unique_id: {
-      type: 'string',
-      required: true,
-      unique: true
-    },
-
-    // uuid for iphone, bluetooth mac address for android => use for bluetooth scanning
+    // uuid for iphone, mac address for android
     uuid: {
       type: 'string',
       required: true,
       unique: true
     },
 
-    // bluetooth mac address
-    bluetooth_mac_address: {
+    // mac address
+    mac_address: {
       type: 'string'
     },
 
@@ -44,15 +32,9 @@ module.exports = {
       type: 'string'
     },
 
-    for_bttendance: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
-    },
-
-    ownerChangedAt: {
-      type: 'date',
-      required: true
+    // One to One
+    owner: {
+    	model: 'Users'
     },
 
     toJSON: function() {
@@ -91,6 +73,22 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
+    next();
+  },
+
+  beforeUpdate: function(values, next) {
+    next();
+  },
+
+  afterUpdate: function(values, next) {
+    next();
+  },
+
+  beforeDestroy: function(values, next) {
+    next();
+  },
+
+  afterDestroy: function(values, next) {
     next();
   }
 

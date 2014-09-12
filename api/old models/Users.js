@@ -34,55 +34,58 @@ module.exports = {
       required: true
     },
 
-    // Many to One
-    devices: {
-      collection: 'Device',
-      via: 'owner'
+    locale: {
+      type: 'string',
+      defaultsTo: 'en'
+    },
+
+    // One to One
+    device: {
+      model: 'Devices'
     },
 
     // One to One
     setting: {
-      model: 'Setting',
-      required: true
+      model: 'Settings'
     },
 
     // Many to Many
     supervising_courses: {
-    	collection: 'Course',
+    	collection: 'Courses',
     	via: 'managers',
     	dominant: true
     },
 
     // Many to Many
     attending_courses: {
-    	collection: 'Course',
+    	collection: 'Courses',
     	via: 'students',
     	dominant: true
     },
 
     // Many to Many
     employed_schools: {
-      collection: 'School',
+      collection: 'Schools',
       via: 'professors',
       dominant: true
     },
 
     // Many to Many
     enrolled_schools: {
-      collection: 'School',
+      collection: 'Schools',
       via: 'students',
       dominant: true
     },
 
     // Many to One
     identifications: {
-      collection: 'Identification',
+      collection: 'Identifications',
       via: 'owner'
     },
 
     // Many to One
     questions: {
-      collection: 'Question',
+      collection: 'Questions',
       via: 'owner'
     },
 
@@ -157,5 +160,21 @@ module.exports = {
         next();
     });
   },
+
+  beforeUpdate: function(values, next) {
+    next();
+  },
+
+  afterUpdate: function(values, next) {
+    next();
+  },
+
+  beforeDestroy: function(values, next) {
+    next();
+  },
+
+  afterDestroy: function(values, next) {
+    next();
+  }
 
 };

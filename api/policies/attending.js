@@ -23,7 +23,7 @@ module.exports = function attending (req, res, next) {
 	if (!password || !course_id)
 		return res.send(400, Error.log(req, "Attending Policy Error", "Password and Course ID is required."));
 
-	Users
+	User
 	.findOne({
 	  or : [
 	    { email: email },

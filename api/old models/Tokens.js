@@ -1,22 +1,32 @@
 /**
-* Notices.js
+* Tokens.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
+var UUID = require('node-uuid');
+
 module.exports = {
 
-  attributes: {
+	attributes: {
 
-		seen_students: {
-			type: 'json',
-      required: true
-		},
+    key: {
+      type: 'string'
+    },
 
-		post: {
-			model: 'Post'
-		},
+    action: {
+    	type: 'string'
+    },
+
+    params: {
+      type: 'string'
+    },
+
+    expired: {
+      type: 'boolean',
+      defaultsTo: false
+    },
 
     toJSON: function() {
       var obj = this.toObject();
@@ -32,7 +42,8 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       return obj;
     }
-  },
+
+	},
 
   beforeValidate: function(values, next) {
     next();
@@ -43,7 +54,7 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.seen_students = new Array();
+    values.key = UUID.v1();
     next();
   },
 
@@ -56,15 +67,6 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
-    
-    Notices
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, notice) {
-      if (notice && notice.post && notice.post.course) 
-        sails.sockets.broadcast('Course#' + notice.post.course, 'notice', notice.toWholeObject());
-    });
-
     next();
   },
 
@@ -75,5 +77,6 @@ module.exports = {
   afterDestroy: function(values, next) {
     next();
   }
+
 };
 

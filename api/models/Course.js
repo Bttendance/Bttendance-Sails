@@ -22,7 +22,8 @@ module.exports = {
 
     // One to Many
     school: {
-    	model: 'School'
+    	model: 'School',
+      required: true
     },
 
     // Many to Many
@@ -62,7 +63,6 @@ module.exports = {
       delete obj.managers;
       delete obj.students;
       delete obj.posts;
-      delete obj.code;
       return obj;
     },
 

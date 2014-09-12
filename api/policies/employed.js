@@ -23,7 +23,7 @@ module.exports = function isUser (req, res, next) {
 	if (!password || !school_id)
 		return res.send(400, Error.alert(req, "Employed Policy Error", "Password and School ID is required."));
 
-	Users
+	User
 	.findOne({
 	  or : [
 	    { email: email },

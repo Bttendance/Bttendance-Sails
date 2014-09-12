@@ -1,5 +1,5 @@
 /**
-* Notices.js
+* Questions.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,19 +9,24 @@ module.exports = {
 
   attributes: {
 
-		seen_students: {
-			type: 'json',
-      required: true
+		message: {
+			type: 'string',
+			required: true
 		},
 
-		post: {
-			model: 'Post'
+		choice_count: {
+			type: 'integer'
+		},
+
+		owner: {
+			model: 'Users'
 		},
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
+      delete obj.owner;
       return obj;
     },
 
@@ -30,8 +35,10 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+      obj.owner = this.owner;
       return obj;
     }
+
   },
 
   beforeValidate: function(values, next) {
@@ -43,7 +50,13 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.seen_students = new Array();
+    if (!values.choice_count)
+      values.choice_count = 4;
+    if (values.choice_count < 2)
+      values.choice_count = 2;
+    if (values.choice_count > 5)
+      values.choice_count = 5;
+
     next();
   },
 
@@ -56,15 +69,6 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
-    
-    Notices
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, notice) {
-      if (notice && notice.post && notice.post.course) 
-        sails.sockets.broadcast('Course#' + notice.post.course, 'notice', notice.toWholeObject());
-    });
-
     next();
   },
 

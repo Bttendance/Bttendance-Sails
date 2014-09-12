@@ -17,34 +17,32 @@ module.exports = {
     },
 
   	message: {
-  		type: 'string',
-      required: true
+  		type: 'string'
   	},
 
     // One Way
     author: {
-    	model: 'User',
-      required: true
+    	model: 'Users'
     },
 
     // One to Many
     course: {
-    	model: 'Course'
+    	model: 'Courses'
     },
 
     // One to One
     attendance: {
-      model: 'Attendance'
+      model: 'Attendances'
     },
 
     // One to One
     clicker: {
-      model: 'Clicker'
+      model: 'Clickers'
     },
 
     // One to One
     notice: {
-      model: 'Notice'
+      model: 'Notices'
     },
 
     toJSON: function() {

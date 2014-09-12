@@ -1,5 +1,5 @@
 /**
-* Questions.js
+* Settings.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,37 +9,27 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
-    owner: {
-      model: 'User'
-    },
-
-		message: {
-			type: 'string',
-			required: true
-		},
-
-		choice_count: {
-			type: 'integer',
-      required: true,
-      defaultsTo: 4,
-      min: 2,
-      max: 5
-		},
-
-    progress_time: {  // sec
-      type: 'integer',
-      required: true
-    },
-
-    detail_privacy: { //all, professor, none
-      type: 'string',
-      required: true
-    },
-
-    show_info_on_select: {
+    attendance: {
       type: 'boolean',
-      required: true
+      required: true,
+      defaultsTo: true
+    },
+
+    clicker: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
+    notice: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
+    // One to One
+    owner: {
+    	model: 'Users'
     },
 
     toJSON: function() {
@@ -60,6 +50,5 @@ module.exports = {
     }
 
   }
-
 };
 

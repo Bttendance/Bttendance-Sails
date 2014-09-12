@@ -16,22 +16,19 @@ module.exports = {
     },
 
     checked_students: {
-      type: 'json',
-      required: true
+      type: 'json'
     },
 
     late_students: {
-      type: 'json',
-      required: true
+      type: 'json'
     },
 
 		clusters: {
-			type: 'json',
-      required: true
+			type: 'json'
 		},
 
 		post: {
-			model: 'Post'
+			model: 'Posts'
 		},
 
     toJSON: function() {

@@ -10,17 +10,15 @@ module.exports = {
 	attributes: {
 
 		identity: {
-			type: 'string',
-      required: true
+			type: 'string'
 		},
 
 		owner: {
-			model: 'User'
+			model: 'Users'
 		},
 
 		school: {
-			model: 'School',
-      required: true
+			model: 'Schools'
 		},
 
     toJSON: function() {

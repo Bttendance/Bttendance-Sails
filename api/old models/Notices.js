@@ -10,12 +10,11 @@ module.exports = {
   attributes: {
 
 		seen_students: {
-			type: 'json',
-      required: true
+			type: 'json'
 		},
 
 		post: {
-			model: 'Post'
+			model: 'Posts'
 		},
 
     toJSON: function() {
