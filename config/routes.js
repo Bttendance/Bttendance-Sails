@@ -365,7 +365,20 @@ module.exports.routes = {
   '/tutorial/notice': {
     controller: 'tutorial',
     action: 'notice'
-  }
+  },
+
+  /************* Homepage Views ************/
+  '/signup': {
+    view: 'users/signup'
+  },
+
+  '/course': {
+    view: 'users/course'
+  },
+
+  '/failtologin': {
+    view: 'users/failtologin'
+  }  
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`

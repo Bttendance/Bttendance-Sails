@@ -29,13 +29,10 @@ var Validator = require('validator');
 module.exports = {
 
 	signup: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var password = req.param('password');
+		//res.contentType('application/json; charset=utf-8');
 		var full_name = req.param('full_name');
+		var password = req.param('password');
 		var email = req.param('email');
-		var device_type = req.param('device_type');
-		var device_uuid = req.param('device_uuid');
 		var locale = req.param('locale');
 		if (!locale)
 			locale = 'en';
@@ -55,156 +52,24 @@ module.exports = {
 		if (!full_name || full_name.length == 0)
 			return res.send(400, Error.alert(req, "Sign Up Error", "Full Name is required."));
 
-		if (!device_type)
-			return res.send(400, Error.alert(req, "Sign Up Error", "Device Type is required."));
-
-		if (!device_uuid)
-			return res.send(400, Error.alert(req, "Sign Up Error", "Device ID is required."));
-
-		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
-			if (err)
-				return res.send(500, Error.log(req, "Sign Up Error", "Deivce Find Error"));
-
-		  if (device && device.owner)
-				return res.send(500, Error.alert(req, "Sign Up Error", "Your deivce already has been registered."));
+		Users
+		.findOneByEmail(email.toLowerCase())
+		.exec(function callback(err, user) {
+		  if (user && user.email == email) return res.send(500, Error.alert(req, "Sign Up Error", "Email is already taken."));
 
 		  Users
-		  .findOneByEmail(email.toLowerCase())
-		  .exec(function callback(err, user) {
-		  	if (err && !user)
-					return res.send(500, Error.log(req, "Sign Up Error", "User Find Error"));
-			  if (user && user.email == email)
-					return res.send(500, Error.alert(req, "Sign Up Error", "Email is already taken."));
-
-			  if (device) {
-					Users.create({
-						username: username,
-						password: password,
-						email: email,
-						full_name: full_name,
-						device: device.id				
-					}).exec(function callback(err, new_user) {
-						if (err || !new_user)
-							return res.send(500, Error.alert(req, "Sign Up Error", "User Create Error. Please try sign up again."));
-
-					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
-							if (err || !updated_device)
-								return res.send(500, Error.alert(req, "Sign Up Error", "Deivce Save Error. Please try sign up again."));
-
-					    Users
-							.findOneById(new_user.id)
-							.populateAll()
-							.exec(function callback(err, user_new) {
-								if (err || !user_new)
-									return res.send(500, Error.log(req, "Sign Up Error", "No User Found Error"));
-
-							  // create reusable transport method (opens pool of SMTP connections)
-								var smtpTransport = Nodemailer.createTransport({
-								    service: "Gmail",
-								    auth: {
-								        user: "no-reply@bttendance.com",
-								        pass: "N0n0r2ply"
-								    }
-								});
-
-								var path;
-								if(locale == 'ko') {
-									path = Path.resolve(__dirname, '../../assets/emails/Welcome_KO.html');
-								} else {
-									path = Path.resolve(__dirname, '../../assets/emails/Welcome_EN.html');
-								}
-
-								FS.readFile(path, 'utf8', function (err, file) {
-								  if (err)
-					  				return res.send(500, { message: "File Read Error" });
-
-									// setup e-mail data with unicode symbols
-									var mailOptions = {
-									    from: "Bttendance<no-reply@bttendance.com>", // sender address
-									    to: user_new.email, // list of receivers
-									    subject: sails.__({ phrase: "Welcome to BTTENDANCE!", locale: locale }), // Subject line
-									    html: file, // plaintext body
-									}
-
-									// send mail with defined transport object
-									smtpTransport.sendMail(mailOptions, function(error, info) {
-									});
-								});
-
-						  	return res.send(user_new.toWholeObject());
-							});
-						});
-					});
-			  } else {
-					Devices.create({
-						type: device_type,
-						uuid: device_uuid
-					}).exec(function callback(err, new_device) {
-						if (err || !new_device)
-							return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Create Error"));
-
-						Users.create({
-							username: username,
-							password: password,
-							email: email,
-							full_name: full_name,
-							device: new_device.id			
-						}).exec(function callback(err, new_user) {
-							if (err || !new_user)
-								return res.send(500, Error.alert(req, "Sign Up Error",  "User Create Error. Please try sign up again."));
-
-						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
-								if (err || !updated_device)
-									return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Save Error. Please try sign up again."));
-
-						    Users
-								.findOneById(new_user.id)
-								.populateAll()
-								.exec(function callback(err, user_new) {
-									if (err || !user_new)
-										return res.send(500, Error.log(req, "Sign Up Error", "No User Found Error"));
-									
-								  // create reusable transport method (opens pool of SMTP connections)
-									var smtpTransport = Nodemailer.createTransport({
-									    service: "Gmail",
-									    auth: {
-									        user: "no-reply@bttendance.com",
-									        pass: "N0n0r2ply"
-									    }
-									});
-
-									var path;
-									if(locale == 'ko') {
-										path = Path.resolve(__dirname, '../../assets/emails/Welcome_KO.html');
-									} else {
-										path = Path.resolve(__dirname, '../../assets/emails/Welcome_EN.html');
-									}
-
-									FS.readFile(path, 'utf8', function (err, file) {
-									  if (err)
-						  				return res.send(500, { message: "File Read Error" });
-
-										// setup e-mail data with unicode symbols
-										var mailOptions = {
-										    from: "Bttendance<no-reply@bttendance.com>", // sender address
-										    to: user_new.email, // list of receivers
-										    subject: sails.__({ phrase: "Welcome to BTTENDANCE!", locale: locale }), // Subject line
-										    html: file, // plaintext body
-										}
-
-										// send mail with defined transport object
-										smtpTransport.sendMail(mailOptions, function(error, info) {
-										});
-									});
-
-							  	return res.send(user_new.toWholeObject());
-								});
-							});
-						});
-					});
-				}
-		  });
-		});
+		  .create({
+				full_name: full_name,
+				password: password,
+				email: email		
+			})
+		  .exec(function callback(err, new_user) {
+				if (err || !new_user)	return res.send(500, Error.alert(req, "Sign Up Error", "User Create Error. Please try sign up again."));
+			
+				req.session.me = new_user;
+				return res.redirect('/course');
+			});
+	  });
 	},
 
   // 401 : Auto Sign Out
@@ -228,7 +93,7 @@ module.exports = {
 		  ]
 		})
 		.populateAll()
-		.exec(function callback(err, user) {
+		.exec(function (err, user) {
 			if (err || !user)
 		    return res.send(401, Error.alert(req, "Auto Sign Out", "User doesn't exist."));
 
@@ -251,21 +116,16 @@ module.exports = {
 	},
 
 	signin: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
+		//res.contentType('application/json; charset=utf-8');
 		var username = req.param('username');
 		var email = req.param('email');
 		var password = req.param('password');
-		var device_uuid = req.param('device_uuid');
-		var device_type = req.param('device_type');
 
 		if (!username && !email)
 			return res.send(400, Error.alert(req, "Sign In Error", "Username or Email is required."));
 
 		if (!password)
 			return res.send(400, Error.alert(req, "Sign In Error", "Password is required."));
-
-		if (!device_uuid) 
-			return res.send(400, Error.alert(req, "Sign In Error", "Device ID is required."));
 
 		Users
 		.findOne({
@@ -276,128 +136,21 @@ module.exports = {
 		})
 		.populateAll()
 		.exec(function callback(err, user) {
-			if (err || !user)
-		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your USERNAME or EMAIL address again."));
+			if (err || !user) return res.send(500, Error.alert(req, "Sign In Error", "Please check your USERNAME or EMAIL address again."));
 
-			if (username == "appletest0"
-		|| username == "appletest1" 
-		|| username == "appletest2"
-		|| username == "appletest3"
-		|| username == "appletest4"
-		|| username == "appletest5"
-		|| username == "appletest6"
-		|| username == "appletest7"
-		|| username == "appletest8"
-		|| username == "appletest9"
-		|| email == "apple0@apple.com"
-		|| email == "apple1@apple.com"
-		|| email == "apple2@apple.com"
-		|| email == "apple3@apple.com"
-		|| email == "apple4@apple.com"
-		|| email == "apple5@apple.com"
-		|| email == "apple6@apple.com"
-		|| email == "apple7@apple.com"
-		|| email == "apple8@apple.com"
-		|| email == "apple9@apple.com") {
-
-				Devices
-				.findOneByUuid(device_uuid)
-				.populate('owner')
-				.exec(function callback(err, device) {
-					if (err)
-						return res.send(500, Error.log(req, "Sign In Error", "Device Found Error"));
-
-					else if (!device) {
-						user.device.uuid = device_uuid;
-						user.device.save(function callback(err) {
-					   	if (err)
-								return res.send(500, Error.log(req, "Sign In Error", "Device Save Error"));
-
-					  	return res.send(user.toWholeObject());
-						});
-					} else if (device.uuid != user.device.uuid) {
-						device.uuid = device.owner.username_lower;
-						device.save(function callback(err) {
-							if (err)
-								return res.send(500, Error.log(req, "Sign In Error", "Device Save Error"));
-
-						  user.device.uuid = device_uuid;
-						  console.log(user);
-						  user.device.save(function callback(err) {
-								if (err)
-									return res.send(500, Error.log(req, "Sign In Error", "Device Save Error"));
-
-						  	return res.send(user.toWholeObject());
-						  })
-						});
-					} else
-				  	return res.send(user.toWholeObject());
-				});
-			} else {
-				if (!PasswordHash.verify(password, user.password)) {
-				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
-			  } else if (user.device.uuid != device_uuid && user.email == 'qkrqh7@kaist.ac.kr') {
-
-					Devices
-					.findOneByUuid(device_uuid)
-					.populate('owner')
-					.exec(function callback(err, device) {
-						if (err)
-							return res.send(500, Error.log(req, "Sign In Error", "Device Found Error"));
-
-						if (device) {
-							user.device.owner = null;
-							user.device.save();
-
-							user.device = device;
-							user.save(function(err, updated_user) {
-								if (err || !updated_user)
-									return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
-
-								Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
-									if (err || !user)
-										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
-
-							  	return res.send(user.toWholeObject());
-								});
-							});
-						} else {
-							Devices
-							.create({
-								type: device_type,
-								uuid: device_uuid,
-								owner: user.id
-							}).exec(function callback(err, new_device) {
-								if (err || !new_device)
-									return res.send(500, Error.log(req, "Sign In Error", "Device Create Error"));
-
-								user.device.owner = null;
-								user.device.save();
-
-								user.device = new_device;
-								user.save(function(err, updated_user) {
-									if (err || !updated_user)
-										return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
-
-									Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
-										if (err || !user)
-											return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
-
-								  	return res.send(user.toWholeObject());
-									});
-								});
-							});
-						}
-
-					});
-
-			  } else if (user.device.uuid != device_uuid) {
-				  return res.send(500, Error.alert(req, "Sign In Error", "We doesn't support multi devices for now. If you have changed your phone, please contact us via contact@bttendance.com."));
-			  } else {
-			  	return res.send(user.toWholeObject());
-			  }
+			if (!PasswordHash.verify(password, user.password)) {
+				return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
 			}
+
+			req.session.me = user;
+			return res.redirect('/course');
+
 		});
+	},
+
+	signout: function(req, res){
+		req.session.me = null;
+		return res.redirect('/');
 	},
 
 	forgot_password: function(req, res) {

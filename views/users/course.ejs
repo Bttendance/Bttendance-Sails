@@ -1,0 +1,137 @@
+<body class="course-bground" ng-controller="UserController as user" ng-init="user={req.session.me}">
+	<!-- Navigation Start -->
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+    		<a class="navbar-brand" href="#">BTTENDANCE</a>
+  		</div>
+  		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    		<ul class="nav navbar-nav navbar-right">
+      		<li class="dropdown">
+        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.full_name}} <span class="glyphicon glyphicon-cog"></span></a>
+        		<ul class="dropdown-menu" role="menu">
+          		<li><a href="#">프로필 설정</a></li>
+          		<li><a href="#">고객지원</a></li>
+        		</ul>
+      		</li>
+    		</ul>
+  		</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+  <!-- Navigation End -->
+  <!-- Contents Start -->
+  <div class="container course-contents">
+    <div class="row">
+      <!-- Left -->
+      <div class="col-lg-3 course-col">
+        <div class="course-left user-profile">
+          <h4>{{user.full_name}}</h4>
+          <h5>{{user.email}}</h5>
+        </div>
+        <div class="course-left user-lectures">
+          <h3 class="lectures-title">LECTURES</h3>
+          <p>강의 추가하기 <span class="glyphicon glyphicon-plus"></span></p>
+          <div class="lectures-course" ng-repeat="course in user.courses">
+            <p class="lectures-course-name">{{course.name}} <span class="glyphicon glyphicon-chevron-right"></span></p>
+            <p class="lectures-course-summary">{{course.description}}</p>
+          </div>
+        </div>
+      </div>
+      <!-- Center 다른 HTML로 빼서 AngularJS로 불러올 것 -->
+      <div class="col-lg-6 course-col">
+        <div class="course-center course-info">
+          <div class="class-code">
+            <div class="code-top"><p class="code-title">클래스 코드</p></div>
+            <div class="code-bottom"><h2 class="code-characters">A37M</h2></div>
+          </div>
+          <% if (req.session.me) { %>
+          <h1>Yes!</h1>
+          <% } else { %>
+          <h1>No!</h1>
+          <% } %>            
+          <h3>#courseName</h3>
+          <h4><span>#profName</span> | <span>#institutionName</span> | 학생 수: <span>#studentName</span></h4>
+        </div>
+        <div class="container-fluid course-buttons">
+          <div class="row">
+            <div class="col-xs-4 clicker-button">
+              <img class="button-image" src="images/ic_clicker.png">
+              <h4 class="button-name">설문하기</h4>
+            </div>
+            <div class="col-xs-4 attendance-button">
+              <img class="button-image" src="images/ic_attendance.png"> 
+              <h4 class="button-name">출석체크</h4>
+            </div>
+            <div class="col-xs-4 notice-button">
+              <img class="button-image" src="images/ic_notice.png"> 
+              <h4 class="button-name">공지하기</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-center course-post" data-toggle="modal" data-target="#myModal1">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-3 post-left">
+                <img class="post-logo" src="images/ic_clicker.png">
+              </div>
+              <div class="col-xs-9">
+                <div class="post-info">
+                  <p class="post-name">#postName</p>
+                  <p class="post-content">#postContent</p>
+                </div>                  
+                <p class="post-date">#date</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Right -->
+      <div class="col-lg-3 course-col">
+        <div class="course-right bttd">
+          <h5>© 2014 Bttendance Inc. <a href="">공식 블로그</a> <a href="">페이스북 페이지</a> <a href="">Github</a> <a href="">이용 약관</a> <a href="">개인정보 처리방침</a> <a href="">...</a></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Contents End -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          Modal 1
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#myModal2">Go to modal 2</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          hahahahahahahaha
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Javascript -->
+</body>

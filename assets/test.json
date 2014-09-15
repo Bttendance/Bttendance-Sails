@@ -1,0 +1,12 @@
+{
+	full_name: 'HeeHwan Park',
+	email: 'heehwan.park@gmail.com',
+	courses: [{
+		name: 'Introduction to Programming',
+		description: 'Welcome to the Hell'
+	},
+	{
+		name: 'General Biology',
+		description: 'You cannot escape from us'
+	}]
+}

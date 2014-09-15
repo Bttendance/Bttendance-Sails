@@ -1,0 +1,223 @@
+body {
+	padding-top: 50px;
+}
+h1, h2, h3, h4, h5, h6, p {
+	font-family: "Helvetica Neue", "malgun gothic", "dotum", "Arial", "sans-serif";
+	line-height: 1.3em;
+}
+.main-background {
+	width: 100%;
+	height: 500px;
+	padding: 0;
+}
+.slide-page {
+	position: absolute;
+	width: 100%;
+	height: 500px;
+}
+.item {
+	height: 500px;
+}
+.back-img {
+	width: 100%;
+}
+.main-icons {
+	width: 200px;
+}
+.main-text {
+	margin: 10px 0;
+}
+.main-name, .main-copy {
+	font-weight: bold;
+	color: #F1F1FF;
+}
+.main-name {
+	font-size: 40px;
+}
+.main-copy {
+	font-size: 25px;
+}
+.main-signin {
+	margin: 150px 0;
+}
+.form-control {
+	margin-bottom: 5px;
+}
+.form-link {
+	font-size: 14px;
+	color: #0072B0;
+}
+.form-checkbox {
+	padding-bottom: 10px;
+}
+.form-linktext {
+	padding: 5px 0;
+	font-size: 13px;
+	vertical-align: middle;
+	text-align: center;
+}
+.line {
+	width: 80%;
+	height: 2px;
+	background: #E9E9F7;
+	margin: 0 auto;
+}
+.explain-row {
+	margin: 20px 0;
+}
+.explain-title {
+	margin: 50px 0;
+	text-align: center;
+}
+.explain-description {
+	margin: 50px 0;
+	text-indent: 10px;
+}
+.download-links {
+	text-align: center;
+}
+.download-button {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.footy {
+	margin-top: 50px;
+	background: #191927;
+	padding-top: 50px;
+	color: #6D6D7B;
+}
+.form-sign {
+	background: #E9E9F7;
+	width: 300px;
+	padding: 10px;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 10px;
+}
+.sign-title {
+	font-weight: bold;
+	color: #191927;
+	margin-top: 100px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.sign-bground {
+
+}
+.fail-alarm {
+	color: #C1272D;
+}
+.course-bground {
+	background: #6D6D7B;
+	background-image: url('../images/students-2.jpg');
+	background-size: cover;
+}
+.course-contents {
+	margin-top: 10px;
+}
+.course-col {
+	padding: 0 5px;
+}
+.course-left, .course-center, .course-right {
+	padding: 10px;
+	background: #F1F1FF;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+.user-profile {
+	height: 150px;
+	text-align: center;
+}
+.lectures-course {
+	background: #E9E9F7;
+}
+.lectures-course-name {
+	color: #33B5E5;
+}
+.course-info {
+	text-align: center;
+}
+.course-buttons {
+	margin-bottom: 10px;
+}
+.course-post {
+
+}
+.bttd {
+
+}
+.clicker-button, .attendance-button, .notice-button {
+	background: #F1F1FF;;
+	width: 185px;
+	border-radius: 5px;
+}
+.clicker-button {
+	margin-right: 5px;
+}
+.attendance-button {
+	margin: 0 5px;
+}
+.notice-button {
+	margin-left: 5px;
+}
+.button-image {
+	width: 50px;	
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 52.5px;
+	margin-right: 52.5px;
+}
+.button-name {
+	margin-top: 0px;
+	color: #0072B0;
+	text-align: center;
+}
+.lectures-title {
+	margin-top: 0px;
+}
+.class-code {
+	width: 100px;
+	margin: 0 auto;
+	text-align: center;
+}
+.code-top {
+	background: #0072B0;
+	border-radius: 5px 5px 0 0;	
+}
+.code-title {
+	color: #F1F1FF;
+	padding: 5px 0;
+}
+.code-bottom {
+	background: #E9E9F7;	
+	border-radius: 0 0 5px 5px;
+}
+.code-characters {
+	color: #0072B0;
+	padding: 5px 0;
+}
+.code-title, .code-characters {	
+	margin: 0px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.post-left {
+	text-align: center;
+}
+.post-logo {
+
+}
+.post-name {
+	font-weight: bold;
+}
+.post-date {
+	position: absolute;
+	right: 10px;
+}
+.post-info {
+	margin-top: 10px;
+}
+.sign-text {
+	text-align: center;
+}
