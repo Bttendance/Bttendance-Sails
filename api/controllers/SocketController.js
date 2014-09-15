@@ -15,12 +15,12 @@ module.exports = {
 			return res.badRequest();
 
 		// For Beta
-    Clickers.unwatch(req.socket);
-    Attendances.unwatch(req.socket);
-    Notices.unwatch(req.socket);
-    Posts.unwatch(req.socket);
+    Clicker.unwatch(req.socket);
+    Attendance.unwatch(req.socket);
+    Notice.unwatch(req.socket);
+    Post.unwatch(req.socket);
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {

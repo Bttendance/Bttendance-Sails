@@ -1,5 +1,5 @@
 /**
- * Identifications.js
+ * Identification.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs		:: http://sailsjs.org/#!documentation/models
@@ -10,26 +10,29 @@ module.exports = {
 	attributes: {
 
 		identity: {
-			type: 'string'
+			type: 'string',
+      required: true
 		},
 
 		owner: {
-			model: 'Users'
+			model: 'User'
 		},
 
 		school: {
-			model: 'Schools'
+			model: 'School',
+      required: true
 		},
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.owner;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;

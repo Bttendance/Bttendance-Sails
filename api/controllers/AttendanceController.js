@@ -1,5 +1,5 @@
 /**
- * AttendancesController.js 
+ * AttendanceController.js 
  *
  * @description ::
  * @docs        :: http://sailsjs.org/#!documentation/controllers
@@ -16,26 +16,26 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var course_ids = req.param('course_ids');
 
-		Courses
+		Course
 		.findById(course_ids)
 		.populate('posts')
 		.exec(function callback(err, courses) {
 			if (err || !courses)
     		return res.send(new Array());
 
-			var postsWithAttendances = new Array();
+			var postsWithAttendance = new Array();
 			var now = Moment();
     	for (var i = 0; i < courses.length; i++) {
     		for (var j = 0; j < courses[i].posts.length; j++) {
     			var createdAt = Moment(courses[i].posts[j].createdAt);
     			var diff = now.diff(createdAt);
     			if (diff < 65 * 1000 && courses[i].posts[j].type == 'attendance')
-    				postsWithAttendances.push(courses[i].posts[j].id);
+    				postsWithAttendance.push(courses[i].posts[j].id);
     		}
     	}
 
-    	Posts
-    	.findById(postsWithAttendances)
+    	Post
+    	.findById(postsWithAttendance)
 			.populate('attendance')
     	.exec(function callback(err, posts) {
     		if (err || !posts)
@@ -57,13 +57,13 @@ module.exports = {
 		var attendance_id = req.param('attendance_id');
 		var uuid = req.param('uuid');
 
-		Devices 
+		Device 
 		.findOneByUuid(uuid)
 		.exec(function callback(err, device) {
 			if (err || !device)
   			return res.send(500, Error.log(req, "Bttendance Error", "Wrong device."));
 
-    	Users
+    	User
     	.findOneById(device.owner)
 			.populate('supervising_courses')
 			.populate('attending_courses')
@@ -71,7 +71,7 @@ module.exports = {
 				if (err || !user_uuid)
 	  			return res.send(500, Error.log(req, "Bttendance Error", "Fail to find user."));
 
-				Users
+				User
 				.findOne({
 				  or : [
 				    { email: email },
@@ -87,7 +87,7 @@ module.exports = {
 	    		if (user_uuid.id == user_api.id)
 		  			return res.send(400, Error.log(req, "Bttendance Error", "User has found his own device somehow."));
 
-		    	Attendances
+		    	Attendance
 		    	.findOneById(attendance_id)
 		    	.populate('post')
 		    	.exec(function callback(err, attendance) {
@@ -231,13 +231,13 @@ module.exports = {
 												noti = false;
 
 										if (noti) {
-											Users
+											User
 											.findOneById(notiable[m])
 											.populate('device')
 											.populate('setting')
 											.exec(function callback(err, user) {
 												if (user && user.setting && user.setting.attendance) {
-													Courses
+													Course
 													.findOneById(attendance.post.course)
 													.exec(function callback(err, course) {
 														if (course)
@@ -275,14 +275,14 @@ module.exports = {
 		var user_id = req.param('user_id');
 		var attendance_id = req.param('attendance_id');
 
-		Users
+		User
 		.findOneById(user_id)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
   			return res.send(500, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
 
-  		Attendances
+  		Attendance
   		.findOneById(attendance_id)
   		.populateAll()
   		.exec(function callback(err, attendance) {
@@ -316,7 +316,7 @@ module.exports = {
 						if (err)
 			  			return res.send(500, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
 
-						Posts
+						Post
 						.findOneById(attendance.post.id)
 						.populateAll()
 						.exec(function callback(err, post) {
@@ -338,14 +338,14 @@ module.exports = {
 		var user_id = req.param('user_id');
 		var attendance_id = req.param('attendance_id');
 
-		Users
+		User
 		.findOneById(user_id)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
   			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Student doesn't exist."));
 
-  		Attendances
+  		Attendance
   		.findOneById(attendance_id)
   		.populateAll()
   		.exec(function callback(err, attendance) {
@@ -379,7 +379,7 @@ module.exports = {
 						if (err)
 			  			return res.send(500, Error.alert(req, "Manual Un-Check Error", "Updating attendance record has been failed."));
 
-						Posts
+						Post
 						.findOneById(attendance.post.id)
 						.populateAll()
 						.exec(function callback(err, post) {
@@ -402,14 +402,14 @@ module.exports = {
 		var user_id = req.param('user_id');
 		var attendance_id = req.param('attendance_id');
 
-		Users
+		User
 		.findOneById(user_id)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
   			return res.send(500, Error.alert(req, "Manual Check Error", "Student doesn't exist."));
 
-  		Attendances
+  		Attendance
   		.findOneById(attendance_id)
   		.populateAll()
   		.exec(function callback(err, attendance) {
@@ -452,7 +452,7 @@ module.exports = {
 					if (err)
 		  			return res.send(500, Error.alert(req, "Manual Check Error", "Updating attendance record has been failed."));
 
-					Posts
+					Post
 					.findOneById(attendance.post.id)
 					.populateAll()
 					.exec(function callback(err, post) {

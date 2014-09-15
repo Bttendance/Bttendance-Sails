@@ -59,8 +59,6 @@ module.exports.session = {
   // pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',
   // prefix: 'sess:'
 
-
-
   /***************************************************************************
   *                                                                          *
   * Uncomment the following lines to use your Mongo adapter as a session     *

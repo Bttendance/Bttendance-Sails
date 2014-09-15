@@ -1,5 +1,5 @@
 /**
-* Settings.js
+* Setting.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,38 +9,64 @@ module.exports = {
 
   attributes: {
 
-    attendance: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
-    },
-
-    clicker: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
-    },
-
-    notice: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
-    },
-
     // One to One
     owner: {
-    	model: 'Users'
+      model: 'User'
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    attendanceNoti: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
+    clickerNoti: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
+    noticeNoti: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
+    locale: {
+      type: 'string',
+      required: true,
+      defaultsTo: 'en'
+    },
+
+    clickerProgressTime: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 90
+    },
+
+    clickerDetailPrivacy: {
+      type: 'string',
+      enum: ['all', 'professor', 'none'],
+      required: true,
+      defaultsTo: 'professor'
+    },
+
+    clickerShowInfoOnSelect: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.owner;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;

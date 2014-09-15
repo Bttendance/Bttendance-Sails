@@ -27,7 +27,7 @@ module.exports = function supervising (req, res, next) {
 	if (!password)
 		return res.send(400, Error.alert(req, "Supervising Policy Error", "Password is required."));
 
-	Users
+	User
 	.findOne({
 	  or : [
 	    { email: email },
@@ -56,7 +56,7 @@ module.exports = function supervising (req, res, next) {
 		// Found User
 	  } else if (post_id) {
 
-	  	Posts
+	  	Post
 	  	.findOneById(post_id)
 	  	.exec(function callback(err, post) {
 

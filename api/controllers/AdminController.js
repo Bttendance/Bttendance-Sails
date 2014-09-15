@@ -24,7 +24,7 @@ module.exports = {
 
 		if (model == 'users') {
 			if (id == 'all')
-				Users
+				User
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -40,7 +40,7 @@ module.exports = {
 					}
 				});
 			else 
-				Users
+				User
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, user) {
@@ -54,7 +54,7 @@ module.exports = {
 				});
 		} else if (model == 'schools') {
 			if (id == 'all')
-				Schools
+				School
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -70,7 +70,7 @@ module.exports = {
 					}
 				});
 			else 
-				Schools
+				School
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, school) {
@@ -84,7 +84,7 @@ module.exports = {
 				});
 		} else if (model == 'courses') {
 			if (id == 'all')
-				Courses
+				Course
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -100,7 +100,7 @@ module.exports = {
 					}
 				});
 			else 
-				Courses
+				Course
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, course) {
@@ -114,7 +114,7 @@ module.exports = {
 				});
 		} else if (model == 'posts') {
 			if (id == 'all')
-				Posts
+				Post
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -130,7 +130,7 @@ module.exports = {
 					}
 				});
 			else 
-				Posts
+				Post
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, post) {
@@ -144,7 +144,7 @@ module.exports = {
 				});
 		} else if (model == 'devices') {
 			if (id == 'all')
-				Devices
+				Device
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -160,7 +160,7 @@ module.exports = {
 					}
 				});
 			else 
-				Devices
+				Device
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, device) {
@@ -174,7 +174,7 @@ module.exports = {
 				});
 		} else if (model == 'settings') {
 			if (id == 'all')
-				Settings
+				Setting
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -190,7 +190,7 @@ module.exports = {
 					}
 				});
 			else 
-				Settings
+				Setting
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, setting) {
@@ -204,7 +204,7 @@ module.exports = {
 				});
 		} else if (model == 'identifications') {
 			if (id == 'all')
-				Identifications
+				Identification
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -220,7 +220,7 @@ module.exports = {
 					}
 				});
 			else 
-				Identifications
+				Identification
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, identification) {
@@ -264,7 +264,7 @@ module.exports = {
 				});
 		} else if (model == 'attendances') {
 			if (id == 'all')
-				Attendances
+				Attendance
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -280,7 +280,7 @@ module.exports = {
 					}
 				});
 			else 
-				Attendances
+				Attendance
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, attendance) {
@@ -294,7 +294,7 @@ module.exports = {
 				});
 		} else if (model == 'clickers') {
 			if (id == 'all')
-				Clickers
+				Clicker
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -310,7 +310,7 @@ module.exports = {
 					}
 				});
 			else 
-				Clickers
+				Clicker
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, clicker) {
@@ -324,7 +324,7 @@ module.exports = {
 				});
 		} else if (model == 'notices') {
 			if (id == 'all')
-				Notices
+				Notice
 				.find()
 				.populateAll()
 				.sort('id DESC')
@@ -340,7 +340,7 @@ module.exports = {
 					}
 				});
 			else 
-				Notices
+				Notice
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, notice) {
@@ -371,7 +371,7 @@ module.exports = {
 		if (!type)
 			type = 'all';
 		
-		Users
+		User
 		.find()
 		.sort('id DESC')
 		.populate('supervising_courses')
@@ -415,7 +415,7 @@ module.exports = {
 	},
 
 	noti: function(req, res) {
-		Users
+		User
 		.findOneByUsername('galaxys2')
 		.populateAll()
 		.exec(function callback(err, user) {

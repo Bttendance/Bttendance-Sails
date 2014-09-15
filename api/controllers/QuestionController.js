@@ -14,7 +14,7 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populate('questions')
 		.exec(function callback(err, user) {
@@ -43,7 +43,7 @@ module.exports = {
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -100,7 +100,7 @@ module.exports = {
 		var email = req.param('email');
 		var question_id = req.param('question_id');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populate('questions')
 		.exec(function callback(err, user) {

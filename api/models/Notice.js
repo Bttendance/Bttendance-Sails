@@ -1,5 +1,5 @@
 /**
-* Notices.js
+* Notice.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,22 +9,25 @@ module.exports = {
 
   attributes: {
 
-		seen_students: {
-			type: 'json'
+		seenStudents: {
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
 		post: {
-			model: 'Posts'
+			model: 'Post'
 		},
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
@@ -33,30 +36,9 @@ module.exports = {
     }
   },
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    values.seen_students = new Array();
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
   afterUpdate: function(values, next) {
     
-    Notices
+    Notice
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, notice) {
@@ -64,14 +46,6 @@ module.exports = {
         sails.sockets.broadcast('Course#' + notice.post.course, 'notice', notice.toWholeObject());
     });
 
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
     next();
   }
 };

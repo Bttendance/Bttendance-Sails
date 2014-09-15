@@ -47,7 +47,7 @@ module.exports = function isUser (req, res, next) {
 		|| email == "apple9@apple.com")
 		return next();
 
-	Users
+	User
 	.findOne({
 	  or : [
 	    { email: email },

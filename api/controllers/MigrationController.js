@@ -6,34 +6,11 @@
  */
 
 // For Develop (Drop all table and add new)
+// heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a190.dump' --app bttendance-dev
 // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
-// DROP TABLE attendances, clickers, courses, courses_managers__users_supervising_courses, courses_students__users_attending_courses, devices, identifications, notices, posts, questions, schools, schools_professors__users_employed_schools, schools_students__users_enrolled_schools, settings, tokens, users;
-// heroku pgbackups:restore HEROKU_POSTGRESQL_MAROON 'https://s3-ap-northeast-1.amazonaws.com/herokubackup/a156.dump' --app bttendance-dev
-
-// For Production
-// heroku maintenance:on
-// heroku ps:scale worker=0
-
-/**** Do work ****/
-
-// heroku ps:scale worker=1
-// heroku maintenance:off
-
-// 1.
-// DROP TABLE "user", course, school, post, serial, serials, serials_owners__users_serials;
-// ALTER TABLE courses DROP COLUMN number CASCADE; ALTER TABLE courses DROP COLUMN students_count CASCADE; ALTER TABLE courses DROP COLUMN "attdCheckedAt" CASCADE; ALTER TABLE courses DROP COLUMN clicker_usage CASCADE; ALTER TABLE courses DROP COLUMN notice_usage CASCADE; ALTER TABLE schools DROP COLUMN logo_image CASCADE; ALTER TABLE schools DROP COLUMN website CASCADE; ALTER TABLE users DROP COLUMN username_lower CASCADE; ALTER TABLE users DROP COLUMN profile_image CASCADE;
-
-// 2.
-// comment out courses.code unique & models migrate.safe
-// sails lift
-// uncomment courses.code unique & models migrate.safe
-
-// 3.
-// sails lift
-// call api for migration
-
-// 4.
-// ALTER TABLE courses ADD CONSTRAINT courses_code_key UNIQUE (code);
+// ALTER TABLE attendances RENAME TO attendance; ALTER TABLE clickers RENAME TO clicker; ALTER TABLE courses RENAME TO course; ALTER TABLE devices RENAME TO device; ALTER TABLE identifications RENAME TO identification; ALTER TABLE notices RENAME TO notice; ALTER TABLE posts RENAME TO post; ALTER TABLE questions RENAME TO question; ALTER TABLE schools RENAME TO school; ALTER TABLE settings RENAME TO setting; ALTER TABLE users RENAME TO "user";
+// ALTER TABLE courses_managers__users_supervising_courses RENAME TO course_managers__user_supervising_courses; ALTER TABLE courses_students__users_attending_courses RENAME TO course_students__user_attending_courses; ALTER TABLE schools_professors__users_employed_schools RENAME TO school_professors__user_employed_schools; ALTER TABLE schools_students__users_enrolled_schools RENAME TO school_students__user_enrolled_schools;
+// DROP TABLE tokens;
 
 var Random = require('../utils/random');
 var Arrays = require('../utils/arrays');
@@ -43,7 +20,7 @@ module.exports = {
 	migrate: function(req, res) {
 
 		//create Notice
-		Posts
+		Post
 		.find()
 		.populate('attendance')
 		.sort('id ASC')
@@ -53,7 +30,7 @@ module.exports = {
 
 			async.eachSeries(posts, function (each_post, done) {
 				if (each_post.type == 'notice') {
-					Notices.create({
+					Notice.create({
 						post: each_post.id
 					}).exec(function callback(err, notice) {
 						if (err || !notice)
@@ -62,7 +39,7 @@ module.exports = {
 						if (each_post.course == null || !each_post.course || each_post.course == 'null')
 							done();
 						else {
-							Courses
+							Course
 							.findOneById(each_post.course)
 							.populate('students')
 							.exec(function callback(err, course) {
@@ -72,14 +49,14 @@ module.exports = {
 								notice.seen_students = Arrays.getIds(course.students);
 								notice.save();
 
-								Posts.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
+								Post.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
 										done();
 								});
 							});
 						}
 					});
 				} else if(each_post.type == 'attendance') {
-					Courses
+					Course
 					.findOneById(each_post.course)
 					.populate('managers')
 					.exec(function callback(err, course) {
@@ -110,7 +87,7 @@ module.exports = {
 					done();
 			}, function (err) {
 				if (err == null)
-					console.log('Create Notices && remove manager from attendance finished');
+					console.log('Create Notice && remove manager from attendance finished');
 				else
 					console.log(err);
 			});
@@ -120,18 +97,18 @@ module.exports = {
 	migrate1: function(req, res) {
 
 		//create Setting
-		Users.find().sort('id ASC').exec(function callback(err, users) {
+		User.find().sort('id ASC').exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
 			async.eachSeries(users, function (each_user, done) {
 				if (!each_user.setting) {
-					Settings.create({
+					Setting.create({
 						owner: each_user.id
 					}).exec(function callback(err, setting) {
 						if (err || !setting)
 							done(err);
-						Users.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
+						User.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
 								done();
 						});
 					});
@@ -149,7 +126,7 @@ module.exports = {
 	migrate2: function(req, res) {
 
 		//create type, late_students
-		Attendances
+		Attendance
 		.find()
 		.sort('id ASC')
 		.exec(function callback(err, attendances) {
@@ -164,7 +141,7 @@ module.exports = {
 		});
 
 		//user locale
-		Users.find().sort('id ASC').exec(function callback(err, users) {
+		User.find().sort('id ASC').exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
@@ -175,28 +152,28 @@ module.exports = {
 		});
 
 		//Update School Type
-		Schools.update({ name: 'BTTENDANCE' }, { type: 'institute' }).exec(function callback(err, school){});
-		Schools.update({ name: 'KAIST' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Yonsei University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Seoul National University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Korea University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Postech' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Hongik University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Harvard University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Stanford University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'MIT' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Gang Dong University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Seoul Science High School' }, { type: 'school' }).exec(function callback(err, school){});
-		Schools.update({ name: 'ROKAF_ATC' }, { type: 'etc' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Institute of Technical Education' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'BTTENDANCE' }, { type: 'institute' }).exec(function callback(err, school){});
+		School.update({ name: 'KAIST' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Yonsei University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Seoul National University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Korea University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Postech' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Hongik University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Harvard University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Stanford University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'MIT' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Gang Dong University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Seoul Science High School' }, { type: 'school' }).exec(function callback(err, school){});
+		School.update({ name: 'ROKAF_ATC' }, { type: 'etc' }).exec(function callback(err, school){});
+		School.update({ name: 'Institute of Technical Education' }, { type: 'university' }).exec(function callback(err, school){});
 
 		// Add Opened/Code for all Courses
-		Courses.find().sort('id ASC').exec(function callback(err, courses) {
+		Course.find().sort('id ASC').exec(function callback(err, courses) {
 			if (err || !courses)
 				return;
 
 			for ( index = 0; index < courses.length; index++) 
-				Courses.update({ id: courses[index].id }, { opened: false, code: Random.string(4) }).exec(function callback(err, course){});
+				Course.update({ id: courses[index].id }, { opened: false, code: Random.string(4) }).exec(function callback(err, course){});
 		});
 	}
 	

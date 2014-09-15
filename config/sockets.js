@@ -104,11 +104,10 @@ module.exports.sockets = {
   ***************************************************************************/
 
   adapter: 'redis',
-  host: process.env.REDIS_HOST || 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
-  port: process.env.REDIS_PORT || 15296,
-  db:   process.env.REDIS_DB   || 'redis-app23178340',
-  pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',
-
+  host: process.env.REDIS_HOST || 'pub-redis-19584.us-east-1-4.1.ec2.garantiadata.com',
+  port: process.env.REDIS_PORT || 19584,
+  db:   process.env.REDIS_DB   || 'redis-bttendance-model-change',
+  pass: process.env.REDIS_PASS || 'ViQtWlylHb2VcBwE',
 
   /***************************************************************************
   *                                                                          *

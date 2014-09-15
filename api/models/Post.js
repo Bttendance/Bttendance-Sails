@@ -1,5 +1,5 @@
 /**
- * Posts
+ * Post
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
@@ -17,36 +17,39 @@ module.exports = {
     },
 
   	message: {
-  		type: 'string'
+  		type: 'string',
+      required: true
   	},
 
     // One Way
     author: {
-    	model: 'Users'
+    	model: 'User',
+      required: true
     },
 
     // One to Many
     course: {
-    	model: 'Courses'
+    	model: 'Course'
     },
 
     // One to One
     attendance: {
-      model: 'Attendances'
+      model: 'Attendance'
     },
 
     // One to One
     clicker: {
-      model: 'Clickers'
+      model: 'Clicker'
     },
 
     // One to One
     notice: {
-      model: 'Notices'
+      model: 'Notice'
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.attendance;
@@ -55,7 +58,7 @@ module.exports = {
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
@@ -72,7 +75,7 @@ module.exports = {
       values.course = values.course_id;
 
     if (values.username) {
-      Users.findOne({
+      User.findOne({
         username: values.username
       }).done(function(err, user) {
         if (user)
@@ -97,7 +100,7 @@ module.exports = {
       prof.push(values.author);
       clusters.push(prof);
 
-      Attendances
+      Attendance
       .create({
         clusters: clusters,
         type: values.attendance_type
@@ -110,7 +113,7 @@ module.exports = {
         }
       });
     } else if (values.type == 'clicker') {
-      Clickers
+      Clicker
       .create({
         choice_count: Number(values.choice_count)
       }).exec(function callback(err, clicker) {
@@ -122,7 +125,7 @@ module.exports = {
         }
       });
     } else if (values.type == 'notice') {
-      Notices
+      Notice
       .create({
       }).exec(function callback(err, notice) {
         if (err || !notice)
@@ -138,7 +141,7 @@ module.exports = {
 
   afterCreate: function(values, next) {
     if (values.type == 'attendance') {
-      Attendances
+      Attendance
       .update({id: values.attendance}, {post: values.id})
       .exec(function callback(err, attendance) {
         if (err || !attendance)
@@ -147,7 +150,7 @@ module.exports = {
           next();
       });
     } else if (values.type == 'clicker') {
-      Clickers
+      Clicker
       .update({id: values.clicker}, {post: values.id})
       .exec(function callback(err, clicker) {
         if (err || !clicker)
@@ -156,7 +159,7 @@ module.exports = {
           next();
       });
     } else if (values.type == 'notice') {
-      Notices
+      Notice
       .update({id: values.notice}, {post: values.id})
       .exec(function callback(err, notice) {
         if (err || !notice)
@@ -174,7 +177,7 @@ module.exports = {
 
   afterUpdate: function(values, next) {
     
-    Posts
+    Post
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, post) {
