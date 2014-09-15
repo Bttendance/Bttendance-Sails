@@ -29,7 +29,7 @@ module.exports = {
       required: true
     },
 
-    full_name: {
+    fullName: {
       type: 'string',
       required: true
     },
@@ -47,28 +47,28 @@ module.exports = {
     },
 
     // Many to Many
-    supervising_courses: {
+    supervisingCourses: {
     	collection: 'Course',
     	via: 'managers',
     	dominant: true
     },
 
     // Many to Many
-    attending_courses: {
+    attendingCourses: {
     	collection: 'Course',
     	via: 'students',
     	dominant: true
     },
 
     // Many to Many
-    employed_schools: {
+    employedSchools: {
       collection: 'School',
       via: 'professors',
       dominant: true
     },
 
     // Many to Many
-    enrolled_schools: {
+    enrolledSchools: {
       collection: 'School',
       via: 'students',
       dominant: true
@@ -86,55 +86,47 @@ module.exports = {
       via: 'owner'
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.password;
-      delete obj.locale;
       delete obj.device;
       delete obj.setting;
-      delete obj.supervising_courses;
-      delete obj.attending_courses;
-      delete obj.employed_schools;
-      delete obj.enrolled_schools;
+      delete obj.supervisingCourses;
+      delete obj.attendingCourses;
+      delete obj.employedSchools;
+      delete obj.enrolledSchools;
       delete obj.identifications;
       delete obj.questions;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.password = this.password;
-      obj.locale = this.locale;
       obj.device = this.device;
       obj.setting = this.setting;
-      obj.supervising_courses = this.supervising_courses;
-      obj.attending_courses = this.attending_courses;
-      obj.employed_schools = this.employed_schools;
-      obj.enrolled_schools = this.enrolled_schools;
-      obj.identifications = this.identifications;
-      obj.questions_count = this.questions.length;
+      obj.supervisingCourses = this.supervisingCourses;
+      obj.attendingCourses = this.attendingCourses;
+      obj.employedSchools = this.employedSchools;
+      obj.enrolledSchools = this.enrolledSchools;
+      obj.identifications = new Array();
+      for (var i = 0; i < this.identifications.length; i++)
+        obj.identifications.push(this.identifications[i].toSimpleJSON());
+      obj.questionsCount = this.questions.length;
       return obj;
     }
     
   },
 
-  beforeValidate: function(values, next) {
-    if (values.email)
-      values.email = values.email.toLowerCase();
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
   beforeCreate: function(values, next) {
     values.password = PasswordHash.generate(values.password);
+    values.email = values.email.toLowerCase();
     Settings
     .create({})
     .exec(function callback(err, setting) {
@@ -156,6 +148,6 @@ module.exports = {
       else
         next();
     });
-  },
+  }
 
 };

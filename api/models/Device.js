@@ -15,16 +15,15 @@ module.exports = {
       model: 'User'
     },
 
-    //iOS, Android, MIUI, etc
     os: {
       type: 'string',
+      enum: ['iOS', 'Android', 'MIUI'],
       required: true
     },
 
     // uuid for iphone, Pseudo-Unique ID for android
-    unique_id: {
+    uniqueID: {
       type: 'string',
-      required: true,
       unique: true
     },
 
@@ -36,15 +35,15 @@ module.exports = {
     },
 
     // bluetooth mac address
-    bluetooth_mac_address: {
+    bluetoothMacAddress: {
       type: 'string'
     },
 
-    notification_key: {
+    notificationKey: {
       type: 'string'
     },
 
-    for_bttendance: {
+    forBttendance: {
       type: 'boolean',
       required: true,
       defaultsTo: true
@@ -52,45 +51,37 @@ module.exports = {
 
     ownerChangedAt: {
       type: 'date',
-      required: true
+      required: true,
+      defaultsTo: function() {return new Date();}
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.mac_address;
+      delete obj.bluetoothMacAddress;
       delete obj.owner;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.mac_address = this.mac_address;
+      obj.bluetoothMacAddress = this.bluetoothMacAddress;
       obj.owner = this.owner;
       return obj;
     }
     
   },
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
   beforeCreate: function(values, next) {
-    if (values.type == 'android')
-      values.mac_address = values.uuid;
-    next();
-  },
-
-  afterCreate: function(values, next) {
+    if (values.type == 'iOS')
+      values.uniqueID = values.uuid;
+    if (values.type == 'Android')
+      values.bluetoothMacAddress = values.uuid;
     next();
   }
 

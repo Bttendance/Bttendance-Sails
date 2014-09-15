@@ -19,7 +19,7 @@ module.exports = {
 			required: true
 		},
 
-		choice_count: {
+		choiceCount: {
 			type: 'integer',
       required: true,
       defaultsTo: 4,
@@ -27,30 +27,32 @@ module.exports = {
       max: 5
 		},
 
-    progress_time: {  // sec
+    progressTime: {  // sec
       type: 'integer',
       required: true
     },
 
-    detail_privacy: { //all, professor, none
+    detailPrivacy: {
       type: 'string',
+      enum: ['all', 'professor', 'none'],
       required: true
     },
 
-    show_info_on_select: {
+    showInfoOnSelect: {
       type: 'boolean',
       required: true
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.owner;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;

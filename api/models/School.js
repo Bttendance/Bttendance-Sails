@@ -40,8 +40,9 @@ module.exports = {
     	via: 'enrolled_schools'
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.courses;
@@ -50,14 +51,14 @@ module.exports = {
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.courses_count = this.courses.length;
-      obj.professors_count = this.professors.length;
-      obj.students_count = this.students.length;
+      obj.coursesCount = this.courses.length;
+      obj.professorsCount = this.professors.length;
+      obj.studentsCount = this.students.length;
       return obj;
     } 
   }

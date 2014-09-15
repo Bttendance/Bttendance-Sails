@@ -12,29 +12,33 @@ module.exports = {
     // auto, manual
     type: {
       type: 'string',
+      enum: ['auto', 'manual'],
       required: true
     },
 
-    checked_students: {
-      type: 'json',
-      required: true
+    checkedStudents: {
+      type: 'array',
+      required: true,
+      defaultsTo: new Array()
     },
 
-    late_students: {
-      type: 'json',
-      required: true
+    lateStudents: {
+      type: 'array',
+      required: true,
+      defaultsTo: new Array()
     },
 
 		clusters: {
-			type: 'json',
-      required: true
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
 		post: {
 			model: 'Post'
 		},
 
-    toJSON: function() {
+    toSimpleJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
@@ -42,41 +46,14 @@ module.exports = {
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.clusters = this.clusters;
+      if (this.post)
+        obj.post = this.post.toSimpleJSON();
       return obj;
     }
 	},
-
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    if (!values.checked_students)
-      values.checked_students = new Array();
-    if (!values.late_students)
-      values.late_students = new Array();
-    if (!values.clusters)
-      values.clusters = new Array();
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
 
   afterUpdate: function(values, next) {
     
@@ -88,14 +65,6 @@ module.exports = {
         sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
     });
     
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
     next();
   }
 

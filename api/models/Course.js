@@ -15,7 +15,7 @@ module.exports = {
       required: true
     },
 
-    professor_name: {
+    professorName: {
       type: 'string',
       required: true
     },
@@ -29,13 +29,13 @@ module.exports = {
     // Many to Many
     managers: {
     	collection: 'User',
-    	via: 'supervising_courses'
+    	via: 'supervisingCourses'
     },
     
     // Many to Many
     students: {
     	collection: 'User',
-    	via: 'attending_courses'
+    	via: 'attendingCourses'
     },
 
     // One to Many
@@ -56,8 +56,9 @@ module.exports = {
       defaultsTo: true
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.managers;
@@ -66,7 +67,7 @@ module.exports = {
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
@@ -78,38 +79,6 @@ module.exports = {
       return obj;
     }
     
-  },
-
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
-  afterUpdate: function(values, next) {
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
   }
 
 };

@@ -14,19 +14,19 @@ module.exports = {
       model: 'User'
     },
 
-    attendance: {
+    attendanceNoti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    clicker: {
+    clickerNoti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    notice: {
+    noticeNoti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
@@ -38,33 +38,35 @@ module.exports = {
       defaultsTo: 'en'
     },
 
-    clicker_progress_time: {
+    clickerProgressTime: {
       type: 'integer',
       required: true,
       defaultsTo: 90
     },
 
-    clicker_detail_privacy: {
+    clickerDetailPrivacy: {
       type: 'string',
+      enum: ['all', 'professor', 'none'],
       required: true,
       defaultsTo: 'professor'
     },
 
-    clicker_show_info_on_select: {
+    clickerShowInfoOnSelect: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.owner;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;

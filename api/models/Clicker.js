@@ -9,63 +9,73 @@ module.exports = {
 
 	attributes: {
 
-		a_students: {
-			type: 'json',
-      required: true
+		aChosenStudents: {
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
-		b_students: {
-			type: 'json',
-      required: true
+		bChosenStudents: {
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
-		c_students: {
-			type: 'json',
-      required: true
+		cChosenStudents: {
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
-		d_students: {
-			type: 'json',
-      required: true
+		dChosenStudents: {
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
-		e_students: {
-			type: 'json',
-      required: true
+		eChosenStudents: {
+			type: 'array',
+      required: true,
+      defaultsTo: new Array()
 		},
 
 		post: {
 			model: 'Post'
 		},
 
-    choice_count: {
+    choiceCount: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 4,
+      min: 2,
+      max: 5
+    },
+
+    progressTime: {
       type: 'integer',
       required: true
     },
 
-    progress_time: {  // sec
-      type: 'integer',
-      required: true
-    },
-
-    detail_privacy: { //all, professor, none
+    detailPrivacy: {
       type: 'string',
-      required: true
+      enum: ['all', 'professor', 'none'],
+      required: true 
     },
 
-    show_info_on_select: {
+    showInfoOnSelect: {
       type: 'boolean',
       required: true
     },
 
-    toJSON: function() {
-      var obj = this.toObject();
+    toSimpleJSON: function() {
+      var json = JSON.stringify(this);
+      var obj = JSON.parse(json);
       delete obj.createdAt;
       delete obj.updatedAt;
       return obj;
     },
 
-    toWholeObject: function() {
+    toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
@@ -73,31 +83,6 @@ module.exports = {
       return obj;
     }
 	},
-
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    values.a_students = new Array();
-    values.b_students = new Array();
-    values.c_students = new Array();
-    values.d_students = new Array();
-    values.e_students = new Array();
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
 
   afterUpdate: function(values, next) {
     
@@ -111,14 +96,6 @@ module.exports = {
       }
     });
 
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
     next();
   }
 };
