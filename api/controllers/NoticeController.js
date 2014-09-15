@@ -1,5 +1,5 @@
 /**
- * NoticesController
+ * NoticeController
  *
  * @description :: Server-side logic for managing notices
  * @help        :: See http://links.sailsjs.org/docs/controllers
@@ -15,13 +15,13 @@ module.exports = {
 		var email = req.param('email');
 		var notice_id = req.param('notice_id');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.exec(function callback(err, user) {
 			if (err || !user)
   			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find user."));
 
-			Notices
+			Notice
 			.findOneById(notice_id)
 			.populateAll()
 			.exec(function callback(err, notice) {

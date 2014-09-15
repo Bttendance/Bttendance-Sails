@@ -111,14 +111,14 @@ module.exports.connections = {
   *                                                                          *
   *                                                                          *
   ***************************************************************************/
-  // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
+  // psql "dbname=db7ttqi4se36vg host=ec2-54-83-43-49.compute-1.amazonaws.com user=dvdygiyqqnldrr password=BDh-fCMXcP-4JzdjKm1tSLCHuG port=5432 sslmode=require"
   postgresDevelopment: {
     module   : 'sails-postgresql',
-    host     : 'ec2-54-204-42-178.compute-1.amazonaws.com',
+    host     : 'ec2-54-83-43-49.compute-1.amazonaws.com',
     port     : 5432,
-    user     : 'neqpefgtcbgyym',
-    password : 'ub0oR3o9VsAbGsuiYarNsx4yqw',
-    database : 'd9vocafm0kncoe',
+    user     : 'dvdygiyqqnldrr',
+    password : 'BDh-fCMXcP-4JzdjKm1tSLCHuG',
+    database : 'db7ttqi4se36vg',
     ssl      : true
   },
 
@@ -159,13 +159,13 @@ module.exports.connections = {
     }
   },
 
-  // redis-cli -h pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com -p 15296 -a sZ17PA571loLwYNt
+  // redis-cli -h pub-redis-19584.us-east-1-4.1.ec2.garantiadata.com -p 19584 -a ViQtWlylHb2VcBwE
   redisDevelopment: {
     module   : 'sails-redis',
-    host     : 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
-    port     : 15296,
+    host     : 'pub-redis-19584.us-east-1-4.1.ec2.garantiadata.com',
+    port     : 19584,
     options: {
-      auth_pass: 'sZ17PA571loLwYNt',
+      auth_pass: 'ViQtWlylHb2VcBwE',
       parser: 'javascript',
       return_buffers: false,
       detect_buffers: false,

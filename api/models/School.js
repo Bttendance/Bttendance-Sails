@@ -1,5 +1,5 @@
 /**
- * Schools
+ * School
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
@@ -31,13 +31,13 @@ module.exports = {
     // Many to Many
     professors: {
     	collection: 'User',
-    	via: 'employed_schools'
+    	via: 'employedSchools'
     },
 
     // Many to Many
     students: {
     	collection: 'User',
-    	via: 'enrolled_schools'
+    	via: 'enrolledSchools'
     },
 
     toSimpleJSON: function() {

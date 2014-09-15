@@ -1,5 +1,5 @@
 /**
- * DevicesController
+ * DeviceController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -29,7 +29,7 @@ module.exports = {
 		if (!notification_key) 
 			return res.send(400, Error.log(req, "Notification Key Update Error", "Key is required."));
 
-		Users
+		User
 		.findOne({
 		  or : [
 		    { email: email },

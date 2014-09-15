@@ -86,13 +86,13 @@ module.exports = {
 
   afterUpdate: function(values, next) {
     
-    Clickers
+    Clicker
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, clicker) {
       if (clicker && clicker.post && clicker.post.course) {
         sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
-        Clickers.publishCreate(clicker.toWholeObject()); //For Beta
+        Clicker.publishCreate(clicker.toWholeObject()); //For Beta
       }
     });
 

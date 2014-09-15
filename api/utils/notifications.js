@@ -109,14 +109,14 @@ exports.send = function(user, title, message, type, course_id) {
 
 exports.resendAttedance = function(attendance_id) {
 
-	Attendances
+	Attendance
 	.findOneById(attendance_id)
 	.populate('post')
 	.exec(function callback(err, attendance) {
 		if (err || !attendance)
 			return;
 
-		Courses
+		Course
 		.findOneById(attendance.post.course)
   	.populate('students')
 		.exec(function callback(err, course) {
@@ -133,7 +133,7 @@ exports.resendAttedance = function(attendance_id) {
 					unchecked.splice(index, 1);
 			}
 
-  		Users
+  		User
   		.findById(unchecked)
   		.populate('device')
   		.populate('setting')
@@ -155,14 +155,14 @@ exports.resendAttedance = function(attendance_id) {
 
 exports.resendClicker = function(clicker_id) {
 
-	Clickers
+	Clicker
 	.findOneById(clicker_id)
 	.populate('post')
 	.exec(function callback(err, clicker) {
 		if (err || !clicker)
 			return;
 
-		Courses
+		Course
 		.findOneById(clicker.post.course)
   	.populate('students')
 		.exec(function callback(err, course) {
@@ -203,7 +203,7 @@ exports.resendClicker = function(clicker_id) {
 					unchecked.splice(index, 1);
 			}
 
-  		Users
+  		User
   		.findById(unchecked)
   		.populate('device')
   		.populate('setting')

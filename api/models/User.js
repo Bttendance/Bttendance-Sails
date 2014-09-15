@@ -1,5 +1,5 @@
 /**
- * Users
+ * User
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
@@ -127,7 +127,7 @@ module.exports = {
   beforeCreate: function(values, next) {
     values.password = PasswordHash.generate(values.password);
     values.email = values.email.toLowerCase();
-    Settings
+    Setting
     .create({})
     .exec(function callback(err, setting) {
       if (err || !setting)
@@ -140,7 +140,7 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
-    Settings
+    Setting
     .update({id: values.setting}, {owner: values.id})
     .exec(function callback(err, setting) {
       if (err || !setting)

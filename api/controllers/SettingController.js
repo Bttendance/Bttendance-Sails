@@ -1,5 +1,5 @@
 /**
- * SettingsController
+ * SettingController
  *
  * @description :: Server-side logic for managing settings
  * @help        :: See http://links.sailsjs.org/docs/controllers
@@ -14,7 +14,7 @@ module.exports = {
 		var email = req.param('email');
 		var attendance = req.param('attendance');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -39,7 +39,7 @@ module.exports = {
 		var email = req.param('email');
 		var clicker = req.param('clicker');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -64,7 +64,7 @@ module.exports = {
 		var email = req.param('email');
 		var notice = req.param('notice');
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {

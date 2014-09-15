@@ -20,7 +20,7 @@ module.exports = {
 	migrate: function(req, res) {
 
 		//create Notice
-		Posts
+		Post
 		.find()
 		.populate('attendance')
 		.sort('id ASC')
@@ -30,7 +30,7 @@ module.exports = {
 
 			async.eachSeries(posts, function (each_post, done) {
 				if (each_post.type == 'notice') {
-					Notices.create({
+					Notice.create({
 						post: each_post.id
 					}).exec(function callback(err, notice) {
 						if (err || !notice)
@@ -39,7 +39,7 @@ module.exports = {
 						if (each_post.course == null || !each_post.course || each_post.course == 'null')
 							done();
 						else {
-							Courses
+							Course
 							.findOneById(each_post.course)
 							.populate('students')
 							.exec(function callback(err, course) {
@@ -49,14 +49,14 @@ module.exports = {
 								notice.seen_students = Arrays.getIds(course.students);
 								notice.save();
 
-								Posts.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
+								Post.update({ id: notice.post }, { notice: notice.id }).exec(function callback(err, updated_device) {
 										done();
 								});
 							});
 						}
 					});
 				} else if(each_post.type == 'attendance') {
-					Courses
+					Course
 					.findOneById(each_post.course)
 					.populate('managers')
 					.exec(function callback(err, course) {
@@ -87,7 +87,7 @@ module.exports = {
 					done();
 			}, function (err) {
 				if (err == null)
-					console.log('Create Notices && remove manager from attendance finished');
+					console.log('Create Notice && remove manager from attendance finished');
 				else
 					console.log(err);
 			});
@@ -97,18 +97,18 @@ module.exports = {
 	migrate1: function(req, res) {
 
 		//create Setting
-		Users.find().sort('id ASC').exec(function callback(err, users) {
+		User.find().sort('id ASC').exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
 			async.eachSeries(users, function (each_user, done) {
 				if (!each_user.setting) {
-					Settings.create({
+					Setting.create({
 						owner: each_user.id
 					}).exec(function callback(err, setting) {
 						if (err || !setting)
 							done(err);
-						Users.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
+						User.update({ id: setting.owner }, { setting: setting.id }).exec(function callback(err, updated_user) {
 								done();
 						});
 					});
@@ -126,7 +126,7 @@ module.exports = {
 	migrate2: function(req, res) {
 
 		//create type, late_students
-		Attendances
+		Attendance
 		.find()
 		.sort('id ASC')
 		.exec(function callback(err, attendances) {
@@ -141,7 +141,7 @@ module.exports = {
 		});
 
 		//user locale
-		Users.find().sort('id ASC').exec(function callback(err, users) {
+		User.find().sort('id ASC').exec(function callback(err, users) {
 			if (err || !users)
 				return;
 
@@ -152,28 +152,28 @@ module.exports = {
 		});
 
 		//Update School Type
-		Schools.update({ name: 'BTTENDANCE' }, { type: 'institute' }).exec(function callback(err, school){});
-		Schools.update({ name: 'KAIST' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Yonsei University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Seoul National University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Korea University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Postech' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Hongik University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Harvard University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Stanford University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'MIT' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Gang Dong University' }, { type: 'university' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Seoul Science High School' }, { type: 'school' }).exec(function callback(err, school){});
-		Schools.update({ name: 'ROKAF_ATC' }, { type: 'etc' }).exec(function callback(err, school){});
-		Schools.update({ name: 'Institute of Technical Education' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'BTTENDANCE' }, { type: 'institute' }).exec(function callback(err, school){});
+		School.update({ name: 'KAIST' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Yonsei University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Seoul National University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Korea University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Postech' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Hongik University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Harvard University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Stanford University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'MIT' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Gang Dong University' }, { type: 'university' }).exec(function callback(err, school){});
+		School.update({ name: 'Seoul Science High School' }, { type: 'school' }).exec(function callback(err, school){});
+		School.update({ name: 'ROKAF_ATC' }, { type: 'etc' }).exec(function callback(err, school){});
+		School.update({ name: 'Institute of Technical Education' }, { type: 'university' }).exec(function callback(err, school){});
 
 		// Add Opened/Code for all Courses
-		Courses.find().sort('id ASC').exec(function callback(err, courses) {
+		Course.find().sort('id ASC').exec(function callback(err, courses) {
 			if (err || !courses)
 				return;
 
 			for ( index = 0; index < courses.length; index++) 
-				Courses.update({ id: courses[index].id }, { opened: false, code: Random.string(4) }).exec(function callback(err, course){});
+				Course.update({ id: courses[index].id }, { opened: false, code: Random.string(4) }).exec(function callback(err, course){});
 		});
 	}
 	

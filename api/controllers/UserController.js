@@ -1,5 +1,5 @@
 /**
- * UsersController
+ * UserController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -61,14 +61,14 @@ module.exports = {
 		if (!device_uuid)
 			return res.send(400, Error.alert(req, "Sign Up Error", "Device ID is required."));
 
-		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
+		Device.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
 			if (err)
 				return res.send(500, Error.log(req, "Sign Up Error", "Deivce Find Error"));
 
 		  if (device && device.owner)
 				return res.send(500, Error.alert(req, "Sign Up Error", "Your deivce already has been registered."));
 
-		  Users
+		  User
 		  .findOneByEmail(email.toLowerCase())
 		  .exec(function callback(err, user) {
 		  	if (err && !user)
@@ -77,7 +77,7 @@ module.exports = {
 					return res.send(500, Error.alert(req, "Sign Up Error", "Email is already taken."));
 
 			  if (device) {
-					Users.create({
+					User.create({
 						username: username,
 						password: password,
 						email: email,
@@ -87,11 +87,11 @@ module.exports = {
 						if (err || !new_user)
 							return res.send(500, Error.alert(req, "Sign Up Error", "User Create Error. Please try sign up again."));
 
-					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+					  Device.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 							if (err || !updated_device)
 								return res.send(500, Error.alert(req, "Sign Up Error", "Deivce Save Error. Please try sign up again."));
 
-					    Users
+					    User
 							.findOneById(new_user.id)
 							.populateAll()
 							.exec(function callback(err, user_new) {
@@ -136,14 +136,14 @@ module.exports = {
 						});
 					});
 			  } else {
-					Devices.create({
+					Device.create({
 						type: device_type,
 						uuid: device_uuid
 					}).exec(function callback(err, new_device) {
 						if (err || !new_device)
 							return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Create Error"));
 
-						Users.create({
+						User.create({
 							username: username,
 							password: password,
 							email: email,
@@ -153,11 +153,11 @@ module.exports = {
 							if (err || !new_user)
 								return res.send(500, Error.alert(req, "Sign Up Error",  "User Create Error. Please try sign up again."));
 
-						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+						  Device.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 								if (err || !updated_device)
 									return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Save Error. Please try sign up again."));
 
-						    Users
+						    User
 								.findOneById(new_user.id)
 								.populateAll()
 								.exec(function callback(err, user_new) {
@@ -220,7 +220,7 @@ module.exports = {
 		var device_type = req.param('device_type');
 		var app_version = req.param('app_version');
 
-		Users
+		User
 		.findOne({
 		  or : [
 		    { email: email },
@@ -267,7 +267,7 @@ module.exports = {
 		if (!device_uuid) 
 			return res.send(400, Error.alert(req, "Sign In Error", "Device ID is required."));
 
-		Users
+		User
 		.findOne({
 		  or : [
 		    { email: email },
@@ -300,7 +300,7 @@ module.exports = {
 		|| email == "apple8@apple.com"
 		|| email == "apple9@apple.com") {
 
-				Devices
+				Device
 				.findOneByUuid(device_uuid)
 				.populate('owner')
 				.exec(function callback(err, device) {
@@ -338,7 +338,7 @@ module.exports = {
 				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
 			  } else if (user.device.uuid != device_uuid && user.email == 'qkrqh7@kaist.ac.kr') {
 
-					Devices
+					Device
 					.findOneByUuid(device_uuid)
 					.populate('owner')
 					.exec(function callback(err, device) {
@@ -354,7 +354,7 @@ module.exports = {
 								if (err || !updated_user)
 									return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
 
-								Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+								User.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
 									if (err || !user)
 										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
 
@@ -362,7 +362,7 @@ module.exports = {
 								});
 							});
 						} else {
-							Devices
+							Device
 							.create({
 								type: device_type,
 								uuid: device_uuid,
@@ -379,7 +379,7 @@ module.exports = {
 									if (err || !updated_user)
 										return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
 
-									Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+									User.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
 										if (err || !user)
 											return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
 
@@ -407,7 +407,7 @@ module.exports = {
 		if (!locale)
 			locale = 'en';
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -483,7 +483,7 @@ module.exports = {
 		if (password_new.length < 6) 
 			return res.send(400, Error.alert(req, "Password Update Error", "New Password is too short. (should be longer than 6 letters)"));
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -549,7 +549,7 @@ module.exports = {
 		if (!full_name)
 			return res.send(400, Error.alert(req, "FullName Update Error", "FullName is required."));
 
-		Users
+		User
 		.findOne({
 		  or : [
 		    { email: email },
@@ -580,7 +580,7 @@ module.exports = {
 			return res.send(400, Error.alert(req, "Email Update Error", "Email is required."));
 
 		if (username) {
-			Users
+			User
 			.findOneByUsername(username)
 			.populateAll()
 			.exec(function callback(err, user) {
@@ -598,7 +598,7 @@ module.exports = {
 			if (!email_new)
 				return res.send(400, Error.alert(req, "Email Update Error", "New email is required."));
 
-			Users
+			User
 			.findOneByEmail(email)
 			.populateAll()
 			.exec(function callback(err, user) {
@@ -625,7 +625,7 @@ module.exports = {
 	    return res.send(400, Error.alert(req, "Searching User Error", "Username or email is required." ));
 	  search_id = search_id.toLowerCase();
 
-		Users
+		User
 		.findOne({
 		  or: [{username: search_id}, {email: search_id}]
 		})
@@ -646,7 +646,7 @@ module.exports = {
 		var username = req.param('username');
 		var page = req.param('page');
 		
-		Users
+		User
 		.findOneByUsername(username)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -657,7 +657,7 @@ module.exports = {
 	  	var attending_courses = Arrays.getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
-  		Courses
+  		Course
   		.findById(total_courses)
 			.populateAll()
   		.exec(function callback(err, courses) {
@@ -669,7 +669,7 @@ module.exports = {
 					for (var j = 0; j < courses[i].posts.length; j++)
 						total_posts.push(courses[i].posts[j].id);
 
-	  		Posts
+	  		Post
 	  		.findById(total_posts)
 				.populateAll()
 	  		.sort('id DESC')
@@ -729,7 +729,7 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 
-		Users
+		User
 		.findOne({
 		  or : [
 		    { email: email },
@@ -745,7 +745,7 @@ module.exports = {
 	  	var attending_courses = Arrays.getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
-  		Courses
+  		Course
   		.findById(total_courses)
 			.populateAll()
   		.sort('id ASC')
@@ -758,7 +758,7 @@ module.exports = {
 					for (var j = 0; j < courses[i].posts.length; j++)
 						total_posts.push(courses[i].posts[j].id);
 
-	    	Posts
+	    	Post
 	  		.findById(total_posts)
 				.populateAll()
 	  		.sort('id DESC')
