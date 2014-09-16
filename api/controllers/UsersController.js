@@ -316,7 +316,7 @@ module.exports = {
 					  	return res.send(user.toWholeObject());
 						});
 					} else if (device.uuid != user.device.uuid) {
-						device.owner = device.owner.id;
+						device.owner = user.id;
 						device.save(function callback(err) {
 							if (err)
 								return res.send(500, Error.log(req, "Sign In Error", "Device Save Error"));
