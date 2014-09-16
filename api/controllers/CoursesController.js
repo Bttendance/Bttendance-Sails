@@ -605,7 +605,7 @@ module.exports = {
         if (err || !mang)
 	        return res.send(500, Error.alert(req, "Adding Manager Error", "Fail to add a user %s as a manager.\nPlease check User ID of Email again.", manager));
 
-	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0)
+	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0 || Arrays.getEmails(course.managers).indexOf(manager) >= 0)
 	        return res.send(500, Error.alert(req, "Adding Manager Error", "%s is already supervising current course.", mang.full_name));
 
 			  var employed_schools = Arrays.getIds(mang.employed_schools);
