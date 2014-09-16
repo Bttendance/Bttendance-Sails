@@ -32,14 +32,14 @@ module.exports = {
       defaultsTo: 90
     },
 
-    detail_privacy: { //all, none, professor
-      type: 'string',
-      defaultsTo: 'professor'
-    },
-
     show_info_on_select: {
       type: 'boolean',
       defaultsTo: true
+    },
+
+    detail_privacy: { //all, none, professor
+      type: 'string',
+      defaultsTo: 'professor'
     },
 
     // One to One

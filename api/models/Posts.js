@@ -113,6 +113,9 @@ module.exports = {
       Clickers
       .create({
         choice_count: Number(values.choice_count)
+        progress_time: Number(values.progress_time),
+        show_info_on_select: values.show_info_on_select,
+        detail_privacy: values.detail_privacy,
       }).exec(function callback(err, clicker) {
         if (err || !clicker)
           next(err);

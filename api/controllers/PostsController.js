@@ -27,7 +27,16 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
+		var progress_time = req.param('progress_time');
+		var show_info_on_select = req.param('show_info_on_select');
+		var detail_privacy = req.param('detail_privacy');
 
+		if (!progress_time)
+			progress_time = 60;
+		if (!show_info_on_select)
+			show_info_on_select = true;
+		if (!detail_privacy)
+			detail_privacy = 'professor';
 
 		Courses.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
@@ -53,7 +62,10 @@ module.exports = {
 				  course: course_id,
 				  message: message,
 				  type: 'clicker',
-				  choice_count: choice_count
+				  choice_count: choice_count,
+					progress_time: progress_time,
+					show_info_on_select: show_info_on_select,
+					detail_privacy: detail_privacy
 				}).exec(function callback(err, post) {
 					if (err || !post)
 		  			return res.send(500, Error.alert(req, "Start Clicker Error", "Fail to create a post."));

@@ -42,6 +42,16 @@ module.exports = {
 		var email = req.param('email');
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
+		var progress_time = req.param('progress_time');
+		var show_info_on_select = req.param('show_info_on_select');
+		var detail_privacy = req.param('detail_privacy');
+
+		if (!progress_time)
+			progress_time = 60;
+		if (!show_info_on_select)
+			show_info_on_select = true;
+		if (!detail_privacy)
+			detail_privacy = 'professor';
 
 		Users
 		.findOneByEmail(email)
@@ -53,6 +63,9 @@ module.exports = {
 			.create({
 				message: message,
 				choice_count: choice_count,
+				progress_time: progress_time,
+				show_info_on_select: show_info_on_select,
+				detail_privacy: detail_privacy,
 				owner: user.id
 			}).exec(function callback(err, question) {
 		  	if (err || !question)
@@ -76,6 +89,16 @@ module.exports = {
 		var question_id = req.param('question_id');
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
+		var progress_time = req.param('progress_time');
+		var show_info_on_select = req.param('show_info_on_select');
+		var detail_privacy = req.param('detail_privacy');
+
+		if (!progress_time)
+			progress_time = 60;
+		if (!show_info_on_select)
+			show_info_on_select = true;
+		if (!detail_privacy)
+			detail_privacy = 'professor';
 
 		Questions
 		.findOneById(question_id)
@@ -86,6 +109,9 @@ module.exports = {
 
 			question.message = message;
 			question.choice_count = choice_count;
+			question.progress_time = progress_time;
+			question.show_info_on_select = show_info_on_select;
+			question.detail_privacy = detail_privacy;
 			question.save(function callback(err) {
 				if (err)
 					return res.send(500, Error.alert(req, "Update Questions Error", "Fail to save question."));
