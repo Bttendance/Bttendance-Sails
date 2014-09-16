@@ -112,7 +112,7 @@ module.exports = {
     } else if (values.type == 'clicker') {
       Clickers
       .create({
-        choice_count: Number(values.choice_count)
+        choice_count: Number(values.choice_count),
         progress_time: Number(values.progress_time),
         show_info_on_select: values.show_info_on_select,
         detail_privacy: values.detail_privacy,
