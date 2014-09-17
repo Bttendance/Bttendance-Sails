@@ -937,7 +937,9 @@ module.exports = {
 		        	var gradeObject = new Array();
 		        	gradeObject.push(users[index].full_name); // Student Name
 		        	for (var i = 0; i < users[index].identifications.length; i++) 
-		        		if (users[index].identifications[i].school == course.school.id)
+		        		if (users[index].identifications[i].school == course.school.id
+		        			&& users[index].identifications[i].identity
+		        			&& users[index].identifications[i].identity != null)
 		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
 
 		        	if (gradeObject.length < 2)
@@ -1025,7 +1027,9 @@ module.exports = {
 		        	var gradeObject = new Array();
 		        	gradeObject.push(users[index].full_name); // Student Name
 		        	for (var i = 0; i < users[index].identifications.length; i++) 
-		        		if (users[index].identifications[i].school == course.school.id)
+		        		if (users[index].identifications[i].school == course.school.id
+		        			&& users[index].identifications[i].identity
+		        			&& users[index].identifications[i].identity != null)
 		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
 
 		        	if (gradeObject.length < 2)
