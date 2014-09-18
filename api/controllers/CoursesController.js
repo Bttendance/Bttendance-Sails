@@ -552,6 +552,7 @@ module.exports = {
 		    return res.send(500, Error.log(req, "Course Students Error", "User doesn't exist."));
 
         for (var index in users) {  
+	        users[index].student_id = "";
         	for (var i = 0; i < users[index].identifications.length; i++) 
         		if (users[index].identifications[i].school == course.school.id)
         			users[index].student_id = users[index].identifications[i].identity;
@@ -671,11 +672,12 @@ module.exports = {
 	        				grade++;
 	        		}
 	        	}
-	        
+	        	users[index].grade = grade + "/" + total_grade;
+	        	
+		        users[index].student_id = "";
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
 	        		if (users[index].identifications[i].school == course.school.id)
 	        			users[index].student_id = users[index].identifications[i].identity;
-	        	users[index].grade = grade + "/" + total_grade;
 	        }
 
 	        users.sort(function(a, b) {
@@ -747,11 +749,12 @@ module.exports = {
 	        			if (postsObject[i].clicker.e_students[j] == users[index].id)
 	        				grade++;
 	        	}
+	        	users[index].grade = grade + "/" + total_grade;
 	        
+		        users[index].student_id = "";
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
 	        		if (users[index].identifications[i].school == course.school.id)
 	        			users[index].student_id = users[index].identifications[i].identity;
-	        	users[index].grade = grade + "/" + total_grade;
 	        }
 
 	        users.sort(function(a, b) {
