@@ -48,6 +48,26 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
+    aOptionText: {
+      type: 'string'
+    },
+
+    bOptionText: {
+      type: 'string'
+    },
+
+    cOptionText: {
+      type: 'string'
+    },
+
+    dOptionText: {
+      type: 'string'
+    },
+
+    eOptionText: {
+      type: 'string'
+    },
+
     post: {
       model: 'Posts'
     },
