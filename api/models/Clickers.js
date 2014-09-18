@@ -48,23 +48,23 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
-    aOptionText: {
+    a_option_text: {
       type: 'string'
     },
 
-    bOptionText: {
+    b_option_text: {
       type: 'string'
     },
 
-    cOptionText: {
+    c_option_text: {
       type: 'string'
     },
 
-    dOptionText: {
+    d_option_text: {
       type: 'string'
     },
 
-    eOptionText: {
+    e_option_text: {
       type: 'string'
     },
 
