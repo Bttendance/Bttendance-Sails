@@ -73,7 +73,6 @@
     "Attendance notification setting update has some error.": "Updating Attendance notification setting has been failed",
     "Poll notification setting update has some error.": "Updating Clicker notification setting has been failed.",
     "Notice notification setting update has some error.": "Updating Notice notification setting has been failed.",
-    "Clicker default setting update has some error.": "Updating Clicker default setting has been failed.",
     "Password is required.": "Password is required.",
     "Password is too short. (should be longer than 6 letters)": "Your password is too short. (should be longer than 6 letters)",
     "Email is required.": "Email is required.",
@@ -118,6 +117,7 @@
     "User is not supervising current course.": "User is not supervising current course.",
     "Error in post find method.": "Error in post find method.",
     "Post doesn't exitst.": "Post doesn't exist.",
+    "Updating identity has been failed.": "Updating identity has been failed.",
 
     "You've already chosen A as a choice.": "You've already chosen A as a choice.",
     "You've already chosen B as a choice.": "You've already chosen B as a choice.",
