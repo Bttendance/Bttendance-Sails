@@ -11,21 +11,24 @@ module.exports = {
 		var password = req.param('password');
 		var model = req.param('model');
 		var id = req.param('id');
+		var page = req.param('page');
 
 		if (password != 'bttendance') {
 			res.contentType('html');
 			return res.forbidden('Your password doesn\'t match.');
 		}
 
-		if ( isNaN(Number(id)) && id != 'all' ) {
+		if ( (!id || isNaN(Number(id)))
+			&& (!page || isNaN(Number(page))) ) {
 			res.contentType('html');
-			return res.forbidden('Check out your id parameter.');
+			return res.forbidden('Numeric parameter id or page is required.');
 		}
 
-		if (model == 'users') {
-			if (id == 'all')
+		if (model == 'user') {
+			if (page)
 				Users
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, users) {
@@ -52,10 +55,11 @@ module.exports = {
 				  	return res.send(user.toWholeObject());
 					}
 				});
-		} else if (model == 'schools') {
-			if (id == 'all')
+		} else if (model == 'school') {
+			if (page)
 				Schools
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, schools) {
@@ -82,10 +86,11 @@ module.exports = {
 				  	return res.send(school.toWholeObject());
 					}
 				});
-		} else if (model == 'courses') {
-			if (id == 'all')
+		} else if (model == 'course') {
+			if (page)
 				Courses
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, courses) {
@@ -112,10 +117,11 @@ module.exports = {
 				  	return res.send(course.toWholeObject());
 					}
 				});
-		} else if (model == 'posts') {
-			if (id == 'all')
+		} else if (model == 'post') {
+			if (page)
 				Posts
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, posts) {
@@ -142,130 +148,11 @@ module.exports = {
 				  	return res.send(post.toWholeObject());
 					}
 				});
-		} else if (model == 'devices') {
-			if (id == 'all')
-				Devices
-				.find()
-				.populateAll()
-				.sort('id DESC')
-				.exec(function callback (err, devices) {
-					if (err || !devices) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < devices.length; i++)
-							devices[i] = devices[i].toWholeObject();
-				  	return res.send(devices);
-					}
-				});
-			else 
-				Devices
-				.findOneById(Number(id))
-				.populateAll()
-				.exec(function callback (err, device) {
-					if (err || !device) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-				  	return res.send(device.toWholeObject());
-					}
-				});
-		} else if (model == 'settings') {
-			if (id == 'all')
-				Settings
-				.find()
-				.populateAll()
-				.sort('id DESC')
-				.exec(function callback (err, settings) {
-					if (err || !settings) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < settings.length; i++)
-							settings[i] = settings[i].toWholeObject();
-				  	return res.send(settings);
-					}
-				});
-			else 
-				Settings
-				.findOneById(Number(id))
-				.populateAll()
-				.exec(function callback (err, setting) {
-					if (err || !setting) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-				  	return res.send(setting.toWholeObject());
-					}
-				});
-		} else if (model == 'identifications') {
-			if (id == 'all')
-				Identifications
-				.find()
-				.populateAll()
-				.sort('id DESC')
-				.exec(function callback (err, identifications) {
-					if (err || !identifications) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < identifications.length; i++)
-							identifications[i] = identifications[i].toWholeObject();
-				  	return res.send(identifications);
-					}
-				});
-			else 
-				Identifications
-				.findOneById(Number(id))
-				.populateAll()
-				.exec(function callback (err, identification) {
-					if (err || !identification) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-				  	return res.send(identification.toWholeObject());
-					}
-				});
-		} else if (model == 'questions') {
-			if (id == 'all')
-				Questions
-				.find()
-				.populateAll()
-				.sort('id DESC')
-				.exec(function callback (err, questions) {
-					if (err || !questions) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-						for (var i = 0; i < questions.length; i++)
-							questions[i] = questions[i].toWholeObject();
-				  	return res.send(questions);
-					}
-				});
-			else 
-				Questions
-				.findOneById(Number(id))
-				.populateAll()
-				.exec(function callback (err, question) {
-					if (err || !question) {
-						res.contentType('html');
-						return res.notFound();
-					} else {
-						res.contentType('application/json; charset=utf-8');
-				  	return res.send(question.toWholeObject());
-					}
-				});
-		} else if (model == 'attendances') {
-			if (id == 'all')
+		} else if (model == 'attendance') {
+			if (page)
 				Attendances
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, attendances) {
@@ -292,10 +179,11 @@ module.exports = {
 				  	return res.send(attendance.toWholeObject());
 					}
 				});
-		} else if (model == 'clickers') {
-			if (id == 'all')
+		} else if (model == 'clicker') {
+			if (page)
 				Clickers
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, clickers) {
@@ -322,10 +210,11 @@ module.exports = {
 				  	return res.send(clicker.toWholeObject());
 					}
 				});
-		} else if (model == 'notices') {
-			if (id == 'all')
+		} else if (model == 'notice') {
+			if (page)
 				Notices
 				.find()
+				.paginate({page: page, limit: 50})
 				.populateAll()
 				.sort('id DESC')
 				.exec(function callback (err, notices) {
@@ -350,6 +239,130 @@ module.exports = {
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(notice.toWholeObject());
+					}
+				});
+		} else if (model == 'question') {
+			if (page)
+				Questions
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, questions) {
+					if (err || !questions) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < questions.length; i++)
+							questions[i] = questions[i].toWholeObject();
+				  	return res.send(questions);
+					}
+				});
+			else 
+				Questions
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, question) {
+					if (err || !question) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(question.toWholeObject());
+					}
+				});
+		} else if (model == 'device') {
+			if (page)
+				Devices
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, devices) {
+					if (err || !devices) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < devices.length; i++)
+							devices[i] = devices[i].toWholeObject();
+				  	return res.send(devices);
+					}
+				});
+			else 
+				Devices
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, device) {
+					if (err || !device) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(device.toWholeObject());
+					}
+				});
+		} else if (model == 'setting') {
+			if (page)
+				Settings
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, settings) {
+					if (err || !settings) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < settings.length; i++)
+							settings[i] = settings[i].toWholeObject();
+				  	return res.send(settings);
+					}
+				});
+			else 
+				Settings
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, setting) {
+					if (err || !setting) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(setting.toWholeObject());
+					}
+				});
+		} else if (model == 'identification') {
+			if (page)
+				Identifications
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, identifications) {
+					if (err || !identifications) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < identifications.length; i++)
+							identifications[i] = identifications[i].toWholeObject();
+				  	return res.send(identifications);
+					}
+				});
+			else 
+				Identifications
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, identification) {
+					if (err || !identification) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(identification.toWholeObject());
 					}
 				});
 		} else {
@@ -415,14 +428,14 @@ module.exports = {
 	},
 
 	noti: function(req, res) {
-		Users
-		.findOneByUsername('galaxys2')
-		.populateAll()
-		.exec(function callback(err, user) {
-			var Noti = require('../utils/notifications');
-			Noti.send(user, "BTTENDANCE", "You have succeed to send a message.", "message", 0);
-			return res.send(user.toWholeObject());
-		});
+		// Users
+		// .findOneByUsername('galaxys2')
+		// .populateAll()
+		// .exec(function callback(err, user) {
+		// 	var Noti = require('../utils/notifications');
+		// 	Noti.send(user, "BTTENDANCE", "You have succeed to send a message.", "message", 0);
+		// 	return res.send(user.toWholeObject());
+		// });
 	}
 	
 };

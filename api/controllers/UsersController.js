@@ -279,26 +279,16 @@ module.exports = {
 			if (err || !user)
 		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your USERNAME or EMAIL address again."));
 
-			if (username == "appletest0"
-		|| username == "appletest1" 
-		|| username == "appletest2"
-		|| username == "appletest3"
-		|| username == "appletest4"
-		|| username == "appletest5"
-		|| username == "appletest6"
-		|| username == "appletest7"
-		|| username == "appletest8"
-		|| username == "appletest9"
-		|| email == "apple0@apple.com"
-		|| email == "apple1@apple.com"
-		|| email == "apple2@apple.com"
-		|| email == "apple3@apple.com"
-		|| email == "apple4@apple.com"
-		|| email == "apple5@apple.com"
-		|| email == "apple6@apple.com"
-		|| email == "apple7@apple.com"
-		|| email == "apple8@apple.com"
-		|| email == "apple9@apple.com") {
+			if (email == "apple0@apple.com"
+				|| email == "apple1@apple.com"
+				|| email == "apple2@apple.com"
+				|| email == "apple3@apple.com"
+				|| email == "apple4@apple.com"
+				|| email == "apple5@apple.com"
+				|| email == "apple6@apple.com"
+				|| email == "apple7@apple.com"
+				|| email == "apple8@apple.com"
+				|| email == "apple9@apple.com") {
 
 				Devices
 				.findOneByUuid(device_uuid)
