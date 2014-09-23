@@ -30,80 +30,6 @@ var Random = require('../utils/random');
 
 module.exports = {
 
-	create_request: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var name = req.param('name');
-		var number = req.param('number');
-		var school_id = req.param('school_id');
-		var professor_name = req.param('professor_name');
-
-		var params = req.params.all('httpParam');
-		var query = QueryString.stringify(params);
-
-		Users
-		.findOneByUsername(username)
-		.exec(function callback(err, user) {
-			if (err || !user)
-		    return res.send(500, Error.log(req, "Course Create Request Error", "User doesn't exist."));
-
-		  Schools
-		  .findOneById(school_id)
-		  .exec(function callback(err, school) {
-				if (err || !school) 
-			    return res.send(500, Error.log(req, "Course Create Request Error", "School doesn't exist."));
-
-				Tokens.create({
-					action: 'createCourse',
-					params: query
-				}).exec(function callback(err, token) {
-					if (err || !token) 
-				    return res.send(500, Error.log(req, "Course Create Request Error", "Token creation has been failed."));
-
-				  var link = 'http://' + Url.parse(req.baseUrl).hostname + "/verify/" + token.key;
-
-					// create reusable transport method (opens pool of SMTP connections)
-					var smtpTransport = Nodemailer.createTransport({
-					    service: "Gmail",
-					    auth: {
-					        user: "no-reply@bttendance.com",
-					        pass: "N0n0r2ply"
-					    }
-					});
-
-					var path = Path.resolve(__dirname, '../../assets/emails/create_course_verification.html');
-					FS.readFile(path, 'utf8', function (err, file) {
-					  if (err)
-		  				return res.send(500, { message: "File Read Error" });
-
-		  			file = file.replace('#fullname', user.full_name);
-		  			file = file.replace('#courseTitle', name);
-		  			file = file.replace('#courseID', number);
-		  			file = file.replace('#profname', professor_name);
-		  			file = file.replace('#schoolname', school.name);
-		  			file = file.replace('#schoolname', school.name);
-		  			file = file.replace('#validationLink', link);
-
-						// setup e-mail data with unicode symbols
-						var mailOptions = {
-						    from: "Bttendance<no-reply@bttendance.com>", // sender address
-						    to: user.email, // list of receivers
-						    subject: "Course Creation Verification Email", // Subject line
-						    html: file, // plaintext body
-						}
-
-						// send mail with defined transport object
-						smtpTransport.sendMail(mailOptions, function(error, info) {
-					    if(error)
-							  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
-			        return res.send(Email.json(user.email));
-						});
-					});
-				});
-		  });
-		});
-	},
-
 	create_instant: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
@@ -621,9 +547,17 @@ module.exports = {
 		        return res.send(500, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save %s as a manager.\nPlease try again.", mang.full_name));
 
 					Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager", course.id);
-	        return res.send(course.toWholeObject());
-				});
 
+			    Courses
+			    .findOneById(course_id)
+			    .populateAll()
+			    .exec(function callback(err, course) {
+			      if (err || !course)
+			        return res.send(500, Error.alert(req, "Adding Manager Error", "Course doesn't exist."));
+
+		        return res.send(course.toWholeObject());
+			    });
+				});
       });
     });
 	},

@@ -48,25 +48,25 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
-    a_option_text: {
-      type: 'string'
-    },
+    // a_option_text: {
+    //   type: 'string'
+    // },
 
-    b_option_text: {
-      type: 'string'
-    },
+    // b_option_text: {
+    //   type: 'string'
+    // },
 
-    c_option_text: {
-      type: 'string'
-    },
+    // c_option_text: {
+    //   type: 'string'
+    // },
 
-    d_option_text: {
-      type: 'string'
-    },
+    // d_option_text: {
+    //   type: 'string'
+    // },
 
-    e_option_text: {
-      type: 'string'
-    },
+    // e_option_text: {
+    //   type: 'string'
+    // },
 
     post: {
       model: 'Posts'

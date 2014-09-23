@@ -206,11 +206,6 @@ module.exports.routes = {
   },
 
   /************* Courses API ************/  
-  'post /api/courses/create/request': {
-    controller: 'courses',
-    action: 'create_request'
-  },  
-
   'post /api/courses/create/instant': {
     controller: 'courses',
     action: 'create_instant'
