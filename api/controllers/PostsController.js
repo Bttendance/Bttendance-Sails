@@ -37,6 +37,11 @@ module.exports = {
 			show_info_on_select = true;
 		if (!detail_privacy)
 			detail_privacy = 'professor';
+		
+		if (show_info_on_select == 'false' || show_info_on_select == 'NO')
+			show_info_on_select = false;
+		else
+			show_info_on_select = true;
 
 		Courses.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
