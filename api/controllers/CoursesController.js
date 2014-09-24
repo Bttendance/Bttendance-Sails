@@ -140,7 +140,7 @@ module.exports = {
 						}
 					}
 
-  				if (supervising_courses.indexOf(course.id) >= 0) {
+  				if (Arrays.getIds(user.supervising_courses).indexOf(course.id) >= 0) {
 						attendance_rate = Number( ( attd_checks.length / attd_usage / course.students.length * 100).toFixed() );
 						clicker_rate = Number( ( clicker_checks.length / clicker_usage / course.students.length * 100).toFixed() );
 						if (notice_last)
