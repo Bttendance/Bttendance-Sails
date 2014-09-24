@@ -82,6 +82,7 @@ module.exports = {
 						password: password,
 						email: email,
 						full_name: full_name,
+						locale: locale,
 						device: device.id				
 					}).exec(function callback(err, new_user) {
 						if (err || !new_user)
@@ -148,6 +149,7 @@ module.exports = {
 							password: password,
 							email: email,
 							full_name: full_name,
+							locale: locale,
 							device: new_device.id			
 						}).exec(function callback(err, new_user) {
 							if (err || !new_user)
@@ -227,7 +229,6 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
-		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(401, Error.alert(req, "Auto Sign Out", "User doesn't exist."));
@@ -244,8 +245,6 @@ module.exports = {
 	    // if (device_type == 'android' && parseFloat(app_version) < 1.1)
 		   //  return res.send(441, Error.alert(req, sails.__({ phrase: "Update Available", locale: locale }), sails.__({ phrase: "New version of Bttendance has been updated. Please update the app for new features.", locale: locale })));
 	    
-	    user.locale = locale;
-	    user.save();
 	  	return res.send(user.toWholeObject());
 		});
 	},

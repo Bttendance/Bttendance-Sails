@@ -44,9 +44,22 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 				return res.send(404, Error.log(req, "Notification Key Update Error", "Device doesn't match."));
 
-		  user.device.notification_key = notification_key;
-		  user.device.save();
-	  	return res.send(user.toWholeObject());
+			Devices
+			.update({ id : user.device.id }, { notification_key : notification_key })
+			.exec(function callback(err, device) {
+				if (err || !device)
+					return res.send(404, Error.log(req, "Notification Key Update Error", "Updating Device Failed."));
+
+				Users
+				.findOneById(user.id)
+				.populateAll()
+				.exec(function callback(err, user) {
+					if (err || !user)
+						return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
+					
+			  	return res.send(user.toWholeObject());
+				});
+			});
 		});
 	}
 };

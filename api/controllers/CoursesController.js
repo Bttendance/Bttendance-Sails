@@ -30,6 +30,153 @@ var Random = require('../utils/random');
 
 module.exports = {
 
+	info: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
+		var username = req.param('username');
+		var course_id = req.param('course_id');
+
+		Users
+		.findOne({
+		  or : [
+		    { email: email },
+		    { username: username }
+		  ]
+		})
+		.populateAll()
+		.exec(function callback(err, user) {
+			if (err || !user) 
+				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
+
+  		Courses
+  		.findOneById(course_id)
+			.populateAll()
+  		.sort('id ASC')
+  		.exec(function callback(err, course) {
+  			if (err || !course)
+					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
+
+	    	Posts
+	  		.findById(Arrays.getIds(course.posts))
+				.populateAll()
+	  		.sort('id DESC')
+	  		.exec(function callback(err, posts) {
+	  			if (err || !posts) {
+							course = course.toWholeObject();
+							course.grade = 0;
+							course.attendance_rate = 0;
+							course.clicker_rate = 0;
+							course.notice_unseen = 0;
+				  	return res.send(course);
+	  			}
+
+					// Attendance
+					var attendance_rate = 0; //전체 출석률 or 본인의 출석률
+					var attd_last = undefined; //가장 마지막 attendance
+					var attd_checks = new Array(); //checked_students late_students를 모두 합한 Array
+					var attd_usage = 0; //attd check을 여태까지 몇번했는지
+					var attd_checked_count = 0; //본인이 attd check이 몇번 되었는지 (강의자의 경우 attd check을 한것으로 인정)
+
+					// Clicker
+					var clicker_rate = 0; //전체 참여율 or 본인의 참여율
+					var clicker_last = undefined; //가장 마지막 clicker
+					var clicker_checks = new Array(); //a_students, b_students, c_students, d_students, e_students를 모두 합한 Array
+					var clicker_usage = 0; //clicker를 여태까지 몇번 사용 했는지
+					var clicker_checked_count = 0; //본인이 clicker를 몇번 참여했는지 (강의자의 경우 참여 안한 것으로 간주)
+
+					// Notice
+					var notice_unseen = 0;
+					var notice_last = undefined; //가장 마지막 attendance
+					var notice_usage = 0; //notice를 post한 횟수
+					var notice_seen_count = 0; //본인이 notice를 몇개 보았는지 (강의자의 경우 안본 것으로 간주)
+
+					for (var j = 0; j < posts.length; j++) {
+
+						// Attendance Count
+						if (posts[j].type == "attendance") {
+							if (posts[j].attendance.checked_students.indexOf(user.id) >= 0)
+								attd_checked_count++;
+
+							if (!attd_last)
+								attd_last = posts[j].attendance;
+
+							attd_checks = attd_checks.concat(posts[j].attendance.checked_students);
+							attd_checks = attd_checks.concat(posts[j].attendance.late_students);
+
+							attd_usage++;
+						}
+
+						// Clicker Count
+						if (posts[j].type == "clicker") {
+							if (posts[j].clicker.a_students.indexOf(user.id) >= 0)
+								clicker_checked_count++;
+							if (posts[j].clicker.b_students.indexOf(user.id) >= 0)
+								clicker_checked_count++;
+							if (posts[j].clicker.c_students.indexOf(user.id) >= 0)
+								clicker_checked_count++;
+							if (posts[j].clicker.d_students.indexOf(user.id) >= 0)
+								clicker_checked_count++;
+							if (posts[j].clicker.e_students.indexOf(user.id) >= 0)
+								clicker_checked_count++;
+
+							clicker_checks = clicker_checks.concat(posts[j].clicker.a_students);
+							clicker_checks = clicker_checks.concat(posts[j].clicker.b_students);
+							clicker_checks = clicker_checks.concat(posts[j].clicker.c_students);
+							clicker_checks = clicker_checks.concat(posts[j].clicker.d_students);
+							clicker_checks = clicker_checks.concat(posts[j].clicker.e_students);
+
+							clicker_usage++;
+						}
+
+						// Notice Count
+						if (posts[j].type == "notice") {
+							if (posts[j].notice.seen_students.indexOf(user.id) >= 0)
+								notice_seen_count++;
+
+							if (!notice_last)
+								notice_last = posts[j].notice;
+
+							notice_usage++;
+						}
+					}
+
+  				if (supervising_courses.indexOf(course.id) >= 0) {
+						attendance_rate = Number( ( attd_checks.length / attd_usage / course.students.length * 100).toFixed() );
+						clicker_rate = Number( ( clicker_checks.length / clicker_usage / course.students.length * 100).toFixed() );
+						if (notice_last)
+							notice_unseen = course.students.length - notice_last.seen_students.length;
+						else
+							notice_unseen = course.students.length;
+  				} else {
+						attendance_rate = Number( (attd_checked_count / attd_usage * 100).toFixed() );
+						clicker_rate = Number( (clicker_checked_count / clicker_usage * 100).toFixed() );
+						notice_unseen = notice_usage - notice_seen_count;
+  				}
+
+  				// Attendance Rate >= 0 & < 100
+					if (attendance_rate < 0 || attd_usage == 0 || isNaN(attendance_rate)) attendance_rate = 0;
+					if (attendance_rate > 100) attendance_rate = 100;
+
+  				// Attendance Rate >= 0 & < 100
+					if (clicker_rate < 0 || clicker_usage == 0 || isNaN(clicker_rate)) clicker_rate = 0;
+					if (clicker_rate > 100) clicker_rate = 100;
+
+					course = course.toWholeObject();
+					course.grade = attendance_rate;
+					course.attendance_rate = attendance_rate;
+					course.clicker_rate = clicker_rate;
+					course.notice_unseen = notice_unseen;
+					course.clicker_usage = clicker_usage;
+					course.notice_usage = notice_usage;
+					if (attd_last)
+  					course.attdCheckedAt = attd_last.createdAt;
+
+			  	return res.send(course);
+	  		});
+  		});
+		});
+	},
+
 	create_instant: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');

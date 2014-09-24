@@ -44,7 +44,12 @@ module.exports = {
 				});
 			else 
 				Users
-				.findOneById(Number(id))
+				.findOne({
+				  or : [
+				    { id: id },
+				    { email: id }
+				  ]
+				})
 				.populateAll()
 				.exec(function callback (err, user) {
 					if (err || !user) {

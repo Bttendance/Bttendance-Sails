@@ -85,7 +85,7 @@ module.exports.policies = {
   },
 
   CoursesController: {
-    create_request: 'isUser',
+    info: 'attending_or_supervising',
     create_instant: 'isUser',
     search: 'isUser',
     attend: 'isUser',
@@ -93,7 +93,7 @@ module.exports.policies = {
     feed: 'attending_or_supervising',
     open: 'supervising',
     close: 'supervising',
-    students: 'supervising',
+    students: 'attending_or_supervising',
     add_manager: 'supervising',
     attendance_grades: 'supervising',
     clicker_grades: 'supervising',
