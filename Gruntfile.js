@@ -78,4 +78,7 @@ module.exports = function(grunt) {
 	invokeConfigFn(taskConfigurations);
 	invokeConfigFn(registerDefinitions);
 
+ 	grunt.loadNpmTasks('gake');
+	grunt.loadNpmTasks('sails-migrations');
+
 };
