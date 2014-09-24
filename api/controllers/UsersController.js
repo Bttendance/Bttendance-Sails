@@ -229,6 +229,7 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
+		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(401, Error.alert(req, "Auto Sign Out", "User doesn't exist."));

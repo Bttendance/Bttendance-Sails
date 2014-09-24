@@ -12,13 +12,15 @@ module.exports = {
 		var model = req.param('model');
 		var id = req.param('id');
 		var page = req.param('page');
+		var email = req.param('email');
 
 		if (password != 'bttendance') {
 			res.contentType('html');
 			return res.forbidden('Your password doesn\'t match.');
 		}
 
-		if ( (!id || isNaN(Number(id)))
+		if ( (model == 'user' && !email)
+			&& (!id || isNaN(Number(id)))
 			&& (!page || isNaN(Number(page))) ) {
 			res.contentType('html');
 			return res.forbidden('Numeric parameter id or page is required.');
@@ -47,7 +49,7 @@ module.exports = {
 				.findOne({
 				  or : [
 				    { id: id },
-				    { email: id }
+				    { email: email }
 				  ]
 				})
 				.populateAll()
