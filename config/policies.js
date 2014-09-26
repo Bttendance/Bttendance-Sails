@@ -64,6 +64,7 @@ module.exports.policies = {
     update_attendance: 'isUser',
     update_clicker: 'isUser',
     update_notice: 'isUser',
+    update_clicker_defaults: 'isUser'
   },
 
   QuestionsController: {
