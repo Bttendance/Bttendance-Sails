@@ -91,6 +91,10 @@ module.exports = {
 		var detail_privacy = req.param('detail_privacy');
 		var show_info_on_select = req.param('show_info_on_select');
 
+		console.log(progress_time);
+		console.log(detail_privacy);
+		console.log(show_info_on_select);
+
 		Users
 		.findOneByEmail(email)
 		.populateAll()
