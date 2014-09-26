@@ -74,7 +74,7 @@ module.exports.policies = {
   },
 
   IdentificationsController: {
-    update_identity: 'isUser'
+    update_identity: 'enrolled'
   },
 
   SchoolsController: {
@@ -101,8 +101,8 @@ module.exports.policies = {
   },
 
   PostsController: {
-    start_attendance: 'supervising',
     start_clicker: 'supervising',
+    start_attendance: 'supervising',
     create_notice: 'supervising',
     update_message: 'supervising',
     remove: 'supervising'

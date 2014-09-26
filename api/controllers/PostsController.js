@@ -107,7 +107,7 @@ module.exports = {
 					  				Noti.send(users[j], post.course.name, "Clicker has been started", "clicker_started", course.id);
 				  		});
 
-				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, 33000);
+				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, progress_time * 500);
 
 					  	return res.send(post.toWholeObject());
 				  	});
