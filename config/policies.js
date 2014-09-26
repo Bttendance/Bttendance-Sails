@@ -36,7 +36,7 @@ module.exports.policies = {
   },
 
   MigrationController: {
-    '*': true
+    '*': 'isDev'
   },
 
   SocketsController: {
