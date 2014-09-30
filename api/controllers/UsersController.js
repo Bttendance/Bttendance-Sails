@@ -327,9 +327,9 @@ module.exports = {
 				if (!PasswordHash.verify(password, user.password)) {
 				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
 			  } else if (user.device.uuid != device_uuid 
-			  	&& (user.email == 'xognsxo1491@naver.com'
-			  		|| user.email == 'misko0319@gmail.com'
-			  		|| user.email == 'lisa02@naver.com')) {
+			  	&& (user.email == 'sayoo123@hanmail.net'
+			  		|| user.email == 'gksekdms21@naver.com'
+			  		|| user.email == 'swyeon11@kaist.ac.kr')) {
 
 					Devices
 					.findOneByUuid(device_uuid)
