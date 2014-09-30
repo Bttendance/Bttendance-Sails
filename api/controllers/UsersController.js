@@ -329,7 +329,8 @@ module.exports = {
 			  } else if (user.device.uuid != device_uuid 
 			  	&& (user.email == 'sayoo123@hanmail.net'
 			  		|| user.email == 'gksekdms21@naver.com'
-			  		|| user.email == 'swyeon11@kaist.ac.kr')) {
+			  		|| user.email == 'swyeon11@kaist.ac.kr'
+			  		|| user.email == 'pooreun91@naver.com')) {
 
 					Devices
 					.findOneByUuid(device_uuid)
