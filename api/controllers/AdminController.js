@@ -453,7 +453,7 @@ module.exports = {
 
 						var isActive = false;
 						for (var j = 0; j < courses_over_5[i].posts.length; j++) {
-							if (-Moment(courses_over_5[i].posts[j].createdAt).diff(Moment(new Date()), 'days') <= 10) {
+							if (-Moment(courses_over_5[i].posts[j].createdAt).diff(Moment(new Date()), 'days') <= 7) {
 								isActive = true;
 
 								var add = true;
