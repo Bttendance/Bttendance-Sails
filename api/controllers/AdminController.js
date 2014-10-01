@@ -5,6 +5,9 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
+var Moment = require('moment-timezone');
+var Arrays = require('../utils/arrays');
+
 module.exports = {
 
 	show: function(req, res) {
@@ -377,6 +380,102 @@ module.exports = {
 			return res.forbidden('Check out your model parameter.');
 		}
 
+	},
+
+	analyze: function(req, res) {
+		var start = req.param('start');
+		var end = req.param('end');
+
+		if (!start) {
+			res.contentType('html');
+			return res.forbidden('Check out your model parameter.');
+		}
+
+		var startDate = Moment.tz(start, "Asia/Seoul").zone("+00:00").format();
+		var endDate;
+		if (!end)
+			endDate = Moment.tz("Asia/Seoul").zone("+00:00").format();
+		else
+			endDate = Moment.tz(end, "Asia/Seoul").zone("+00:00").format();
+
+		if (startDate == 'Invalid date') {
+			res.contentType('html');
+			return res.forbidden('Start is not valid format date.');
+		}
+
+		if (endDate == 'Invalid date') {
+			res.contentType('html');
+			return res.forbidden('End is not valid format date.');
+		}
+
+		Courses
+		.find({ createdAt: { 
+			'>': startDate, 
+			'<': endDate } })
+		.sort('createdAt DESC')
+		.populate('students')
+		.exec(function callback(err, courses) {
+			if (err || !courses) {
+				res.contentType('html');
+				return res.notFound();
+			} else {
+				res.contentType('application/json; charset=utf-8');
+
+				var result = {};
+				result.course_count = courses.length;
+
+				for (var i = 0; i < courses.length; i++)
+					courses[i].students_count = courses[i].students.length;
+
+				var courses_over_5_ids = new Array();
+				for (var i = 0; i < courses.length; i++) 
+					if (courses[i].students.length >= 5)
+						courses_over_5_ids.push(courses[i].id);
+
+				result.student_over_5 = courses_over_5_ids.length;
+
+				Courses
+				.find(courses_over_5_ids)
+				.populate('managers')
+				.populate('students')
+				.populate('posts')
+				.exec(function callback(err, courses_over_5) {
+					if (err || !courses_over_5)
+						res.send(result);
+
+					var active = 0;
+					var active_managers = new Array();
+
+					for (var i = 0; i < courses_over_5.length; i++) {
+						courses_over_5[i].managers_count = courses_over_5[i].managers.length;
+						courses_over_5[i].students_count = courses_over_5[i].students.length;
+						courses_over_5[i].posts_count = courses_over_5[i].posts.length;
+
+						var isActive = false;
+						for (var j = 0; j < courses_over_5[i].posts.length; j++) {
+							if (-Moment(courses_over_5[i].posts[j].createdAt).diff(Moment(new Date()), 'days') <= 10) {
+								isActive = true;
+
+								var add = true;
+								for (var l = 0; l < active_managers.length; l++)
+									if (courses_over_5[i].managers.length >= 1 && active_managers[l].id == courses_over_5[i].managers[0].id)
+										add = false;
+								if (add)
+									active_managers.push(courses_over_5[i].managers[0]);
+							}
+						}
+						if (isActive)
+							active++;
+						courses_over_5[i].active = isActive;
+					}
+
+					result.active = active;
+					result.active_managers_count = active_managers.length;
+					result.courses_over_5 = courses_over_5;
+					res.send(result);
+				});
+			}
+		});
 	},
 
 	emails: function(req, res) {
