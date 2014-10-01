@@ -382,6 +382,49 @@ module.exports = {
 
 	},
 
+	user: function(req, res) {
+		var start = req.param('start');
+		var end = req.param('end');
+
+		if (!start) {
+			res.contentType('html');
+			return res.forbidden('Check out your model parameter.');
+		}
+
+		var startDate = Moment.tz(start, "Asia/Seoul").zone("+00:00").format();
+		var endDate;
+		if (!end)
+			endDate = Moment.tz("Asia/Seoul").zone("+00:00").format();
+		else
+			endDate = Moment.tz(end, "Asia/Seoul").zone("+00:00").format();
+
+		if (startDate == 'Invalid date') {
+			res.contentType('html');
+			return res.forbidden('Start is not valid format date.');
+		}
+
+		if (endDate == 'Invalid date') {
+			res.contentType('html');
+			return res.forbidden('End is not valid format date.');
+		}
+
+		Users
+		.find({ createdAt: { 
+			'>': startDate, 
+			'<': endDate } })
+		.exec(function callback(err, users) {
+			if (err || !users) {
+				res.contentType('html');
+				return res.notFound();
+			} else {
+				res.contentType('application/json; charset=utf-8');
+				var result = {};
+				result.user_count = users.length;
+				return res.send(result);
+			}
+		});
+	},
+
 	analyze: function(req, res) {
 		var start = req.param('start');
 		var end = req.param('end');
