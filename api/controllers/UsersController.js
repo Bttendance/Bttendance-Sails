@@ -328,7 +328,7 @@ module.exports = {
 				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
 			  } else if (user.device.uuid != device_uuid 
 			  	&& (user.email == 'psh123c@yonsei.ac.kr'
-			  		|| user.email == 'gksekdms21@naver.com')) {
+			  		|| user.email == 'cudoshin@naver.com')) {
 
 					Devices
 					.findOneByUuid(device_uuid)
