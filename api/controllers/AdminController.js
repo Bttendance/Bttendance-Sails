@@ -16,6 +16,7 @@ module.exports = {
 		var id = req.param('id');
 		var page = req.param('page');
 		var email = req.param('email');
+		var course = req.param('course');
 
 		if (password != 'bttendance') {
 			res.contentType('html');
@@ -23,6 +24,7 @@ module.exports = {
 		}
 
 		if ( (model == 'user' && !email)
+			&& (model == 'post' && !course)
 			&& (!id || isNaN(Number(id)))
 			&& (!page || isNaN(Number(page))) ) {
 			res.contentType('html');
@@ -145,7 +147,7 @@ module.exports = {
 				  	return res.send(posts);
 					}
 				});
-			else 
+			else if (id)
 				Posts
 				.findOneById(Number(id))
 				.populateAll()
@@ -156,6 +158,21 @@ module.exports = {
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(post.toWholeObject());
+					}
+				});
+			else
+				Posts
+				.find({ where: { course: course }})
+				.populateAll()
+				.exec(function callback (err, posts) {
+					if (err || !posts) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < posts.length; i++)
+							posts[i] = posts[i].toWholeObject();
+				  	return res.send(posts);
 					}
 				});
 		} else if (model == 'attendance') {
