@@ -162,7 +162,7 @@ module.exports = {
 				});
 			else
 				Posts
-				.find({ where: { course: course }})
+				.find({ where: { course: course }, sort: 'id DESC'})
 				.populateAll()
 				.exec(function callback (err, posts) {
 					if (err || !posts) {
