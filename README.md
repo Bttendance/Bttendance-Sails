@@ -10,7 +10,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 ####Model
 - Attribute doesn't contain Capital Letter.
 - Attribute uses '_' as space between words.
-- User Model is for Access (which includes username, email, password, access_token, etc)
+- User Model is for Access (email and password)s
 - Every Model is associated via waterline association.
 - Some Model is associcated via array of id.
 - Model is using Heroku Postgres DB
@@ -19,7 +19,7 @@ This app uses "Sails.js" as framework and "Java Script" as language.
 - API Schema : 'api/:controller/:action/:model' (ex : 'api/user/join/school')
 - Controller Action : ':action_:model' (ex : join_school)
 - Route : 'api/:controller/:action/:model' to ':action_:model'
-- Every API requires username, password
+- Every API requires email, password
 
 ####Socket
 - Socket is using Redis Cloud DB
