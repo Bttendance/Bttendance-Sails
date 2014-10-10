@@ -1,5 +1,5 @@
 /**
- * IdentificationsController.js 
+ * IdentificationController.js 
  *
  * @description ::
  * @docs        :: http://sailsjs.org/#!documentation/controllers
@@ -18,7 +18,7 @@ module.exports = {
 		if (!identity)
 			return res.send(400, Error.log(req, "Identity Update Error", "Identity is required."));
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -40,14 +40,14 @@ module.exports = {
 			}
 
 			if (!found) {
-				Identifications.create({
+				Identification.create({
 					identity: identity,
 					school: school_id,
 					owner: user.id
 				}).exec(function callback(err, identification) {
 			  		if (err || !identification)
 							return res.send(500, Error.alert(req, "Identity Update Error", "Updating identity has been failed."));
-						Users
+						User
 						.findOneById(user.id)
 						.populateAll()
 						.exec(function callback(err, user) {

@@ -1,5 +1,5 @@
 /**
- * UsersController
+ * UserController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -23,14 +23,12 @@ var PasswordHash = require('password-hash');
 var Nodemailer = require("nodemailer");
 var	FS = require('fs');
 var Path = require('path');
-var Moment = require('moment');
 var Validator = require('validator');
 
 module.exports = {
 
 	signup: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var password = req.param('password');
 		var full_name = req.param('full_name');
 		var email = req.param('email');
@@ -61,14 +59,14 @@ module.exports = {
 		if (!device_uuid)
 			return res.send(400, Error.alert(req, "Sign Up Error", "Device ID is required."));
 
-		Devices.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
+		Device.findOneByUuid(device_uuid).populate('owner').exec(function callback(err, device) {
 			if (err)
 				return res.send(500, Error.log(req, "Sign Up Error", "Deivce Find Error"));
 
 		  if (device && device.owner)
 				return res.send(500, Error.alert(req, "Sign Up Error", "Your deivce already has been registered."));
 
-		  Users
+		  User
 		  .findOneByEmail(email.toLowerCase())
 		  .exec(function callback(err, user) {
 		  	if (err && !user)
@@ -77,10 +75,9 @@ module.exports = {
 					return res.send(500, Error.alert(req, "Sign Up Error", "Email is already taken."));
 
 			  if (device) {
-					Users.create({
-						username: username,
-						password: password,
+					User.create({
 						email: email,
+						password: password,
 						full_name: full_name,
 						locale: locale,
 						device: device.id				
@@ -88,11 +85,11 @@ module.exports = {
 						if (err || !new_user)
 							return res.send(500, Error.alert(req, "Sign Up Error", "User Create Error. Please try sign up again."));
 
-					  Devices.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+					  Device.update({ id: device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 							if (err || !updated_device)
 								return res.send(500, Error.alert(req, "Sign Up Error", "Deivce Save Error. Please try sign up again."));
 
-					    Users
+					    User
 							.findOneById(new_user.id)
 							.populateAll()
 							.exec(function callback(err, user_new) {
@@ -137,17 +134,16 @@ module.exports = {
 						});
 					});
 			  } else {
-					Devices.create({
+					Device.create({
 						type: device_type,
 						uuid: device_uuid
 					}).exec(function callback(err, new_device) {
 						if (err || !new_device)
 							return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Create Error"));
 
-						Users.create({
-							username: username,
-							password: password,
+						User.create({
 							email: email,
+							password: password,
 							full_name: full_name,
 							locale: locale,
 							device: new_device.id			
@@ -155,11 +151,11 @@ module.exports = {
 							if (err || !new_user)
 								return res.send(500, Error.alert(req, "Sign Up Error",  "User Create Error. Please try sign up again."));
 
-						  Devices.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
+						  Device.update({ id: new_device.id }, { owner: new_user.id }).exec(function callback(err, updated_device) {
 								if (err || !updated_device)
 									return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Save Error. Please try sign up again."));
 
-						    Users
+						    User
 								.findOneById(new_user.id)
 								.populateAll()
 								.exec(function callback(err, user_new) {
@@ -214,7 +210,6 @@ module.exports = {
 	// 442 : Update Required
 	auto_signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var password = req.param('password');
 		var locale = req.param('locale');
@@ -222,13 +217,8 @@ module.exports = {
 		var device_type = req.param('device_type');
 		var app_version = req.param('app_version');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -252,14 +242,13 @@ module.exports = {
 
 	signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 		var device_type = req.param('device_type');
 
-		if (!username && !email)
-			return res.send(400, Error.alert(req, "Sign In Error", "Username or Email is required."));
+		if (!email)
+			return res.send(400, Error.alert(req, "Sign In Error", "Email is required."));
 
 		if (!password)
 			return res.send(400, Error.alert(req, "Sign In Error", "Password is required."));
@@ -267,17 +256,12 @@ module.exports = {
 		if (!device_uuid) 
 			return res.send(400, Error.alert(req, "Sign In Error", "Device ID is required."));
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your USERNAME or EMAIL address again."));
+		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your EMAIL address again."));
 
 			if (email == "apple0@apple.com"
 				|| email == "apple1@apple.com"
@@ -290,7 +274,7 @@ module.exports = {
 				|| email == "apple8@apple.com"
 				|| email == "apple9@apple.com") {
 
-				Devices
+				Device
 				.findOneByUuid(device_uuid)
 				.populate('owner')
 				.exec(function callback(err, device) {
@@ -330,7 +314,7 @@ module.exports = {
 			  	&& (user.email == 'psh123c@yonsei.ac.kr'
 			  		|| user.email == 'cudoshin@naver.com')) {
 
-					Devices
+					Device
 					.findOneByUuid(device_uuid)
 					.populate('owner')
 					.exec(function callback(err, device) {
@@ -346,7 +330,7 @@ module.exports = {
 								if (err || !updated_user)
 									return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
 
-								Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+								User.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
 									if (err || !user)
 										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
 
@@ -354,7 +338,7 @@ module.exports = {
 								});
 							});
 						} else {
-							Devices
+							Device
 							.create({
 								type: device_type,
 								uuid: device_uuid,
@@ -371,7 +355,7 @@ module.exports = {
 									if (err || !updated_user)
 										return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
 
-									Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+									User.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
 										if (err || !user)
 											return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
 
@@ -399,12 +383,12 @@ module.exports = {
 		if (!locale)
 			locale = 'en';
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, Error.alert(req, "Password Recovery Error", "Please check your email address again."));
+		    return res.send(500, Error.alert(req, "Password Recovery Error", "Please check your EMAIL address again."));
 
 		  var password = Random.string(8);
 		  user.password = PasswordHash.generate(password);
@@ -475,7 +459,7 @@ module.exports = {
 		if (password_new.length < 6) 
 			return res.send(400, Error.alert(req, "Password Update Error", "New Password is too short. (should be longer than 6 letters)"));
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
@@ -534,20 +518,14 @@ module.exports = {
 
 	update_full_name: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var full_name = req.param('full_name');
 
 		if (!full_name)
 			return res.send(400, Error.alert(req, "FullName Update Error", "FullName is required."));
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -564,63 +542,42 @@ module.exports = {
 
 	update_email: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var email_new = req.param('email_new');
 
 		if (!email)
 			return res.send(400, Error.alert(req, "Email Update Error", "Email is required."));
 
-		if (username) {
-			Users
-			.findOneByUsername(username)
-			.populateAll()
-			.exec(function callback(err, user) {
-				if (err || !user)
-					return res.send(500, Error.alert(req, "Email Update Error", "User doesn't exist."));
+		if (!email_new)
+			return res.send(400, Error.alert(req, "Email Update Error", "New email is required."));
 
-		  	user.email = email;
-		  	user.save(function callback(err, updated_user) {
-		  		if (err || !updated_user)
-						return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
-			  	return res.send(updated_user.toWholeObject());
-		  	});
-			});
-		} else {
-			if (!email_new)
-				return res.send(400, Error.alert(req, "Email Update Error", "New email is required."));
+		User
+		.findOneByEmail(email)
+		.populateAll()
+		.exec(function callback(err, user) {
+			if (err || !user)
+				return res.send(500, Error.alert(req, "Email Update Error", "User doesn't exist."));
 
-			Users
-			.findOneByEmail(email)
-			.populateAll()
-			.exec(function callback(err, user) {
-				if (err || !user)
-					return res.send(500, Error.alert(req, "Email Update Error", "User doesn't exist."));
-
-		  	user.email = email_new;
-		  	user.save(function callback(err, updated_user) {
-		  		if (err || !updated_user)
-						return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
-			  	return res.send(updated_user.toWholeObject());
-		  	});
-			});
-		}
+	  	user.email = email_new;
+	  	user.save(function callback(err, updated_user) {
+	  		if (err || !updated_user)
+					return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
+		  	return res.send(updated_user.toWholeObject());
+	  	});
+		});
 	},
 
 	search: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var search_id = req.param('search_id');
-		var username = req.param('username');
 		var email = req.param('email');
 
 		if (!search_id)
-	    return res.send(400, Error.alert(req, "Searching User Error", "Username or email is required." ));
+	    return res.send(400, Error.alert(req, "Searching User Error", "Email is required." ));
 	  search_id = search_id.toLowerCase();
 
-		Users
-		.findOne({
-		  or: [{username: search_id}, {email: search_id}]
-		})
+		User
+		.findOneByEmail(search_id)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -633,101 +590,12 @@ module.exports = {
 		});
 	},
 
-	feed: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var page = req.param('page');
-		
-		Users
-		.findOneByUsername(username)
-		.populateAll()
-		.exec(function callback(err, user) {
-			if (err || !user) 
-				return res.send(500, Error.log(req, "User Feed Error", "User doesn't exist."));
-
-	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
-	  	var attending_courses = Arrays.getIds(user.attending_courses);
-	  	var total_courses = supervising_courses.concat(attending_courses);
-
-  		Courses
-  		.findById(total_courses)
-			.populateAll()
-  		.exec(function callback(err, courses) {
-  			if (err || !courses)
-	    		return res.send(new Array());
-
-				var total_posts = new Array();
-				for (var i = 0; i < courses.length; i++)
-					for (var j = 0; j < courses[i].posts.length; j++)
-						total_posts.push(courses[i].posts[j].id);
-
-	  		Posts
-	  		.findById(total_posts)
-				.populateAll()
-	  		.sort('id DESC')
-	  		.exec(function callback(err, posts) {
-	  			if (err || !posts)
-		    		return res.send(JSON.stringify(new Array()));
-
-					for (var i = 0; i < posts.length; i++) {
-
-						var students_count = 0;
-						for (var j = 0; j < courses.length; j++) {
-							if (courses[j].id == posts[i].course.id) {
-								students_count = courses[j].students.length;
-			  				posts[i].school_name = courses[j].school.name;
-							}
-						}
-
-						var grade;
-						var message;
-						if (posts[i].type == 'attendance') {
-							var locale = user.locale;
-							if (!locale)
-								locale = 'en';
-
-							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / students_count * 100).toFixed());
-		  				if (grade < 0 || isNaN(grade)) grade = 0;
-		  				if (grade > 100) grade = 100;
-
-		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
-		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + students_count + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
-		  				else {
-		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
-		  						message = sails.__({ phrase: "Attendance Checked", locale: locale })
-		  					else if (posts[i].attendance.late_students.indexOf(user.id) >= 0)
-		  						message = sails.__({ phrase: "Attendance Late", locale: locale })
-		  					else if (Moment().diff(Moment(posts[i].createdAt)) < 60 * 1000 && posts[i].attendance.type == 'auto') 
-		  					 	message = sails.__({ phrase: "Attendance Checking", locale: locale })
-	  						else
-		  					 	message = sails.__({ phrase: "Attendance Failed", locale: locale })
-		  				}
-		  			}
-
-	  				posts[i] = posts[i].toWholeObject();
-	  				if (posts[i].type == 'attendance') {
-		  				posts[i].grade = grade;
-	  					posts[i].message = message;
-	  				}
-					}
-			  	return res.send(posts);
-	  		});
-  		});
-		});
-	},
-
 	courses: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user) 
@@ -737,7 +605,7 @@ module.exports = {
 	  	var attending_courses = Arrays.getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
-  		Courses
+  		Course
   		.findById(total_courses)
 			.populateAll()
   		.sort('id ASC')
@@ -750,7 +618,7 @@ module.exports = {
 					for (var j = 0; j < courses[i].posts.length; j++)
 						total_posts.push(courses[i].posts[j].id);
 
-	    	Posts
+	    	Post
 	  		.findById(total_posts)
 				.populateAll()
 	  		.sort('id DESC')

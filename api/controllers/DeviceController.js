@@ -1,5 +1,5 @@
 /**
- * DevicesController
+ * DeviceController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -22,20 +22,14 @@ module.exports = {
 	update_notification_key: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var device_uuid = req.param('device_uuid');
 		var notification_key = req.param('notification_key');
 
 		if (!notification_key) 
 			return res.send(400, Error.log(req, "Notification Key Update Error", "Key is required."));
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -44,13 +38,13 @@ module.exports = {
 		  if (device_uuid != user.device.uuid)
 				return res.send(404, Error.log(req, "Notification Key Update Error", "Device doesn't match."));
 
-			Devices
+			Device
 			.update({ id : user.device.id }, { notification_key : notification_key })
 			.exec(function callback(err, device) {
 				if (err || !device)
 					return res.send(404, Error.log(req, "Notification Key Update Error", "Updating Device Failed."));
 
-				Users
+				User
 				.findOneById(user.id)
 				.populateAll()
 				.exec(function callback(err, user) {

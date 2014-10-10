@@ -33,7 +33,7 @@ module.exports = {
 
 		if (model == 'user') {
 			if (page)
-				Users
+				User
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -50,7 +50,7 @@ module.exports = {
 					}
 				});
 			else 
-				Users
+				User
 				.findOne({
 				  or : [
 				    { id: id },
@@ -69,7 +69,7 @@ module.exports = {
 				});
 		} else if (model == 'school') {
 			if (page)
-				Schools
+				School
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -86,7 +86,7 @@ module.exports = {
 					}
 				});
 			else 
-				Schools
+				School
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, school) {
@@ -100,7 +100,7 @@ module.exports = {
 				});
 		} else if (model == 'course') {
 			if (page)
-				Courses
+				Course
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -117,7 +117,7 @@ module.exports = {
 					}
 				});
 			else 
-				Courses
+				Course
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, course) {
@@ -131,7 +131,7 @@ module.exports = {
 				});
 		} else if (model == 'post') {
 			if (page)
-				Posts
+				Post
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -148,7 +148,7 @@ module.exports = {
 					}
 				});
 			else if (id)
-				Posts
+				Post
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, post) {
@@ -161,7 +161,7 @@ module.exports = {
 					}
 				});
 			else
-				Posts
+				Post
 				.find({ where: { course: course }, sort: 'id DESC'})
 				.populateAll()
 				.exec(function callback (err, posts) {
@@ -177,7 +177,7 @@ module.exports = {
 				});
 		} else if (model == 'attendance') {
 			if (page)
-				Attendances
+				Attendance
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -194,7 +194,7 @@ module.exports = {
 					}
 				});
 			else 
-				Attendances
+				Attendance
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, attendance) {
@@ -208,7 +208,7 @@ module.exports = {
 				});
 		} else if (model == 'clicker') {
 			if (page)
-				Clickers
+				Clicker
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -225,7 +225,7 @@ module.exports = {
 					}
 				});
 			else 
-				Clickers
+				Clicker
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, clicker) {
@@ -239,7 +239,7 @@ module.exports = {
 				});
 		} else if (model == 'notice') {
 			if (page)
-				Notices
+				Notice
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -256,7 +256,7 @@ module.exports = {
 					}
 				});
 			else 
-				Notices
+				Notice
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, notice) {
@@ -270,7 +270,7 @@ module.exports = {
 				});
 		} else if (model == 'question') {
 			if (page)
-				Questions
+				Question
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -287,7 +287,7 @@ module.exports = {
 					}
 				});
 			else 
-				Questions
+				Question
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, question) {
@@ -301,7 +301,7 @@ module.exports = {
 				});
 		} else if (model == 'device') {
 			if (page)
-				Devices
+				Device
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -318,7 +318,7 @@ module.exports = {
 					}
 				});
 			else 
-				Devices
+				Device
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, device) {
@@ -332,7 +332,7 @@ module.exports = {
 				});
 		} else if (model == 'setting') {
 			if (page)
-				Settings
+				Setting
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -349,7 +349,7 @@ module.exports = {
 					}
 				});
 			else 
-				Settings
+				Setting
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, setting) {
@@ -363,7 +363,7 @@ module.exports = {
 				});
 		} else if (model == 'identification') {
 			if (page)
-				Identifications
+				Identification
 				.find()
 				.paginate({page: page, limit: 50})
 				.populateAll()
@@ -380,7 +380,7 @@ module.exports = {
 					}
 				});
 			else 
-				Identifications
+				Identification
 				.findOneById(Number(id))
 				.populateAll()
 				.exec(function callback (err, identification) {
@@ -425,7 +425,7 @@ module.exports = {
 			return res.forbidden('End is not valid format date.');
 		}
 
-		Users
+		User
 		.find({ createdAt: { 
 			'>': startDate, 
 			'<': endDate } })
@@ -468,7 +468,7 @@ module.exports = {
 			return res.forbidden('End is not valid format date.');
 		}
 
-		Courses
+		Course
 		.find({ createdAt: { 
 			'>': startDate, 
 			'<': endDate } })
@@ -494,7 +494,7 @@ module.exports = {
 
 				result.student_over_5 = courses_over_5_ids.length;
 
-				Courses
+				Course
 				.find(courses_over_5_ids)
 				.populate('managers')
 				.populate('students')
@@ -550,7 +550,7 @@ module.exports = {
 		if (!type)
 			type = 'all';
 		
-		Users
+		User
 		.find()
 		.sort('id DESC')
 		.populate('supervising_courses')
@@ -594,8 +594,8 @@ module.exports = {
 	},
 
 	noti: function(req, res) {
-		// Users
-		// .findOneByUsername('galaxys2')
+		// User
+		// .findOneByEmail('galaxys2@bttendance.com')
 		// .populateAll()
 		// .exec(function callback(err, user) {
 		// 	var Noti = require('../utils/notifications');

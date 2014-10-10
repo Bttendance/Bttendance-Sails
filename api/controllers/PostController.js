@@ -1,5 +1,5 @@
 /**
- * PostsController
+ * PostController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -23,7 +23,6 @@ module.exports = {
 	start_clicker: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
@@ -43,25 +42,20 @@ module.exports = {
 		else
 			show_info_on_select = true;
 
-		Courses.findOneById(course_id).exec(function callback(err, course) {
+		Course.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Start Clicker Error", "Course doesn't exist."));
 
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Start Clicker Error", "Current course is closed."));
 
-			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			User
+			.findOneByEmail(email)
 			.exec(function callback(err, user) {
 				if(err || !user)
 	  			return res.send(500, Error.log(req, "Start Clicker Error", "User doesn't exist."));
 
-				Posts
+				Post
 				.create({
 				  author: user.id,
 				  course: course_id,
@@ -75,14 +69,14 @@ module.exports = {
 					if (err || !post)
 		  			return res.send(500, Error.alert(req, "Start Clicker Error", "Fail to create a post."));
 
-		    	Posts
+		    	Post
 		    	.findOneById(post.id)
 		    	.populateAll()
 		  		.exec(function callback(err, post) {
 		  			if (err || !post)
 			  			return res.send(500, Error.log(req, "Start Clicker Error", "Post doesn't exist."));
 
-			    	Courses
+			    	Course
 			    	.findOneById(post.course.id)
 			    	.populateAll()
 				  	.exec(function callback(err, course) {
@@ -90,14 +84,14 @@ module.exports = {
 				  			return res.send(500, Error.log(req, "Start Clicker Error", "Course doesn't exist."));
 
 					  	// Send notification about post to Prof & Std
-					  	var notiUsers = new Array();
+					  	var notis = new Array();
 					  	for (var i = 0; i < course.students.length; i++)
-					  		notiUsers.push(course.students[i].id);
+					  		notis.push(course.students[i].id);
 					  	for (var i = 0; i < course.managers.length; i++)
-					  		notiUsers.push(course.managers[i].id);
+					  		notis.push(course.managers[i].id);
 					  	
-				  		Users
-				  		.findById(notiUsers)
+				  		User
+				  		.findById(notis)
 							.populate('device')
 							.populate('setting')
 				  		.sort('id DESC')
@@ -120,30 +114,24 @@ module.exports = {
 	start_attendance: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var type = req.param('type');
 		if (!type) type = 'auto';
 
-		Courses.findOneById(course_id).exec(function callback(err, course) {
+		Course.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
 
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Start Attendance Error", "Current course is closed."));
 
-			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			User
+			.findOneByEmail(email)
 			.exec(function callback(err, user) {
 				if(err || !user)
 	  			return res.send(500, Error.log(req, "Start Attendance Error", "User doesn't exist."));
 
-				Posts
+				Post
 				.create({
 				  author: user.id,
 				  course: course_id,
@@ -153,14 +141,14 @@ module.exports = {
 					if (err || !post)
 		  			return res.send(500, Error.alert(req, "Start Attendance Error", "Fail to create a post."));
 
-		    	Posts
+		    	Post
 		    	.findOneById(post.id)
 		    	.populateAll()
 		  		.exec(function callback(err, post) {
 		  			if (err || !post)
 			  			return res.send(500, Error.log(req, "Start Attendance Error", "Post doesn't exist."));
 
-			    	Courses
+			    	Course
 			    	.findOneById(post.course.id)
 			    	.populateAll()
 				  	.exec(function callback(err, course) {
@@ -168,14 +156,14 @@ module.exports = {
 				  			return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
 
 						  	// Send notification about post to Prof & Std
-						  	var notiUsers = new Array();
+						  	var notis = new Array();
 						  	for (var i = 0; i < course.students.length; i++)
-						  		notiUsers.push(course.students[i].id);
+						  		notis.push(course.students[i].id);
 						  	for (var i = 0; i < course.managers.length; i++)
-						  		notiUsers.push(course.managers[i].id);
+						  		notis.push(course.managers[i].id);
 						  	
-					  		Users
-					  		.findById(notiUsers)
+					  		User
+					  		.findById(notis)
 								.populate('device')
 								.populate('setting')
 					  		.sort('id DESC')
@@ -202,29 +190,23 @@ module.exports = {
 	create_notice: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 
-		Courses.findOneById(course_id).exec(function callback(err, course) {
+		Course.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Start Notice Error", "Course doesn't exist."));
 
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Start Notice Error", "Current course is closed."));
 
-			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			User
+			.findOneByEmail(email)
 			.exec(function callback(err, user) {
 				if (err || !user)
 	  			return res.send(500, Error.log(req, "Post Notice Error", "User doesn't exist."));
 
-				Posts.create({
+				Post.create({
 				  author: user.id,
 				  course: course_id,
 				  message: message,
@@ -233,14 +215,14 @@ module.exports = {
 					if (err || !post)
 		  			return res.send(500, Error.alert(req, "Post Notice Error", "Fail to create a post."));
 
-	    		Posts
+	    		Post
 	    		.findOneById(post.id)
 		    	.populateAll()
 		  		.exec(function callback(err, post) {
 		  			if (err || !post)
 			  			return res.send(500, Error.log(req, "Post Notice Error", "Post doesn't exist."));
 
-			    	Courses
+			    	Course
 			    	.findOneById(post.course.id)
 			    	.populateAll()
 				  	.exec(function callback(err, course) {
@@ -248,14 +230,14 @@ module.exports = {
 				  			return res.send(500, Error.log(req, "Post Notice Error", "Course doesn't exist."));
 
 					  	// Send notification about post to Prof & Std
-					  	var notiUsers = new Array();
+					  	var notis = new Array();
 					  	for (var i = 0; i < course.students.length; i++)
-					  		notiUsers.push(course.students[i].id);
+					  		notis.push(course.students[i].id);
 					  	for (var i = 0; i < course.managers.length; i++)
-					  		notiUsers.push(course.managers[i].id);
+					  		notis.push(course.managers[i].id);
 					  	
-				  		Users
-				  		.findById(notiUsers)
+				  		User
+				  		.findById(notis)
 				  		.populate('device')
 							.populate('setting')
 				  		.sort('id DESC')
@@ -281,13 +263,13 @@ module.exports = {
 		if (!message)
 			return res.send(500, Error.alert(req, "Update Post Error", "Please write any message."));
 
-		Posts
+		Post
 		.findOneById(post_id)
 		.exec(function callback(err, post) {
 			if (err || !post)
   			return res.send(500, Error.log(req, "Update Post Error", "Post doesn't exist."));
 
-    	Courses
+    	Course
     	.findOneById(post.course)
     	.exec(function callback(err, course) {
 				if (err || !course)
@@ -301,7 +283,7 @@ module.exports = {
 	    		if (err)
 		  			return res.send(500, Error.alert(req, "Update Post Error", "Fail to update post."));
 
-					Posts
+					Post
 					.findOneById(post_id)
 					.populateAll()
 					.exec(function callback(err, post) {
@@ -319,13 +301,13 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var post_id = req.param('post_id');
 
-		Posts
+		Post
 		.findOneById(post_id)
 		.exec(function callback(err, post) {
 			if (err || !post)
   			return res.send(500, Error.log(req, "Delete Post Error", "Post doesn't exist."));
 
-    	Courses
+    	Course
     	.findOneById(post.course)
     	.populate('posts')
     	.exec(function callback(err, course) {
@@ -340,7 +322,7 @@ module.exports = {
 	    		if (err)
 		  			return res.send(500, Error.alert(req, "Delete Post Error", "Fail to update course."));
 
-					Posts
+					Post
 					.findOneById(post_id)
 					.populateAll()
 					.exec(function callback(err, post) {

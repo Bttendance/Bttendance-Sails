@@ -1,5 +1,5 @@
 /**
- * ClickersController.js 
+ * ClickerController.js 
  *
  * @description ::
  * @docs        :: http://sailsjs.org/#!documentation/controllers
@@ -12,22 +12,16 @@ module.exports = {
 	click: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var clicker_id = req.param('clicker_id');
 		var choice_number = req.param('choice_number');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.exec(function callback(err, user) { 
 			if (err || !user)
 		    return res.send(500, Error.log(req, "Clicker Click Error", "User doesn't exitst."));
 
-		  Clickers
+		  Clicker
 		  .findOneById(clicker_id)
 		  .populateAll()
 		  .exec(function callback(err, clicker) {

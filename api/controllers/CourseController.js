@@ -1,7 +1,7 @@
 /**
- * CoursesController
+ * CourseController
  *
- * @module      :: CoursesController
+ * @module      :: CourseController
  * @description	:: A set of functions called `actions`.
  *
  *                 Actions contain code telling Sails how to respond to a certain type of request.
@@ -33,22 +33,16 @@ module.exports = {
 	info: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
 
-  		Courses
+  		Course
   		.findOneById(course_id)
 			.populateAll()
   		.sort('id ASC')
@@ -56,7 +50,7 @@ module.exports = {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
 
-	    	Posts
+	    	Post
 	  		.findById(Arrays.getIds(course.posts))
 				.populateAll()
 	  		.sort('id DESC')
@@ -187,21 +181,21 @@ module.exports = {
 		if (!locale)
 			locale = 'en';
 
-		Users
+		User
 		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
 		    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
 
-		  Schools
+		  School
 		  .findOneById(school_id)
 		  .exec(function callback(err, school) {
 				if (err || !school) 
 			    return res.send(500, Error.log(req, "Course Create Error", "School doesn't exist."));
 
 			  var code = Random.string(4);
-				Courses.create({
+				Course.create({
 					name: name,
 					school: school_id,
 					professor_name: professor_name,
@@ -219,14 +213,14 @@ module.exports = {
 						if (err) 
 					    return res.send(500, Error.log(req, "Course Create Error", "User save error."));
 
-				    Users
+				    User
 						.findOneByEmail(email)
 						.populateAll()
 						.exec(function callback(err, user_new) {
 							if (err || !user_new)
 						    return res.send(500, Error.log(req, "Course Create Error", "User doesn't exist."));
 
-						  Courses
+						  Course
 						  .findOneById(course.id)
 						  .populateAll()
 						  .exec(function callback(err, course) {
@@ -293,7 +287,7 @@ module.exports = {
 		var course_id = req.param('course_id');
 		course_code = course_code.toLowerCase();
 
-		Courses
+		Course
 		.findOne({
 		  or : [
 		    { id: course_id },
@@ -312,13 +306,12 @@ module.exports = {
 	attend: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var locale = req.param('locale');
 		if (!locale)
 			locale = 'en';
 
-		Courses
+		Course
 		.findOneById(course_id)
 		.populateAll()
 		.exec(function callback(err, course) {
@@ -328,13 +321,8 @@ module.exports = {
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Course Attend Error", "Current course is closed."));
 		
-			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			User
+			.findOneByEmail(email)
 			.populateAll()
 			.exec(function callback(err, user) {
 				if (err || !user)
@@ -353,13 +341,8 @@ module.exports = {
 					if (err)
 				    return res.send(500, Error.log(req, "Course Attend Error", "Fail to save user."));
 
-			    Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
+			    User
+					.findOneByEmail(email)
 					.populateAll()
 					.exec(function callback(err, user_new) {
 						if (err || !user_new)
@@ -429,23 +412,17 @@ module.exports = {
 	dettend: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 
-		Courses.findOneById(course_id).exec(function callback(err, course) {
+		Course.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Course Unjoin Error", "Course doesn't exist."));
 
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Course Unjoin Error", "Current course is closed."));
 		
-			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			User
+			.findOneByEmail(email)
 			.populateAll()
 			.exec(function callback(err, user) {
 				if (err || !user)
@@ -464,13 +441,8 @@ module.exports = {
 					if (err)
 				    return res.send(500, Error.log(req, "Course Unjoin Error", "Fail to save user."));
 
-			    Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
+			    User
+					.findOneByEmail(email)
 					.populateAll()
 					.exec(function callback(err, user_new) {
 						if (err || !user_new)
@@ -486,17 +458,11 @@ module.exports = {
 	feed: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.exec(function callback(err, user) {
@@ -505,7 +471,7 @@ module.exports = {
 
 	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
 
-			Courses
+			Course
 			.findOneById(course_id)
 			.populate('posts')
 			.populate('students')
@@ -514,12 +480,12 @@ module.exports = {
 				if (err || !course)
 		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
 
-	  		Posts
+	  		Post
 	  		.findById(Arrays.getIds(course.posts))
 				.populateAll()
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
-				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));
+				    return res.send(500, Error.log(req, "Course Feed Error", "Post doesn't exist."));
 
 					for (var i = 0; i < posts.length; i++) {
 
@@ -565,13 +531,13 @@ module.exports = {
     var email = req.param('email');
     var course_id = req.param('course_id');
 
-    Courses
+    Course
     .update({ id : course_id }, { opened : true })
     .exec(function callback(err, course) {
       if (err || !course)
 		    return res.send(500, Error.alert(req, "Course Open Error", "Course update error."));
 
-		  Users
+		  User
 		  .findOneByEmail(email)
 		  .populateAll()
 		  .exec(function callback(err, user) {
@@ -588,13 +554,13 @@ module.exports = {
     var email = req.param('email');
     var course_id = req.param('course_id');
 
-    Courses
+    Course
     .update({ id : course_id }, { opened : false })
     .exec(function callback(err, course) {
       if (err || !course)
 		    return res.send(500, Error.alert(req, "Course Open Error", "Course update error."));
 
-		  Users
+		  User
 		  .findOneByEmail(email)
 		  .populateAll()
 		  .exec(function callback(err, user) {
@@ -610,14 +576,14 @@ module.exports = {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
    
-    Courses
+    Course
     .findOneById(course_id)
     .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
 		    return res.send(500, Error.log(req, "Course Students Error", "Course doesn't exist."));
 
-      Users
+      User
       .findById(Arrays.getIds(course.students))
 			.populateAll()
       .exec(function callback(err, users) {
@@ -648,10 +614,9 @@ module.exports = {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
     var email = req.param('email');
-    var username = req.param('username');
     var manager = req.param('manager');
 
-    Courses
+    Course
     .findOneById(course_id)
     .populateAll()
     .exec(function callback(err, course) {
@@ -661,25 +626,20 @@ module.exports = {
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Adding Manager Error", "Current course is closed."));
  
-      if (Arrays.getUsernames(course.managers).indexOf(username) == -1 && Arrays.getEmails(course.managers).indexOf(email) == -1)
+      if (Arrays.getEmails(course.managers).indexOf(email) == -1)
         return res.send(500, Error.alert(req, "Adding Manager Error", "You are not supervising current course."));
 
-      if (Arrays.getUsernames(course.students).indexOf(manager) >= 0 || Arrays.getEmails(course.students).indexOf(manager) >= 0)
+      if (Arrays.getEmails(course.students).indexOf(manager) >= 0)
         return res.send(500, Error.alert(req, "Adding Manager Error", "User is already attending current course."));
 
-      Users
-			.findOne({
-			  or : [
-			    { email: manager },
-			    { username: manager }
-			  ]
-			})
+      User
+			.findOneByEmail(email)
       .populateAll()
       .exec(function callback(err, mang) {
         if (err || !mang)
 	        return res.send(500, Error.alert(req, "Adding Manager Error", "Fail to add a user %s as a manager.\nPlease check User ID of Email again.", manager));
 
-	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0 || Arrays.getEmails(course.managers).indexOf(manager) >= 0)
+	      if (Arrays.getEmails(course.managers).indexOf(manager) >= 0)
 	        return res.send(500, Error.alert(req, "Adding Manager Error", "%s is already supervising current course.", mang.full_name));
 
 			  var employed_schools = Arrays.getIds(mang.employed_schools);
@@ -695,7 +655,7 @@ module.exports = {
 
 					Noti.send(mang, course.name, "You have been added as a manager.", "added_as_manager", course.id);
 
-			    Courses
+			    Course
 			    .findOneById(course_id)
 			    .populateAll()
 			    .exec(function callback(err, course) {
@@ -713,14 +673,14 @@ module.exports = {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
 
-    Courses
+    Course
     .findOneById(course_id)
     .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(500, Error.log(req, "Attendance Grades Error", "Course doesn't exist."));
 
-      Users
+      User
       .findById(Arrays.getIds(course.students))
 	    .populateAll()
       .sort('full_name DESC')
@@ -728,7 +688,7 @@ module.exports = {
         if (err || !users)
 	        return res.send(500, Error.alert(req, "Attendance Grades Error", "Current course has no student."));
 
-	  		Posts
+	  		Post
 	  		.findById(Arrays.getIds(course.posts))
 		    .populateAll()
 	  		.sort('id DESC')
@@ -779,14 +739,14 @@ module.exports = {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
 
-    Courses
+    Course
     .findOneById(course_id)
     .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(500, Error.log(req, "Clicker Grades Error", "Course doesn't exist."));
 
-      Users
+      User
       .findById(Arrays.getIds(course.students))
 	    .populateAll()
       .sort('full_name DESC')
@@ -794,7 +754,7 @@ module.exports = {
         if (err || !users)
 	        return res.send(500, Error.alert(req, "Clicker Grades Error", "Current course has no student."));
 
-	  		Posts
+	  		Post
 	  		.findById(Arrays.getIds(course.posts))
 		    .populateAll()
 	  		.sort('id DESC')
@@ -855,20 +815,19 @@ module.exports = {
 	export_grades: function(req, res) {
     res.contentType('application/json; charset=utf-8');
     var email = req.param('email');
-    var username = req.param('username');
     var course_id = req.param('course_id');
 		var locale = req.param('locale');
 		if (!locale)
 			locale = 'en';
 
-    Courses
+    Course
     .findOneById(course_id)
     .populateAll()
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(500, Error.alert(req, "Export Grades Error", "Fail to find current course."));
 
-      Users
+      User
       .findById(Arrays.getIds(course.students))
   		.populateAll()
       .sort('full_name DESC')
@@ -876,7 +835,7 @@ module.exports = {
         if (err || !users)
           return res.send(500, Error.alert(req, "Export Grades Error", "Current course has no student."));
 
-	  		Posts
+	  		Post
 	  		.findById(Arrays.getIds(course.posts))
 	  		.populateAll()
 	  		.sort('id DESC')
@@ -1173,13 +1132,8 @@ module.exports = {
 				  	]
 					});
 
-	        Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
+	        User
+					.findOneByEmail(email)
 					.exec(function callback(err, user) {
 		        if (err || !user)
 		          return res.send(500, Error.alert(req, "Export Grades Error", "Fail to find user."));

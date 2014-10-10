@@ -1,5 +1,5 @@
 /**
- * SchoolsController
+ * SchoolController
  *
  * @module      :: Controller
  * @description	:: A set of functions called `actions`.
@@ -31,7 +31,7 @@ module.exports = {
 		if (!type)
 			return res.send(400, Error.alert(req, "School Create Error", "School type is required."));
 
-		Schools
+		School
 		.create({
 			name: name,
 			type: type	
@@ -40,7 +40,7 @@ module.exports = {
 			if (err || !school)
 				return res.send(500, Error.alert(req, "School Create Error", "Fail to create a school."));
 
-			Schools
+			School
 			.findOneById(school.id)
 			.populate('courses')
 			.populate('professors')
@@ -54,17 +54,14 @@ module.exports = {
 	all: function(req, res) {
 		res.contentType('application/json; charset=utf-8');		
 
-		Schools
+		School
 		.find()
 		.populate('courses')
 		.populate('professors')
 		.populate('students')
 		.exec(function callback(err, schools) {
-			for (var i = 0; i < schools.length; i++) {
+			for (var i = 0; i < schools.length; i++)
 				schools[i] = schools[i].toWholeObject();
-				// Will be Deprecated
-				schools[i].website = schools[i].courses_count + '_Courses';
-			}
 	  	return res.send(schools);
 		});
 	},
@@ -76,7 +73,7 @@ module.exports = {
 		if (!school_id)
 			return res.send(400, Error.log(req, "Show All Courses Error", "School id is required."));
 
-		Schools
+		School
 		.findOneById(school_id)
 		.populate('courses')
 		.exec(function callback(err, school) {
@@ -87,7 +84,7 @@ module.exports = {
 		  for (var i = 0; i < school.courses.length; i++)
 		  	courses.push(school.courses[i].id);
 
-  		Courses
+  		Course
   		.findById(courses)
   		.populateAll()
   		.exec(function callback(err, courses) {
@@ -104,19 +101,13 @@ module.exports = {
 	enroll: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var school_id = req.param('school_id');
 		var identity = req.param('identity');
 		if (!identity)
 			identity  = req.param('student_id');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		User
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -126,11 +117,11 @@ module.exports = {
 		  if (enrolled_schools.indexOf(Number(school_id)) != -1)
 		  	return res.send(user.toWholeObject());
 
-		  Schools.findOneById(school_id).exec(function callback(err, school) {
+		  School.findOneById(school_id).exec(function callback(err, school) {
 		  	if (err || !school)
 					return res.send(500, Error.log(req, "Enroll School Error", "School Find Error"));
 
-				Identifications.create({
+				Identification.create({
 					identity: identity,
 					school: school.id,
 					owner: user.id
@@ -144,13 +135,8 @@ module.exports = {
 						if (err)
 							return res.send(500, Error.log(req, "Enroll School Error", "Fail to save user."));
 
-				    Users
-						.findOne({
-						  or : [
-						    { email: email },
-						    { username: username }
-						  ]
-						})
+				    User
+						.findOneByEmail(email)
 						.populateAll()
 						.exec(function callback(err, user_new) {
 							if (err || !user_new)
