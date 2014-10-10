@@ -40,7 +40,7 @@ exports.log = function(req, title, message, param1, param2) {
 	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2);
 
 	var locale = req.param('locale');
-	if (!locale)
+	if (!locale || locale != 'ko')
 		locale = 'en';
 	
 	var json = {};
@@ -55,7 +55,7 @@ exports.toast = function(req, title, message, param1, param2) {
 	sails.log.warn(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2);
 
 	var locale = req.param('locale');
-	if (!locale)
+	if (!locale || locale != 'ko')
 		locale = 'en';
 
 	var json = {};
@@ -70,7 +70,7 @@ exports.alert = function(req, title, message, param1, param2) {
 	sails.log.error(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2);
 
 	var locale = req.param('locale');
-	if (!locale)
+	if (!locale || locale != 'ko')
 		locale = 'en';
 
 	var json = {};

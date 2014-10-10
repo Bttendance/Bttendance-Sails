@@ -109,6 +109,10 @@ module.exports = {
 								});
 
 								var path;
+
+								if (!locale || locale != 'ko')
+									locale = 'en';
+
 								if(locale == 'ko') {
 									path = Path.resolve(__dirname, '../../assets/emails/Welcome_KO.html');
 								} else {
@@ -176,6 +180,8 @@ module.exports = {
 									});
 
 									var path;
+									if (!locale || locale != 'ko')
+										locale = 'en';
 									if(locale == 'ko') {
 										path = Path.resolve(__dirname, '../../assets/emails/Welcome_KO.html');
 									} else {
@@ -221,6 +227,8 @@ module.exports = {
 		var device_uuid = req.param('device_uuid');
 		var device_type = req.param('device_type');
 		var app_version = req.param('app_version');
+		if (!locale || locale != 'ko')
+			locale = 'en';
 
 		Users
 		.findOne({
@@ -396,7 +404,7 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		Users
@@ -460,7 +468,7 @@ module.exports = {
 		var password_old = req.param('password_old');
 		var password_new = req.param('password_new');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		if (!email)
@@ -683,7 +691,7 @@ module.exports = {
 						var message;
 						if (posts[i].type == 'attendance') {
 							var locale = user.locale;
-							if (!locale)
+							if (!locale || locale != 'ko')
 								locale = 'en';
 
 							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / students_count * 100).toFixed());

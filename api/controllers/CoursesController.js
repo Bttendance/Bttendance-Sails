@@ -184,7 +184,7 @@ module.exports = {
 		var school_id = req.param('school_id');
 		var professor_name = req.param('professor_name');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		Users
@@ -315,7 +315,7 @@ module.exports = {
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		Courses
@@ -527,7 +527,7 @@ module.exports = {
 						var message;
 						if (posts[i].type == 'attendance') {
 							var locale = user.locale;
-							if (!locale)
+							if (!locale || locale != 'ko')
 								locale = 'en';
 
 							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / course.students.length * 100).toFixed());
@@ -858,7 +858,7 @@ module.exports = {
     var username = req.param('username');
     var course_id = req.param('course_id');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
     Courses
