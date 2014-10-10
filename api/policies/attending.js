@@ -12,24 +12,18 @@ var Arrays = require('../utils/arrays');
 module.exports = function attending (req, res, next) {
 
 	// Params
-	var username = req.param('username');
 	var email = req.param('email');
 	var password = req.param('password');
 	var course_id = req.param('course_id');
 
-	if (!username && !email)
-		return res.send(400, Error.log(req, "Attending Policy Error", "Username or Email is required."));
+	if (!email)
+		return res.send(400, Error.log(req, "Attending Policy Error", "Email is required."));
 
 	if (!password || !course_id)
 		return res.send(400, Error.log(req, "Attending Policy Error", "Password and Course ID is required."));
 
-	Users
-	.findOne({
-	  or : [
-	    { email: email },
-	    { username: username }
-	  ]
-	})
+	User
+	.findOneByEmail(email)
 	.populate('attending_courses')
 	.exec(function callback(err, user) {
 

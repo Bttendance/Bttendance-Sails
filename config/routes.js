@@ -85,133 +85,128 @@ module.exports.routes = {
 
   /************* Sockets API ************/  
   'put /api/sockets/connect': {
-    controller: 'sockets',
+    controller: 'socket',
     action: 'connect'
   },
 
   /************* Users API ************/  
   'post /api/users/signup': {
-    controller: 'users',
+    controller: 'user',
     action: 'signup'
   },
 
   'get /api/users/auto/signin': {
-    controller: 'users',
+    controller: 'user',
     action: 'auto_signin'
   },
 
   'get /api/users/signin': {
-    controller: 'users',
+    controller: 'user',
     action: 'signin'
   },
 
   'put /api/users/forgot/password': {
-    controller: 'users',
+    controller: 'user',
     action: 'forgot_password'
   },
 
   'put /api/users/update/password': {
-    controller: 'users',
+    controller: 'user',
     action: 'update_password'
   },
 
   'put /api/users/update/full_name': {
-    controller: 'users',
+    controller: 'user',
     action: 'update_full_name'
   },
 
   'put /api/users/update/email': {
-    controller: 'users',
+    controller: 'user',
     action: 'update_email'
   },
 
-  'get /api/users/feed': {
-    controller: 'users',
-    action: 'feed'
-  },
-
   'get /api/users/courses': {
-    controller: 'users',
+    controller: 'user',
     action: 'courses'
   },
 
   'get /api/users/search': {
-    controller: 'users',
+    controller: 'user',
     action: 'search'
   },
 
   /************* Devices API ************/  
   'put /api/devices/update/notification_key': {
-    controller: 'devices',
+    controller: 'device',
     action: 'update_notification_key'
   },
 
   /************* Settings API ************/  
   'put /api/settings/update/attendance': {
-    controller: 'settings',
+    controller: 'setting',
     action: 'update_attendance'
   },  
 
   'put /api/settings/update/clicker': {
-    controller: 'settings',
+    controller: 'setting',
     action: 'update_clicker'
   },
 
   'put /api/settings/update/notice': {
-    controller: 'settings',
+    controller: 'setting',
     action: 'update_notice'
   },
 
-  'put /api/settings/update/clicker/defaults': {
-    controller: 'settings',
+  'put /api/setting/update/clicker/defaults': {
+    controller: 'setting',
     action: 'update_clicker_defaults'
   },
 
   /************* Questions API ************/  
   'get /api/questions/mine': {
-    controller: 'questions',
+    controller: 'question',
     action: 'mine'
   },  
 
   'post /api/questions/create': {
-    controller: 'questions',
+    controller: 'question',
     action: 'create'
   },
 
   'put /api/questions/edit': {
-    controller: 'questions',
+    controller: 'question',
     action: 'edit'
   },
 
   'delete /api/questions/remove': {
-    controller: 'questions',
+    controller: 'question',
     action: 'remove'
   },
 
   /************* Identifications API ************/  
   'put /api/identifications/update/identity': {
-    controller: 'identifications',
+    controller: 'identification',
     action: 'update_identity'
   },
 
   /************* Schools API ************/  
   'post /api/schools/create': {
-    controller: 'schools',
+    controller: 'school',
     action: 'create'
   },
 
   'get /api/schools/all': {
-    controller: 'schools',
+    controller: 'school',
     action: 'all'
   },
 
   'get /api/schools/courses': {
-    controller: 'schools',
+    controller: 'school',
     action: 'courses'
   },
 
   'put /api/schools/enroll': {
-    controller: 'schools',
+    controller: 'school',
     action: 'enroll'
   },
 
@@ -222,138 +217,132 @@ module.exports.routes = {
   },
 
   'post /api/courses/create/instant': {
-    controller: 'courses',
+    controller: 'course',
     action: 'create_instant'
   },
 
   'get /api/courses/search': {
-    controller: 'courses',
+    controller: 'course',
     action: 'search'
   },
 
   'put /api/courses/attend': {
-    controller: 'courses',
+    controller: 'course',
     action: 'attend'
   },
 
   'put /api/courses/dettend': {
-    controller: 'courses',
+    controller: 'course',
     action: 'dettend'
   },
 
   'get /api/courses/feed': {
-    controller: 'courses',
+    controller: 'course',
     action: 'feed'
   },
 
   'put /api/courses/open': {
-    controller: 'courses',
+    controller: 'course',
     action: 'open'
   },
 
   'put /api/courses/close': {
-    controller: 'courses',
+    controller: 'course',
     action: 'close'
   },
 
   'get /api/courses/students': {
-    controller: 'courses',
+    controller: 'course',
     action: 'students'
   },
 
   'put /api/courses/add/manager': {
-    controller: 'courses',
+    controller: 'course',
     action: 'add_manager'
   },
 
   'get /api/courses/grades': {
-    controller: 'courses',
+    controller: 'course',
     action: 'attendance_grades'
   },
 
   'get /api/courses/attendance/grades': {
-    controller: 'courses',
+    controller: 'course',
     action: 'attendance_grades'
   },
 
   'get /api/courses/clicker/grades': {
-    controller: 'courses',
+    controller: 'course',
     action: 'clicker_grades'
   },
 
   'put /api/courses/export/grades': {
-    controller: 'courses',
+    controller: 'course',
     action: 'export_grades'
   },
 
   /************* Posts API ************/  
   'post /api/posts/start/attendance': {
-    controller: 'posts',
+    controller: 'post',
     action: 'start_attendance'
   },
 
   'post /api/posts/start/clicker': {
-    controller: 'posts',
+    controller: 'post',
     action: 'start_clicker'
   },
 
   'post /api/posts/create/notice': {
-    controller: 'posts',
+    controller: 'post',
     action: 'create_notice'
   },
 
   'put /api/posts/update/message': {
-    controller: 'posts',
+    controller: 'post',
     action: 'update_message'
   },
 
   'delete /api/posts/remove': {
-    controller: 'posts',
+    controller: 'post',
     action: 'remove'
   },
 
   /************* Attendances API ************/  
   'get /api/attendances/from/courses': {
-    controller: 'attendances',
+    controller: 'attendance',
     action: 'from_courses'
   },
 
   'put /api/attendances/found/device': {
-    controller: 'attendances',
+    controller: 'attendance',
     action: 'found_device'
   },
 
   'put /api/attendances/check/manually': {
-    controller: 'attendances',
+    controller: 'attendance',
     action: 'check_manually'
   },
 
   'put /api/attendances/uncheck/manually': {
-    controller: 'attendances',
+    controller: 'attendance',
     action: 'uncheck_manually'
   },
 
   'put /api/attendances/toggle/manually': {
-    controller: 'attendances',
+    controller: 'attendance',
     action: 'toggle_manually'
   },
 
   /************* Clickers API ************/ 
   'put /api/clickers/click': {
-    controller: 'clickers',
+    controller: 'clicker',
     action: 'click'
   },
 
   /************* Notices API ************/ 
   'put /api/notices/seen': {
-    controller: 'notices',
+    controller: 'notice',
     action: 'seen'
-  },
-
-  /************* Tokens API ************/  
-  '/verify/:token_key': {
-    controller: 'tokens',
-    action: 'verify'
   },
 
   /************* Tutorial Views ************/  
@@ -376,4 +365,5 @@ module.exports.routes = {
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
   // for configuration options and examples.
 };
+ 
  

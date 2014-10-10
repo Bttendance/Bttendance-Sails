@@ -12,24 +12,18 @@ var Arrays = require('../utils/arrays');
 module.exports = function attending_or_supervising (req, res, next) {
 
 	// Params
-	var username = req.param('username');
 	var email = req.param('email');
 	var password = req.param('password');
 	var course_id = req.param('course_id');
 
-	if (!username && !email)
-		return res.send(400, Error.log(req, "Course Policy Error", "Username or Email is required."));
+	if (!email)
+		return res.send(400, Error.log(req, "Course Policy Error", "Email is required."));
 
 	if (!password || !course_id)
-		return res.send(400, Error.log(req, "Course Policy Error", "Username, password and course id is required."));
+		return res.send(400, Error.log(req, "Course Policy Error", "Password and Course ID is required."));
 
-	Users
-	.findOne({
-	  or : [
-	    { email: email },
-	    { username: username }
-	  ]
-	})
+	User
+	.findOneByEmail(email)
 	.populate('supervising_courses')
 	.populate('attending_courses')
 	.exec(function callback(err, user) {

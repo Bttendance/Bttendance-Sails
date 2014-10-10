@@ -11,28 +11,14 @@ var Error = require('../utils/errors');
 module.exports = function isUser (req, res, next) {
 
 	// Params
-	var username = req.param('username');
 	var email = req.param('email');
 	var password = req.param('password');
 
-	if (!username && !email)
-		return res.send(400, Error.alert(req, "User Policy Error", "Username or Email is required."));
+	if (!email)
+		return res.send(400, Error.alert(req, "User Policy Error", "Email is required."));
 
 	if (!password)
 		return res.send(400, Error.alert(req, "User Policy Error", "Password is required."));
-
-	// Super Username Policy
-	if (username == "appletest0"
-		|| username == "appletest1"
-		|| username == "appletest2"
-		|| username == "appletest3"
-		|| username == "appletest4"
-		|| username == "appletest5"
-		|| username == "appletest6"
-		|| username == "appletest7"
-		|| username == "appletest8"
-		|| username == "appletest9")
-		return next();
 
 	// Super Email Policy
 	if (email == "apple0@apple.com"
@@ -47,13 +33,8 @@ module.exports = function isUser (req, res, next) {
 		|| email == "apple9@apple.com")
 		return next();
 
-	Users
-	.findOne({
-	  or : [
-	    { email: email },
-	    { username: username }
-	  ]
-	})
+	User
+	.findOneByEmail(email)
 	.exec(function callback(err, user) {
 
 		// Error handling

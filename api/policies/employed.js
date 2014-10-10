@@ -12,24 +12,18 @@ var Arrays = require('../utils/arrays');
 module.exports = function isUser (req, res, next) {
 
 	// Params
-	var username = req.param('username');
 	var email = req.param('email');
 	var password = req.param('password');
 	var school_id = req.param('school_id');
 
-	if (!username && !email)
-		return res.send(400, Error.alert(req, "Employed Policy Error", "Username or Email is required."));
+	if (!email)
+		return res.send(400, Error.alert(req, "Employed Policy Error", "Email is required."));
 
 	if (!password || !school_id)
 		return res.send(400, Error.alert(req, "Employed Policy Error", "Password and School ID is required."));
 
-	Users
-	.findOne({
-	  or : [
-	    { email: email },
-	    { username: username }
-	  ]
-	})
+	User
+	.findOneByEmail(email)
 	.populate('employed_schools')
 	.exec(function callback(err, user) {
 

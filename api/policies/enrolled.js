@@ -23,13 +23,8 @@ module.exports = function isUser (req, res, next) {
 	if (!password || !school_id)
 		return res.send(400, Error.alert(req, "Enrolled Policy Error", "Password and School ID is required."));
 
-	Users
-	.findOne({
-	  or : [
-	    { email: email },
-	    { username: username }
-	  ]
-	})
+	User
+	.findOneByEmail(email)
 	.populate('enrolled_schools')
 	.exec(function callback(err, user) {
 
