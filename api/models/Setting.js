@@ -32,6 +32,12 @@ module.exports = {
       defaultsTo: true
     },
 
+    curiousNoti: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
     locale: {
       type: 'string',
       required: true,

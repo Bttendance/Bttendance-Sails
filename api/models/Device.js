@@ -43,12 +43,6 @@ module.exports = {
       type: 'string'
     },
 
-    forBttendance: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
-    },
-
     ownerChangedAt: {
       type: 'date',
       required: true,
