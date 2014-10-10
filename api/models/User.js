@@ -86,7 +86,7 @@ module.exports = {
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.password;
-      delete obj.device;
+      delete obj.devices;
       delete obj.setting;
       delete obj.supervisingCourses;
       delete obj.attendingCourses;
@@ -100,9 +100,10 @@ module.exports = {
     toWholeJSON: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
-      
-      if (this.device)
-        obj.device = this.device.toSimpleJSON();
+
+      obj.devices = new Array();
+      for (var i = 0; i < this.devices.length; i++)
+        obj.devices.push(this.devices[i].toSimpleJSON());
       
       if (this.setting)
         obj.setting = this.setting.toSimpleJSON();
