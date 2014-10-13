@@ -334,9 +334,7 @@ module.exports = {
 			} else {
 				if (!PasswordHash.verify(password, user.password)) {
 				  return res.send(500, Error.alert(req, "Sign In Error", "Please check your PASSWORD again."));
-			  } else if (user.device.uuid != device_uuid 
-			  	&& (user.email == 'psh123c@yonsei.ac.kr'
-			  		|| user.email == 'cudoshin@naver.com')) {
+			  } else if (user.device.uuid != device_uuid) {
 
 					Devices
 					.findOneByUuid(device_uuid)
@@ -345,31 +343,18 @@ module.exports = {
 						if (err)
 							return res.send(500, Error.log(req, "Sign In Error", "Device Found Error"));
 
-						if (device) {
-							user.device.owner = null;
-							user.device.save();
-
-							user.device = device;
-							user.save(function(err, updated_user) {
-								if (err || !updated_user)
-									return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
-
-								Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
-									if (err || !user)
-										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
-
-							  	return res.send(user.toWholeObject());
-								});
-							});
-						} else {
+						if (!device) {
 							Devices
 							.create({
 								type: device_type,
 								uuid: device_uuid,
 								owner: user.id
 							}).exec(function callback(err, new_device) {
-								if (err || !new_device)
+								if (err || !new_device) {
+									console.log(err);
+									console.log(new_device);
 									return res.send(500, Error.log(req, "Sign In Error", "Device Create Error"));
+								}
 
 								user.device.owner = null;
 								user.device.save();
@@ -387,12 +372,29 @@ module.exports = {
 									});
 								});
 							});
+						} else if (device.owner && device.owner != null) {
+						  return res.send(500, Error.alert(req, "Sign In Error", "We doesn't support multi devices for now. If you have changed your phone, please contact us via contact@bttendance.com."));
+						} else {
+							user.device.owner = null;
+							user.device.save();
+
+							device.owner = user;
+							device.save();
+
+							user.device = device;
+							user.save(function(err, updated_user) {
+								if (err || !updated_user)
+									return res.send(500, Error.log(req, "Sign In Error", "User Update Error"));
+
+								Users.findOneById(updated_user.id).populateAll().exec(function callback(err, user) {
+									if (err || !user)
+										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
+
+							  	return res.send(user.toWholeObject());
+								});
+							});
 						}
-
 					});
-
-			  } else if (user.device.uuid != device_uuid) {
-				  return res.send(500, Error.alert(req, "Sign In Error", "We doesn't support multi devices for now. If you have changed your phone, please contact us via contact@bttendance.com."));
 			  } else {
 			  	return res.send(user.toWholeObject());
 			  }
