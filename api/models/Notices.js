@@ -19,16 +19,12 @@ module.exports = {
 
     toJSON: function() {
       var obj = this.toObject();
-      delete obj.createdAt;
-      delete obj.updatedAt;
       return obj;
     },
 
     toWholeObject: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
       return obj;
     }
   },

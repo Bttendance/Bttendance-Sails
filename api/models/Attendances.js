@@ -33,8 +33,6 @@ module.exports = {
 
     toJSON: function() {
       var obj = this.toObject();
-      delete obj.createdAt;
-      delete obj.updatedAt;
       delete obj.clusters;
       return obj;
     },
@@ -42,8 +40,6 @@ module.exports = {
     toWholeObject: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
       obj.clusters = this.clusters;
       return obj;
     }
