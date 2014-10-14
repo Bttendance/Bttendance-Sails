@@ -349,7 +349,7 @@ module.exports = {
 			    return res.send(500, Error.alert(req, "Course Attend Error", "You are already attending current course."));
 
 				user.attending_courses.add(course_id);
-				user.save(function callback(err, saved_user) {
+				user.save(function callback(err) {
 					if (err)
 				    return res.send(500, Error.log(req, "Course Attend Error", "Fail to save user."));
 
