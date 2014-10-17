@@ -21,7 +21,7 @@ exports.send = function(user, title, message, type, course_id) {
 		return;
 
 	var locale = user.locale;
-	if (!locale)
+	if (!locale || locale != 'ko')
 		locale = 'en';
 	message = sails.__({ phrase: message, locale: locale });
 
@@ -144,7 +144,7 @@ exports.resendAttedance = function(attendance_id) {
   			for (var i = 0; i < users.length; i++)
   				if (users[i].setting && users[i].setting.attendance) {
   					var locale = users[i].locale;
-  					if (!locale)
+  					if (!locale || locale != 'ko')
   						locale = 'en';
 					  exports.send(users[i], course.name, sails.__({ phrase: "Attendance check is on-going", locale: locale }), "attendance_on_going", course.id);
   				}
@@ -214,7 +214,7 @@ exports.resendClicker = function(clicker_id) {
   			for (var i = 0; i < users.length; i++)
   				if (users[i].setting && users[i].setting.clicker) {
   					var locale = users[i].locale;
-  					if (!locale)
+  					if (!locale || locale != 'ko')
   						locale = 'en';
 					  exports.send(users[i], course.name, sails.__({ phrase: "Clicker is on-going", locale: locale }), "clicker_on_going", course.id);
   				}

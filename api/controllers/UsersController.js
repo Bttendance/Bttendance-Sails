@@ -37,7 +37,7 @@ module.exports = {
 		var device_type = req.param('device_type');
 		var device_uuid = req.param('device_uuid');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		if (!password) 
