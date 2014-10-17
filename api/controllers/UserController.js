@@ -35,7 +35,7 @@ module.exports = {
 		var device_type = req.param('device_type');
 		var device_uuid = req.param('device_uuid');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		if (!password) 
@@ -383,7 +383,7 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		User
@@ -447,7 +447,7 @@ module.exports = {
 		var password_old = req.param('password_old');
 		var password_new = req.param('password_new');
 		var locale = req.param('locale');
-		if (!locale)
+		if (!locale || locale != 'ko')
 			locale = 'en';
 
 		if (!email)
