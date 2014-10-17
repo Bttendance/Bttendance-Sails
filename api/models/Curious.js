@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-    likedUsers: {
+    liked_users: {
       type: 'array',
       required: true,
       defaultsTo: new Array()

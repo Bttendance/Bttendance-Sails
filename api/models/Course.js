@@ -15,7 +15,7 @@ module.exports = {
       required: true
     },
 
-    professorName: {
+    professor_name: {
       type: 'string',
       required: true
     },

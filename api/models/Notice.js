@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-		seenStudents: {
+		seen_students: {
 			type: 'array',
       required: true,
       defaultsTo: new Array()

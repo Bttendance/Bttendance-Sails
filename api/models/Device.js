@@ -22,7 +22,7 @@ module.exports = {
     },
 
     // uuid for iphone, Pseudo-Unique ID for android
-    uniqueID: {
+    unique_id: {
       type: 'string',
       unique: true
     },
@@ -35,11 +35,11 @@ module.exports = {
     },
 
     // bluetooth mac address
-    bluetoothMacAddress: {
+    bluetooth_mac_address: {
       type: 'string'
     },
 
-    notificationKey: {
+    notification_key: {
       type: 'string'
     },
 

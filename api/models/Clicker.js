@@ -9,31 +9,31 @@ module.exports = {
 
 	attributes: {
 
-		aChosenStudents: {
+		a_chosen_students: {
 			type: 'array',
       required: true,
       defaultsTo: new Array()
 		},
 
-		bChosenStudents: {
+		b_chosen_students: {
 			type: 'array',
       required: true,
       defaultsTo: new Array()
 		},
 
-		cChosenStudents: {
+		c_chosen_students: {
 			type: 'array',
       required: true,
       defaultsTo: new Array()
 		},
 
-		dChosenStudents: {
+		d_chosen_students: {
 			type: 'array',
       required: true,
       defaultsTo: new Array()
 		},
 
-		eChosenStudents: {
+		e_chosen_students: {
 			type: 'array',
       required: true,
       defaultsTo: new Array()
@@ -43,7 +43,7 @@ module.exports = {
 			model: 'Post'
 		},
 
-    choiceCount: {
+    choice_count: {
       type: 'integer',
       required: true,
       defaultsTo: 4,
@@ -51,39 +51,39 @@ module.exports = {
       max: 5
     },
 
-    progressTime: {
+    progress_time: {
       type: 'integer',
       required: true
     },
 
-    detailPrivacy: {
+    detail_privacy: {
       type: 'string',
       enum: ['all', 'professor', 'none'],
       required: true 
     },
 
-    showInfoOnSelect: {
+    show_info_on_select: {
       type: 'boolean',
       required: true
     },
 
-    aOptionText: {
+    a_option: {
       type: 'string'
     },
 
-    bOptionText: {
+    b_option: {
       type: 'string'
     },
 
-    cOptionText: {
+    c_option: {
       type: 'string'
     },
 
-    dOptionText: {
+    d_option: {
       type: 'string'
     },
 
-    eOptionText: {
+    e_option: {
       type: 'string'
     },
 
@@ -112,10 +112,8 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, clicker) {
-      if (clicker && clicker.post && clicker.post.course) {
+      if (clicker && clicker.post && clicker.post.course)
         sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeJSON());       
-        Clicker.publishCreate(clicker.toWholeJSON()); //For Beta
-      }
     });
 
     next();

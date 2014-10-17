@@ -16,13 +16,13 @@ module.exports = {
       required: true
     },
 
-    checkedStudents: {
+    checked_students: {
       type: 'array',
       required: true,
       defaultsTo: new Array()
     },
 
-    lateStudents: {
+    late_students: {
       type: 'array',
       required: true,
       defaultsTo: new Array()

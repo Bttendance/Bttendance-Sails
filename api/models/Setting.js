@@ -14,25 +14,25 @@ module.exports = {
       model: 'User'
     },
 
-    attendanceNoti: {
+    attendance_noti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    clickerNoti: {
+    clicker_noti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    noticeNoti: {
+    notice_noti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    curiousNoti: {
+    curious_noti: {
       type: 'boolean',
       required: true,
       defaultsTo: true
@@ -42,25 +42,6 @@ module.exports = {
       type: 'string',
       required: true,
       defaultsTo: 'en'
-    },
-
-    clickerProgressTime: {
-      type: 'integer',
-      required: true,
-      defaultsTo: 90
-    },
-
-    clickerDetailPrivacy: {
-      type: 'string',
-      enum: ['all', 'professor', 'none'],
-      required: true,
-      defaultsTo: 'professor'
-    },
-
-    clickerShowInfoOnSelect: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
     },
 
     toSimpleJSON: function() {

@@ -19,7 +19,7 @@ module.exports = {
 			required: true
 		},
 
-		choiceCount: {
+		choice_count: {
 			type: 'integer',
       required: true,
       defaultsTo: 4,
@@ -27,39 +27,39 @@ module.exports = {
       max: 5
 		},
 
-    progressTime: {  // sec
+    progress_time: {  // sec
       type: 'integer',
       required: true
     },
 
-    detailPrivacy: {
+    detail_privacy: {
       type: 'string',
       enum: ['all', 'professor', 'none'],
       required: true
     },
 
-    showInfoOnSelect: {
+    show_info_on_select: {
       type: 'boolean',
       required: true
     },
 
-    aOptionText: {
+    a_option: {
       type: 'string'
     },
 
-    bOptionText: {
+    b_option: {
       type: 'string'
     },
 
-    cOptionText: {
+    c_option: {
       type: 'string'
     },
 
-    dOptionText: {
+    d_option: {
       type: 'string'
     },
 
-    eOptionText: {
+    e_option: {
       type: 'string'
     },
 

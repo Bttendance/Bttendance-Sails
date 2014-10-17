@@ -23,7 +23,7 @@ module.exports = {
       required: true
     },
 
-    fullName: {
+    full_name: {
       type: 'string',
       required: true
     },
@@ -41,28 +41,28 @@ module.exports = {
     },
 
     // Many to Many
-    supervisingCourses: {
+    supervising_courses: {
     	collection: 'Course',
     	via: 'managers',
     	dominant: true
     },
 
     // Many to Many
-    attendingCourses: {
+    attending_courses: {
     	collection: 'Course',
     	via: 'students',
     	dominant: true
     },
 
     // Many to Many
-    employedSchools: {
+    employed_schools: {
       collection: 'School',
       via: 'professors',
       dominant: true
     },
 
     // Many to Many
-    enrolledSchools: {
+    enrolled_schools: {
       collection: 'School',
       via: 'students',
       dominant: true
@@ -88,10 +88,10 @@ module.exports = {
       delete obj.password;
       delete obj.devices;
       delete obj.setting;
-      delete obj.supervisingCourses;
-      delete obj.attendingCourses;
-      delete obj.employedSchools;
-      delete obj.enrolledSchools;
+      delete obj.supervising_courses;
+      delete obj.attending_courses;
+      delete obj.employed_schools;
+      delete obj.enrolled_schools;
       delete obj.identifications;
       delete obj.questions;
       return obj;
@@ -108,21 +108,21 @@ module.exports = {
       if (this.setting)
         obj.setting = this.setting.toSimpleJSON();
 
-      obj.supervisingCourses = new Array();
-      for (var i = 0; i < this.supervisingCourses.length; i++)
-        obj.supervisingCourses.push(this.supervisingCourses[i].toSimpleJSON());
+      obj.supervising_courses = new Array();
+      for (var i = 0; i < this.supervising_courses.length; i++)
+        obj.supervising_courses.push(this.supervising_courses[i].toSimpleJSON());
 
-      obj.attendingCourses = new Array();
-      for (var i = 0; i < this.attendingCourses.length; i++)
-        obj.attendingCourses.push(this.attendingCourses[i].toSimpleJSON());
+      obj.attending_courses = new Array();
+      for (var i = 0; i < this.attending_courses.length; i++)
+        obj.attending_courses.push(this.attending_courses[i].toSimpleJSON());
 
-      obj.employedSchools = new Array();
-      for (var i = 0; i < this.employedSchools.length; i++)
-        obj.employedSchools.push(this.employedSchools[i].toSimpleJSON());
+      obj.employed_schools = new Array();
+      for (var i = 0; i < this.employed_schools.length; i++)
+        obj.employed_schools.push(this.employed_schools[i].toSimpleJSON());
 
-      obj.enrolledSchools = new Array();
-      for (var i = 0; i < this.enrolledSchools.length; i++)
-        obj.enrolledSchools.push(this.enrolledSchools[i].toSimpleJSON());
+      obj.enrolled_schools = new Array();
+      for (var i = 0; i < this.enrolled_schools.length; i++)
+        obj.enrolled_schools.push(this.enrolled_schools[i].toSimpleJSON());
 
       obj.identifications = new Array();
       for (var i = 0; i < this.identifications.length; i++)
