@@ -14,4 +14,4 @@ exports.string = function(length) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
-}
+};

@@ -400,8 +400,14 @@ module.exports = {
 	},
 
 	user: function(req, res) {
+		var password = req.param('password');
 		var start = req.param('start');
 		var end = req.param('end');
+
+		if (password != 'bttendance') {
+			res.contentType('html');
+			return res.forbidden('Your password doesn\'t match.');
+		}
 
 		if (!start) {
 			res.contentType('html');
@@ -443,8 +449,14 @@ module.exports = {
 	},
 
 	analyze: function(req, res) {
+		var password = req.param('password');
 		var start = req.param('start');
 		var end = req.param('end');
+
+		if (password != 'bttendance') {
+			res.contentType('html');
+			return res.forbidden('Your password doesn\'t match.');
+		}
 
 		if (!start) {
 			res.contentType('html');

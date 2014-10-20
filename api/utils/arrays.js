@@ -14,7 +14,7 @@ exports.getIds = function(jsonArray) {
   for (var i = 0; i < jsonArray.length; i++)
   	ids.push(jsonArray[i].id);
 	return ids;
-}
+};
 
 exports.getUsernames = function(jsonArray) {
 	if (!jsonArray)
@@ -24,7 +24,7 @@ exports.getUsernames = function(jsonArray) {
   for (var i = 0; i < jsonArray.length; i++)
   	ids.push(jsonArray[i].username);
 	return ids;
-}
+};
 
 exports.getEmails = function(jsonArray) {
 	if (!jsonArray)
@@ -34,4 +34,4 @@ exports.getEmails = function(jsonArray) {
   for (var i = 0; i < jsonArray.length; i++)
   	ids.push(jsonArray[i].email);
 	return ids;
-}
+};

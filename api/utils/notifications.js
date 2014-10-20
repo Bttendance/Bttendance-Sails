@@ -105,7 +105,7 @@ exports.send = function(user, title, message, type, course_id) {
 		apnConnection.pushNotification(note, myDevice);
 		console.log("iOS notification has been sent to " + user.full_name + " (" + user.email + ")");
 	}
-}
+};
 
 exports.resendAttedance = function(attendance_id) {
 
@@ -151,7 +151,7 @@ exports.resendAttedance = function(attendance_id) {
   		});
 		});
 	});
-}
+};
 
 exports.resendClicker = function(clicker_id) {
 
@@ -221,4 +221,4 @@ exports.resendClicker = function(clicker_id) {
   		});
 		});
 	});
-}
+};

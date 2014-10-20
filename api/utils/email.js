@@ -13,4 +13,4 @@ exports.json = function(email) {
 	var json = {};
 	json.email = email;
 	return json;
-}
+};
