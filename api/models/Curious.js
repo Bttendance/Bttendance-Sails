@@ -15,6 +15,12 @@ module.exports = {
       defaultsTo: new Array()
     },
 
+    followers: {
+      type: 'array',
+      required: true,
+      defaultsTo: new Array()
+    },
+
     post: {
       model: 'Post'
     },
