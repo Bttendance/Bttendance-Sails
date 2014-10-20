@@ -523,6 +523,11 @@ module.exports = {
 						courses_over_5[i].students_count = courses_over_5[i].students.length;
 						courses_over_5[i].posts_count = courses_over_5[i].posts.length;
 
+						var professors = new Array();
+						for (var j = 0; j < courses_over_5[i].managers.length; j++)
+							professors.push(courses_over_5[i].managers[j].toJSON());
+						courses_over_5[i].professors = professors;
+
 						var isActive = false;
 						for (var j = 0; j < courses_over_5[i].posts.length; j++) {
 							if (-Moment(courses_over_5[i].posts[j].createdAt).diff(Moment(new Date()), 'days') < 14) {
