@@ -23,15 +23,15 @@ module.exports = {
 			return res.forbidden('Your password doesn\'t match.');
 		}
 
-		if ( (model == 'user' && !email)
-			&& (model == 'post' && !course)
+		if ( (model == 'User' && !email)
+			&& (model == 'Post' && !course)
 			&& (!id || isNaN(Number(id)))
 			&& (!page || isNaN(Number(page))) ) {
 			res.contentType('html');
 			return res.forbidden('Numeric parameter id or page is required.');
 		}
 
-		if (model == 'user') {
+		if (model == 'User') {
 			if (page)
 				Users
 				.find()
@@ -67,7 +67,7 @@ module.exports = {
 				  	return res.send(user.toWholeObject());
 					}
 				});
-		} else if (model == 'school') {
+		} else if (model == 'School') {
 			if (page)
 				Schools
 				.find()
@@ -98,7 +98,7 @@ module.exports = {
 				  	return res.send(school.toWholeObject());
 					}
 				});
-		} else if (model == 'course') {
+		} else if (model == 'Course') {
 			if (page)
 				Courses
 				.find()
@@ -129,7 +129,7 @@ module.exports = {
 				  	return res.send(course.toWholeObject());
 					}
 				});
-		} else if (model == 'clicker_question') {
+		} else if (model == 'ClickerQuestion') {
 			if (page)
 				ClickerQuestions
 				.find()
@@ -160,7 +160,7 @@ module.exports = {
 				  	return res.send(clicker_question.toWholeObject());
 					}
 				});
-		} else if (model == 'attendance_alarm') {
+		} else if (model == 'AttendanceAlarm') {
 			if (page)
 				AttendanceAlarms
 				.find()
@@ -191,7 +191,7 @@ module.exports = {
 				  	return res.send(attendance_alarm.toWholeObject());
 					}
 				});
-		} else if (model == 'post') {
+		} else if (model == 'Post') {
 			if (page)
 				Posts
 				.find()
@@ -237,7 +237,7 @@ module.exports = {
 				  	return res.send(posts);
 					}
 				});
-		} else if (model == 'comment') {
+		} else if (model == 'Comment') {
 			if (page)
 				Comments
 				.find()
@@ -268,7 +268,7 @@ module.exports = {
 				  	return res.send(comment.toWholeObject());
 					}
 				});
-		} else if (model == 'attendance') {
+		} else if (model == 'Attendance') {
 			if (page)
 				Attendances
 				.find()
@@ -299,7 +299,7 @@ module.exports = {
 				  	return res.send(attendance.toWholeObject());
 					}
 				});
-		} else if (model == 'clicker') {
+		} else if (model == 'Clicker') {
 			if (page)
 				Clickers
 				.find()
@@ -330,7 +330,7 @@ module.exports = {
 				  	return res.send(clicker.toWholeObject());
 					}
 				});
-		} else if (model == 'notice') {
+		} else if (model == 'Notice') {
 			if (page)
 				Notices
 				.find()
@@ -361,7 +361,7 @@ module.exports = {
 				  	return res.send(notice.toWholeObject());
 					}
 				});
-		} else if (model == 'curious') {
+		} else if (model == 'Curious') {
 			if (page)
 				Curiouses
 				.find()
@@ -392,7 +392,7 @@ module.exports = {
 				  	return res.send(curious.toWholeObject());
 					}
 				});
-		} else if (model == 'question') {
+		} else if (model == 'Question') {
 			if (page)
 				Questions
 				.find()
@@ -423,7 +423,7 @@ module.exports = {
 				  	return res.send(question.toWholeObject());
 					}
 				});
-		} else if (model == 'device') {
+		} else if (model == 'Device') {
 			if (page)
 				Devices
 				.find()
@@ -454,7 +454,7 @@ module.exports = {
 				  	return res.send(device.toWholeObject());
 					}
 				});
-		} else if (model == 'setting') {
+		} else if (model == 'Setting') {
 			if (page)
 				Settings
 				.find()
@@ -485,7 +485,7 @@ module.exports = {
 				  	return res.send(setting.toWholeObject());
 					}
 				});
-		} else if (model == 'identification') {
+		} else if (model == 'Identification') {
 			if (page)
 				Identifications
 				.find()
