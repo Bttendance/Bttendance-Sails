@@ -72,7 +72,19 @@ module.exports = {
 	},
 
 	migrate3: function(req, res) {
-		//seen_students, seen_managers
+		//Post
+		Posts
+		.exec(function callback(err, posts) {
+			for (var i = posts.length - 1; i >= 0; i--) {
+				posts[i].seen_students = posts[i].notice.seen_students;
+				posts[i].seen_managers = posts[i].notice.seen_managers;
+				posts[i].save();
+			};
+		});
+	},
+
+	migrate4: function(req, res) {
+		//seen_students, seen_managers (done)
 		Courses
 		.find()
 		.populate('posts')
@@ -91,8 +103,8 @@ module.exports = {
 		});
 	},
 
-	migrate4: function(req, res) {
-		//Notice
+	migrate5: function(req, res) {
+		//Notice (done)
 		Posts
 		.findByType('notice')
 		.populate('notice')
