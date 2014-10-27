@@ -46,7 +46,7 @@ module.exports = {
 			async.each(questions, function(question, callback) {
 
 				Users
-				.findOneById(question.author)
+				.findOneById(question.owner)
 				.populate('supervising_courses')
 				.exec(function callback(user, err) {
 
