@@ -33,6 +33,10 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
+    author: {
+      model: 'Users'
+    },
+
 		course: {
 			model: 'Courses'
 		},

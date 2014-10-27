@@ -27,7 +27,7 @@ var Arrays = require('../utils/arrays');
 module.exports = {
 
 	migrate1: function(req, res) {
-		// setting
+		// setting (done)
 		Settings
 		.find()
 		.exec(function callback(err, settings) {
@@ -43,7 +43,7 @@ module.exports = {
 		Questions
 		.find()
 		.exec(function callback(err, questions) {
-			Sails.async.each(questions, function(question, callback) {
+			async.each(questions, function(question, callback) {
 
 				console.log(question);
 				callback();

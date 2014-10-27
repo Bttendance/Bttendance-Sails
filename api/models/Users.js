@@ -12,12 +12,6 @@ module.exports = {
 
   attributes: {
 
-    username: {
-      type: 'string',
-      required: false,
-      unique: true
-    },
-
     email: {
       type: 'email',
       required: true,
