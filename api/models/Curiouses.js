@@ -1,49 +1,37 @@
 /**
-* Tokens.js
+* Curiouses.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
-var UUID = require('node-uuid');
-
 module.exports = {
 
-	attributes: {
+  attributes: {
 
-    key: {
-      type: 'string'
-    },
+  	liked_users: {
+  		type: 'json'
+  	},
 
-    action: {
-    	type: 'string'
-    },
+  	followers: {
+  		type: 'json'
+  	},
 
-    params: {
-      type: 'string'
-    },
-
-    expired: {
-      type: 'boolean',
-      defaultsTo: false
+    post: {
+      model: 'Posts'
     },
 
     toJSON: function() {
       var obj = this.toObject();
-      delete obj.createdAt;
-      delete obj.updatedAt;
       return obj;
     },
 
     toWholeObject: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
       return obj;
     }
-
-	},
+  },
 
   beforeValidate: function(values, next) {
     next();
@@ -54,7 +42,8 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.key = UUID.v1();
+    values.liked_users = new Array();
+    values.followers = new Array();
     next();
   },
 
@@ -67,6 +56,16 @@ module.exports = {
   },
 
   afterUpdate: function(values, next) {
+    
+    Curiouses
+    .findOneById(values.id)
+    .populateAll()
+    .exec(function callback(err, curious) {
+      if (curious && curious.post && curious.post.course) {
+        sails.sockets.broadcast('Course#' + curious.post.course, 'curious', curious.toWholeObject());       
+      }
+    });
+
     next();
   },
 
@@ -77,6 +76,5 @@ module.exports = {
   afterDestroy: function(values, next) {
     next();
   }
-
 };
 

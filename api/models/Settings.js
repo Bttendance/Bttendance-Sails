@@ -27,6 +27,12 @@ module.exports = {
       defaultsTo: true
     },
 
+    curious: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
     progress_time: {
       type: 'integer',
       defaultsTo: 60

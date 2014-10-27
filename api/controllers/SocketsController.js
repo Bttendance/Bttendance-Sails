@@ -14,12 +14,6 @@ module.exports = {
 		if (!email)
 			return res.badRequest();
 
-		// For Beta
-    Clickers.unwatch(req.socket);
-    Attendances.unwatch(req.socket);
-    Notices.unwatch(req.socket);
-    Posts.unwatch(req.socket);
-
 		Users
 		.findOneByEmail(email)
 		.populateAll()

@@ -45,6 +45,25 @@ module.exports = {
       model: 'Notices'
     },
 
+    // One to One
+    curious: {
+      model: 'Curiouses'
+    },
+
+    // One to Many
+    comments: {
+      collection: 'Comments',
+      via: 'post'
+    },
+
+    seen_students: {
+      type: 'json'
+    },
+
+    seen_managers: {
+      type: 'json'
+    },
+
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
@@ -52,6 +71,8 @@ module.exports = {
       delete obj.attendance;
       delete obj.clicker;
       delete obj.notice;
+      delete obj.curious;
+      delete obj.comments;
       return obj;
     },
 
@@ -63,6 +84,8 @@ module.exports = {
       obj.attendance = this.attendance;
       obj.clicker = this.clicker;
       obj.notice = this.notice;
+      obj.curious = this.curious;
+      obj.comments = this.comments;
       return obj;
     }
   },
@@ -89,6 +112,10 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    
+    values.seen_students = new Array();
+    values.seen_managers = new Array();
+
     if (values.type == 'attendance') {
       values.message = 'Attendance';
 
@@ -135,6 +162,17 @@ module.exports = {
           next();
         }
       });
+    } else if (values.type == 'curious') {
+      Curiouses
+      .create({
+      }).exec(function callback(err, curious) {
+        if (err || !curious)
+          next(err);
+        else {
+          values.curious = curious.id;
+          next();
+        }
+      });
     } else
       next();
   },
@@ -163,6 +201,15 @@ module.exports = {
       .update({id: values.notice}, {post: values.id})
       .exec(function callback(err, notice) {
         if (err || !notice)
+          next(err);
+        else
+          next();
+      });
+    } else if (values.type == 'curious') {
+      Curiouses
+      .update({id: values.curious}, {post: values.id})
+      .exec(function callback(err, curious) {
+        if (err || !curious)
           next(err);
         else
           next();

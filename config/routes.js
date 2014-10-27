@@ -350,12 +350,6 @@ module.exports.routes = {
     action: 'seen'
   },
 
-  /************* Tokens API ************/  
-  '/verify/:token_key': {
-    controller: 'tokens',
-    action: 'verify'
-  },
-
   /************* Tutorial Views ************/  
   '/tutorial/clicker': {
     controller: 'tutorial',

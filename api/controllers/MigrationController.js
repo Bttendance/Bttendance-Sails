@@ -28,28 +28,37 @@ module.exports = {
 
 	migrate: function(req, res) {
 
+		//seen_students, seen_managers
+
 		// question
 		Questions
 		.find()
 		.exec(function callback(err, questions) {
-			for (var i = 0; i < questions.length; i++) {
-				questions[i].progress_time = 60;
-				questions[i].show_info_on_select = true;
-				questions[i].detail_privacy = 'professor';
-				questions[i].save();
-			}
-		});
+			Sails.async.each(questions, function(question, callback) {
 
-		// clicker
-		Clickers
-		.find()
-		.exec(function callback(err, clickers) {
-			for (var i = 0; i < clickers.length; i++) {
-				clickers[i].progress_time = 60;
-				clickers[i].show_info_on_select = true;
-				clickers[i].detail_privacy = 'professor';
-				clickers[i].save();
-			}
+				Users
+				.findOneById(question.author)
+				.populate('supervising_courses')
+				.exec(function callback(user, err) {
+
+					Sails.async.each(user.supervising_courses, function(course, callback) {
+						ClickerQuestions.create({
+							author: question.author,
+							message: question.message,
+							choice_count: question.choice_count,
+							progress_time: question.progress_time,
+							detail_privacy: question.detail_privacy,
+							course: course.id
+						}).exec(function(clickerQuestion, err) {
+
+						});
+					} , function(err) {
+					});
+
+				});
+
+			}, function(err) {
+			});
 		});
 
 		// setting
@@ -57,9 +66,7 @@ module.exports = {
 		.find()
 		.exec(function callback(err, settings) {
 			for (var i = 0; i < settings.length; i++) {
-				settings[i].progress_time = 60;
-				settings[i].show_info_on_select = true;
-				settings[i].detail_privacy = 'professor';
+				settings[i].curious = true;
 				settings[i].save();
 			}
 		});

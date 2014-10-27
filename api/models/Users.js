@@ -3,7 +3,7 @@
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
- * @docs		:: http://sailsjs.org/#!documentation/models
+ * @docs    :: http://sailsjs.org/#!documentation/models
  */
 
 var PasswordHash = require('password-hash');
@@ -51,16 +51,16 @@ module.exports = {
 
     // Many to Many
     supervising_courses: {
-    	collection: 'Courses',
-    	via: 'managers',
-    	dominant: true
+      collection: 'Courses',
+      via: 'managers',
+      dominant: true
     },
 
     // Many to Many
     attending_courses: {
-    	collection: 'Courses',
-    	via: 'students',
-    	dominant: true
+      collection: 'Courses',
+      via: 'students',
+      dominant: true
     },
 
     // Many to Many

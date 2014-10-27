@@ -1,5 +1,5 @@
 /**
-* Questions.js
+* ClickerQuestions.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,14 +9,14 @@ module.exports = {
 
   attributes: {
 
-    message: {
-      type: 'string',
-      required: true
-    },
+		message: {
+			type: 'string',
+			required: true
+		},
 
-    choice_count: {
-      type: 'integer'
-    },
+		choice_count: {
+			type: 'integer'
+		},
 
     progress_time: {
       type: 'integer',
@@ -33,15 +33,15 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
-    owner: {
-      model: 'Users'
-    },
+		course: {
+			model: 'Courses'
+		},
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.owner;
+      delete obj.course;
       return obj;
     },
 
@@ -50,7 +50,7 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.owner = this.owner;
+      obj.course = this.course;
       return obj;
     }
 
@@ -95,3 +95,4 @@ module.exports = {
     next();
   }
 };
+

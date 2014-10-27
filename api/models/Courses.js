@@ -55,6 +55,12 @@ module.exports = {
       defaultsTo: true
     },
 
+    // Many to One
+    questions: {
+      collection: 'ClickerQuestions',
+      via: 'course'
+    },
+
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;

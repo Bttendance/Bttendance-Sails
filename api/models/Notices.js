@@ -48,8 +48,7 @@ module.exports = {
 
   beforeUpdate: function(values, next) {
     next();
-  },
-
+  }, 
   afterUpdate: function(values, next) {
     
     Notices

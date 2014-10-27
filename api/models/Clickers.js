@@ -48,26 +48,6 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
-    // a_option_text: {
-    //   type: 'string'
-    // },
-
-    // b_option_text: {
-    //   type: 'string'
-    // },
-
-    // c_option_text: {
-    //   type: 'string'
-    // },
-
-    // d_option_text: {
-    //   type: 'string'
-    // },
-
-    // e_option_text: {
-    //   type: 'string'
-    // },
-
     post: {
       model: 'Posts'
     },
@@ -124,7 +104,6 @@ module.exports = {
     .exec(function callback(err, clicker) {
       if (clicker && clicker.post && clicker.post.course) {
         sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
-        Clickers.publishCreate(clicker.toWholeObject()); //For Beta
       }
     });
 

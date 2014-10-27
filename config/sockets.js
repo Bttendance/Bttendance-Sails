@@ -23,13 +23,6 @@ module.exports.sockets = {
   ***************************************************************************/
   onConnect: function(session, socket) {
     // By default: do nothing.
-
-    // For Beta
-    Clickers.watch(socket);
-    Attendances.watch(socket);
-    Notices.watch(socket);
-    Posts.watch(socket);
-
     var socketID = sails.sockets.id(socket);
     sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
   },
@@ -43,12 +36,6 @@ module.exports.sockets = {
   ***************************************************************************/
   onDisconnect: function(session, socket) {
     // By default: do nothing.
-
-    // For Beta
-    Clickers.unwatch(socket);
-    Attendances.unwatch(socket);
-    Notices.unwatch(socket);
-    Posts.unwatch(socket);
   },
 
 
