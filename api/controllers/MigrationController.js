@@ -45,28 +45,26 @@ module.exports = {
 		.exec(function callback(err, questions) {
 			async.each(questions, function(question, callback) {
 
-				console.log(question);
-				callback();
-				// Users
-				// .findOneById(question.author)
-				// .populate('supervising_courses')
-				// .exec(function callback(user, err) {
+				Users
+				.findOneById(question.author)
+				.populate('supervising_courses')
+				.exec(function callback(user, err) {
 
-				// 	Sails.async.each(user.supervising_courses, function(course, callback) {
-				// 		ClickerQuestions.create({
-				// 			author: question.author,
-				// 			message: question.message,
-				// 			choice_count: question.choice_count,
-				// 			progress_time: question.progress_time,
-				// 			detail_privacy: question.detail_privacy,
-				// 			course: course.id
-				// 		}).exec(function(clickerQuestion, err) {
+					async.each(user.supervising_courses, function(course, callback) {
+						ClickerQuestions.create({
+							author: question.author,
+							message: question.message,
+							choice_count: question.choice_count,
+							progress_time: question.progress_time,
+							detail_privacy: question.detail_privacy,
+							course: course.id
+						}).exec(function(clickerQuestion, err) {
 
-				// 		});
-				// 	} , function(err) {
-				// 	});
+						});
+					} , function(err) {
+					});
 
-				// });
+				});
 
 			}, function(err) {
 			});
@@ -81,7 +79,7 @@ module.exports = {
 		.populate('students')
 		.populate('managers')
 		.exec(function callback(err, courses) {
-			Sails.async.each(courses, function(course, callback) {
+			async.each(courses, function(course, callback) {
 				for (var i = course.posts.length - 1; i >= 0; i--) {
 					if (course.posts[i].type != 'notice')
 						course.posts[i].seen_students = Arrays.getIds(course.students);
