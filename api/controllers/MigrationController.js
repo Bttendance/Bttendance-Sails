@@ -98,9 +98,10 @@ module.exports = {
 		.populate('notice')
 		.exec(function callback(err, posts) {
 			for (var i = posts.length - 1; i >= 0; i--) {
-				console.log(posts[i]);
-				// posts[i].seen_students = posts[i].notice.seen_students;
-				// posts[i].save();
+				if (posts[i].notice && posts[i].notice != null) {
+					posts[i].seen_students = posts[i].notice.seen_students;
+					posts[i].save();
+				}
 			};
 		});
 	}
