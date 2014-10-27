@@ -78,9 +78,24 @@ module.exports.routes = {
   },
 
   /************* Migration APIs ************/
-  '/api/migration/migrate': {
+  '/api/migration/migrate1': {
     controller: 'migration',
-    action: 'migrate'
+    action: 'migrate1'
+  },
+
+  '/api/migration/migrate2': {
+    controller: 'migration',
+    action: 'migrate2'
+  },
+
+  '/api/migration/migrate3': {
+    controller: 'migration',
+    action: 'migrate3'
+  },
+
+  '/api/migration/migrate4': {
+    controller: 'migration',
+    action: 'migrate4'
   },
 
   /************* Sockets API ************/  

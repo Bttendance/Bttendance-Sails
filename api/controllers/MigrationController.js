@@ -26,41 +26,7 @@ var Arrays = require('../utils/arrays');
 
 module.exports = {
 
-	migrate: function(req, res) {
-
-		//seen_students, seen_managers
-
-		// question
-		Questions
-		.find()
-		.exec(function callback(err, questions) {
-			Sails.async.each(questions, function(question, callback) {
-
-				Users
-				.findOneById(question.author)
-				.populate('supervising_courses')
-				.exec(function callback(user, err) {
-
-					Sails.async.each(user.supervising_courses, function(course, callback) {
-						ClickerQuestions.create({
-							author: question.author,
-							message: question.message,
-							choice_count: question.choice_count,
-							progress_time: question.progress_time,
-							detail_privacy: question.detail_privacy,
-							course: course.id
-						}).exec(function(clickerQuestion, err) {
-
-						});
-					} , function(err) {
-					});
-
-				});
-
-			}, function(err) {
-			});
-		});
-
+	migrate1: function(req, res) {
 		// setting
 		Settings
 		.find()
@@ -69,6 +35,74 @@ module.exports = {
 				settings[i].curious = true;
 				settings[i].save();
 			}
+		});
+	},
+
+	migrate2: function(req, res) {
+		// question
+		Questions
+		.find()
+		.exec(function callback(err, questions) {
+			Sails.async.each(questions, function(question, callback) {
+
+				console.log(question);
+				callback();
+				// Users
+				// .findOneById(question.author)
+				// .populate('supervising_courses')
+				// .exec(function callback(user, err) {
+
+				// 	Sails.async.each(user.supervising_courses, function(course, callback) {
+				// 		ClickerQuestions.create({
+				// 			author: question.author,
+				// 			message: question.message,
+				// 			choice_count: question.choice_count,
+				// 			progress_time: question.progress_time,
+				// 			detail_privacy: question.detail_privacy,
+				// 			course: course.id
+				// 		}).exec(function(clickerQuestion, err) {
+
+				// 		});
+				// 	} , function(err) {
+				// 	});
+
+				// });
+
+			}, function(err) {
+			});
+		});
+	},
+
+	migrate3: function(req, res) {
+		//seen_students, seen_managers
+		Courses
+		.find()
+		.populate('posts')
+		.populate('students')
+		.populate('managers')
+		.exec(function callback(err, courses) {
+			Sails.async.each(courses, function(course, callback) {
+				for (var i = course.posts.length - 1; i >= 0; i--) {
+					if (course.posts[i].type != 'notice')
+						course.posts[i].seen_students = Arrays.getIds(course.students);
+					course.posts[i].seen_managers = Arrays.getIds(course.managers);
+					course.posts[i].save();
+				};
+			}, function(err) {
+			});
+		});
+	},
+
+	migrate4: function(req, res) {
+		//Notice
+		Posts
+		.findByType('notice')
+		.populate('notices')
+		.exec(function callback(err, posts) {
+			for (var i = posts.length - 1; i >= 0; i--) {
+				posts[i].seen_students = posts[i].notice.seen_students;
+				posts[i].save();
+			};
 		});
 	}
 	
