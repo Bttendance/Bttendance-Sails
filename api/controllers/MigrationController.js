@@ -74,6 +74,7 @@ module.exports = {
 	migrate3: function(req, res) {
 		//Post
 		Posts
+		.find()
 		.exec(function callback(err, posts) {
 			for (var i = posts.length - 1; i >= 0; i--) {
 				posts[i].seen_students = posts[i].notice.seen_students;
