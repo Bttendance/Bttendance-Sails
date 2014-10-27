@@ -50,19 +50,20 @@ module.exports = {
 				.populate('supervising_courses')
 				.exec(function callback(user, err) {
 
-					async.each(user.supervising_courses, function(course, callback) {
-						ClickerQuestions.create({
-							author: question.author,
-							message: question.message,
-							choice_count: question.choice_count,
-							progress_time: question.progress_time,
-							detail_privacy: question.detail_privacy,
-							course: course.id
-						}).exec(function(clickerQuestion, err) {
+					if (user.supervising_courses && user.supervising_courses != null)
+						async.each(user.supervising_courses, function(course, callback) {
+							ClickerQuestions.create({
+								author: question.author,
+								message: question.message,
+								choice_count: question.choice_count,
+								progress_time: question.progress_time,
+								detail_privacy: question.detail_privacy,
+								course: course.id
+							}).exec(function(clickerQuestion, err) {
 
+							});
+						} , function(err) {
 						});
-					} , function(err) {
-					});
 
 				});
 
