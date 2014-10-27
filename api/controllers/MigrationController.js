@@ -95,7 +95,7 @@ module.exports = {
 		//Notice
 		Posts
 		.findByType('notice')
-		.populate('notices')
+		.populate('notice')
 		.exec(function callback(err, posts) {
 			for (var i = posts.length - 1; i >= 0; i--) {
 				posts[i].seen_students = posts[i].notice.seen_students;
