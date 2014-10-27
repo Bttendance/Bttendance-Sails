@@ -77,8 +77,8 @@ module.exports = {
 		.find()
 		.exec(function callback(err, posts) {
 			for (var i = posts.length - 1; i >= 0; i--) {
-				posts[i].seen_students = posts[i].notice.seen_students;
-				posts[i].seen_managers = posts[i].notice.seen_managers;
+				posts[i].seen_students = new Array();
+				posts[i].seen_managers = new Array();
 				posts[i].save();
 			};
 		});
