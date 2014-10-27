@@ -129,6 +129,68 @@ module.exports = {
 				  	return res.send(course.toWholeObject());
 					}
 				});
+		} else if (model == 'clicker_question') {
+			if (page)
+				ClickerQuestions
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, clicker_questions) {
+					if (err || !clicker_questions) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < clicker_questions.length; i++)
+							clicker_questions[i] = clicker_questions[i].toWholeObject();
+				  	return res.send(clicker_questions);
+					}
+				});
+			else 
+				ClickerQuestions
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, clicker_question) {
+					if (err || !clicker_question) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(clicker_question.toWholeObject());
+					}
+				});
+		} else if (model == 'attendance_alarm') {
+			if (page)
+				AttendanceAlarms
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, attendance_alarms) {
+					if (err || !attendance_alarms) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < attendance_alarms.length; i++)
+							attendance_alarms[i] = attendance_alarms[i].toWholeObject();
+				  	return res.send(attendance_alarms);
+					}
+				});
+			else 
+				AttendanceAlarms
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, attendance_alarm) {
+					if (err || !attendance_alarm) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(attendance_alarm.toWholeObject());
+					}
+				});
 		} else if (model == 'post') {
 			if (page)
 				Posts
@@ -173,6 +235,37 @@ module.exports = {
 						for (var i = 0; i < posts.length; i++)
 							posts[i] = posts[i].toWholeObject();
 				  	return res.send(posts);
+					}
+				});
+		} else if (model == 'comment') {
+			if (page)
+				Comments
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, comments) {
+					if (err || !comments) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < comments.length; i++)
+							comments[i] = comments[i].toWholeObject();
+				  	return res.send(comments);
+					}
+				});
+			else 
+				Comments
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, comment) {
+					if (err || !comment) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(comment.toWholeObject());
 					}
 				});
 		} else if (model == 'attendance') {
@@ -266,6 +359,37 @@ module.exports = {
 					} else {
 						res.contentType('application/json; charset=utf-8');
 				  	return res.send(notice.toWholeObject());
+					}
+				});
+		} else if (model == 'curious') {
+			if (page)
+				Curiouses
+				.find()
+				.paginate({page: page, limit: 50})
+				.populateAll()
+				.sort('id DESC')
+				.exec(function callback (err, curiouses) {
+					if (err || !curiouses) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < curiouses.length; i++)
+							curiouses[i] = curiouses[i].toWholeObject();
+				  	return res.send(curiouses);
+					}
+				});
+			else 
+				Curiouses
+				.findOneById(Number(id))
+				.populateAll()
+				.exec(function callback (err, curious) {
+					if (err || !curious) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+				  	return res.send(curious.toWholeObject());
 					}
 				});
 		} else if (model == 'question') {

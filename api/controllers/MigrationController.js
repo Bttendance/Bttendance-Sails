@@ -72,7 +72,7 @@ module.exports = {
 	},
 
 	migrate3: function(req, res) {
-		//Post
+		//Post init seen_students & seen_managers (done)
 		Posts
 		.find()
 		.exec(function callback(err, posts) {
