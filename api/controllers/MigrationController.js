@@ -98,8 +98,9 @@ module.exports = {
 		.populate('notice')
 		.exec(function callback(err, posts) {
 			for (var i = posts.length - 1; i >= 0; i--) {
-				posts[i].seen_students = posts[i].notice.seen_students;
-				posts[i].save();
+				console.log(posts[i]);
+				// posts[i].seen_students = posts[i].notice.seen_students;
+				// posts[i].save();
 			};
 		});
 	}
