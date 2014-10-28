@@ -39,7 +39,7 @@ module.exports = {
 
 		Users
 		.findOneByEmail(email)
-		.populateAll()
+		.populate('supervising_courses')
 		.exec(function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
@@ -57,7 +57,10 @@ module.exports = {
 				console.log('Query3 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 	    	Posts
-	  		.findById(Arrays.getIds(course.posts))
+	    	.find({
+    			id : Arrays.getIds(course.posts)
+	    	})
+	  		// .findById(Arrays.getIds(course.posts))
 				.populateAll()
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
