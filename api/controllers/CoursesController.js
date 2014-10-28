@@ -143,7 +143,7 @@ module.exports = {
   				if (Arrays.getIds(user.supervising_courses).indexOf(course.id) >= 0) {
 						attendance_rate = Number( ( attd_checks.length / attd_usage / course.students.length * 100).toFixed() );
 						clicker_rate = Number( ( clicker_checks.length / clicker_usage / course.students.length * 100).toFixed() );
-						notice_rate = Number( ( notice_checks.length / notice_usage / courses[i].students.length * 100).toFixed() );
+						notice_rate = Number( ( notice_checks.length / notice_usage / course.students.length * 100).toFixed() );
 						if (notice_last_post)
 							notice_unseen = course.students.length - notice_last_post.seen_students.length;
 						else
