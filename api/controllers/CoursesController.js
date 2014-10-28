@@ -35,6 +35,8 @@ module.exports = {
 		var email = req.param('email');
 		var course_id = req.param('course_id');
 
+		console.log('Query : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+
 		Users
 		.findOneByEmail(email)
 		.populateAll()
@@ -64,7 +66,7 @@ module.exports = {
 				  	return res.send(course);
 	  			}
 
-	  			console.log('Start : ' + new Date());
+					console.log('Start : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					// Attendance
 					var attendance_rate = 0; //전체 출석률 or 본인의 출석률
@@ -174,7 +176,7 @@ module.exports = {
 					if (attd_last)
   					course.attdCheckedAt = attd_last.createdAt;
 
-	  			console.log('End : ' + new Date());
+					console.log('End : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 			  	return res.send(course);
 	  		});
