@@ -47,29 +47,30 @@ module.exports = {
 
 				if (!question.owner || question.owner == null)
 					next();
+				else {
+					Users
+					.findOneById(question.owner)
+					.populate('supervising_courses')
+					.exec(function callback(user, err) {
 
-				Users
-				.findOneById(question.owner)
-				.populate('supervising_courses')
-				.exec(function callback(user, err) {
+						if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
+							for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
+								ClickerQuestions.create({
+									author: question.owner,
+									message: question.message,
+									choice_count: question.choice_count,
+									progress_time: question.progress_time,
+									detail_privacy: question.detail_privacy,
+									course: user.supervising_courses[i].id
+								}).exec(function(clickerQuestion, err) {
 
-					if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
-						for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
-							ClickerQuestions.create({
-								author: question.owner,
-								message: question.message,
-								choice_count: question.choice_count,
-								progress_time: question.progress_time,
-								detail_privacy: question.detail_privacy,
-								course: user.supervising_courses[i].id
-							}).exec(function(clickerQuestion, err) {
-
-							});
+								});
+							}
 						}
-					}
 
-					next();
-				});
+						next();
+					});
+				}
 
 			}, function(err) {
 			});
