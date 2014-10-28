@@ -58,7 +58,7 @@ module.exports = {
 
 	    	Posts
 	    	.find({
-    			id : Arrays.getIds(course.posts)
+    			course: course_id
 	    	})
 	  		// .findById(Arrays.getIds(course.posts))
 				.populateAll()
