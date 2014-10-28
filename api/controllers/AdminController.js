@@ -736,7 +736,7 @@ module.exports = {
 
 	noti: function(req, res) {
 		// Users
-		// .findOneByUsername('galaxys2')
+		// .findOneByEmail('thefinestartist@bttendance.com')
 		// .populateAll()
 		// .exec(function callback(err, user) {
 		// 	var Noti = require('../utils/notifications');

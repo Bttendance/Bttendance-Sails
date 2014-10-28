@@ -104,19 +104,13 @@ module.exports = {
 	enroll: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var school_id = req.param('school_id');
 		var identity = req.param('identity');
 		if (!identity)
 			identity  = req.param('student_id');
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -145,12 +139,7 @@ module.exports = {
 							return res.send(500, Error.log(req, "Enroll School Error", "Fail to save user."));
 
 				    Users
-						.findOne({
-						  or : [
-						    { email: email },
-						    { username: username }
-						  ]
-						})
+						.findOneByemail(email)
 						.populateAll()
 						.exec(function callback(err, user_new) {
 							if (err || !user_new)

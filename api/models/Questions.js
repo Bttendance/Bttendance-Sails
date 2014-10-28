@@ -20,7 +20,7 @@ module.exports = {
 
     progress_time: {
       type: 'integer',
-      defaultsTo: 90
+      defaultsTo: 60
     },
 
     show_info_on_select: {

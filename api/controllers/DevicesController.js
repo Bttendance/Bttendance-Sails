@@ -22,7 +22,6 @@ module.exports = {
 	update_notification_key: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var device_uuid = req.param('device_uuid');
 		var notification_key = req.param('notification_key');
 
@@ -30,12 +29,7 @@ module.exports = {
 			return res.send(400, Error.log(req, "Notification Key Update Error", "Key is required."));
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)

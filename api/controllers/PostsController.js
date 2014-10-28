@@ -23,7 +23,6 @@ module.exports = {
 	start_clicker: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 		var choice_count = req.param('choice_count');
@@ -51,12 +50,7 @@ module.exports = {
 			    return res.send(500, Error.alert(req, "Start Clicker Error", "Current course is closed."));
 
 			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			.findOneByEmail(email)
 			.exec(function callback(err, user) {
 				if(err || !user)
 	  			return res.send(500, Error.log(req, "Start Clicker Error", "User doesn't exist."));
@@ -120,7 +114,6 @@ module.exports = {
 	start_attendance: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var type = req.param('type');
 		if (!type) type = 'auto';
@@ -133,12 +126,7 @@ module.exports = {
 			    return res.send(500, Error.alert(req, "Start Attendance Error", "Current course is closed."));
 
 			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			.findOneByEmail(email)
 			.exec(function callback(err, user) {
 				if(err || !user)
 	  			return res.send(500, Error.log(req, "Start Attendance Error", "User doesn't exist."));
@@ -202,7 +190,6 @@ module.exports = {
 	create_notice: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var message = req.param('message');
 
@@ -214,12 +201,7 @@ module.exports = {
 			    return res.send(500, Error.alert(req, "Start Notice Error", "Current course is closed."));
 
 			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			.findOneByEmail(email)
 			.exec(function callback(err, user) {
 				if (err || !user)
 	  			return res.send(500, Error.log(req, "Post Notice Error", "User doesn't exist."));

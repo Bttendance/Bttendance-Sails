@@ -12,17 +12,11 @@ module.exports = {
 	click: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var clicker_id = req.param('clicker_id');
 		var choice_number = req.param('choice_number');
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.exec(function callback(err, user) { 
 			if (err || !user)
 		    return res.send(500, Error.log(req, "Clicker Click Error", "User doesn't exitst."));

@@ -30,7 +30,6 @@ module.exports = {
 
 	signup: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var password = req.param('password');
 		var full_name = req.param('full_name');
 		var email = req.param('email');
@@ -78,9 +77,8 @@ module.exports = {
 
 			  if (device) {
 					Users.create({
-						username: username,
-						password: password,
 						email: email,
+						password: password,
 						full_name: full_name,
 						locale: locale,
 						device: device.id				
@@ -149,9 +147,8 @@ module.exports = {
 							return res.send(500, Error.alert(req, "Sign Up Error",  "Deivce Create Error"));
 
 						Users.create({
-							username: username,
-							password: password,
 							email: email,
+							password: password,
 							full_name: full_name,
 							locale: locale,
 							device: new_device.id			
@@ -220,7 +217,6 @@ module.exports = {
 	// 442 : Update Required
 	auto_signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var password = req.param('password');
 		var locale = req.param('locale');
@@ -231,12 +227,7 @@ module.exports = {
 			locale = 'en';
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -260,14 +251,13 @@ module.exports = {
 
 	signin: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var password = req.param('password');
 		var device_uuid = req.param('device_uuid');
 		var device_type = req.param('device_type');
 
-		if (!username && !email)
-			return res.send(400, Error.alert(req, "Sign In Error", "Username or Email is required."));
+		if (!email)
+			return res.send(400, Error.alert(req, "Sign In Error", "Email is required."));
 
 		if (!password)
 			return res.send(400, Error.alert(req, "Sign In Error", "Password is required."));
@@ -276,16 +266,11 @@ module.exports = {
 			return res.send(400, Error.alert(req, "Sign In Error", "Device ID is required."));
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
-		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your USERNAME or EMAIL address again."));
+		    return res.send(500, Error.alert(req, "Sign In Error", "Please check your EMAIL address again."));
 
 			if (email == "apple0@apple.com"
 				|| email == "apple1@apple.com"
@@ -544,7 +529,6 @@ module.exports = {
 
 	update_full_name: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var full_name = req.param('full_name');
 
@@ -552,12 +536,7 @@ module.exports = {
 			return res.send(400, Error.alert(req, "FullName Update Error", "FullName is required."));
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -574,63 +553,42 @@ module.exports = {
 
 	update_email: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
 		var email = req.param('email');
 		var email_new = req.param('email_new');
 
 		if (!email)
 			return res.send(400, Error.alert(req, "Email Update Error", "Email is required."));
 
-		if (username) {
-			Users
-			.findOneByUsername(username)
-			.populateAll()
-			.exec(function callback(err, user) {
-				if (err || !user)
-					return res.send(500, Error.alert(req, "Email Update Error", "User doesn't exist."));
+		if (!email_new)
+			return res.send(400, Error.alert(req, "Email Update Error", "New email is required."));
 
-		  	user.email = email;
-		  	user.save(function callback(err, updated_user) {
-		  		if (err || !updated_user)
-						return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
-			  	return res.send(updated_user.toWholeObject());
-		  	});
-			});
-		} else {
-			if (!email_new)
-				return res.send(400, Error.alert(req, "Email Update Error", "New email is required."));
+		Users
+		.findOneByEmail(email)
+		.populateAll()
+		.exec(function callback(err, user) {
+			if (err || !user)
+				return res.send(500, Error.alert(req, "Email Update Error", "User doesn't exist."));
 
-			Users
-			.findOneByEmail(email)
-			.populateAll()
-			.exec(function callback(err, user) {
-				if (err || !user)
-					return res.send(500, Error.alert(req, "Email Update Error", "User doesn't exist."));
-
-		  	user.email = email_new;
-		  	user.save(function callback(err, updated_user) {
-		  		if (err || !updated_user)
-						return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
-			  	return res.send(updated_user.toWholeObject());
-		  	});
-			});
-		}
+	  	user.email = email_new;
+	  	user.save(function callback(err, updated_user) {
+	  		if (err || !updated_user)
+					return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
+		  	return res.send(updated_user.toWholeObject());
+	  	});
+		});
 	},
 
 	search: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var search_id = req.param('search_id');
-		var username = req.param('username');
 		var email = req.param('email');
 
 		if (!search_id)
-	    return res.send(400, Error.alert(req, "Searching User Error", "Username or email is required." ));
+	    return res.send(400, Error.alert(req, "Searching User Error", "Email is required." ));
 	  search_id = search_id.toLowerCase();
 
 		Users
-		.findOne({
-		  or: [{username: search_id}, {email: search_id}]
-		})
+		.findOneByEmail(search_id)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user)
@@ -643,101 +601,12 @@ module.exports = {
 		});
 	},
 
-	feed: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var username = req.param('username');
-		var page = req.param('page');
-		
-		Users
-		.findOneByUsername(username)
-		.populateAll()
-		.exec(function callback(err, user) {
-			if (err || !user) 
-				return res.send(500, Error.log(req, "User Feed Error", "User doesn't exist."));
-
-	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
-	  	var attending_courses = Arrays.getIds(user.attending_courses);
-	  	var total_courses = supervising_courses.concat(attending_courses);
-
-  		Courses
-  		.findById(total_courses)
-			.populateAll()
-  		.exec(function callback(err, courses) {
-  			if (err || !courses)
-	    		return res.send(new Array());
-
-				var total_posts = new Array();
-				for (var i = 0; i < courses.length; i++)
-					for (var j = 0; j < courses[i].posts.length; j++)
-						total_posts.push(courses[i].posts[j].id);
-
-	  		Posts
-	  		.findById(total_posts)
-				.populateAll()
-	  		.sort('id DESC')
-	  		.exec(function callback(err, posts) {
-	  			if (err || !posts)
-		    		return res.send(JSON.stringify(new Array()));
-
-					for (var i = 0; i < posts.length; i++) {
-
-						var students_count = 0;
-						for (var j = 0; j < courses.length; j++) {
-							if (courses[j].id == posts[i].course.id) {
-								students_count = courses[j].students.length;
-			  				posts[i].school_name = courses[j].school.name;
-							}
-						}
-
-						var grade;
-						var message;
-						if (posts[i].type == 'attendance') {
-							var locale = user.locale;
-							if (!locale || locale != 'ko')
-								locale = 'en';
-
-							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / students_count * 100).toFixed());
-		  				if (grade < 0 || isNaN(grade)) grade = 0;
-		  				if (grade > 100) grade = 100;
-
-		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
-		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + students_count + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
-		  				else {
-		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
-		  						message = sails.__({ phrase: "Attendance Checked", locale: locale })
-		  					else if (posts[i].attendance.late_students.indexOf(user.id) >= 0)
-		  						message = sails.__({ phrase: "Attendance Late", locale: locale })
-		  					else if (Moment().diff(Moment(posts[i].createdAt)) < 60 * 1000 && posts[i].attendance.type == 'auto') 
-		  					 	message = sails.__({ phrase: "Attendance Checking", locale: locale })
-	  						else
-		  					 	message = sails.__({ phrase: "Attendance Failed", locale: locale })
-		  				}
-		  			}
-
-	  				posts[i] = posts[i].toWholeObject();
-	  				if (posts[i].type == 'attendance') {
-		  				posts[i].grade = grade;
-	  					posts[i].message = message;
-	  				}
-					}
-			  	return res.send(posts);
-	  		});
-  		});
-		});
-	},
-
 	courses: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user) 

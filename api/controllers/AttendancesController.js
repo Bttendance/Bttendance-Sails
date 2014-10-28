@@ -53,7 +53,6 @@ module.exports = {
 	found_device: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var attendance_id = req.param('attendance_id');
 		var uuid = req.param('uuid');
 
@@ -72,12 +71,7 @@ module.exports = {
 	  			return res.send(500, Error.log(req, "Bttendance Error", "Fail to find user."));
 
 				Users
-				.findOne({
-				  or : [
-				    { email: email },
-				    { username: username }
-				  ]
-				})
+				.findOneByEmail(email)
 				.populate('supervising_courses')
 				.populate('attending_courses')
 				.exec(function callback(err, user_api) {

@@ -12,14 +12,13 @@ var Arrays = require('../utils/arrays');
 module.exports = function supervising (req, res, next) {
 
 	// Params
-	var username = req.param('username');
 	var email = req.param('email');
 	var password = req.param('password');
 	var course_id = req.param('course_id');
 	var post_id = req.param('post_id');
 
-	if (!username && !email)
-		return res.send(400, Error.alert(req, "Supervising Policy Error", "Username or Email is required."));
+	if (!email)
+		return res.send(400, Error.alert(req, "Supervising Policy Error", "Email is required."));
 
 	if (!course_id && !post_id)
 		return res.send(400, Error.alert(req, "Supervising Policy Error", "Course ID or Post ID is required."));
@@ -28,12 +27,7 @@ module.exports = function supervising (req, res, next) {
 		return res.send(400, Error.alert(req, "Supervising Policy Error", "Password is required."));
 
 	Users
-	.findOne({
-	  or : [
-	    { email: email },
-	    { username: username }
-	  ]
-	})
+	.findOneByEmail(email)
 	.populate('supervising_courses')
 	.exec(function callback(err, user) {
 

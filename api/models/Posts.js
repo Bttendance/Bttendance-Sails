@@ -91,20 +91,7 @@ module.exports = {
   },
 
   beforeValidate: function(values, next) {
-    if (values.course_id)
-      values.course = values.course_id;
-
-    if (values.username) {
-      Users.findOne({
-        username: values.username
-      }).done(function(err, user) {
-        if (user)
-          values.author = user.id;
-        else
-          next();
-      });
-    } else
-      next();
+    next();
   },
 
   afterValidate: function(values, next) {

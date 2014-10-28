@@ -145,11 +145,6 @@ module.exports.routes = {
     action: 'update_email'
   },
 
-  'get /api/users/feed': {
-    controller: 'users',
-    action: 'feed'
-  },
-
   'get /api/users/courses': {
     controller: 'users',
     action: 'courses'

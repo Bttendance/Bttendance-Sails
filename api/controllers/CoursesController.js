@@ -33,16 +33,10 @@ module.exports = {
 	info: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populateAll()
 		.exec(function callback(err, user) {
 			if (err || !user) 
@@ -312,7 +306,6 @@ module.exports = {
 	attend: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var locale = req.param('locale');
 		if (!locale || locale != 'ko')
@@ -329,12 +322,7 @@ module.exports = {
 			    return res.send(500, Error.alert(req, "Course Attend Error", "Current course is closed."));
 		
 			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			.findOneByEmail(email)
 			.populateAll()
 			.exec(function callback(err, user) {
 				if (err || !user)
@@ -354,12 +342,7 @@ module.exports = {
 				    return res.send(500, Error.log(req, "Course Attend Error", "Fail to save user."));
 
 			    Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
+					.findOneByEmail(email)
 					.populateAll()
 					.exec(function callback(err, user_new) {
 						if (err || !user_new)
@@ -429,7 +412,6 @@ module.exports = {
 	dettend: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 
 		Courses.findOneById(course_id).exec(function callback(err, course) {
@@ -440,12 +422,7 @@ module.exports = {
 			    return res.send(500, Error.alert(req, "Course Unjoin Error", "Current course is closed."));
 		
 			Users
-			.findOne({
-			  or : [
-			    { email: email },
-			    { username: username }
-			  ]
-			})
+			.findOneByEmail(email)
 			.populateAll()
 			.exec(function callback(err, user) {
 				if (err || !user)
@@ -465,12 +442,7 @@ module.exports = {
 				    return res.send(500, Error.log(req, "Course Unjoin Error", "Fail to save user."));
 
 			    Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
+					.findOneByEamil(email)
 					.populateAll()
 					.exec(function callback(err, user_new) {
 						if (err || !user_new)
@@ -486,17 +458,11 @@ module.exports = {
 	feed: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
-		var username = req.param('username');
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
 		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
+		.findOneByEmail(email)
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.exec(function callback(err, user) {
@@ -648,7 +614,6 @@ module.exports = {
     res.contentType('application/json; charset=utf-8');
     var course_id = req.param('course_id');
     var email = req.param('email');
-    var username = req.param('username');
     var manager = req.param('manager');
 
     Courses
@@ -661,25 +626,20 @@ module.exports = {
 			if (!course.opened)
 			    return res.send(500, Error.alert(req, "Adding Manager Error", "Current course is closed."));
  
-      if (Arrays.getUsernames(course.managers).indexOf(username) == -1 && Arrays.getEmails(course.managers).indexOf(email) == -1)
+      if (Arrays.getEmails(course.managers).indexOf(email) == -1)
         return res.send(500, Error.alert(req, "Adding Manager Error", "You are not supervising current course."));
 
-      if (Arrays.getUsernames(course.students).indexOf(manager) >= 0 || Arrays.getEmails(course.students).indexOf(manager) >= 0)
+      if (Arrays.getEmails(course.students).indexOf(manager) >= 0)
         return res.send(500, Error.alert(req, "Adding Manager Error", "User is already attending current course."));
 
       Users
-			.findOne({
-			  or : [
-			    { email: manager },
-			    { username: manager }
-			  ]
-			})
+			.findOneByEmail(email)
       .populateAll()
       .exec(function callback(err, mang) {
         if (err || !mang)
 	        return res.send(500, Error.alert(req, "Adding Manager Error", "Fail to add a user %s as a manager.\nPlease check User ID of Email again.", manager));
 
-	      if (Arrays.getUsernames(course.managers).indexOf(manager) >= 0 || Arrays.getEmails(course.managers).indexOf(manager) >= 0)
+	      if (Arrays.getEmails(course.managers).indexOf(manager) >= 0)
 	        return res.send(500, Error.alert(req, "Adding Manager Error", "%s is already supervising current course.", mang.full_name));
 
 			  var employed_schools = Arrays.getIds(mang.employed_schools);
@@ -855,7 +815,6 @@ module.exports = {
 	export_grades: function(req, res) {
     res.contentType('application/json; charset=utf-8');
     var email = req.param('email');
-    var username = req.param('username');
     var course_id = req.param('course_id');
 		var locale = req.param('locale');
 		if (!locale || locale != 'ko')
@@ -1174,12 +1133,7 @@ module.exports = {
 					});
 
 	        Users
-					.findOne({
-					  or : [
-					    { email: email },
-					    { username: username }
-					  ]
-					})
+					.findOneByEmail(email)
 					.exec(function callback(err, user) {
 		        if (err || !user)
 		          return res.send(500, Error.alert(req, "Export Grades Error", "Fail to find user."));
