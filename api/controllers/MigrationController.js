@@ -43,10 +43,10 @@ module.exports = {
 		Questions
 		.find()
 		.exec(function callback(err, questions) {
-			async.each(questions, function(question, callback) {
+			async.each(questions, function(question, next) {
 
 				if (!question.owner || question.owner == null)
-					callback();
+					next();
 
 				Users
 				.findOneById(question.owner)
@@ -68,7 +68,7 @@ module.exports = {
 						}
 					}
 
-					callback();
+					next();
 				});
 
 			}, function(err) {
