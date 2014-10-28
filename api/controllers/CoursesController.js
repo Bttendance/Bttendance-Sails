@@ -35,7 +35,7 @@ module.exports = {
 		var email = req.param('email');
 		var course_id = req.param('course_id');
 
-		console.log('Query : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+		console.log('Query1 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 		Users
 		.findOneByEmail(email)
@@ -44,6 +44,8 @@ module.exports = {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
 
+			console.log('Query2 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+
   		Courses
   		.findOneById(course_id)
 			.populateAll()
@@ -51,6 +53,8 @@ module.exports = {
   		.exec(function callback(err, course) {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
+
+				console.log('Query3 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 	    	Posts
 	  		.findById(Arrays.getIds(course.posts))
