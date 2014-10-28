@@ -45,26 +45,30 @@ module.exports = {
 		.exec(function callback(err, questions) {
 			async.each(questions, function(question, callback) {
 
+				if (!question.owner || question.owner == null)
+					callback();
+
 				Users
 				.findOneById(question.owner)
 				.populate('supervising_courses')
 				.exec(function callback(user, err) {
 
-					if (user.supervising_courses && user.supervising_courses != null)
-						async.each(user.supervising_courses, function(course, callback) {
+					if (user.supervising_courses && user.supervising_courses != null) {
+						for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
 							ClickerQuestions.create({
-								author: question.author,
+								author: question.owner,
 								message: question.message,
 								choice_count: question.choice_count,
 								progress_time: question.progress_time,
 								detail_privacy: question.detail_privacy,
-								course: course.id
+								course: user.supervising_courses[i].id
 							}).exec(function(clickerQuestion, err) {
 
 							});
-						} , function(err) {
-						});
+						}
+					}
 
+					callback();
 				});
 
 			}, function(err) {
