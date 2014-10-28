@@ -55,6 +55,7 @@ module.exports = {
 
 						if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
 							for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
+								console.log(user.supervising_courses[i]);
 								ClickerQuestions.create({
 									author: question.owner,
 									message: question.message,
@@ -63,7 +64,7 @@ module.exports = {
 									detail_privacy: question.detail_privacy,
 									course: user.supervising_courses[i].id
 								}).exec(function(clickerQuestion, err) {
-
+									console.log(clickerQuestion);
 								});
 							}
 						}
