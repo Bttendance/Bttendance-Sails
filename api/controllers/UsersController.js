@@ -662,8 +662,10 @@ module.exports = {
 						var clicker_checked_count = 0; //본인이 clicker를 몇번 참여했는지 (강의자의 경우 참여 안한 것으로 간주)
 
 						// Notice
+						var notice_rate = 0; //전체 공지 리치율 or 본인 공지 읽은 율
+						var notice_checks = new Array(); //seen_students를 모두 합한 Array
 						var notice_unseen = 0;
-						var notice_last = undefined; //가장 마지막 attendance
+						var notice_last_post = undefined; //가장 마지막 attendance
 						var notice_usage = 0; //notice를 post한 횟수
 						var notice_seen_count = 0; //본인이 notice를 몇개 보았는지 (강의자의 경우 안본 것으로 간주)
 
@@ -707,11 +709,13 @@ module.exports = {
 
 							// Notice Count
 							if (posts[j].course.id == courses[i].id && posts[j].type == "notice") {
-								if (posts[j].notice.seen_students.indexOf(user.id) >= 0)
+								if (posts[j].seen_students.indexOf(user.id) >= 0)
 									notice_seen_count++;
 
-								if (!notice_last)
-									notice_last = posts[j].notice;
+								if (!notice_last_post)
+									notice_last_post = posts[j];
+
+								notice_checks = notice_checks.concat(posts[j].seen_students);
 
 								notice_usage++;
 							}
@@ -720,13 +724,15 @@ module.exports = {
 	  				if (supervising_courses.indexOf(courses[i].id) >= 0) {
 							attendance_rate = Number( ( attd_checks.length / attd_usage / courses[i].students.length * 100).toFixed() );
 							clicker_rate = Number( ( clicker_checks.length / clicker_usage / courses[i].students.length * 100).toFixed() );
-							if (notice_last)
-								notice_unseen = courses[i].students.length - notice_last.seen_students.length;
+							notice_rate = Number( ( notice_checks.length / notice_usage / courses[i].students.length * 100).toFixed() );
+							if (notice_last_post)
+								notice_unseen = courses[i].students.length - notice_last_post.seen_students.length;
 							else
 								notice_unseen = courses[i].students.length;
 	  				} else {
 							attendance_rate = Number( (attd_checked_count / attd_usage * 100).toFixed() );
 							clicker_rate = Number( (clicker_checked_count / clicker_usage * 100).toFixed() );
+							notice_rate = Number( (notice_seen_count / notice_usage * 100).toFixed() );
 							notice_unseen = notice_usage - notice_seen_count;
 	  				}
 
@@ -742,6 +748,7 @@ module.exports = {
   					courses[i].grade = attendance_rate;
   					courses[i].attendance_rate = attendance_rate;
   					courses[i].clicker_rate = clicker_rate;
+  					courses[i].notice_rate = notice_rate;
   					courses[i].notice_unseen = notice_unseen;
   					courses[i].clicker_usage = clicker_usage;
   					courses[i].notice_usage = notice_usage;

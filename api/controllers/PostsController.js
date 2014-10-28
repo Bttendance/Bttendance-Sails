@@ -196,10 +196,10 @@ module.exports = {
 
 		Courses.findOneById(course_id).exec(function callback(err, course) {
 			if (err || !course)
-			    return res.send(500, Error.log(req, "Start Notice Error", "Course doesn't exist."));
+			    return res.send(500, Error.log(req, "Post Notice Error", "Course doesn't exist."));
 
 			if (!course.opened)
-			    return res.send(500, Error.alert(req, "Start Notice Error", "Current course is closed."));
+			    return res.send(500, Error.alert(req, "Post Notice Error", "Current course is closed."));
 
 			Users
 			.findOneByEmail(email)
@@ -247,6 +247,56 @@ module.exports = {
 				  				if (users[j].setting && users[j].setting.notice)
 					  				Noti.send(users[j], post.course.name, "You have new notice.", "notice", course.id);
 				  		});
+
+					  	return res.send(post.toWholeObject());
+			    	});
+				  });
+		  	});
+			});
+		});
+	},
+
+	create_curious: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
+		var course_id = req.param('course_id');
+		var message = req.param('message');
+
+		Courses.findOneById(course_id).exec(function callback(err, course) {
+			if (err || !course)
+			    return res.send(500, Error.log(req, "Post Curious Error", "Course doesn't exist."));
+
+			if (!course.opened)
+			    return res.send(500, Error.alert(req, "Post Curious Error", "Current course is closed."));
+
+			Users
+			.findOneByEmail(email)
+			.exec(function callback(err, user) {
+				if (err || !user)
+	  			return res.send(500, Error.log(req, "Post Curious Error", "User doesn't exist."));
+
+				Posts.create({
+				  author: user.id,
+				  course: course_id,
+				  message: message,
+				  type: 'curious'
+				}).exec(function callback(err, post) {
+					if (err || !post)
+		  			return res.send(500, Error.alert(req, "Post Curious Error", "Fail to create a post."));
+
+	    		Posts
+	    		.findOneById(post.id)
+		    	.populateAll()
+		  		.exec(function callback(err, post) {
+		  			if (err || !post)
+			  			return res.send(500, Error.log(req, "Post Curious Error", "Post doesn't exist."));
+
+			    	Courses
+			    	.findOneById(post.course.id)
+			    	.populateAll()
+				  	.exec(function callback(err, course) {
+			    		if (err || !course)
+				  			return res.send(500, Error.log(req, "Post Curious Error", "Course doesn't exist."));
 
 					  	return res.send(post.toWholeObject());
 			    	});
