@@ -50,12 +50,6 @@ module.exports = {
       model: 'Curiouses'
     },
 
-    // One to Many
-    comments: {
-      collection: 'Comments',
-      via: 'post'
-    },
-
     seen_students: {
       type: 'json'
     },
@@ -72,7 +66,6 @@ module.exports = {
       delete obj.clicker;
       delete obj.notice;
       delete obj.curious;
-      delete obj.comments;
       return obj;
     },
 
@@ -85,7 +78,6 @@ module.exports = {
       obj.clicker = this.clicker;
       obj.notice = this.notice;
       obj.curious = this.curious;
-      obj.comments = this.comments;
       return obj;
     }
   },

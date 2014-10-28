@@ -28,12 +28,29 @@ module.exports = {
 				if (err || !notice)
 	  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find notice."));
 
-	  		if (notice.seen_students.indexOf(user.id) != -1)
+	  		if (notice.seen_students.indexOf(user.id) != -1) {
 				  return res.send(notice.toWholeObject());
+	  		} else if (notice.post) {
+		  		Posts
+		  		.findOneById(notice.post.id)
+		  		.exec(function callback(err, post) {
+						if (err || !post)
+			  			return res.send(500, Error.log(req, "Notice Seen Error", "Fail to find post."));
 
-				notice.seen_students.push(user.id);
-				notice.save();
-			  return res.send(notice.toWholeObject());
+			  		post.seen_students.push(user.id)
+			  		post.save();
+
+						notice.seen_students.push(user.id);
+						notice.save();
+
+					  return res.send(notice.toWholeObject());	
+		  		});
+		  	} else {
+					notice.seen_students.push(user.id);
+					notice.save();
+
+				  return res.send(notice.toWholeObject());	
+		  	}
 			});
 		});
 	}

@@ -17,6 +17,7 @@
 
 var Error = require('../utils/errors');
 var Noti = require('../utils/notifications');
+var Arrays = require('../utils/arrays');
 
 module.exports = {
 
@@ -333,6 +334,46 @@ module.exports = {
 			  	});
 	    	});
     	});
+		});
+	},
+
+	seen: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
+		var post_id = req.param('post_id');
+
+		Users
+		.findOneByEmail(email)
+		.populate('supervising_courses')
+		.populate('attending_courses')
+		.exec(function callback(err, user) {
+			if (err || !user)
+  			return res.send(500, Error.log(req, "Post Seen Error", "Fail to find user."));
+
+  		Posts
+  		.findOneById(post_id)
+  		.populateAll()
+  		.exec(function callback(err, post) {
+  			if (err || !post)
+	  			return res.send(500, Error.log(req, "Post Seen Error", "Fail to find post."));
+
+				if (Arrays.getIds(user.supervising_courses).indexOf(post.course.id) != -1
+					&& post.seen_manangers.indexOf(user.id) != -1) {
+					post.seen_manangers.push(user.id);
+					post.save();
+					return res.send(post.toWholeObject());
+				} else if (Arrays.getIds(user.attending_courses).indexOf(post.course.id) != -1
+					&& post.seen_students.indexOf(user.id) != -1) {
+					if (post.type == 'notice') {
+						post.notice.seen_students.push(user.id);
+						post.notice.save();
+					}
+					post.seen_students.push(user.id);
+					post.save();
+					return res.send(post.toWholeObject());
+				} else
+					return res.send(post.toWholeObject());
+  		});
 		});
 	}
 };

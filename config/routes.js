@@ -183,6 +183,11 @@ module.exports.routes = {
     action: 'update_notice'
   },
 
+  'put /api/settings/update/curious': {
+    controller: 'settings',
+    action: 'update_curious'
+  },
+
   'put /api/settings/update/clicker/defaults': {
     controller: 'settings',
     action: 'update_clicker_defaults'

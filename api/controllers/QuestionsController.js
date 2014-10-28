@@ -115,7 +115,7 @@ module.exports = {
 		.populateAll()
 		.exec(function callback(err, question) {
 			if (err || !question)
-				return res.send(500, Error.alert(req, "Update Questions Error", "Fail to fine current question."));
+				return res.send(500, Error.alert(req, "Update Questions Error", "Fail to find current question."));
 
 			question.message = message;
 			question.choice_count = choice_count;
