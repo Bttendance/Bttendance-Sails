@@ -37,9 +37,12 @@ exports.alert = function(req, title, message, param1) {
 
 exports.log = function(req, title, message, param1, param2) {
 	var url = req.url;
-	if (req.param('password'))
-		url = url.replace(escape(req.param('password')), '****');	
-	sails.log.debug(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2);
+	var log = url + ' : ' + title + ' : ' + message;
+	if (param1)
+		log = log + ' : ' + param1;
+	if (param2)
+		log = log + ' : ' + param2;
+	sails.log.debug(log);
 
 	var locale = req.param('locale');
 	if (!locale || locale != 'ko')
@@ -54,9 +57,12 @@ exports.log = function(req, title, message, param1, param2) {
 
 exports.toast = function(req, title, message, param1, param2) {
 	var url = req.url;
-	if (req.param('password'))
-		url = url.replace(escape(req.param('password')), '****');	
-	sails.log.warn(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2);
+	var log = url + ' : ' + title + ' : ' + message;
+	if (param1)
+		log = log + ' : ' + param1;
+	if (param2)
+		log = log + ' : ' + param2;
+	sails.log.warn(log);
 
 	var locale = req.param('locale');
 	if (!locale || locale != 'ko')
@@ -71,9 +77,12 @@ exports.toast = function(req, title, message, param1, param2) {
 
 exports.alert = function(req, title, message, param1, param2) {
 	var url = req.url;
-	if (req.param('password'))
-		url = url.replace(escape(req.param('password')), '****');	
-	sails.log.error(url + ' : ' + title + ' : ' + message + ' : ' + param1 + ' : ' + param2);
+	var log = url + ' : ' + title + ' : ' + message;
+	if (param1)
+		log = log + ' : ' + param1;
+	if (param2)
+		log = log + ' : ' + param2;
+	sails.log.error(log);
 
 	var locale = req.param('locale');
 	if (!locale || locale != 'ko')

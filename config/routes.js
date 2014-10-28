@@ -120,6 +120,12 @@ module.exports.routes = {
     action: 'auto_signin'
   },
 
+  'post /api/users/signin': {
+    controller: 'users',
+    action: 'signin'
+  },
+
+  //Should be removed for security
   'get /api/users/signin': {
     controller: 'users',
     action: 'signin'

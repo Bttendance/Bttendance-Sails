@@ -40,7 +40,7 @@ module.exports = {
 
 	migrate2: function(req, res) {
 
-		// question
+		// question (done)
 		Questions
 		.find()
 		.exec(function callback(err, questions) {
@@ -53,7 +53,7 @@ module.exports = {
 					.findOneById(question.owner)
 					.populate('supervising_courses')
 					.exec(function callback(err, user) {
-						if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
+						if (user && user.supervising_courses) {
 							for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
 								console.log(user.supervising_courses[i]);
 								ClickerQuestions.create({

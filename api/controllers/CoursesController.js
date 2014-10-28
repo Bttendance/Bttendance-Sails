@@ -1182,7 +1182,7 @@ module.exports = {
 							// setup e-mail data with unicode symbols
 							var mailOptions = {
 							    from: "Bttendance<no-reply@bttendance.com>", // sender address
-							    to: 'thefinestartist@bttendance.com', // list of receivers
+							    to: 'user.email', // list of receivers
 							    subject: sails.__({ phrase: "Grade of %s", locale: locale }, course.name), // Subject line
 							    html: file,
 							    attachments: [{   

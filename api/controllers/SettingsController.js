@@ -84,6 +84,31 @@ module.exports = {
 		});
 	},
 
+	update_curious: function(req, res) {
+		res.contentType('application/json; charset=utf-8');
+		var email = req.param('email');
+		var curious = req.param('curious');
+
+		Users
+		.findOneByEmail(email)
+		.populateAll()
+		.exec(function callback(err, user) {
+			if (err || !user || !user.setting)
+				return res.send(500, Error.alert(req, "Update Setting Error", "Notice notification setting update has some error."));
+
+			if (curious == 'false' || curious == 'NO')
+				user.setting.curious = false;
+			else
+				user.setting.curious = true;
+
+		  user.setting.save(function callback(err) {
+		   	if (err)
+					return res.send(500, Error.alert(req, "Update Setting Error", "Notice notification setting update has some error."));
+		  	return res.send(user.toWholeObject());
+	    });
+		});
+	},
+
 	update_clicker_defaults: function(req, res) {
 		res.contentType('application/json; charset=utf-8');
 		var email = req.param('email');
