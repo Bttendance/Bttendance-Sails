@@ -40,54 +40,45 @@ module.exports = {
 
 	migrate2: function(req, res) {
 
-			Questions
-			.create({
-				message: 'Hello',
-				choice_count: 2,
-				progress_time: 60,
-				show_info_on_select: true,
-				detail_privacy: 'all',
-				owner: 1
-			}).exec(function callback(err, question) {
-				console.log(err);
-			});
-
 		// question
-		// Questions
-		// .find()
-		// .exec(function callback(err, questions) {
-		// 	async.each(questions, function(question, next) {
+		Questions
+		.find()
+		.exec(function callback(err, questions) {
+			async.each(questions, function(question, next) {
 
-		// 		if (!question.owner || question.owner == null)
-		// 			next();
-		// 		else {
-		// 			Users
-		// 			.findOneById(question.owner)
-		// 			.populate('supervising_courses')
-		// 			.exec(function callback(err, user) {
-		// 				if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
-		// 					for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
-		// 						console.log(user.supervising_courses[i]);
-		// 						ClickerQuestions.create({
-		// 							author: question.owner,
-		// 							message: question.message,
-		// 							choice_count: question.choice_count,
-		// 							progress_time: question.progress_time,
-		// 							detail_privacy: question.detail_privacy,
-		//							show_info_on_select: question.show_info_on_select,
-		// 							course: user.supervising_courses[i].id
-		// 						}).exec(function(err, clickerQuestion) {
-		// 							console.log(err);
-		// 						});
-		// 					}
-		// 				}
-		// 				next();
-		// 			});
-		// 		}
+				if (!question.owner || question.owner == null)
+					next();
+				else {
+					Users
+					.findOneById(question.owner)
+					.populate('supervising_courses')
+					.exec(function callback(err, user) {
+						if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
+							for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
+								console.log(user.supervising_courses[i]);
+								ClickerQuestions.create({
+									author: question.owner,
+									message: question.message,
+									choice_count: question.choice_count,
+									progress_time: question.progress_time,
+									detail_privacy: question.detail_privacy,
+									show_info_on_select: question.show_info_on_select,
+									course: user.supervising_courses[i].id
+								}).exec(function(err, clickerQuestion) {
+									if (err)
+										console.log(err);
+									else
+										console.log(clickerQuestion);
+								});
+							}
+						}
+						next();
+					});
+				}
 
-		// 	}, function(err) {
-		// 	});
-		// });
+			}, function(err) {
+			});
+		});
 	},
 
 	migrate3: function(req, res) {
