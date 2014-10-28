@@ -53,7 +53,7 @@ module.exports = {
 				.populate('supervising_courses')
 				.exec(function callback(user, err) {
 
-					if (user.supervising_courses && user.supervising_courses != null) {
+					if (user && user != null && user.supervising_courses && user.supervising_courses != null) {
 						for (var i = user.supervising_courses.length - 1; i >= 0; i--) {
 							ClickerQuestions.create({
 								author: question.owner,
