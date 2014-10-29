@@ -473,7 +473,7 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
-			console.log('Time 0 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+		console.log('Time 0 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 		Users
 		.findOneByEmail(email)
@@ -490,7 +490,7 @@ module.exports = {
 			.populate('students')
 			.exec(function callback(err, course) {
 				if (err || !course)
-		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
+			    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
 				console.log('Time 2 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 	  		Posts
@@ -505,20 +505,15 @@ module.exports = {
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
 				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));
-			console.log('Time 3 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+					console.log('Time 3 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					for (var i = 0; i < posts.length; i++) {
 
-						var grade;
 						var message;
 						if (posts[i].type == 'attendance') {
 							var locale = user.locale;
 							if (!locale || locale != 'ko')
 								locale = 'en';
-
-							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / course.students.length * 100).toFixed());
-		  				if (grade < 0 || isNaN(grade)) grade = 0;
-		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
 		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
@@ -535,12 +530,11 @@ module.exports = {
 		  			}
 
 						posts[i] = posts[i].toWholeObject();
-	  				if (posts[i].type == 'attendance') {
-							posts[i].grade = grade;
+						posts[i].course = course.toJSON();
+	  				if (posts[i].type == 'attendance')
 	  					posts[i].message = message;
-	  				}
 					}
-			console.log('Time 4 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+					console.log('Time 4 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 			  	return res.send(posts);
 	  		});
 			});
