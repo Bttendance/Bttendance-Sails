@@ -497,6 +497,7 @@ module.exports = {
 	  		.find({
 	  			course: course_id
 	  		})
+	  		.populate('course')
 				.populate('attendance')
 				.populate('clicker')
 				.populate('notice')

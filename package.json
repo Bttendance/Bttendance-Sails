@@ -43,7 +43,7 @@
     "node-uuid": "~1.4.1",
     "node-xlsx": "~0.5.1",
     "newrelic": "~1.12.2",
-    "validator": "~3.22.0",
+    "validator": "~3.16.0",
     "gake": "~0.1.2",
     "cron": "~1.0.5"
   },
