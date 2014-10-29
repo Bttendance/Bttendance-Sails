@@ -21,6 +21,6 @@ module.exports.models = {
   ***************************************************************************/
 
   connection: connections.getPostgres(),
-
-  migrate: 'safe'
+  migrate: 'alter'
+  
 };
