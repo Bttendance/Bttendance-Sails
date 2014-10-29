@@ -57,11 +57,11 @@ module.exports = {
 				console.log('Query3 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 	    	Posts
-	    	.find({
-    			course: course_id
-	    	})
-	  		// .findById(Arrays.getIds(course.posts))
-				.populateAll()
+	  		.findById(Arrays.getIds(course.posts))
+				.populate('attendance')
+				.populate('clicker')
+				.populate('notice')
+				.populate('curious')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts) {
