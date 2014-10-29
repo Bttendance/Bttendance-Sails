@@ -74,6 +74,8 @@ module.exports = {
       delete obj.clicker;
       delete obj.notice;
       delete obj.curious;
+      delete obj.seen_students;
+      delete obj.seen_managers;
       return obj;
     },
 
@@ -86,6 +88,8 @@ module.exports = {
       obj.clicker = this.clicker;
       obj.notice = this.notice;
       obj.curious = this.curious;
+      obj.seen_students = this.seen_students;
+      obj.seen_managers = this.seen_managers;
       return obj;
     }
   },
