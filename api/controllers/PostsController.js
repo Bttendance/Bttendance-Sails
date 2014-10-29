@@ -139,8 +139,10 @@ module.exports = {
 				  type: 'attendance',
 				  attendance_type: type
 				}).exec(function callback(err, post) {
-					if (err || !post)
+					if (err || !post) {
+						sails.log.error(err);
 		  			return res.send(500, Error.alert(req, "Start Attendance Error", "Fail to create a post."));
+					}
 
 		    	Posts
 		    	.findOneById(post.id)
