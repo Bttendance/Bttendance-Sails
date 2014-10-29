@@ -616,6 +616,8 @@ module.exports = {
 	  	var attending_courses = Arrays.getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
+	  	console.log('Time 1 : ' + Moment.format('MMMM Do YYYY, h:mm:ss SSS a'));
+
   		Courses
   		.findById(total_courses)
 			.populateAll()
@@ -623,6 +625,8 @@ module.exports = {
   		.exec(function callback(err, courses) {
   			if (err || !courses)
 		    		return res.send(JSON.stringify(new Array()));
+
+	  	console.log('Time 2 : ' + Moment.format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 				var total_posts = new Array();
 				for (var i = 0; i < courses.length; i++)
@@ -647,6 +651,8 @@ module.exports = {
 						}
 				  	return res.send(courses);
 	  			}
+
+	  	console.log('Time 3 : ' + Moment.format('MMMM Do YYYY, h:mm:ss SSS a'));
 					
 					for (var i = 0; i < courses.length; i++) {
 
