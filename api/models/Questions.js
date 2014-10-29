@@ -15,26 +15,30 @@ module.exports = {
     },
 
     choice_count: {
-      type: 'integer'
+      type: 'integer',
+      required: true,
+      max: 5,
+      min: 2,
+      defaultsTo: 4
     },
 
     progress_time: {
       type: 'integer',
-      defaultsTo: 60,
-      required: true
+      required: true,
+      defaultsTo: 60
     },
 
     show_info_on_select: {
       type: 'boolean',
-      defaultsTo: true,
-      required: true
+      required: true,
+      defaultsTo: true
     },
 
     detail_privacy: { //all, none, professor
       type: 'string',
       enum: ['all', 'none', 'professor'],
-      defaultsTo: 'professor',
-      required: true
+      required: true,
+      defaultsTo: 'professor'
     },
 
     owner: {
@@ -57,45 +61,5 @@ module.exports = {
       obj.owner = this.owner;
       return obj;
     }
-
-  },
-
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    if (!values.choice_count)
-      values.choice_count = 4;
-    if (values.choice_count < 2)
-      values.choice_count = 2;
-    if (values.choice_count > 5)
-      values.choice_count = 5;
-
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
-  afterUpdate: function(values, next) {
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
   }
 };

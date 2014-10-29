@@ -35,21 +35,21 @@ module.exports = {
 
     progress_time: {
       type: 'integer',
-      defaultsTo: 60,
-      required: true
+      required: true,
+      defaultsTo: 60
     },
 
     show_info_on_select: {
       type: 'boolean',
-      defaultsTo: true,
-      required: true
+      required: true,
+      defaultsTo: true
     },
 
     detail_privacy: {
       type: 'string',
       enum: ['all', 'none', 'professor'],
-      defaultsTo: 'professor',
-      required: true
+      required: true,
+      defaultsTo: 'professor'
     },
 
     // One to One
@@ -76,4 +76,3 @@ module.exports = {
 
   }
 };
-

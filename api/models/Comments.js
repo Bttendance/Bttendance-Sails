@@ -11,16 +11,19 @@ module.exports = {
 
     // One Way
     author: {
-    	model: 'Users'
+    	model: 'Users',
+      index: true
     },
 
     message: {
       type: 'string',
+      required: true
     },
 
     // One to Many
 		curious: {
-			model: 'Curiouses'
+			model: 'Curiouses',
+      index: true
 		},
 
     toJSON: function() {

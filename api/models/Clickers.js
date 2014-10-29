@@ -9,51 +9,61 @@ module.exports = {
 
 	attributes: {
 
-		choice_count: {
-			type: 'integer'
-		},
-
 		a_students: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array()
 		},
 
 		b_students: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array()
 		},
 
 		c_students: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array()
 		},
 
 		d_students: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array()
 		},
 
 		e_students: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array()
 		},
+
+    choice_count: {
+      type: 'integer',
+      required: true,
+      max: 5,
+      min: 2,
+      defaultsTo: 4
+    },
 
     progress_time: {
       type: 'integer',
-      defaultsTo: 60,
-      required: true
+      required: true,
+      defaultsTo: 60
     },
 
     show_info_on_select: {
       type: 'boolean',
-      defaultsTo: true,
-      required: true
+      required: true,
+      defaultsTo: true
     },
 
     detail_privacy: {
       type: 'string',
       enum: ['all', 'none', 'professor'],
-      defaultsTo: 'professor',
-      required: true
+      required: true,
+      defaultsTo: 'professor'
     },
 
     post: {
-      model: 'Posts'
+      model: 'Posts',
+      index: true
     },
 
     toJSON: function() {
@@ -68,38 +78,6 @@ module.exports = {
     }
 	},
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    if (!values.choice_count)
-      values.choice_count = 4;
-    if (values.choice_count < 2)
-      values.choice_count = 2;
-    if (values.choice_count > 5)
-      values.choice_count = 5;
-    
-    values.a_students = new Array();
-    values.b_students = new Array();
-    values.c_students = new Array();
-    values.d_students = new Array();
-    values.e_students = new Array();
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
   afterUpdate: function(values, next) {
     
     Clickers
@@ -112,13 +90,6 @@ module.exports = {
     });
 
     next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
   }
+
 };

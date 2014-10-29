@@ -11,11 +11,13 @@ module.exports = {
 
     // One Way
     author: {
-    	model: 'Users'
+    	model: 'Users',
+      index: true
     },
 
     scheduledAt: {
       type: 'date',
+      required: true
     },
 
     on: {
@@ -26,7 +28,8 @@ module.exports = {
 
     // One Way
 		course: {
-			model: 'Courses'
+			model: 'Courses',
+      index: true
 		},
 
     toJSON: function() {

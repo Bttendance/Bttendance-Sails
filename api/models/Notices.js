@@ -10,7 +10,8 @@ module.exports = {
   attributes: {
 
 		seen_students: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array()
 		},
 
 		post: {
@@ -28,27 +29,7 @@ module.exports = {
       return obj;
     }
   },
-
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    values.seen_students = new Array();
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  }, 
+  
   afterUpdate: function(values, next) {
     
     Notices
@@ -60,14 +41,7 @@ module.exports = {
     });
 
     next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
   }
+
 };
 

@@ -34,7 +34,8 @@ module.exports = {
 
     // One to One
     owner: {
-    	model: 'Users'
+    	model: 'Users',
+      index: true
     },
 
     toJSON: function() {
@@ -58,38 +59,10 @@ module.exports = {
     
   },
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
   beforeCreate: function(values, next) {
     if (values.type == 'android')
       values.mac_address = values.uuid;
     next();
   },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
-  afterUpdate: function(values, next) {
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
-  }
 
 };

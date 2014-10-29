@@ -10,7 +10,8 @@ module.exports = {
 	attributes: {
 
 		identity: {
-			type: 'string'
+			type: 'string',
+      required: true
 		},
 
 		owner: {
@@ -38,5 +39,4 @@ module.exports = {
       return obj;
     }
 	}
-
 };

@@ -30,6 +30,7 @@ module.exports = {
 
     locale: {
       type: 'string',
+      required: true,
       defaultsTo: 'en'
     },
 
@@ -126,10 +127,6 @@ module.exports = {
     next();
   },
 
-  afterValidate: function(values, next) {
-    next();
-  },
-
   beforeCreate: function(values, next) {
     values.password = PasswordHash.generate(values.password);
     Settings
@@ -153,22 +150,5 @@ module.exports = {
       else
         next();
     });
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
-  afterUpdate: function(values, next) {
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
   }
-
 };

@@ -57,11 +57,13 @@ module.exports = {
     },
 
     seen_students: {
-      type: 'json'
+      type: 'json',
+      defaultsTo: new Array()
     },
 
     seen_managers: {
-      type: 'json'
+      type: 'json',
+      defaultsTo: new Array()
     },
 
     toJSON: function() {
@@ -88,18 +90,7 @@ module.exports = {
     }
   },
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
   beforeCreate: function(values, next) {
-    
-    values.seen_students = new Array();
-    values.seen_managers = new Array();
 
     if (values.type == 'attendance') {
       values.message = 'Attendance';
@@ -203,10 +194,6 @@ module.exports = {
       next();
   },
 
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
   afterUpdate: function(values, next) {
     
     Posts
@@ -217,14 +204,6 @@ module.exports = {
         sails.sockets.broadcast('Course#' + post.course.id, 'post', post.toWholeObject());
     });
 
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
     next();
   }
 

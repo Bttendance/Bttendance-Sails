@@ -12,7 +12,8 @@ module.exports = {
     type: {
       type: 'string',
       enum: ['auto', 'manual', 'alarm'],
-      required: true
+      required: true,
+      index: true
     },
 
     checked_students: {
@@ -31,7 +32,8 @@ module.exports = {
 		},
 
 		post: {
-			model: 'Posts'
+			model: 'Posts',
+      index: true
 		},
 
     toJSON: function() {
@@ -48,26 +50,6 @@ module.exports = {
     }
 	},
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
   afterUpdate: function(values, next) {
     
     Attendances
@@ -78,14 +60,6 @@ module.exports = {
         sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
     });
     
-    next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
     next();
   }
 

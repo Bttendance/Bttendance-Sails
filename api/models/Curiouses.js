@@ -10,11 +10,13 @@ module.exports = {
   attributes: {
 
   	liked_users: {
-  		type: 'json'
+  		type: 'json',
+      defaultsTo: new Array()
   	},
 
   	followers: {
-  		type: 'json'
+  		type: 'json',
+      defaultsTo: new Array()
   	},
 
     // One to Many
@@ -24,7 +26,8 @@ module.exports = {
     },
 
     post: {
-      model: 'Posts'
+      model: 'Posts',
+      index: true
     },
 
     toJSON: function() {
@@ -41,28 +44,6 @@ module.exports = {
     }
   },
 
-  beforeValidate: function(values, next) {
-    next();
-  },
-
-  afterValidate: function(values, next) {
-    next();
-  },
-
-  beforeCreate: function(values, next) {
-    values.liked_users = new Array();
-    values.followers = new Array();
-    next();
-  },
-
-  afterCreate: function(values, next) {
-    next();
-  },
-
-  beforeUpdate: function(values, next) {
-    next();
-  },
-
   afterUpdate: function(values, next) {
     
     Curiouses
@@ -75,14 +56,7 @@ module.exports = {
     });
 
     next();
-  },
-
-  beforeDestroy: function(values, next) {
-    next();
-  },
-
-  afterDestroy: function(values, next) {
-    next();
   }
+  
 };
 
