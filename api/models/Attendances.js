@@ -17,19 +17,16 @@ module.exports = {
 
     checked_students: {
       type: 'json',
-      defaultsTo: [],
       required: true
     },
 
     late_students: {
       type: 'json',
-      defaultsTo: [],
       required: true
     },
 
 		clusters: {
 			type: 'json',
-      defaultsTo: [],
       required: true
 		},
 
@@ -60,6 +57,9 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    values.checked_students = new Array();
+    values.late_students = new Array();
+    values.clusters = new Array();
     next();
   },
 
