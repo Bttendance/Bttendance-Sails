@@ -17,19 +17,19 @@ module.exports = {
 
     checked_students: {
       type: 'json',
-      defaultsTo: new Array(),
+      defaultsTo: [],
       required: true
     },
 
     late_students: {
       type: 'json',
-      defaultsTo: new Array(),
+      defaultsTo: [],
       required: true
     },
 
 		clusters: {
 			type: 'json',
-      defaultsTo: new Array(),
+      defaultsTo: [],
       required: true
 		},
 
