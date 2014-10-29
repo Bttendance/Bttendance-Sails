@@ -67,10 +67,8 @@ module.exports = {
 					show_info_on_select: show_info_on_select,
 					detail_privacy: detail_privacy
 				}).exec(function callback(err, post) {
-					if (err || !post) {
-						console.log(err);
+					if (err || !post)
 		  			return res.send(500, Error.alert(req, "Start Clicker Error", "Fail to create a post."));
-					}
 
 		    	Posts
 		    	.findOneById(post.id)
