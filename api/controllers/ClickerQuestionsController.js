@@ -14,26 +14,19 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var course_id = req.param('course_id');
 
-		Courses
-		.findOneById(course_id)
-		.populate('questions')
-		.exec(function callback(err, course) {
-			if (err || !course)
-				return res.send(500, Error.log(req, "Get Questions Error", "User doesn't exist."));
+		ClickerQuestions
+		.find({
+			course: course_id
+		})
+		.sort('id DESC')
+		.populateAll()
+		.exec(function callback(err, clickerQuestions) {
+			if (err || !clickerQuestions)
+				return res.send(500, Error.log(req, "Get Questions Error", "Questions doesn't exist."));
 
-  		ClickerQuestions
-  		.findById(Arrays.getIds(course.questions))
-			.sort('id DESC')
-  		.populateAll()
-  		.exec(function callback(err, clickerQuestions) {
-				if (err || !clickerQuestions)
-					return res.send(500, Error.log(req, "Get Questions Error", "Questions doesn't exist."));
-
-				for (var i = 0; i < clickerQuestions.length; i++)
-  				clickerQuestions[i] = clickerQuestions[i].toWholeObject();
-
-		  	return res.send(clickerQuestions);
-  		});
+			for (var i = 0; i < clickerQuestions.length; i++)
+				clickerQuestions[i] = clickerQuestions[i].toWholeObject();
+	  	return res.send(clickerQuestions);
 		});
 	},
 

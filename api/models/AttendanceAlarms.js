@@ -18,6 +18,12 @@ module.exports = {
       type: 'date',
     },
 
+    on: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
+    },
+
     // One Way
 		course: {
 			model: 'Courses'

@@ -10,9 +10,9 @@ module.exports = {
 
   attributes: {
 
-    //iphone, android, window, blackberry, etc
     type: {
       type: 'string',
+      enum: ['iphone', 'android', 'window', 'blackberry', 'xiaomi'],
       required: true
     },
 

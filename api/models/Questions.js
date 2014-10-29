@@ -20,17 +20,21 @@ module.exports = {
 
     progress_time: {
       type: 'integer',
-      defaultsTo: 60
+      defaultsTo: 60,
+      required: true
     },
 
     show_info_on_select: {
       type: 'boolean',
-      defaultsTo: true
+      defaultsTo: true,
+      required: true
     },
 
     detail_privacy: { //all, none, professor
       type: 'string',
-      defaultsTo: 'professor'
+      enum: ['all', 'none', 'professor'],
+      defaultsTo: 'professor',
+      required: true
     },
 
     owner: {

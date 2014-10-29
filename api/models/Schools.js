@@ -16,9 +16,9 @@ module.exports = {
     	required: true
     },
 
-    // university, school, institute, etc
     type: {
       type: 'string',
+      enum: ['university', 'school', 'institute', 'etc'],
       required: true
     },
 

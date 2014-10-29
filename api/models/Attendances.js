@@ -9,22 +9,28 @@ module.exports = {
 
 	attributes: {
 
-    // auto, manual
     type: {
       type: 'string',
+      enum: ['auto', 'manual', 'alarm'],
       required: true
     },
 
     checked_students: {
-      type: 'json'
+      type: 'json',
+      defaultsTo: new Array(),
+      required: true
     },
 
     late_students: {
-      type: 'json'
+      type: 'json',
+      defaultsTo: new Array(),
+      required: true
     },
 
 		clusters: {
-			type: 'json'
+			type: 'json',
+      defaultsTo: new Array(),
+      required: true
 		},
 
 		post: {
@@ -54,9 +60,6 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    values.checked_students = new Array();
-    values.late_students = new Array();
-    values.clusters = new Array();
     next();
   },
 

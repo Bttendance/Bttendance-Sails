@@ -10,9 +10,9 @@ module.exports = {
 
   attributes: {
 
-    // attendance, notice, clicker
     type: {
       type: 'string',
+      enum: ['attendance', 'notice', 'clicker', 'curious'],
       required: true
     },
 
