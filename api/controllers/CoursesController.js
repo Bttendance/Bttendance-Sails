@@ -35,16 +35,12 @@ module.exports = {
 		var email = req.param('email');
 		var course_id = req.param('course_id');
 
-		console.log('Query1 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
-
 		Users
 		.findOneByEmail(email)
 		.populate('supervising_courses')
 		.exec(function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
-
-			console.log('Query2 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
   		Courses
   		.findOneById(course_id)
@@ -54,10 +50,10 @@ module.exports = {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
 
-				console.log('Query3 : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
-
 	    	Posts
-	  		.findById(Arrays.getIds(course.posts))
+	  		.find({
+	  			course: course_id
+	  		})
 				.populate('attendance')
 				.populate('clicker')
 				.populate('notice')
@@ -72,8 +68,6 @@ module.exports = {
 							course.notice_unseen = 0;
 				  	return res.send(course);
 	  			}
-
-					console.log('Start : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					// Attendance
 					var attendance_rate = 0; //전체 출석률 or 본인의 출석률
@@ -182,8 +176,6 @@ module.exports = {
 					course.notice_usage = notice_usage;
 					if (attd_last)
   					course.attdCheckedAt = attd_last.createdAt;
-
-					console.log('End : ' + Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 			  	return res.send(course);
 	  		});
@@ -484,7 +476,6 @@ module.exports = {
 		Users
 		.findOneByEmail(email)
 		.populate('supervising_courses')
-		.populate('attending_courses')
 		.exec(function callback(err, user) {
 			if (err || !user) 
 		    return res.send(500, Error.log(req, "Course Feed Error", "User doesn't exist."));
@@ -501,7 +492,9 @@ module.exports = {
 		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
 
 	  		Posts
-	  		.findById(Arrays.getIds(course.posts))
+	  		.find({
+	  			course: course.id
+	  		})
 				.populateAll()
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
