@@ -631,7 +631,10 @@ module.exports = {
 
 	    	Posts
 	  		.findById(total_posts)
-				.populateAll()
+				.populate('attendance')
+				.populate('clicker')
+				.populate('notice')
+				.populate('curious')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (!posts) {

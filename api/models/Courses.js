@@ -68,7 +68,6 @@ module.exports = {
       delete obj.managers;
       delete obj.students;
       delete obj.posts;
-      delete obj.code;
       return obj;
     },
 
@@ -80,7 +79,6 @@ module.exports = {
       obj.managers = this.managers;
       obj.students_count = this.students.length;
       obj.posts_count = this.posts.length;
-      obj.code = this.code;
       return obj;
     }
     
