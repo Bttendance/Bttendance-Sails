@@ -1211,6 +1211,20 @@ module.exports = {
 	  		});
       });
     });
-	}
+	},
+
+	update_begin_date: function(req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var course_id = req.param('course_id');
+    var beginDate = req.param('beginDate');
+
+    Courses
+    .findOneById(course_id)
+    .populateAll()
+    .exec(function callback(err, course) {
+    	
+    });
+
+  }
 
 };

@@ -1,5 +1,5 @@
 /**
-* AttendanceAlarms.js
+* Schedules.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,38 +9,30 @@ module.exports = {
 
   attributes: {
 
-    type: {
+  	course: {
+			model: 'Courses',
+      index: true
+  	},
+
+    day: {
       type: 'string',
-      enum: ['schedule', 'manual'],
+      enum: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       required: true
     },
 
-    scheduledAt: {
-      type: 'date',
-      required: true
+    date: {
+    	type: 'string',
+    	required: true
     },
 
-    on: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
+    timezone: {
+    	type: 'string',
+    	required: true
     },
 
-    // One Way
-    author: {
-      model: 'Users',
-      index: true
-    },
-
-    // One to Many
-		course: {
-      model: 'Courses',
-      index: true
-		},
-
-    schedule: {
-      model: 'Schedules',
-      index: true
+    alarms: {
+      collection: 'AttendanceAlarms',
+      via: 'schedule'
     },
 
     toJSON: function() {
@@ -48,7 +40,7 @@ module.exports = {
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.course;
-      delete obj.schedule;
+      delete obj.alarms;
       return obj;
     },
 
@@ -58,7 +50,7 @@ module.exports = {
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.course = this.course;
-      obj.schedule = this.schedule;
+      obj.alarms = this.alarms;
       return obj;
     }
   }

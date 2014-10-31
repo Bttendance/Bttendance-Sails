@@ -12,8 +12,7 @@ module.exports = {
     type: {
       type: 'string',
       enum: ['auto', 'manual', 'alarm'],
-      required: true,
-      index: true
+      required: true
     },
 
     checked_students: {

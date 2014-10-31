@@ -62,6 +62,24 @@ module.exports = {
       via: 'course'
     },
 
+    beginDate: {
+      type: 'date'
+    },
+
+    endDate: {
+      type: 'date'
+    },
+
+    schedules: {
+      collection: 'Schedules',
+      via: 'course'
+    },
+
+    alarms: {
+      collection: 'AttendanceAlarms',
+      via: 'course'
+    },
+
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
@@ -70,6 +88,10 @@ module.exports = {
       delete obj.students;
       delete obj.posts;
       delete obj.questions;
+      delete obj.beginDate;
+      delete obj.endDate;
+      delete obj.schedules;
+      delete obj.alarms;
       return obj;
     },
 
@@ -82,6 +104,10 @@ module.exports = {
       obj.students_count = this.students.length;
       obj.posts_count = this.posts.length;
       obj.questions_count = this.questions.length;
+      obj.beginDate = this.beginDate;
+      obj.endDate = this.endDate;
+      obj.schedules = this.schedules;
+      obj.alarms_count = this.alarms.length;
       return obj;
     }
     

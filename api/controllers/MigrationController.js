@@ -36,6 +36,16 @@ module.exports = {
 				settings[i].save();
 			}
 		});
+
+		// course (done)
+		Courses
+		.find()
+		.exec(function callback(err, courses) {
+			for (var i = 0; i < courses.length; i++) {
+				courses[i].days = new Array();
+				courses[i].save();
+			}
+		});
 	},
 
 	migrate2: function(req, res) {
