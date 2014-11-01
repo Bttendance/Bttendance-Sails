@@ -750,60 +750,58 @@ module.exports = {
 
     Courses
     .findOneById(course_id)
-    .populateAll()
+    .populate('students')
     .exec(function callback(err, course) {
       if (err || !course)
         return res.send(500, Error.log(req, "Clicker Grades Error", "Course doesn't exist."));
 
       Users
       .findById(Arrays.getIds(course.students))
-	    .populateAll()
+	    .populate('identifications')
       .sort('full_name DESC')
       .exec(function callback(err, users) {
         if (err || !users)
 	        return res.send(500, Error.alert(req, "Clicker Grades Error", "Current course has no student."));
 
 	  		Posts
-	  		.findById(Arrays.getIds(course.posts))
-		    .populateAll()
+	  		.find({
+	  			course: course_id,
+	  			type: 'clicker'
+	  		})
+		    .populate('clicker')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts)
 		        return res.send(500, Error.alert(req, "Clicker Grades Error", "Fail to load posts."));
 
-			  	var postsObject = new Array();
-					for (var index in posts)
-						if (posts[index].type == "clicker")
-							postsObject.push(posts[index]);
-
-					var total_grade = postsObject.length;
-					if (total_grade <= 0)
+					var total_grade = posts.length;
+					if (total_grade == 0)
 		        return res.send(500, Error.alert(req, "Clicker Grades Error", "Current course has no clicker records."));
 
 	        for (var index in users) {
 	        	var grade = 0;
-	        	for (var i = 0; i < postsObject.length; i++) {
-	        		for (var j = 0; j < postsObject[i].clicker.a_students.length; j++)
-	        			if (postsObject[i].clicker.a_students[j] == users[index].id)
+	        	for (var i = 0; i < posts.length; i++) {
+	        		for (var j = 0; j < posts[i].clicker.a_students.length; j++)
+	        			if (posts[i].clicker.a_students[j] == users[index].id)
 	        				grade++;
-	        		for (var j = 0; j < postsObject[i].clicker.b_students.length; j++)
-	        			if (postsObject[i].clicker.b_students[j] == users[index].id)
+	        		for (var j = 0; j < posts[i].clicker.b_students.length; j++)
+	        			if (posts[i].clicker.b_students[j] == users[index].id)
 	        				grade++;
-	        		for (var j = 0; j < postsObject[i].clicker.c_students.length; j++)
-	        			if (postsObject[i].clicker.c_students[j] == users[index].id)
+	        		for (var j = 0; j < posts[i].clicker.c_students.length; j++)
+	        			if (posts[i].clicker.c_students[j] == users[index].id)
 	        				grade++;
-	        		for (var j = 0; j < postsObject[i].clicker.d_students.length; j++)
-	        			if (postsObject[i].clicker.d_students[j] == users[index].id)
+	        		for (var j = 0; j < posts[i].clicker.d_students.length; j++)
+	        			if (posts[i].clicker.d_students[j] == users[index].id)
 	        				grade++;
-	        		for (var j = 0; j < postsObject[i].clicker.e_students.length; j++)
-	        			if (postsObject[i].clicker.e_students[j] == users[index].id)
+	        		for (var j = 0; j < posts[i].clicker.e_students.length; j++)
+	        			if (posts[i].clicker.e_students[j] == users[index].id)
 	        				grade++;
 	        	}
 	        	users[index].grade = grade + "/" + total_grade;
 	        
 		        users[index].student_id = "";
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
-	        		if (users[index].identifications[i].school == course.school.id)
+	        		if (users[index].identifications[i].school == course.school)
 	        			users[index].student_id = users[index].identifications[i].identity;
 	        }
 
