@@ -245,7 +245,7 @@ module.exports = {
 				  		.exec(function callback(err, users) {
 				  			for (var j = 0; j < users.length; j++)
 				  				if (users[j].setting && users[j].setting.notice)
-					  				Noti.send(users[j], post.course.name, "You have new notice.", "notice", course.id);
+					  				Noti.send(users[j], post.course.name, "You have new notice.", "notice_created", course.id);
 				  		});
 
 					  	return res.send(post.toWholeObject());

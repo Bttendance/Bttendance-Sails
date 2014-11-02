@@ -43,7 +43,7 @@ module.exports = function supervising (req, res, next) {
 	  } else if (user.password != password) {
 		  return res.send(404, Error.alert(req, "Supervising Policy Error", "Password doesn't match."));
 
-		// User attending check
+		// User supervising check
 		} else if (course_id && Arrays.getIds(user.supervising_courses).indexOf(Number(course_id)) < 0) {
 		  return res.send(403, Error.alert(req, "Supervising Policy Error", "User is not supervising current course."));
 
