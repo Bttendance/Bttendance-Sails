@@ -14,13 +14,13 @@ module.exports = {
       index: true
   	},
 
-    day: {
+    weekday: {
       type: 'string',
       enum: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       required: true
     },
 
-    date: {
+    time: {
     	type: 'string',
     	required: true
     },
@@ -39,7 +39,6 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.course;
       delete obj.alarms;
       return obj;
     },
@@ -49,7 +48,6 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.course = this.course;
       obj.alarms = this.alarms;
       return obj;
     }

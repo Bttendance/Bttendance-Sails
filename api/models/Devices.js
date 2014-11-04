@@ -12,7 +12,7 @@ module.exports = {
 
     type: {
       type: 'string',
-      enum: ['iphone', 'android', 'window', 'blackberry', 'xiaomi'],
+      enum: ['iphone', 'android', 'xiaomi'],
       required: true
     },
 

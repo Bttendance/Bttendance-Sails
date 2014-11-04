@@ -56,14 +56,20 @@ module.exports = {
       index: true
     },
 
+    seen_managers: {
+      type: 'json',
+      defaultsTo: new Array()
+    },
+
     seen_students: {
       type: 'json',
       defaultsTo: new Array()
     },
 
-    seen_managers: {
-      type: 'json',
-      defaultsTo: new Array()
+    // One to Many
+    comments: {
+      collection: 'Comments',
+      via: 'post'
     },
 
     toJSON: function() {
@@ -74,8 +80,9 @@ module.exports = {
       delete obj.clicker;
       delete obj.notice;
       delete obj.curious;
-      delete obj.seen_students;
       delete obj.seen_managers;
+      delete obj.seen_students;
+      delete obj.comments;
       return obj;
     },
 
@@ -88,8 +95,9 @@ module.exports = {
       obj.clicker = this.clicker;
       obj.notice = this.notice;
       obj.curious = this.curious;
-      obj.seen_students = this.seen_students;
       obj.seen_managers = this.seen_managers;
+      obj.seen_students = this.seen_students;
+      obj.comments_count = this.comments.length;
       return obj;
     }
   },

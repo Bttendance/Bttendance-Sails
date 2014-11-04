@@ -9,6 +9,11 @@ module.exports = {
 
   attributes: {
 
+    author: {
+      model: 'Users',
+      index: true
+    },
+
 		message: {
 			type: 'string',
 			required: true
@@ -40,11 +45,6 @@ module.exports = {
       enum: ['all', 'none', 'professor'],
       required: true,
       defaultsTo: 'professor'
-    },
-
-    author: {
-      model: 'Users',
-      index: true
     },
 
 		course: {

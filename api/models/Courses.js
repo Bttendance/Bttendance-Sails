@@ -62,6 +62,10 @@ module.exports = {
       via: 'course'
     },
 
+    information: {
+      type: 'string'
+    },
+
     beginDate: {
       type: 'date'
     },
@@ -88,6 +92,7 @@ module.exports = {
       delete obj.students;
       delete obj.posts;
       delete obj.questions;
+      delete obj.information;
       delete obj.beginDate;
       delete obj.endDate;
       delete obj.schedules;
@@ -104,6 +109,7 @@ module.exports = {
       obj.students_count = this.students.length;
       obj.posts_count = this.posts.length;
       obj.questions_count = this.questions.length;
+      obj.information = this.information;
       obj.beginDate = this.beginDate;
       obj.endDate = this.endDate;
       obj.schedules = this.schedules;

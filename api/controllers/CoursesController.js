@@ -604,6 +604,7 @@ module.exports = {
         	for (var i = 0; i < users[index].identifications.length; i++) 
         		if (users[index].identifications[i].school == course.school.id)
         			users[index].student_id = users[index].identifications[i].identity;
+	        users[index].course_id = course_id;
       	}
 
         users.sort(function(a, b) {
@@ -728,6 +729,8 @@ module.exports = {
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
 	        		if (users[index].identifications[i].school == course.school.id)
 	        			users[index].student_id = users[index].identifications[i].identity;
+
+	        	users[index].course_id = course_id;
 	        }
 
 	        users.sort(function(a, b) {
@@ -803,6 +806,8 @@ module.exports = {
 	        	for (var i = 0; i < users[index].identifications.length; i++) 
 	        		if (users[index].identifications[i].school == course.school)
 	        			users[index].student_id = users[index].identifications[i].identity;
+	        		
+	        	users[index].course_id = course_id;
 	        }
 
 	        users.sort(function(a, b) {

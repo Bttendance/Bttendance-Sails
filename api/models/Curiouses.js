@@ -19,12 +19,6 @@ module.exports = {
       defaultsTo: new Array()
   	},
 
-    // One to Many
-    comments: {
-      collection: 'Comments',
-      via: 'curious'
-    },
-
     post: {
       model: 'Posts',
       index: true
@@ -32,14 +26,12 @@ module.exports = {
 
     toJSON: function() {
       var obj = this.toObject();
-      delete obj.comments;
       return obj;
     },
 
     toWholeObject: function() {
       var json = JSON.stringify(this);
       var obj = JSON.parse(json);
-      obj.comments = this.comments;
       return obj;
     }
   },

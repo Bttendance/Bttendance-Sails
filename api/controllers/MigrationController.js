@@ -37,14 +37,14 @@ module.exports = {
 			}
 		});
 
-		// course (done)
-		Courses
+		// attendance (done)
+		Attendances
 		.find()
-		.exec(function callback(err, courses) {
-			for (var i = 0; i < courses.length; i++) {
-				courses[i].days = new Array();
-				courses[i].save();
-			}
+		.exec(function callback(err, attendances) {
+			for (var i = attendances.length - 1; i >= 0; i--) {
+				attendances[i].type = 'auto';
+				attendances[i].save();
+			};
 		});
 	},
 
@@ -138,6 +138,5 @@ module.exports = {
 			};
 		});
 	}
-	
-};
 
+};

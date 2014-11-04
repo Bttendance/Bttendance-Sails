@@ -21,8 +21,8 @@ module.exports = {
     },
 
     // One to Many
-		curious: {
-			model: 'Curiouses',
+		post: {
+			model: 'Posts',
       index: true
 		},
 
@@ -30,7 +30,7 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.curious;
+      delete obj.post;
       return obj;
     },
 
@@ -39,7 +39,7 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.curious = this.curious;
+      obj.post = this.post;
       return obj;
     }
   }

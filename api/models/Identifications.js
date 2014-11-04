@@ -14,13 +14,13 @@ module.exports = {
       required: true
 		},
 
-		owner: {
-			model: 'Users'
-		},
-
 		school: {
 			model: 'Schools'
 		},
+
+    owner: {
+      model: 'Users'
+    },
 
     toJSON: function() {
       var obj = this.toObject();
