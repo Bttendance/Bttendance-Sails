@@ -9,6 +9,14 @@ module.exports = {
 
   attributes: {
 
+    title: {
+      type: 'string'
+    },
+
+    message: {
+      type: 'string'
+    },
+
   	liked_users: {
   		type: 'json',
       defaultsTo: new Array()
