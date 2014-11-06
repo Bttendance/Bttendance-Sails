@@ -23,6 +23,11 @@ module.exports = {
 			return res.forbidden('Your password doesn\'t match.');
 		}
 
+		if (!model)
+			return res.forbidden('Parameter model is required.');
+
+		model = model.toLowerCase();
+
 		if ( (model == 'user' && !email)
 			&& (model == 'post' && !course)
 			&& (!id || isNaN(Number(id)))
@@ -513,7 +518,7 @@ module.exports = {
 
 						var isActive = false;
 						for (var j = 0; j < courses_over_5[i].posts.length; j++) {
-							if (-Moment(courses_over_5[i].posts[j].createdAt).diff(Moment(new Date()), 'days') < 14) {
+							if (-Moment(courses_over_5[i].posts[j].createdAt).diff(Moment(endDate), 'days') < 14) {
 								isActive = true;
 
 								var add = true;
@@ -540,10 +545,16 @@ module.exports = {
 
 	emails: function(req, res) {
 		var password = req.param('password');
+		var page = req.param('page');
 
 		if (password != 'bttendance') {
 			res.contentType('html');
 			return res.forbidden('Your password doesn\'t match.');
+		}
+
+		if (!page) {
+			res.contentType('html');
+			return res.forbidden('Page is required.');
 		}
 
 		var type = req.param('type'); //non-student, student, professor, non-professor, all
@@ -552,7 +563,8 @@ module.exports = {
 		
 		Users
 		.find()
-		.sort('id DESC')
+		.sort('id DESC')		
+		.paginate({page: page, limit: 100})
 		.populate('supervising_courses')
 		.populate('attending_courses')
 		.exec(function callback (err, users) {
