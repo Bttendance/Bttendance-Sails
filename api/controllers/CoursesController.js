@@ -507,6 +507,7 @@ module.exports = {
 			Courses
 			.findOneById(course_id)
 			.populate('students')
+			.populate('manager')
 			.exec(function callback(err, course) {
 				if (err || !course)
 		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
@@ -515,7 +516,6 @@ module.exports = {
 	  		.find({
 	  			course: course_id
 	  		})
-	  		.populate('author')
 				.populate('attendance')
 				.populate('clicker')
 				.populate('notice')
@@ -557,6 +557,16 @@ module.exports = {
 	  					posts[i].message = message;
 	  				}
 					}
+
+					var authors = new Array();
+					for (var i = posts.length - 1; i >= 0; i--)
+						if (authors.indexOf(posts[i].author) < 0)
+							authors.push(posts[i].author);
+
+					console.log('authors : ' + authors);
+
+      // Users
+      // .findById(Arrays.getIds(course.students))
 			  	return res.send(posts);
 	  		});
 			});
