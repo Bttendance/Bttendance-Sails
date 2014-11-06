@@ -5,6 +5,8 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var Moment = require('moment');
+
 module.exports = {
 
 	attributes: {
@@ -109,6 +111,23 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
+
+    for (var i = values.progress_time.length - 1; i >= 0; i--) {
+      setTimeout(function() { 
+    
+        Clickers
+        .findOneById(values.id)
+        .populateAll()
+        .exec(function callback(err, clicker) {
+          if (clicker && clicker.post && clicker.post.course) {
+            console.log('broadcast clicker : ' + clicker.id);
+            sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+          }
+        });
+
+      }, (i + 1) * 1000);
+    };
+
     next();
   },
 
@@ -118,15 +137,18 @@ module.exports = {
 
   afterUpdate: function(values, next) {
     
-    Clickers
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, clicker) {
-      if (clicker && clicker.post && clicker.post.course) {
-        sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
-        Clickers.publishCreate(clicker.toWholeObject()); //For Beta
-      }
-    });
+    var createdAt = Moment(values.createdAt);
+    var diff = Moment().diff(createdAt);
+    if (diff >= values.progress_time * 1000)
+      Clickers
+      .findOneById(values.id)
+      .populateAll()
+      .exec(function callback(err, clicker) {
+        if (clicker && clicker.post && clicker.post.course) {
+          console.log('broadcast clicker : ' + clicker.id);
+          sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+        }
+      });
 
     next();
   },
@@ -138,4 +160,5 @@ module.exports = {
   afterDestroy: function(values, next) {
     next();
   }
+
 };
