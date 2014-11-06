@@ -563,18 +563,28 @@ module.exports = {
 						if (authors.indexOf(posts[i].author) < 0)
 							authors.push(posts[i].author);
 
-					console.log('authors : ' + authors);
-
 		      Users
 		      .findById(authors)
 		      .exec(function callback(err, users) {
 		      	if (err || !user)
 					  	return res.send(posts);
 
-					  for (var i = posts.length - 1; i >= 0; i--)
-					  	for (var j = users.length - 1; j >= 0; j--)
-					  		if (posts[i].author == users[j].id)
+					  for (var i = posts.length - 1; i >= 0; i--) {
+					  	for (var j = users.length - 1; j >= 0; j--) {
+					  		if (posts[i].author == users[j].id) {
 							  	posts[i].author = users[j].toJSON();
+					  		}
+					  	}
+
+					  	if (!posts[i].author || !posts[i].author.id) {
+					  		var tempUser = {};
+					  		tempUser.username = '';
+					  		tempUser.email = '';
+					  		tempUser.full_name = '';
+					  		tempUser.id = 0;
+						  	posts[i].author = tempUser;
+					  	}
+					  }
 
 				  	return res.send(posts);
 		      });
