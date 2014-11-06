@@ -5,6 +5,8 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var Moment = require('moment');
+
 module.exports = {
 
 	attributes: {
@@ -64,6 +66,23 @@ module.exports = {
   },
 
   afterCreate: function(values, next) {
+
+    for (var i =  1; i <= 60; i++) {
+      setTimeout(function() { 
+    
+        Attendances
+        .findOneById(values.id)
+        .populateAll()
+        .exec(function callback(err, attendance) {
+          if (attendance && attendance.post && attendance.post.course) {
+            console.log('broadcast attendance #1 : ' + attendance.id);
+            sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
+          }
+        });
+
+      }, i * 1000);
+    };
+
     next();
   },
 
@@ -73,13 +92,19 @@ module.exports = {
 
   afterUpdate: function(values, next) {
     
-    Attendances
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, attendance) {
-      if (attendance && attendance.post && attendance.post.course) 
-        sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
-    });
+    var createdAt = Moment(values.createdAt);
+    var diff = Moment().diff(createdAt);
+    if (diff >= 60 * 1000)
+      Attendances
+      .findOneById(values.id)
+      .populateAll()
+      .exec(function callback(err, attendance) {
+        if (attendance && attendance.post && attendance.post.course) {
+          console.log('broadcast attendance #2 : ' + attendance.id);
+          sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
+        }
+      });
+    
     
     next();
   },

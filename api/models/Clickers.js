@@ -120,7 +120,7 @@ module.exports = {
         .populateAll()
         .exec(function callback(err, clicker) {
           if (clicker && clicker.post && clicker.post.course) {
-            console.log('broadcast clicker : ' + clicker.id);
+            console.log('broadcast clicker #1 : ' + clicker.id);
             sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
           }
         });
@@ -145,7 +145,7 @@ module.exports = {
       .populateAll()
       .exec(function callback(err, clicker) {
         if (clicker && clicker.post && clicker.post.course) {
-          console.log('broadcast clicker : ' + clicker.id);
+          console.log('broadcast clicker #2 : ' + clicker.id);
           sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
         }
       });
