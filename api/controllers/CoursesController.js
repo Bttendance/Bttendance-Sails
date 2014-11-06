@@ -498,7 +498,6 @@ module.exports = {
 		  ]
 		})
 		.populate('supervising_courses')
-		.populate('attending_courses')
 		.exec(function callback(err, user) {
 			if (err || !user) 
 		    return res.send(500, Error.log(req, "Course Feed Error", "User doesn't exist."));
@@ -507,16 +506,19 @@ module.exports = {
 
 			Courses
 			.findOneById(course_id)
-			.populate('posts')
 			.populate('students')
-			.populate('managers')
 			.exec(function callback(err, course) {
 				if (err || !course)
 		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
 
 	  		Posts
-	  		.findById(Arrays.getIds(course.posts))
-				.populateAll()
+	  		.find({
+	  			course: course_id
+	  		})
+	  		.populate('author')
+				.populate('attendance')
+				.populate('clicker')
+				.populate('notice')
 	  		.sort('id DESC').exec(function(err, posts) {
 	  			if (err || !posts)
 				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));
@@ -534,7 +536,7 @@ module.exports = {
 		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
-		  				if (supervising_courses.indexOf(posts[i].course.id) >= 0)
+		  				if (supervising_courses.indexOf(posts[i].course) >= 0)
 		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
@@ -549,6 +551,7 @@ module.exports = {
 		  			}
 
 						posts[i] = posts[i].toWholeObject();
+						posts[i].course = course.toJSON();
 	  				if (posts[i].type == 'attendance') {
 							posts[i].grade = grade;
 	  					posts[i].message = message;
