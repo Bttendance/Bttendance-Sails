@@ -804,7 +804,7 @@ module.exports = {
 						for (var j = 0; j < posts.length; j++) {
 
 							// Attendance Count
-							if (posts[j].course.id == courses[i].id && posts[j].type == "attendance") {
+							if (posts[j].course == courses[i].id && posts[j].type == "attendance") {
 								if (posts[j].attendance.checked_students.indexOf(user.id) >= 0)
 									attd_checked_count++;
 
@@ -818,7 +818,7 @@ module.exports = {
 							}
 
 							// Clicker Count
-							if (posts[j].course.id == courses[i].id && posts[j].type == "clicker") {
+							if (posts[j].course == courses[i].id && posts[j].type == "clicker") {
 								if (posts[j].clicker.a_students.indexOf(user.id) >= 0)
 									clicker_checked_count++;
 								if (posts[j].clicker.b_students.indexOf(user.id) >= 0)
@@ -840,7 +840,7 @@ module.exports = {
 							}
 
 							// Notice Count
-							if (posts[j].course.id == courses[i].id && posts[j].type == "notice") {
+							if (posts[j].course == courses[i].id && posts[j].type == "notice") {
 								if (posts[j].notice.seen_students.indexOf(user.id) >= 0)
 									notice_seen_count++;
 
