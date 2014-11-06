@@ -507,7 +507,7 @@ module.exports = {
 			Courses
 			.findOneById(course_id)
 			.populate('students')
-			.populate('manager')
+			.populate('managers')
 			.exec(function callback(err, course) {
 				if (err || !course)
 		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
