@@ -112,7 +112,7 @@ module.exports = {
 
   afterCreate: function(values, next) {
 
-    for (var i = values.progress_time.length - 1; i >= 0; i--) {
+    for (var i =  1; i <= values.progress_time; i++) {
       setTimeout(function() { 
     
         Clickers
@@ -125,7 +125,7 @@ module.exports = {
           }
         });
 
-      }, (i + 1) * 1000);
+      }, i * 1000);
     };
 
     next();
