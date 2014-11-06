@@ -565,9 +565,19 @@ module.exports = {
 
 					console.log('authors : ' + authors);
 
-      // Users
-      // .findById(Arrays.getIds(course.students))
-			  	return res.send(posts);
+		      Users
+		      .findById(authors)
+		      .exec(function callback(err, users) {
+		      	if (err || !user)
+					  	return res.send(posts);
+
+					  for (var i = posts.length - 1; i >= 0; i--)
+					  	for (var j = users.length - 1; j >= 0; j--)
+					  		if (posts[i].author == users[j].id)
+							  	posts[i].author = users[j].toJSON();
+
+				  	return res.send(posts);
+		      });
 	  		});
 			});
 		});
