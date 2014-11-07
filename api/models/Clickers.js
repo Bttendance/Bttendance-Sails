@@ -78,16 +78,37 @@ module.exports = {
     }
 	},
 
+  afterCreate: function(values, next) {
+
+    for (var i =  1; i <= values.progress_time; i++) {
+      setTimeout(function() { 
+    
+        Clickers
+        .findOneById(values.id)
+        .populateAll()
+        .exec(function callback(err, clicker) {
+          if (clicker && clicker.post && clicker.post.course)
+            sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+        });
+
+      }, i * 1000);
+    };
+
+    next();
+  },
+
   afterUpdate: function(values, next) {
     
-    Clickers
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, clicker) {
-      if (clicker && clicker.post && clicker.post.course) {
-        sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
-      }
-    });
+    var createdAt = Moment(values.createdAt);
+    var diff = Moment().diff(createdAt);
+    if (diff >= values.progress_time * 1000)
+      Clickers
+      .findOneById(values.id)
+      .populateAll()
+      .exec(function callback(err, clicker) {
+        if (clicker && clicker.post && clicker.post.course)
+          sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+      });
 
     next();
   }

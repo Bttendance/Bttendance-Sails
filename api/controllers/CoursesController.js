@@ -485,6 +485,7 @@ module.exports = {
 			Courses
 			.findOneById(course_id)
 			.populate('students')
+			.populate('managers')
 			.exec(function callback(err, course) {
 				if (err || !course)
 			    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
@@ -493,7 +494,6 @@ module.exports = {
 	  		.find({
 	  			course: course_id
 	  		})
-	  		.populate('author')
 				.populate('attendance')
 				.populate('clicker')
 				.populate('notice')
@@ -529,7 +529,37 @@ module.exports = {
 	  				if (posts[i].type == 'attendance')
 	  					posts[i].message = message;
 					}
-			  	return res.send(posts);
+
+					var authors = new Array();
+					for (var i = posts.length - 1; i >= 0; i--)
+						if (authors.indexOf(posts[i].author) < 0)
+							authors.push(posts[i].author);
+
+		      Users
+		      .findById(authors)
+		      .exec(function callback(err, users) {
+		      	if (err || !user)
+					  	return res.send(posts);
+
+					  for (var i = posts.length - 1; i >= 0; i--) {
+					  	for (var j = users.length - 1; j >= 0; j--) {
+					  		if (posts[i].author == users[j].id) {
+							  	posts[i].author = users[j].toJSON();
+					  		}
+					  	}
+
+					  	if (!posts[i].author || !posts[i].author.id) {
+					  		var tempUser = {};
+					  		tempUser.username = '';
+					  		tempUser.email = '';
+					  		tempUser.full_name = '';
+					  		tempUser.id = 0;
+						  	posts[i].author = tempUser;
+					  	}
+					  }
+
+				  	return res.send(posts);
+		      });
 	  		});
 			});
 		});
