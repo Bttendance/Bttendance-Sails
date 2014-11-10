@@ -10,8 +10,7 @@ module.exports = {
   attributes: {
 
     author: {
-      model: 'Users',
-      index: true
+      model: 'Users'
     },
 
 		message: {

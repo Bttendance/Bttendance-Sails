@@ -22,8 +22,7 @@ module.exports = {
 
     // One Way
     author: {
-    	model: 'Users',
-      index: true
+    	model: 'Users'
     },
 
     // One to Many
@@ -34,26 +33,22 @@ module.exports = {
 
     // One to One
     attendance: {
-      model: 'Attendances',
-      index: true
+      model: 'Attendances'
     },
 
     // One to One
     clicker: {
-      model: 'Clickers',
-      index: true
+      model: 'Clickers'
     },
 
     // One to One
     notice: {
-      model: 'Notices',
-      index: true
+      model: 'Notices'
     },
 
     // One to One
     curious: {
-      model: 'Curiouses',
-      index: true
+      model: 'Curiouses'
     },
 
     seen_managers: {

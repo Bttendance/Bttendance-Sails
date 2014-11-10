@@ -34,8 +34,7 @@ module.exports = {
 
     // One to One
     owner: {
-    	model: 'Users',
-      index: true
+    	model: 'Users'
     },
 
     toJSON: function() {

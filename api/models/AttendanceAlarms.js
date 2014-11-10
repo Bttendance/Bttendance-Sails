@@ -28,8 +28,7 @@ module.exports = {
 
     // One Way
     author: {
-      model: 'Users',
-      index: true
+      model: 'Users'
     },
 
     // One to Many
