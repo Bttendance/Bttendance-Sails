@@ -582,11 +582,11 @@ module.exports = {
 		}
 
 		var endDate = Moment.tz(end, "Asia/Seoul").zone("+00:00").format();
-		var startDate = Moment.tz(end, "Asia/Seoul").zone("+00:00").subtract(14, 'day').format();
+		var startDate = Moment(end).subtract(14, 'day').tz("Asia/Seoul").zone("+00:00").format();
 
 		Posts
 		.find({ createdAt: { 
-			'>=': startDate, 
+			'>': startDate, 
 			'<=': endDate } })
 		.sort('createdAt DESC')
 		.exec(function callback(err, posts) {
@@ -617,7 +617,7 @@ module.exports = {
 							for (var k = 0; k < courses.length; k++)
 								if (activeCourses[j] == courses[k].id && courses[k].students.length >= 5)
 									json.activeCoursesCount++;
-						json.activeCourses = activeCourses;
+
 				  	return res.send(json);
 					}
 				});
