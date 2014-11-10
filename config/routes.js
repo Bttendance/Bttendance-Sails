@@ -51,6 +51,11 @@ module.exports.routes = {
     action: 'analyze'
   },
 
+  '/api/admin/active': {
+    controller: 'admin',
+    action: 'active'
+  },
+
   '/api/admin/emails': {
     controller: 'admin',
     action: 'emails'

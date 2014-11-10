@@ -955,14 +955,18 @@ module.exports = {
 		        for (var index in users) {
 		        	var gradeObject = new Array();
 		        	gradeObject.push(users[index].full_name); // Student Name
-		        	for (var i = 0; i < users[index].identifications.length; i++) 
+
+		        	for (var i = 0; i < users[index].identifications.length; i++) {
 		        		if (users[index].identifications[i].school == course.school.id 
 		        			&& users[index].identifications[i].identity 
-		        			&& users[index].identifications[i].identity != null)
+		        			&& users[index].identifications[i].identity != null) {
 		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+			        		break;
+		        		}
+		        	}
 
 		        	if (gradeObject.length < 2)
-		        		gradeObject.push("Student has no ID");
+		        		gradeObject.push("No Student ID");
 		        	gradeObject.push(""); // empty
 
 		        	for (var i = 0; i < postsObject.length; i++) {
@@ -1053,11 +1057,14 @@ module.exports = {
 		        for (var index in users) {
 		        	var gradeObject = new Array();
 		        	gradeObject.push(users[index].full_name); // Student Name
-		        	for (var i = 0; i < users[index].identifications.length; i++) 
+		        	for (var i = 0; i < users[index].identifications.length; i++) {
 		        		if (users[index].identifications[i].school == course.school.id
 		        			&& users[index].identifications[i].identity
-		        			&& users[index].identifications[i].identity != null)
+		        			&& users[index].identifications[i].identity != null) {
 		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+			        		break;
+		        		}
+		        	}
 
 		        	if (gradeObject.length < 2)
 		        		gradeObject.push("Student has no ID");
@@ -1085,12 +1092,12 @@ module.exports = {
 		        		}
 
 		        		if (check == 0) {
-			        		gradeObject.push(sails.__({ phrase: "Absent", locale: locale }));
+			        		gradeObject.push(sails.__({ phrase: "Absent Mark", locale: locale }));
 			        		absent++;
 		        		} else if (check == 1)
-			        		gradeObject.push(sails.__({ phrase: "Present", locale: locale }));
+			        		gradeObject.push(sails.__({ phrase: "Present Mark", locale: locale }));
 			        	else
-			        		gradeObject.push(sails.__({ phrase: "Tardy", locale: locale }));
+			        		gradeObject.push(sails.__({ phrase: "Tardy Mark", locale: locale }));
 		        	}
 
 		        	gradeObject.push(""); // empty
@@ -1143,11 +1150,14 @@ module.exports = {
 		        for (var index in users) {
 		        	var gradeObject = new Array();
 		        	gradeObject.push(users[index].full_name); // Student Name
-		        	for (var i = 0; i < users[index].identifications.length; i++) 
+		        	for (var i = 0; i < users[index].identifications.length; i++) {
 		        		if (users[index].identifications[i].school == course.school.id
 		        			&& users[index].identifications[i].identity
-		        			&& users[index].identifications[i].identity != null)
+		        			&& users[index].identifications[i].identity != null) {
 		        			gradeObject.push(users[index].identifications[i].identity.trim()); // Student Id
+			        		break;
+		        		}
+		        	}
 
 		        	if (gradeObject.length < 2)
 		        		gradeObject.push("Student has no ID");
@@ -1164,10 +1174,10 @@ module.exports = {
 
 
 		        		if (seen) {
-			        		gradeObject.push(sails.__({ phrase: "Read", locale: locale }));
+			        		gradeObject.push(sails.__({ phrase: "Read Mark", locale: locale }));
 			        		read++;
 		        		} else {
-			        		gradeObject.push(sails.__({ phrase: "Unread", locale: locale }));
+			        		gradeObject.push(sails.__({ phrase: "Unread Mark", locale: locale }));
 			        		unread++;
 		        		}
 		        	}

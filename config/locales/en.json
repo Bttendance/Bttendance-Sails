@@ -163,10 +163,20 @@
     "%s Choice": "%s Choices",
     "Clicker Message": "Question",
     "Notice Message": "Notice",
+    
     "Present": "Present",
     "Tardy": "Trady",
     "Absent": "Absent",
-    "Didn't Participated": "Didn't Participated",
+    
+    "Present Mark": "O",
+    "Tardy Mark": "△",
+    "Absent Mark": "-",
+
+    "Didn't Participated": "-",
+
     "Read": "Read",
-    "Unread": "Unread"
+    "Unread": "Unread",
+
+    "Read Mark": "O",
+    "Unread Mark": "-"
 }

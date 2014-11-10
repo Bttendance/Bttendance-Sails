@@ -159,10 +159,20 @@
     "%s Choice": "%s 중 고르기",
     "Clicker Message": "질문",
     "Notice Message": "공지 사항",
+    
     "Present": "출석",
     "Tardy": "지각",
     "Absent": "결석",
-    "Didn't Participated": "참여하지 않음",
+    
+    "Present Mark": "O",
+    "Tardy Mark": "△",
+    "Absent Mark": "-",
+
+    "Didn't Participated": "-",
+
     "Read": "읽음",
-    "Unread": "읽지 않음"
+    "Unread": "읽지 않음",
+
+    "Read Mark": "O",
+    "Unread Mark": "-"
 }

@@ -17,6 +17,7 @@ module.exports = {
 		var page = req.param('page');
 		var email = req.param('email');
 		var course = req.param('course');
+		var identity = req.param('identity');
 
 		if (password != 'bttendance') {
 			res.contentType('html');
@@ -30,6 +31,7 @@ module.exports = {
 
 		if ( (model == 'user' && !email)
 			&& (model == 'post' && !course)
+			&& (model == 'identification' && !identity)
 			&& (!id || isNaN(Number(id)))
 			&& (!page || isNaN(Number(page))) ) {
 			res.contentType('html');
@@ -384,7 +386,22 @@ module.exports = {
 				  	return res.send(identifications);
 					}
 				});
-			else 
+			else if (identity)
+				Identifications
+				.findByIdentity(identity)
+				.populateAll()
+				.exec(function callback (err, identifications) {
+					if (err || !identifications) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+						for (var i = 0; i < identifications.length; i++)
+							identifications[i] = identifications[i].toWholeObject();
+				  	return res.send(identifications);
+					}
+				});
+			else
 				Identifications
 				.findOneById(Number(id))
 				.populateAll()
@@ -407,6 +424,7 @@ module.exports = {
 	user: function(req, res) {
 		var start = req.param('start');
 		var end = req.param('end');
+		var password = req.param('password');
 
 		if (!start) {
 			res.contentType('html');
@@ -448,8 +466,14 @@ module.exports = {
 	},
 
 	analyze: function(req, res) {
+		var password = req.param('password');
 		var start = req.param('start');
 		var end = req.param('end');
+
+		if (password != 'bttendance') {
+			res.contentType('html');
+			return res.forbidden('Your password doesn\'t match.');
+		}
 
 		if (!start) {
 			res.contentType('html');
@@ -538,6 +562,60 @@ module.exports = {
 					result.active_managers_count = active_managers.length;
 					result.courses_over_5 = courses_over_5;
 					res.send(result);
+				});
+			}
+		});
+	},
+
+	active: function(req, res) {
+		var password = req.param('password');
+		var end = req.param('end');
+
+		if (password != 'bttendance') {
+			res.contentType('html');
+			return res.forbidden('Your password doesn\'t match.');
+		}
+
+		if (!end) {
+			res.contentType('html');
+			return res.forbidden('Check out your model parameter.');
+		}
+
+		var endDate = Moment.tz(end, "Asia/Seoul").zone("+00:00").format();
+		var startDate = Moment.tz(end, "Asia/Seoul").zone("+00:00").subtract(14, 'day').format();
+
+		Posts
+		.find({ createdAt: { 
+			'>': startDate, 
+			'<=': endDate } })
+		.sort('createdAt DESC')
+		.exec(function callback(err, posts) {
+			if (err || !posts) {
+				res.contentType('html');
+				return res.notFound();
+			} else {
+				var activeCourses = new Array();
+				for (var i = 0; i < posts.length; i++)
+					if (activeCourses.indexOf(posts[i].course) == -1 && posts[i].course)
+						activeCourses.push(posts[i].course);
+
+				Courses
+				.find({ createdAt: { 
+					'<': endDate } })
+				.exec(function callback(err, courses) {
+					if (err || !courses) {
+						res.contentType('html');
+						return res.notFound();
+					} else {
+						res.contentType('application/json; charset=utf-8');
+
+						var json = {};
+						json.totalCoursesCount = courses.length;
+						if (activeCourses)
+							json.activeCoursesCount = activeCourses.length;
+						json.activeCourses = activeCourses;
+				  	return res.send(json);
+					}
 				});
 			}
 		});
