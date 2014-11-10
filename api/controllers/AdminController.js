@@ -586,7 +586,7 @@ module.exports = {
 
 		Posts
 		.find({ createdAt: { 
-			'>': startDate, 
+			'>=': startDate, 
 			'<=': endDate } })
 		.sort('createdAt DESC')
 		.exec(function callback(err, posts) {
