@@ -601,7 +601,8 @@ module.exports = {
 
 				Courses
 				.find({ createdAt: { 
-					'<': endDate } })
+					'<=': endDate } })
+				.populate('students')
 				.exec(function callback(err, courses) {
 					if (err || !courses) {
 						res.contentType('html');
@@ -611,8 +612,11 @@ module.exports = {
 
 						var json = {};
 						json.totalCoursesCount = courses.length;
-						if (activeCourses)
-							json.activeCoursesCount = activeCourses.length;
+						json.activeCoursesCount = 0;
+						for (var j = 0; j < activeCourses.length; j++)
+							for (var k = 0; k < courses.length; k++)
+								if (activeCourses[j] == courses[k].id && courses[k].students.length >= 5)
+									json.activeCoursesCount++;
 						json.activeCourses = activeCourses;
 				  	return res.send(json);
 					}
