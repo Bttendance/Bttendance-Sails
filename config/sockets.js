@@ -91,10 +91,10 @@ module.exports.sockets = {
   ***************************************************************************/
 
   adapter: 'redis',
-  host: process.env.REDIS_HOST || 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
-  port: process.env.REDIS_PORT || 15296,
-  db:   process.env.REDIS_DB   || 'redis-app23178340',
-  pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  db:   process.env.REDIS_DB,
+  pass: process.env.REDIS_PASS,
 
 
   /***************************************************************************
