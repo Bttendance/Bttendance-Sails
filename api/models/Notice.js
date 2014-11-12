@@ -9,14 +9,31 @@ module.exports = {
 
   attributes: {
 
-		seen_students: {
-			type: 'json',
-      defaultsTo: new Array()
-		},
+    // One Way
+    post: {
+      model: 'Post',
+      required: true,
+      index: true
+    },
 
-		post: {
-			model: 'Posts'
-		},
+    type: {
+      type: 'string',
+      required: true,
+      enum: ['all', 'target'],
+      defaultsTo: 'all'
+    },
+
+    message: {
+      type: 'string',
+      required: true,
+      defaultsTo: ''
+    },
+
+    // One to Many
+    targets: {
+      collection: 'NoticeTarget',
+      via: 'notice'
+    },
 
     toJSON: function() {
       var obj = this.toObject();

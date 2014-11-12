@@ -5,65 +5,73 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var Moment = require('moment');
+
 module.exports = {
 
 	attributes: {
 
+		choice_count: {
+			type: 'integer'
+		},
+
 		a_students: {
-			type: 'json',
-      defaultsTo: new Array()
+			type: 'json'
 		},
 
 		b_students: {
-			type: 'json',
-      defaultsTo: new Array()
+			type: 'json'
 		},
 
 		c_students: {
-			type: 'json',
-      defaultsTo: new Array()
+			type: 'json'
 		},
 
 		d_students: {
-			type: 'json',
-      defaultsTo: new Array()
+			type: 'json'
 		},
 
 		e_students: {
-			type: 'json',
-      defaultsTo: new Array()
+			type: 'json'
 		},
-
-    choice_count: {
-      type: 'integer',
-      required: true,
-      max: 5,
-      min: 2,
-      defaultsTo: 4
-    },
 
     progress_time: {
       type: 'integer',
-      required: true,
-      defaultsTo: 60
+      defaultsTo: 90
     },
 
     show_info_on_select: {
       type: 'boolean',
-      required: true,
       defaultsTo: true
     },
 
-    detail_privacy: {
+    detail_privacy: { //all, none, professor
       type: 'string',
-      enum: ['all', 'none', 'professor'],
-      required: true,
       defaultsTo: 'professor'
     },
 
+    // a_option_text: {
+    //   type: 'string'
+    // },
+
+    // b_option_text: {
+    //   type: 'string'
+    // },
+
+    // c_option_text: {
+    //   type: 'string'
+    // },
+
+    // d_option_text: {
+    //   type: 'string'
+    // },
+
+    // e_option_text: {
+    //   type: 'string'
+    // },
+
     post: {
-      model: 'Posts',
-      index: true
+      model: 'Posts'
     },
 
     toJSON: function() {
@@ -78,6 +86,30 @@ module.exports = {
     }
 	},
 
+  beforeValidate: function(values, next) {
+    next();
+  },
+
+  afterValidate: function(values, next) {
+    next();
+  },
+
+  beforeCreate: function(values, next) {
+    if (!values.choice_count)
+      values.choice_count = 4;
+    if (values.choice_count < 2)
+      values.choice_count = 2;
+    if (values.choice_count > 5)
+      values.choice_count = 5;
+    
+    values.a_students = new Array();
+    values.b_students = new Array();
+    values.c_students = new Array();
+    values.d_students = new Array();
+    values.e_students = new Array();
+    next();
+  },
+
   afterCreate: function(values, next) {
 
     for (var i =  1; i <= values.progress_time; i++) {
@@ -87,13 +119,19 @@ module.exports = {
         .findOneById(values.id)
         .populateAll()
         .exec(function callback(err, clicker) {
-          if (clicker && clicker.post && clicker.post.course)
+          if (clicker && clicker.post && clicker.post.course) {
+            console.log('broadcast clicker #1 : ' + clicker.id);
             sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+          }
         });
 
       }, i * 1000);
     };
 
+    next();
+  },
+
+  beforeUpdate: function(values, next) {
     next();
   },
 
@@ -106,10 +144,20 @@ module.exports = {
       .findOneById(values.id)
       .populateAll()
       .exec(function callback(err, clicker) {
-        if (clicker && clicker.post && clicker.post.course)
+        if (clicker && clicker.post && clicker.post.course) {
+          console.log('broadcast clicker #2 : ' + clicker.id);
           sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+        }
       });
 
+    next();
+  },
+
+  beforeDestroy: function(values, next) {
+    next();
+  },
+
+  afterDestroy: function(values, next) {
     next();
   }
 

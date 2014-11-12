@@ -22,8 +22,7 @@ module.exports = {
 
     // One to Many
     school: {
-    	model: 'Schools',
-      index: true
+    	model: 'Schools'
     },
 
     // Many to Many
@@ -56,34 +55,6 @@ module.exports = {
       defaultsTo: true
     },
 
-    // Many to One
-    questions: {
-      collection: 'ClickerQuestions',
-      via: 'course'
-    },
-
-    information: {
-      type: 'string'
-    },
-
-    beginDate: {
-      type: 'date'
-    },
-
-    endDate: {
-      type: 'date'
-    },
-
-    schedules: {
-      collection: 'Schedules',
-      via: 'course'
-    },
-
-    alarms: {
-      collection: 'AttendanceAlarms',
-      via: 'course'
-    },
-
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
@@ -91,12 +62,7 @@ module.exports = {
       delete obj.managers;
       delete obj.students;
       delete obj.posts;
-      delete obj.questions;
-      delete obj.information;
-      delete obj.beginDate;
-      delete obj.endDate;
-      delete obj.schedules;
-      delete obj.alarms;
+      delete obj.code;
       return obj;
     },
 
@@ -108,15 +74,42 @@ module.exports = {
       obj.managers = this.managers;
       obj.students_count = this.students.length;
       obj.posts_count = this.posts.length;
-      obj.questions_count = this.questions.length;
-      obj.information = this.information;
-      obj.beginDate = this.beginDate;
-      obj.endDate = this.endDate;
-      obj.schedules = this.schedules;
-      obj.alarms_count = this.alarms.length;
+      obj.code = this.code;
       return obj;
     }
     
+  },
+
+  beforeValidate: function(values, next) {
+    next();
+  },
+
+  afterValidate: function(values, next) {
+    next();
+  },
+
+  beforeCreate: function(values, next) {
+    next();
+  },
+
+  afterCreate: function(values, next) {
+    next();
+  },
+
+  beforeUpdate: function(values, next) {
+    next();
+  },
+
+  afterUpdate: function(values, next) {
+    next();
+  },
+
+  beforeDestroy: function(values, next) {
+    next();
+  },
+
+  afterDestroy: function(values, next) {
+    next();
   }
 
 };

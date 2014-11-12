@@ -23,7 +23,7 @@ module.exports = {
       required: true
     },
 
-    full_name: {
+    name: {
       type: 'string',
       required: true
     },
@@ -34,54 +34,40 @@ module.exports = {
       defaultsTo: 'en'
     },
 
-    // One to One
-    device: {
-      model: 'Devices'
+    // One to Many
+    devices: {
+      collection: 'Device',
+      via: 'owner',
     },
 
-    // One to One
+    // One Way
     setting: {
-      model: 'Settings'
+      model: 'Setting',
+      required: true
     },
 
-    // Many to Many
-    supervising_courses: {
-      collection: 'Courses',
-      via: 'managers',
-      dominant: true
+    // One to Many
+    supervisingCourses: {
+      collection: 'SupervisingCourse',
+      via: 'user'
     },
 
-    // Many to Many
-    attending_courses: {
-      collection: 'Courses',
-      via: 'students',
-      dominant: true
+    // One to Many
+    attendingCourses: {
+      collection: 'AttendingCourse',
+      via: 'user'
     },
 
-    // Many to Many
-    employed_schools: {
-      collection: 'Schools',
-      via: 'professors',
-      dominant: true
+    // One to Many
+    employedSchools: {
+      collection: 'EmployedSchool',
+      via: 'user'
     },
 
-    // Many to Many
-    enrolled_schools: {
-      collection: 'Schools',
-      via: 'students',
-      dominant: true
-    },
-
-    // Many to One
-    identifications: {
-      collection: 'Identifications',
-      via: 'owner'
-    },
-
-    // Many to One
-    questions: {
-      collection: 'Questions',
-      via: 'owner'
+    // One to Many
+    enrolledSchools: {
+      collection: 'EnrolledSchool',
+      via: 'user'
     },
 
     toJSON: function() {
@@ -96,8 +82,6 @@ module.exports = {
       delete obj.attending_courses;
       delete obj.employed_schools;
       delete obj.enrolled_schools;
-      delete obj.identifications;
-      delete obj.questions;
       return obj;
     },
 
@@ -114,8 +98,6 @@ module.exports = {
       obj.attending_courses = this.attending_courses;
       obj.employed_schools = this.employed_schools;
       obj.enrolled_schools = this.enrolled_schools;
-      obj.identifications = this.identifications;
-      obj.questions_count = this.questions.length;
       return obj;
     }
     

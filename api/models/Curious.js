@@ -9,27 +9,41 @@ module.exports = {
 
   attributes: {
 
+    // One Way
+    post: {
+      model: 'Post',
+      required: true,
+      index: true
+    },
+
     title: {
-      type: 'string'
+      type: 'string',
+      required: true,
+      defaultsTo: ''
     },
 
     message: {
-      type: 'string'
+      type: 'string',
+      required: true,
+      defaultsTo: ''
     },
 
-  	liked_users: {
-  		type: 'json',
-      defaultsTo: new Array()
+    // One to Many
+  	likes: {
+      collection: 'CuriousLike',
+      via: 'curious'
   	},
 
+    // One to Many
   	followers: {
-  		type: 'json',
-      defaultsTo: new Array()
+      collection: 'CuriousFollower',
+      via: 'curious'
   	},
 
-    post: {
-      model: 'Posts',
-      index: true
+    // One to Many
+    comments: {
+      collection: 'Comment',
+      via: 'curious'
     },
 
     toJSON: function() {

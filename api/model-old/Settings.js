@@ -27,28 +27,18 @@ module.exports = {
       defaultsTo: true
     },
 
-    curious: {
-      type: 'boolean',
-      required: true,
-      defaultsTo: true
-    },
-
     progress_time: {
       type: 'integer',
-      required: true,
       defaultsTo: 60
     },
 
     show_info_on_select: {
       type: 'boolean',
-      required: true,
       defaultsTo: true
     },
 
-    detail_privacy: {
+    detail_privacy: { //all, none, professor
       type: 'string',
-      enum: ['all', 'none', 'professor'],
-      required: true,
       defaultsTo: 'professor'
     },
 
@@ -76,3 +66,4 @@ module.exports = {
 
   }
 };
+

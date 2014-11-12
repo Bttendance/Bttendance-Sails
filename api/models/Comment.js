@@ -9,27 +9,28 @@ module.exports = {
 
   attributes: {
 
+    // One to Many
+    curious: {
+      model: 'Curious',
+      index: true
+    },
+
     // One Way
     author: {
-    	model: 'Users'
+    	model: 'User',
+      required: true
     },
 
     message: {
       type: 'string',
-      required: true
+      required: true,
+      defaultsTo: ''
     },
-
-    // One to Many
-		post: {
-			model: 'Posts',
-      index: true
-		},
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.post;
       return obj;
     },
 
@@ -38,7 +39,6 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.post = this.post;
       return obj;
     }
   }

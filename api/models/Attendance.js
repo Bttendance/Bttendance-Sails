@@ -11,30 +11,28 @@ module.exports = {
 
 	attributes: {
 
+    // One Way
+    post: {
+      model: 'Post',
+      required: true,
+      index: true
+    },
+
     type: {
       type: 'string',
-      enum: ['auto', 'alarm'],
-      required: true
+      required: true,
+      enum: ['auto', 'alarm']
     },
 
-    checked_students: {
-      type: 'json',
-      defaultsTo: new Array()
-    },
-
-    late_students: {
-      type: 'json',
-      defaultsTo: new Array()
+    // One to Many
+    states: {
+      collection: 'AttendanceState',
+      via: 'attendance'
     },
 
 		clusters: {
 			type: 'json',
       defaultsTo: new Array()
-		},
-
-		post: {
-			model: 'Posts',
-      index: true
 		},
 
     toJSON: function() {

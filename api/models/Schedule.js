@@ -10,14 +10,14 @@ module.exports = {
   attributes: {
 
   	course: {
-			model: 'Courses',
+			model: 'Course',
       index: true
   	},
 
     weekday: {
       type: 'string',
-      enum: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      required: true
+      required: true,
+      enum: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     },
 
     time: {
@@ -31,7 +31,7 @@ module.exports = {
     },
 
     alarms: {
-      collection: 'AttendanceAlarms',
+      collection: 'AttendanceAlarm',
       via: 'schedule'
     },
 

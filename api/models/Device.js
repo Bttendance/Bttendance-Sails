@@ -10,38 +10,47 @@ module.exports = {
 
   attributes: {
 
-    type: {
+    os: {
       type: 'string',
-      enum: ['iphone', 'android', 'xiaomi'],
-      required: true
+      required: true,
+      enum: ['ios', 'android', 'xiaomi']
     },
 
     // uuid for iphone, mac address for android
-    uuid: {
+    uniqueId: {
       type: 'string',
       required: true,
       unique: true
     },
 
-    // mac address
-    mac_address: {
+    uuid: {
+      type: 'string',
+      unique: true
+    },
+
+    macAddress: {
+      type: 'string',
+      unique: true
+    },
+
+    notificationKey: {
       type: 'string'
     },
 
-    notification_key: {
-      type: 'string'
-    },
-
-    // One to One
+    // One to Many
     owner: {
-    	model: 'Users'
+    	model: 'User'
+    },
+
+    ownerChangedAt: {
+      type: 'date',
+      required: true
     },
 
     toJSON: function() {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.mac_address;
       delete obj.owner;
       return obj;
     },
@@ -51,7 +60,6 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.mac_address = this.mac_address;
       obj.owner = this.owner;
       return obj;
     }

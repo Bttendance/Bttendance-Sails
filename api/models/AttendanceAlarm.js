@@ -9,6 +9,23 @@ module.exports = {
 
   attributes: {
 
+    // One to Many
+    course: {
+      model: 'Course',
+      index: true
+    },
+
+    // One to Many
+    schedule: {
+      model: 'Schedule',
+      index: true
+    },
+
+    // One Way
+    author: {
+      model: 'User'
+    },
+
     type: {
       type: 'string',
       enum: ['schedule', 'manual'],
@@ -24,22 +41,6 @@ module.exports = {
       type: 'boolean',
       required: true,
       defaultsTo: true
-    },
-
-    // One Way
-    author: {
-      model: 'Users'
-    },
-
-    // One to Many
-		course: {
-      model: 'Courses',
-      index: true
-		},
-
-    schedule: {
-      model: 'Schedules',
-      index: true
     },
 
     toJSON: function() {

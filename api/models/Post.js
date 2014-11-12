@@ -10,60 +10,26 @@ module.exports = {
 
   attributes: {
 
+    // One to Many
+    course: {
+      model: 'Course',
+      index: true
+    },
+
+    // One Way
+    author: {
+      model: 'User'
+    },
+
     type: {
       type: 'string',
       enum: ['attendance', 'notice', 'clicker', 'curious'],
       required: true
     },
 
-  	message: {
-  		type: 'string'
-  	},
-
-    // One Way
-    author: {
-    	model: 'Users'
-    },
-
     // One to Many
-    course: {
-    	model: 'Courses',
-      index: true
-    },
-
-    // One to One
-    attendance: {
-      model: 'Attendances'
-    },
-
-    // One to One
-    clicker: {
-      model: 'Clickers'
-    },
-
-    // One to One
-    notice: {
-      model: 'Notices'
-    },
-
-    // One to One
-    curious: {
-      model: 'Curiouses'
-    },
-
-    seen_managers: {
-      type: 'json',
-      defaultsTo: new Array()
-    },
-
-    seen_students: {
-      type: 'json',
-      defaultsTo: new Array()
-    },
-
-    // One to Many
-    comments: {
-      collection: 'Comments',
+    seen: {
+      collection: 'PostSeen',
       via: 'post'
     },
 
@@ -71,13 +37,6 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.attendance;
-      delete obj.clicker;
-      delete obj.notice;
-      delete obj.curious;
-      delete obj.seen_managers;
-      delete obj.seen_students;
-      delete obj.comments;
       return obj;
     },
 
@@ -86,13 +45,6 @@ module.exports = {
       var obj = JSON.parse(json);
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
-      obj.attendance = this.attendance;
-      obj.clicker = this.clicker;
-      obj.notice = this.notice;
-      obj.curious = this.curious;
-      obj.seen_managers = this.seen_managers;
-      obj.seen_students = this.seen_students;
-      obj.comments_count = this.comments.length;
       return obj;
     }
   },
