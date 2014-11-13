@@ -175,6 +175,8 @@ module.exports = {
 
 #### The Finest Artist
 - Email: thefinestartist@bttendance.com
-- Phone: +82-10-7755-4400
+
+#### Devin Doolin
+- Email: icddevin@gmail.com
 
 #### Copyright 2014 @Bttendance Inc.
