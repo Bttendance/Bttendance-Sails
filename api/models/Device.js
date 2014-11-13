@@ -17,7 +17,7 @@ module.exports = {
     },
 
     // uuid for iphone, mac address for android
-    uniqueId: {
+    uniqueID: {
       type: 'string',
       required: true,
       unique: true

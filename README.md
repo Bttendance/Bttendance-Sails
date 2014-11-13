@@ -1,26 +1,20 @@
 Bttendance
 =================
-Bttendance a is Bluetooth-based attendance check and "smart TA" application, established 2013/11/01.
+Bttendance a is Bluetooth-based attendance check and "Smart TA" application, established 2013/11/01.
 
 This app uses Sails.js as framework and vanilla JavaScript as its primary development language.
 
 ## Guidelines
 #### Models
-- Attribute names don't contain capital letters.
-- Attribute names use underscores (_) as spacing between words.
-- User model is used for API permission/access (email and password).
+- Attribute names are writen in camel case.
 - Models are associated via a [Waterline](https://github.com/balderdashy/waterline) association.
-- Some models are associated via an array of IDs.
-- Models are using Heroku Postgres DB
 
 #### API
-- API Schema: 'api/:controller/:action/:model' (ex: 'api/user/join/school')
-- Controller Action: ':action_:model' (ex: join_school)
-- Route: 'api/:controller/:action/:model' to ':action_:model'
-- Every API requires email, password
+- API Schema: 'api/:controller/:action' (ex: 'api/user/signup')
+- Every API requires email (as parameter), password (as form data)
 
-#### Socket
-- Sockets are using Redis Cloud DB
+#### Socket & Session
+- Socket & Seesion are using Redis Database
 
 ## Installation & Usage
 #### Install & Run
