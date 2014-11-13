@@ -72,56 +72,13 @@ module.exports.connections = {
   *                                                                          *
   * Run: npm install sails-postgresql                                        *
   *                                                                          *
-  *                                                                          *
   ***************************************************************************/
-  somePostgresqlServer: {
-    adapter: 'sails-postgresql',
-    host: 'YOUR_POSTGRES_SERVER_HOSTNAME_OR_IP_ADDRESS',
-    user: 'YOUR_POSTGRES_USER',
-    password: 'YOUR_POSTGRES_PASSWORD',
-    database: 'YOUR_POSTGRES_DB'
-  },
-
-  /***************************************************************************
-  *                                                                          *
-  * PostgreSQL is another officially supported relational database.          *
-  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
-  *                                                                          *
-  * Run: npm install sails-postgresql                                        *
-  *                                                                          *
-  *                                                                          *
-  ***************************************************************************/
-  // psql "dbname=d8n4i2f6q5clp2 host=ec2-54-225-88-13.compute-1.amazonaws.com user=u7nsa3j4q3ng05 password=pf3koh48m9br384km90u7kng962 port=5642 sslmode=require"
   postgresProduction: {
-    module   : 'sails-postgresql',
-    host     : 'ec2-54-225-88-13.compute-1.amazonaws.com',
-    port     : 5642,
-    user     : 'u7nsa3j4q3ng05',
-    password : 'pf3koh48m9br384km90u7kng962',
-    database : 'd8n4i2f6q5clp2',
-    ssl      : true
+    module: 'sails-postgresql',
+    url: process.env.DATABASE_URL,
+    pool: false,
+    ssl: true
   },
-
-  /***************************************************************************
-  *                                                                          *
-  * PostgreSQL is another officially supported relational database.          *
-  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
-  *                                                                          *
-  * Run: npm install sails-postgresql                                        *
-  *                                                                          *
-  *                                                                          *
-  ***************************************************************************/
-  // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
-  postgresDevelopment: {
-    module   : 'sails-postgresql',
-    host     : 'ec2-54-204-42-178.compute-1.amazonaws.com',
-    port     : 5432,
-    user     : 'neqpefgtcbgyym',
-    password : 'ub0oR3o9VsAbGsuiYarNsx4yqw',
-    database : 'd9vocafm0kncoe',
-    ssl      : true
-  },
-
 
   /***************************************************************************
   *                                                                          *
@@ -142,55 +99,13 @@ module.exports.connections = {
   // memory: {
   //   adapter: 'sails-memory'
   // }
-
-  // redis-cli -h pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com -p 15511 -a eBKknThiKi1VHZSe
-  redisProduction: {
-    module   : 'sails-redis',
-    host     : 'pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com',
-    port     : 15511,
-    options: {
-      auth_pass: 'eBKknThiKi1VHZSe',
-      parser: 'javascript',
-      return_buffers: false,
-      detect_buffers: false,
-      socket_nodelay: true,
-      no_ready_check: false,
-      enable_offline_queue: true
-    }
-  },
-
-  // redis-cli -h pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com -p 15296 -a sZ17PA571loLwYNt
-  redisDevelopment: {
-    module   : 'sails-redis',
-    host     : 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
-    port     : 15296,
-    options: {
-      auth_pass: 'sZ17PA571loLwYNt',
-      parser: 'javascript',
-      return_buffers: false,
-      detect_buffers: false,
-      socket_nodelay: true,
-      no_ready_check: false,
-      enable_offline_queue: true
-    }
-  }
-
 };
 
 exports.getPostgres = function() {
-  if (process.env.NODE_ENV == 'production')
+  if (process.env.NODE_ENV === 'production')
     return 'postgresProduction';
-  else if (process.env.NODE_ENV == 'development')
+  else if (process.env.NODE_ENV === 'development')
     return 'postgresDevelopment';
-  else 
+  else
     return 'postgresDevelopment';
-},
-
-exports.getRedis = function() {
-    if (process.env.NODE_ENV == 'production')
-        return 'redisProduction';
-    else if (process.env.NODE_ENV == 'development')
-        return 'redisDevelopment';
-    else 
-        return 'redisDevelopment';
 }
