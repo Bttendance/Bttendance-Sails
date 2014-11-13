@@ -127,6 +127,7 @@ module.exports = {
 
     // Connect to a remote DB (prod, dev, etc)
     $ psql <db_url, e.g. postgres://...>
+    $ psql "dbname=<database> host=<host> user=<username> password=<password> port=<port> sslmode=require"
 
     // List databases on current server
     $ \list
@@ -136,9 +137,19 @@ module.exports = {
 
     // List Postgres users on current machine
     $ \du
+    
+    // Describe structure of specific table
+    $ \d+ <table name>
+
+    // Describe all data of specific table
+    $ SELECT * FROM <table name>;
 
     // Exit psql prompt
     $ \q
+
+    // Drop all tables (WARNING : DO NOT USE IN PRODUCTION DATABASE SERVER)
+    $ drop schema public cascade;
+    $ create schema public;
 
 #### Redis (redis-cli) commands
     // Connect to local redis-server instance
@@ -146,12 +157,19 @@ module.exports = {
 
     // Connect to a remote redis instance
     $ redis-cli <db_url, e.g. redis://...>
+    $ redis-cli -h <host> -p <port> -a <auth password>
 
     // List all key/value pairs
     $ KEYS *
 
     // Get value for a specific key
     $ GET <key name>
+    
+    // Exit redis cli
+    $ CTRL+C
+    
+    // Drop all key-values (WARNING : DO NOT USE IN PRODUCTION DATABASE SERVER)
+    $ FLUSHALL
 
 #### Git commands
     // List local and remote branches
