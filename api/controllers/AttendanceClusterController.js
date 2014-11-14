@@ -47,6 +47,23 @@ module.exports = {
       // }, i * 50);
     };
 
+	},
+
+	info: function(req, res) {
+
+    for (var i =  1; i <= 200; i++) {
+      // setTimeout(function() { 
+				var request = require('request');
+				request('http://bttendance-dev.herokuapp.com/api/courses/info?email=heehwan.park@bttendance.com&password=sha1$7df4eacb$1$6886cbed77b7cb33d7b9d12986303769dd53647a&course_id=1', function (error, response, body) {
+				    if (!error && response.statusCode == 200) {
+			        console.log('success : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			     	} else {
+			        console.log('failure : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			     	}
+				});
+      // }, i * 50);
+    };
+
 	}
 	
 };
