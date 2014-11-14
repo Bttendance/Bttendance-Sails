@@ -27,7 +27,7 @@ module.exports = {
 			Attendances.create({
 				type: 'auto',
 			}).exec(function callback(err, attendances) {
-				console.log('end : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z')); : 
+				console.log('end : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
 		// }
 	}
