@@ -10,23 +10,24 @@ var Moment = require('moment');
 module.exports = {
 
 	create: function(req, res) {
-		console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
-		for (var i = 1000; i < 2000; i++) {
-			AttendanceCluster
-			.findOneById(i+1)
-			.exec(function callback(err, attendanceCluster) {
-				console.log('update' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+		for (var i = 0; i < 1000; i++) {
+			AttendanceCluster.create({
+				attendanceID: 1,
+				email: 'contact@thefinestartist.com',
+				uuid: 'asdf1234'
+			}).exec(function callback(err, attendanceCluster) {
+				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
 		}
 	},
 
 	create2: function(req, res) {
-		console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 		for (var i = 0; i < 1000; i++) {
-			Attendances
-			.findOneById(i+1)
-			.exec(function callback(err, attendances) {
-				console.log('get' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			Attendances.create({
+				type: 'auto',
+			}).exec(function callback(err, attendances) {
+				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
 		}
 	}
