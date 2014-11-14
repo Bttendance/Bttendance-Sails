@@ -15,7 +15,7 @@ module.exports = {
 			email: 'contact@thefinestartist.com',
 			uuid: 'asdf1234'
 		}).exec(function callback(err, attendanceCluster) {
-			console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			// console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
   		return res.send(JSON.stringify(attendanceCluster));
 		});
 	},
