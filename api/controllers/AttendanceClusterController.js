@@ -13,7 +13,7 @@ module.exports = {
 		console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 		for (var i = 0; i < 1000; i++) {
 			AttendanceCluster
-			.findOneById(1)
+			.findOneById(i+1)
 			.exec(function callback(err, attendanceCluster) {
 				console.log('get' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
@@ -24,7 +24,7 @@ module.exports = {
 		console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 		for (var i = 0; i < 1000; i++) {
 			Attendances
-			.findOneById(1)
+			.findOneById(i+1)
 			.exec(function callback(err, attendances) {
 				console.log('get' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
