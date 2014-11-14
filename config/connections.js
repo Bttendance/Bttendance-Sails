@@ -114,11 +114,11 @@ module.exports.connections = {
   // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
   postgresDevelopment: {
     module   : 'sails-postgresql',
-    host     : 'ec2-54-243-217-113.compute-1.amazonaws.com',
-    port     : 5502,
-    user     : 'u9sm728rvnr77r',
-    password : 'p3mb7akiugudfl6p3g6ett2dtun',
-    database : 'de08p13s7ujds1',
+    host     : 'ec2-54-204-42-178.compute-1.amazonaws.com',
+    port     : 5432,
+    user     : 'neqpefgtcbgyym',
+    password : 'ub0oR3o9VsAbGsuiYarNsx4yqw',
+    database : 'd9vocafm0kncoe',
     ssl      : true
   },
 
