@@ -10,8 +10,7 @@ var Moment = require('moment');
 module.exports = {
 
 	create: function(req, res) {
-		console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
-		// for (var i = 0; i < 1000; i++) {
+		for (var i = 0; i < 1000; i++) {
 			AttendanceCluster.create({
 				attendanceID: 1,
 				email: 'contact@thefinestartist.com',
@@ -19,7 +18,17 @@ module.exports = {
 			}).exec(function callback(err, attendanceCluster) {
 				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
-		// }
+		}
+	},
+
+	create2: function(req, res) {
+		for (var i = 0; i < 1000; i++) {
+			Attendance.create({
+				type: 'auto',
+			}).exec(function callback(err, attendances) {
+				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			});
+		}
 	}
 	
 };
