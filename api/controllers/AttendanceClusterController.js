@@ -13,7 +13,7 @@ module.exports = {
 		console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 		for (var i = 0; i < 1000; i++) {
 			AttendanceCluster
-			.update({id : i+1}, {uuid : 'asdf'})
+			.destroy({id:i+1})
 			.exec(function callback(err, attendanceCluster) {
 				console.log('update' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
