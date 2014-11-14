@@ -16,6 +16,12 @@ module.exports = {
 		res.contentType('application/json; charset=utf-8');
 		var course_ids = req.param('course_ids');
 
+		Posts
+		.find({
+			type: 'attendance',
+			course: course_ids
+		})
+
 		Courses
 		.findById(course_ids)
 		.populate('posts')
