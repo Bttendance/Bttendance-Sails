@@ -13,9 +13,9 @@ module.exports = {
 		console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 		for (var i = 0; i < 1000; i++) {
 			AttendanceCluster
-			.findOneById(i+1)
+			.update({id : i+1}, {uuid : 'asdf'})
 			.exec(function callback(err, attendanceCluster) {
-				console.log('get' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+				console.log('update' + i + ' : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
 		}
 	},
