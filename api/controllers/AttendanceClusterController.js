@@ -22,13 +22,14 @@ module.exports = {
 	},
 
 	create2: function(req, res) {
-		for (var i = 0; i < 1000; i++) {
+		// for (var i = 0; i < 1000; i++) {
+			console.log('start : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			Attendances.create({
 				type: 'auto',
 			}).exec(function callback(err, attendances) {
-				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+				console.log('end : ' + Moment().format('YYYY-MM-DD HH:mm ss SSS Z')); : 
 			});
-		}
+		// }
 	}
 	
 };
