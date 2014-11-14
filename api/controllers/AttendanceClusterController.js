@@ -23,7 +23,7 @@ module.exports = {
 
 	create2: function(req, res) {
 		for (var i = 0; i < 1000; i++) {
-			Attendance.create({
+			Attendances.create({
 				type: 'auto',
 			}).exec(function callback(err, attendances) {
 				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
