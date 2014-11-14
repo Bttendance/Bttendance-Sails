@@ -25,7 +25,7 @@ module.exports = {
 		for (var i = 0; i < 1000; i++) {
 			console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			Attendances
-			.update({id:i+1},{uuid:'asdf'})
+			.destroy({id:i+1})
 			.exec(function callback(err, attendances) {
 				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
