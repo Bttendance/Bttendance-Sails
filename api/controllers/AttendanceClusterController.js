@@ -30,6 +30,17 @@ module.exports = {
 				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
 			});
 		}
+	},
+
+	feed: function(req, res) {
+		for (var i = 0; i < 1000; i++) {
+			console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			Attendances
+			.destroy({id:i+1})
+			.exec(function callback(err, attendances) {
+				console.log(Moment().format('YYYY-MM-DD HH:mm ss SSS Z'));
+			});
+		}
 	}
 	
 };
