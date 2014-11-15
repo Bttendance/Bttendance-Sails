@@ -19,41 +19,22 @@ module.exports = {
 		Posts
 		.find({
 			type: 'attendance',
-			course: course_ids
+			course: course_ids,
+			createdAt: { 
+				'>': Moment().subtract(6500, 's').format()
+			}
 		})
-
-		Courses
-		.findById(course_ids)
-		.populate('posts')
-		.exec(function callback(err, courses) {
-			if (err || !courses)
+		.populate('attendance')
+  	.exec(function callback(err, posts) {
+  		if (err || !posts)
     		return res.send(new Array());
 
-			var postsWithAttendances = new Array();
-			var now = Moment();
-    	for (var i = 0; i < courses.length; i++) {
-    		for (var j = 0; j < courses[i].posts.length; j++) {
-    			var createdAt = Moment(courses[i].posts[j].createdAt);
-    			var diff = now.diff(createdAt);
-    			if (diff < 65 * 1000 && courses[i].posts[j].type == 'attendance')
-    				postsWithAttendances.push(courses[i].posts[j].id);
-    		}
-    	}
-
-    	Posts
-    	.findById(postsWithAttendances)
-			.populate('attendance')
-    	.exec(function callback(err, posts) {
-    		if (err || !posts)
-	    		return res.send(new Array());
-
-	  		var autoAttds = new Array();
-	  		for (var i = 0; i < posts.length; i++)
-	  			if (posts[i].attendance.type == 'auto')
-	  				autoAttds.push(posts[i].attendance.id);
-	  		return res.send(autoAttds);
-    	});
-		});
+  		var autoAttds = new Array();
+  		for (var i = 0; i < posts.length; i++)
+  			if (posts[i].attendance.type == 'auto')
+  				autoAttds.push(posts[i].attendance.id);
+  		return res.send(autoAttds);
+  	});
 	},
 
 	found_device: function(req, res) {

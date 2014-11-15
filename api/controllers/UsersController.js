@@ -743,16 +743,8 @@ module.exports = {
 		var email = req.param('email');
 		var username = req.param('username');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.populate('supervising_courses')
-		.populate('attending_courses')
-		.exec(function callback(err, user) {
+		UserCache
+		.findFromCache(email, function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Courses Error", "User doesn't exist."));
 
@@ -760,11 +752,8 @@ module.exports = {
 	  	var attending_courses = Arrays.getIds(user.attending_courses);
 	  	var total_courses = supervising_courses.concat(attending_courses);
 
-  		Courses
-  		.findById(total_courses)
-			.populateAll()
-  		.sort('id ASC')
-  		.exec(function callback(err, courses) {
+			CourseCache
+			.findManyFromCache(total_courses, function callback(err, courses) {
   			if (err || !courses)
 		    		return res.send(JSON.stringify(new Array()));
 
@@ -782,7 +771,6 @@ module.exports = {
 	  		.exec(function callback(err, posts) {
 	  			if (!posts) {
 						for (var i = 0; i < courses.length; i++) {
-							courses[i] = courses[i].toWholeObject();
 							courses[i].grade = 0;
 							courses[i].attendance_rate = 0;
 							courses[i].clicker_rate = 0;
@@ -864,12 +852,12 @@ module.exports = {
 						}
 
 	  				if (supervising_courses.indexOf(courses[i].id) >= 0) {
-							attendance_rate = Number( ( attd_checks.length / attd_usage / courses[i].students.length * 100).toFixed() );
-							clicker_rate = Number( ( clicker_checks.length / clicker_usage / courses[i].students.length * 100).toFixed() );
+							attendance_rate = Number( ( attd_checks.length / attd_usage / courses[i].students_count * 100).toFixed() );
+							clicker_rate = Number( ( clicker_checks.length / clicker_usage / courses[i].students_count * 100).toFixed() );
 							if (notice_last)
-								notice_unseen = courses[i].students.length - notice_last.seen_students.length;
+								notice_unseen = courses[i].students_count - notice_last.seen_students.length;
 							else
-								notice_unseen = courses[i].students.length;
+								notice_unseen = courses[i].students_count;
 	  				} else {
 							attendance_rate = Number( (attd_checked_count / attd_usage * 100).toFixed() );
 							clicker_rate = Number( (clicker_checked_count / clicker_usage * 100).toFixed() );
@@ -884,7 +872,6 @@ module.exports = {
   					if (clicker_rate < 0 || clicker_usage == 0 || isNaN(clicker_rate)) clicker_rate = 0;
   					if (clicker_rate > 100) clicker_rate = 100;
 
-						courses[i] = courses[i].toWholeObject();
   					courses[i].grade = attendance_rate;
   					courses[i].attendance_rate = attendance_rate;
   					courses[i].clicker_rate = clicker_rate;

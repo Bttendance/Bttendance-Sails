@@ -18,11 +18,156 @@ module.exports = {
   		required: true
   	},
 
-  	couse: {
+  	course: {
   		type: 'json',
       required: true
   	}
 
+  },
+
+  toJSON: function(course) {
+    var json = JSON.stringify(course);
+    var obj = JSON.parse(json);
+    if (course.school)
+      obj.school = course.school.id;
+    delete obj.createdAt;
+    delete obj.updatedAt;
+    delete obj.managers;
+    delete obj.students_count;
+    delete obj.posts_count;
+    delete obj.code;
+    return obj;
+  },
+
+  findManyFromCache: function(ids, cb) {
+    if (ids.length == 0)
+      return cb(null, new Array());
+
+    CourseCache
+    .findByCourseID(ids)
+    .exec(function callback(err, courseCaches) {
+      if (err)
+        return cb(err);
+
+      if (!courseCaches) 
+        courseCaches = new Array();
+
+      var cached = new Array();
+      for (var i = 0; i < courseCaches.length; i++)
+        if (courseCaches[i].course)
+          cached.push(courseCaches[i].course.id);
+
+      var unCached = new Array();
+      for (var i = ids.length - 1; i >= 0; i--)
+        if (cached.indexOf(ids[i]) < 0)
+          unCached.push(ids[i]);
+
+      var objects = new Array();
+      for (var i = 0; i < courseCaches.length; i++)
+        objects.push(courseCaches[i].course);
+
+      if (unCached.length == 0) {
+        objects.sort(function(a, b) {
+          return a.id - b.id
+        });
+        return cb(null, objects);
+      } else {
+        Courses
+        .findById(unCached)
+        .populateAll()
+        .exec(function callback(err, courses) {
+          if (err || !courses) 
+            cb(err);
+
+          for (var i = courses.length - 1; i >= 0; i--) {
+            var courseJson = courses[i].toWholeObject();
+            objects.push(courseJson);
+
+            CourseCache
+            .create({
+              courseID : courseJson.id,
+              course : courseJson
+            }).exec(function callback(err, courseCache) {
+            });
+          }
+
+          objects.sort(function(a, b) {
+            return a.id - b.id
+          });
+          
+          return cb(null, objects);
+        });
+      }
+    });
+  },
+
+  findFromCache: function(id, cb) {
+    CourseCache
+    .findOneByCourseID(id)
+    .exec(function callback(err, courseCache) {
+      if (err || !courseCache) {
+        Courses
+        .findOneById(id)
+        .populateAll()
+        .exec(function callback(err, course) {
+          if (err || !course)
+            return cb(err);
+
+          var courseJson = course.toWholeObject();
+          CourseCache
+          .create({
+            courseID : id,
+            course : courseJson 
+          }).exec(function callback(err, courseCache) {
+            console.log(err);
+            return cb(null, courseJson);
+          });
+        });
+      } else {
+        return cb(null, courseCache.course);
+      }
+    });
+  },
+
+  updateFromCache: function(user) {
+    UserCache
+    .findOneByEmail(user.email)
+    .exec(function callback(err, userCache) {
+      if (err || !userCache) {
+        UserCache
+        .create({
+          email : user.email,
+          user : user.toWholeObject() 
+        }).exec(function callback(err, userCache) {
+        });
+      } else {
+        if (populateCount(userCache.user) > 0 && populateCount(user) == 0) {
+          Users
+          .findOneByEmail(user.email)
+          .populateAll()
+          .exec(function callback(err, user) {
+            if (err || !user)
+              return;
+
+            UserCache
+            .update({
+              email : user.email
+            }, {
+              user : user.toWholeObject() 
+            }).exec(function callback(err, userCache) {
+            });
+          });
+        }
+
+        UserCache
+        .update({
+          email : user.email
+        }, {
+          user : user.toWholeObject() 
+        }).exec(function callback(err, userCache) {
+        });
+      }
+    });
   }
 };
 

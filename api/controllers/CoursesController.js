@@ -36,35 +36,26 @@ module.exports = {
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.populate('supervising_courses')
-		.exec(function callback(err, user) {
+		UserCache
+		.findFromCache(email, function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
 
-  		Courses
-  		.findOneById(course_id)
-			.populateAll()
-  		.sort('id ASC')
-  		.exec(function callback(err, course) {
+			CourseCache
+			.findFromCache(course_id, function callback(err, course) {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
 
 	    	Posts
-	  		.findById(Arrays.getIds(course.posts))
+	    	.find({
+	    		course: course.id
+	    	})
 				.populate('attendance')
 				.populate('clicker')
 				.populate('notice')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts) {
-							course = course.toWholeObject();
 							course.grade = 0;
 							course.attendance_rate = 0;
 							course.clicker_rate = 0;
@@ -143,12 +134,12 @@ module.exports = {
 					}
 
   				if (Arrays.getIds(user.supervising_courses).indexOf(course.id) >= 0) {
-						attendance_rate = Number( ( attd_checks.length / attd_usage / course.students.length * 100).toFixed() );
-						clicker_rate = Number( ( clicker_checks.length / clicker_usage / course.students.length * 100).toFixed() );
+						attendance_rate = Number( ( attd_checks.length / attd_usage / course.students_count * 100).toFixed() );
+						clicker_rate = Number( ( clicker_checks.length / clicker_usage / course.students_count * 100).toFixed() );
 						if (notice_last)
-							notice_unseen = course.students.length - notice_last.seen_students.length;
+							notice_unseen = course.students_count - notice_last.seen_students.length;
 						else
-							notice_unseen = course.students.length;
+							notice_unseen = course.students_count;
   				} else {
 						attendance_rate = Number( (attd_checked_count / attd_usage * 100).toFixed() );
 						clicker_rate = Number( (clicker_checked_count / clicker_usage * 100).toFixed() );
@@ -163,7 +154,6 @@ module.exports = {
 					if (clicker_rate < 0 || clicker_usage == 0 || isNaN(clicker_rate)) clicker_rate = 0;
 					if (clicker_rate > 100) clicker_rate = 100;
 
-					course = course.toWholeObject();
 					course.grade = attendance_rate;
 					course.attendance_rate = attendance_rate;
 					course.clicker_rate = clicker_rate;
@@ -495,27 +485,17 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.populate('supervising_courses')
-		.exec(function callback(err, user) {
+		UserCache
+		.findFromCache(email, function callback(err, user) {
 			if (err || !user) 
-		    return res.send(500, Error.log(req, "Course Feed Error", "User doesn't exist."));
+				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
 
 	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
 
-			Courses
-			.findOneById(course_id)
-			.populate('students')
-			.populate('managers')
-			.exec(function callback(err, course) {
-				if (err || !course)
-		    return res.send(500, Error.log(req, "Course Feed Error", "Course doesn't exist."));
+			CourseCache
+			.findFromCache(course_id, function callback(err, course) {
+  			if (err || !course)
+					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
 
 	  		Posts
 	  		.find({
@@ -537,12 +517,12 @@ module.exports = {
 							if (!locale || locale != 'ko')
 								locale = 'en';
 
-							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / course.students.length * 100).toFixed());
+							grade = Number(( (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) / course.students_count * 100).toFixed());
 		  				if (grade < 0 || isNaN(grade)) grade = 0;
 		  				if (grade > 100) grade = 100;
 
 		  				if (supervising_courses.indexOf(posts[i].course) >= 0)
-		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + course.students.length + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
+		  					message = (posts[i].attendance.checked_students.length + posts[i].attendance.late_students.length) + "/" + course.students_count + " (" + grade + "%) " + sails.__({ phrase: "students has been attended.", locale: locale });
 		  				else {
 		  					if (posts[i].attendance.checked_students.indexOf(user.id) >= 0)
 		  						message = sails.__({ phrase: "Attendance Checked", locale: locale })
@@ -556,7 +536,7 @@ module.exports = {
 		  			}
 
 						posts[i] = posts[i].toWholeObject();
-						posts[i].course = course.toJSON();
+						posts[i].course = CourseCache.toJSON(course);
 	  				if (posts[i].type == 'attendance') {
 							posts[i].grade = grade;
 	  					posts[i].message = message;
