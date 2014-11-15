@@ -57,6 +57,7 @@ module.exports = {
 					if (err || !user)
 						return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
 					
+					UserCache.updateFromCache(user);
 			  	return res.send(user.toWholeObject());
 				});
 			});

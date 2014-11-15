@@ -1,5 +1,5 @@
 /**
-* AttendanceCluster.js
+* CourseCache.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -13,19 +13,14 @@ module.exports = {
 
   attributes: {
 
-  	attendanceID: {
+  	courseID: {
   		type: 'integer',
   		required: true
   	},
 
-  	email: {
-  		type: 'email',
+  	couse: {
+  		type: 'json',
       required: true
-  	},
-
-  	uuid: {
-  		type: 'string',
-  		required: true
   	}
 
   }

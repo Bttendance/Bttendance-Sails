@@ -32,6 +32,8 @@ module.exports = {
 			  	user.identifications[i].save(function callback(err, updated_user) {
 			  		if (err || !updated_user)
 							return res.send(500, Error.alert(req, "Identity Update Error", "Updating identity has been failed."));
+						
+						UserCache.updateFromCache(user);
 				  	return res.send(user.toWholeObject());
 			  	});
 					found = true;
@@ -53,6 +55,8 @@ module.exports = {
 						.exec(function callback(err, user) {
 				  		if (err || !user)
 								return res.send(500, Error.log(req, "Identity Update Error", "User doesn't exist."));
+
+							UserCache.updateFromCache(user);
 					  	return res.send(user.toWholeObject());
 						});
 				});

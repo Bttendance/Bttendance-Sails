@@ -43,7 +43,7 @@ module.exports = {
 		    { username: username }
 		  ]
 		})
-		.populateAll()
+		.populate('supervising_courses')
 		.exec(function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
@@ -58,7 +58,9 @@ module.exports = {
 
 	    	Posts
 	  		.findById(Arrays.getIds(course.posts))
-				.populateAll()
+				.populate('attendance')
+				.populate('clicker')
+				.populate('notice')
 	  		.sort('id DESC')
 	  		.exec(function callback(err, posts) {
 	  			if (err || !posts) {
@@ -277,6 +279,7 @@ module.exports = {
 									smtpTransport.sendMail(mailOptions, function(error, info) {
 									});
 
+									UserCache.updateFromCache(user_new);
 							  	return res.send(user_new.toWholeObject());
 								});
 						  });
@@ -418,6 +421,7 @@ module.exports = {
 							smtpTransport.sendMail(mailOptions, function(error, info) {
 							});
 
+							UserCache.updateFromCache(user_new);
 					  	return res.send(user_new.toWholeObject());
 						});
 					});
@@ -476,6 +480,7 @@ module.exports = {
 						if (err || !user_new)
 					    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
 
+						UserCache.updateFromCache(user_new);
 				  	return res.send(user_new.toWholeObject());
 					});
 			  });
@@ -604,6 +609,59 @@ module.exports = {
       if (err || !course)
 		    return res.send(500, Error.alert(req, "Course Open Error", "Course update error."));
 
+		  Courses
+		  .findOneById(course_id)
+		  .populate('students')
+		  .populate('managers')
+		  .exec(function callback(err, course) {
+		  	if (!err && course) {
+
+		  		async.each(course.students, function(user, callback) {
+		  			UserCache
+				    .findOneByEmail(user.email)
+				    .exec(function callback(err, userCache) {
+				    	if (!err && userCache && userCache.user) {
+				    		for (var i = userCache.user.attending_courses.length - 1; i >= 0; i--) {
+				    			if (userCache.user.attending_courses[i].id == course_id)
+				    				userCache.user.attending_courses[i].opened = true;
+				    		}
+
+				        UserCache
+				        .update({
+				          email : userCache.email
+				        }, {
+				          user : userCache.user
+				        }).exec(function callback(err, userCache) {
+				        });
+				    	}
+			    	});
+					}, function(err) {
+					});
+
+		  		async.each(course.managers, function(user, callback) {
+		  			UserCache
+				    .findOneByEmail(user.email)
+				    .exec(function callback(err, userCache) {
+				    	if (!err && userCache && userCache.user) {
+				    		for (var i = userCache.user.supervising_courses.length - 1; i >= 0; i--) {
+				    			if (userCache.user.supervising_courses[i].id == course_id)
+				    				userCache.user.supervising_courses[i].opened = true;
+				    		}
+
+				        UserCache
+				        .update({
+				          email : userCache.email
+				        }, {
+				          user : userCache.user
+				        }).exec(function callback(err, userCache) {
+				        });
+				    	}
+			    	});
+					}, function(err) {
+					});
+		  	}
+		  });
+
 		  Users
 		  .findOneByEmail(email)
 		  .populateAll()
@@ -611,6 +669,7 @@ module.exports = {
 	      if (err || !user)
 			    return res.send(500, Error.log(req, "Course Open Error", "Fail to find user."));
 
+					UserCache.updateFromCache(user);
 			  	return res.send(user.toWholeObject());
 		  });
     });
@@ -627,6 +686,59 @@ module.exports = {
       if (err || !course)
 		    return res.send(500, Error.alert(req, "Course Open Error", "Course update error."));
 
+		  Courses
+		  .findOneById(course_id)
+		  .populate('students')
+		  .populate('managers')
+		  .exec(function callback(err, course) {
+		  	if (!err && course) {
+
+		  		async.each(course.students, function(user, callback) {
+		  			UserCache
+				    .findOneByEmail(user.email)
+				    .exec(function callback(err, userCache) {
+				    	if (!err && userCache && userCache.user) {
+				    		for (var i = userCache.user.attending_courses.length - 1; i >= 0; i--) {
+				    			if (userCache.user.attending_courses[i].id == course_id)
+				    				userCache.user.attending_courses[i].opened = false;
+				    		}
+
+				        UserCache
+				        .update({
+				          email : userCache.email
+				        }, {
+				          user : userCache.user
+				        }).exec(function callback(err, userCache) {
+				        });
+				    	}
+			    	});
+					}, function(err) {
+					});
+
+		  		async.each(course.managers, function(user, callback) {
+		  			UserCache
+				    .findOneByEmail(user.email)
+				    .exec(function callback(err, userCache) {
+				    	if (!err && userCache && userCache.user) {
+				    		for (var i = userCache.user.supervising_courses.length - 1; i >= 0; i--) {
+				    			if (userCache.user.supervising_courses[i].id == course_id)
+				    				userCache.user.supervising_courses[i].opened = false;
+				    		}
+
+				        UserCache
+				        .update({
+				          email : userCache.email
+				        }, {
+				          user : userCache.user
+				        }).exec(function callback(err, userCache) {
+				        });
+				    	}
+			    	});
+					}, function(err) {
+					});
+		  	}
+		  });
+
 		  Users
 		  .findOneByEmail(email)
 		  .populateAll()
@@ -634,6 +746,7 @@ module.exports = {
 	      if (err || !user)
 			    return res.send(500, Error.log(req, "Course Open Error", "Fail to find user."));
 
+					UserCache.updateFromCache(user);
 			  	return res.send(user.toWholeObject());
 		  });
     });

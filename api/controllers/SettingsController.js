@@ -29,6 +29,8 @@ module.exports = {
 		  user.setting.save(function callback(err) {
 		   	if (err)
 					return res.send(500, Error.alert(req, "Update Setting Error", "Attendance notification setting update has some error."));
+
+				UserCache.updateFromCache(user);
 		  	return res.send(user.toWholeObject());
 	    });
 		});
@@ -54,6 +56,8 @@ module.exports = {
 		  user.setting.save(function callback(err) {
 		   	if (err)
 					return res.send(500, Error.alert(req, "Update Setting Error", "Poll notification setting update has some error."));
+
+				UserCache.updateFromCache(user);
 		  	return res.send(user.toWholeObject());
 	    });
 		});
@@ -79,6 +83,8 @@ module.exports = {
 		  user.setting.save(function callback(err) {
 		   	if (err)
 					return res.send(500, Error.alert(req, "Update Setting Error", "Notice notification setting update has some error."));
+
+				UserCache.updateFromCache(user);
 		  	return res.send(user.toWholeObject());
 	    });
 		});
@@ -109,6 +115,8 @@ module.exports = {
 		  user.setting.save(function callback(err) {
 		   	if (err)
 					return res.send(500, Error.alert(req, "Update Setting Error", "Clicker default setting update has some error."));
+				
+				UserCache.updateFromCache(user);
 		  	return res.send(user.toWholeObject());
 	    });
 		});

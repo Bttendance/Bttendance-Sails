@@ -83,6 +83,11 @@ module.exports = {
 					if (err || !question)
 						return res.send(500, Error.log(req, "Create Questions Error", "Question doesn't exist."));
 
+					Users.findOneByEmail(email).populateAll().exec(function callback(err, user) {
+						if (!err && user)
+							UserCache.updateFromCache(user);
+					});
+
 			  	return res.send(question.toWholeObject());
 	  		});
 			});
@@ -155,6 +160,11 @@ module.exports = {
 					if (err || !question)
 						return res.send(500, Error.log(req, "Delete Questions Error", "Question doesn't exist."));
 
+					Users.findOneByEmail(email).populateAll().exec(function callback(err, user) {
+						if (!err && user)
+							UserCache.updateFromCache(user);
+					});
+					
 			  	return res.send(question.toWholeObject());
 	  		});
 			});

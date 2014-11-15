@@ -156,6 +156,7 @@ module.exports = {
 							if (err || !user_new)
 								return res.send(500, Error.log(req, "Enroll School Error", "User Find Error"));
 
+							UserCache.updateFromCache(user_new);
 					  	return res.send(user_new.toWholeObject());
 						});
 					});

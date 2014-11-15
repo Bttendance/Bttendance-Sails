@@ -136,6 +136,7 @@ module.exports = {
 									});
 								});
 
+								UserCache.updateFromCache(user_new);
 						  	return res.send(user_new.toWholeObject());
 							});
 						});
@@ -205,6 +206,7 @@ module.exports = {
 										});
 									});
 
+									UserCache.updateFromCache(user_new);
 							  	return res.send(user_new.toWholeObject());
 								});
 							});
@@ -230,15 +232,8 @@ module.exports = {
 		if (!locale || locale != 'ko')
 			locale = 'en';
 
-		Users
-		.findOne({
-		  or : [
-		    { email: email },
-		    { username: username }
-		  ]
-		})
-		.populateAll()
-		.exec(function callback(err, user) {
+		UserCache
+		.findFromCache(email, function callback(err, user) {
 			if (err || !user)
 		    return res.send(401, Error.alert(req, "Auto Sign Out", "User doesn't exist."));
 
@@ -254,7 +249,7 @@ module.exports = {
 	    // if (device_type == 'android' && parseFloat(app_version) < 1.1)
 		   //  return res.send(441, Error.alert(req, sails.__({ phrase: "Update Available", locale: locale }), sails.__({ phrase: "New version of Bttendance has been updated. Please update the app for new features.", locale: locale })));
 	    
-	  	return res.send(user.toWholeObject());
+	  	return res.send(user);
 		});
 	},
 
@@ -311,6 +306,7 @@ module.exports = {
 					   	if (err)
 								return res.send(500, Error.log(req, "Sign In Error", "Device Save Error"));
 
+							UserCache.updateFromCache(user);
 					  	return res.send(user.toWholeObject());
 						});
 					} else if (device.uuid != user.device.uuid) {
@@ -325,11 +321,14 @@ module.exports = {
 								if (err)
 									return res.send(500, Error.log(req, "Sign In Error", "Device Save Error"));
 
+								UserCache.updateFromCache(user);
 						  	return res.send(user.toWholeObject());
 						  })
 						});
-					} else
+					} else {
+						UserCache.updateFromCache(user);
 				  	return res.send(user.toWholeObject());
+					}
 				});
 			} else {
 				if (!PasswordHash.verify(password, user.password)) {
@@ -368,6 +367,7 @@ module.exports = {
 										if (err || !user)
 											return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
 
+										UserCache.updateFromCache(user);
 								  	return res.send(user.toWholeObject());
 									});
 								});
@@ -390,12 +390,14 @@ module.exports = {
 									if (err || !user)
 										return res.send(500, Error.log(req, "Sign In Error", "User Found Error"));
 
+									UserCache.updateFromCache(user);
 							  	return res.send(user.toWholeObject());
 								});
 							});
 						}
 					});
 			  } else {
+					UserCache.updateFromCache(user);
 			  	return res.send(user.toWholeObject());
 			  }
 			}
@@ -457,6 +459,8 @@ module.exports = {
 					smtpTransport.sendMail(mailOptions, function(error, info) {
 				    if(error)
 						  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
+
+						UserCache.updateFromCache(user);
 		        return res.send(Email.json(user.email));
 					});
 				});
@@ -535,6 +539,8 @@ module.exports = {
 					smtpTransport.sendMail(mailOptions, function(error, info) {
 				    if(error)
 						  return res.send(500, Error.alert(req, "Sending Email Error", "Oh uh, error occurred. Please try it again."));
+
+						UserCache.updateFromCache(user);
 		        return res.send(user.toWholeObject());
 					});
 				});
@@ -567,6 +573,8 @@ module.exports = {
 	  	user.save(function callback(err, updated_user) {
 	  		if (err || !updated_user)
 					return res.send(400, Error.alert(req, "FullName Update Error", "Updating full name has been failed."));
+
+				UserCache.updateFromCache(updated_user);
 		  	return res.send(updated_user.toWholeObject());
 	  	});
 		});
@@ -593,6 +601,8 @@ module.exports = {
 		  	user.save(function callback(err, updated_user) {
 		  		if (err || !updated_user)
 						return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
+
+				UserCache.updateFromCache(updated_user);
 			  	return res.send(updated_user.toWholeObject());
 		  	});
 			});
@@ -611,6 +621,8 @@ module.exports = {
 		  	user.save(function callback(err, updated_user) {
 		  		if (err || !updated_user)
 						return res.send(400, Error.alert(req, "Email Update Error", "Email already registered to other user."));
+					
+					UserCache.updateFromCache(updated_user);
 			  	return res.send(updated_user.toWholeObject());
 		  	});
 			});
