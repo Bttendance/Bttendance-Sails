@@ -21,7 +21,7 @@ module.exports = {
 			type: 'attendance',
 			course: course_ids,
 			createdAt: { 
-				'>': Moment().subtract(6500, 's').format()
+				'>': Moment().subtract(65, 's').format()
 			}
 		})
 		.populate('attendance')
