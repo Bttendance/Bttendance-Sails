@@ -75,6 +75,7 @@ module.exports = {
         .populateAll()
         .exec(function callback(err, attendance) {
           if (attendance && attendance.post && attendance.post.course) {
+            PostsCache.updateAttendance(attendance);
             sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
           }
         });
@@ -99,6 +100,7 @@ module.exports = {
       .populateAll()
       .exec(function callback(err, attendance) {
         if (attendance && attendance.post && attendance.post.course) {
+          PostsCache.updateAttendance(attendance);
           sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
         }
       });

@@ -109,6 +109,7 @@ module.exports = {
 
 				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, progress_time * 500);
 
+				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 				  	});
 					});
@@ -191,6 +192,7 @@ module.exports = {
 				  		if (type == 'auto')
 					  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 33000);
 
+				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 				  	});
 					});
@@ -265,6 +267,7 @@ module.exports = {
 					  				Noti.send(users[j], post.course.name, "You have new notice.", "notice", course.id);
 				  		});
 
+				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 			    	});
 				  });
@@ -308,6 +311,7 @@ module.exports = {
 						if (err || !post)
 			  			return res.send(500, Error.log(req, "Update Post Error", "Post doesn't exist."));
 
+			  		PostsCache.updatePost(post.toWholeObject());
 	    			return res.send(post.toWholeObject());
 			  	});
 	    	});
@@ -347,6 +351,7 @@ module.exports = {
 						if (err || !post)
 			  			return res.send(500, Error.log(req, "Delete Post Error", "Post doesn't exist."));
 
+			  		PostsCache.removePost(course.id, post.toWholeObject());
 	    			return res.send(post.toWholeObject());
 			  	});
 	    	});

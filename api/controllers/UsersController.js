@@ -757,18 +757,8 @@ module.exports = {
   			if (err || !courses)
 		    		return res.send(JSON.stringify(new Array()));
 
-				var total_posts = new Array();
-				for (var i = 0; i < courses.length; i++)
-					for (var j = 0; j < courses[i].posts.length; j++)
-						total_posts.push(courses[i].posts[j].id);
-
-	    	Posts
-	  		.findById(total_posts)
-				.populate('attendance')
-				.populate('clicker')
-				.populate('notice')
-	  		.sort('id DESC')
-	  		.exec(function callback(err, posts) {
+	  		PostsCache
+	  		.findManyFromCache(Arrays.getIds(courses), function callback(err, posts) {
 	  			if (!posts) {
 						for (var i = 0; i < courses.length; i++) {
 							courses[i].grade = 0;

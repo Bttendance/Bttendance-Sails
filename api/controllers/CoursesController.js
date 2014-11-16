@@ -510,27 +510,22 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
-		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
-
 		UserCache
 		.findFromCache(email, function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
 
 	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
-		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 			CourseCache
 			.findFromCache(course_id, function callback(err, course) {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
-		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 	  		PostsCache
 	  		.findFromCache(course_id, function callback(err, posts) {
 	  			if (err || !posts)
 				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));
-		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					for (var i = 0; i < posts.length; i++) {
 
@@ -576,7 +571,6 @@ module.exports = {
 		      .exec(function callback(err, users) {
 		      	if (err || !user)
 					  	return res.send(posts);
-		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					  for (var i = posts.length - 1; i >= 0; i--) {
 					  	for (var j = users.length - 1; j >= 0; j--) {
@@ -595,7 +589,6 @@ module.exports = {
 					  	}
 					  }
 
-		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 				  	return res.send(posts);
 		      });
 	  		});

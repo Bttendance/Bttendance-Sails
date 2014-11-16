@@ -41,7 +41,7 @@ module.exports = {
 
   findManyFromCache: function(ids, cb) {
     if (ids.length == 0)
-      return cb(null, new Array());
+      return cb(null, []);
 
     CourseCache
     .findByCourseID(ids)
@@ -50,19 +50,19 @@ module.exports = {
         return cb(err);
 
       if (!courseCaches) 
-        courseCaches = new Array();
+        courseCaches = [];
 
-      var cached = new Array();
+      var cached = [];
       for (var i = 0; i < courseCaches.length; i++)
         if (courseCaches[i].course)
           cached.push(courseCaches[i].course.id);
 
-      var unCached = new Array();
+      var unCached = [];
       for (var i = ids.length - 1; i >= 0; i--)
         if (cached.indexOf(ids[i]) < 0)
           unCached.push(ids[i]);
 
-      var objects = new Array();
+      var objects = [];
       for (var i = 0; i < courseCaches.length; i++)
         objects.push(courseCaches[i].course);
 

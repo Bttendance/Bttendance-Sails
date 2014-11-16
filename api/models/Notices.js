@@ -56,8 +56,10 @@ module.exports = {
     .findOneById(values.id)
     .populateAll()
     .exec(function callback(err, notice) {
-      if (notice && notice.post && notice.post.course) 
+      if (notice && notice.post && notice.post.course) {
+        PostsCache.updateNotice(notice);
         sails.sockets.broadcast('Course#' + notice.post.course, 'notice', notice.toWholeObject());
+      }
     });
 
     next();

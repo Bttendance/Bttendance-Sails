@@ -120,6 +120,7 @@ module.exports = {
         .populateAll()
         .exec(function callback(err, clicker) {
           if (clicker && clicker.post && clicker.post.course) {
+            PostsCache.updateClicker(clicker);
             sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
           }
         });
@@ -144,6 +145,7 @@ module.exports = {
       .populateAll()
       .exec(function callback(err, clicker) {
         if (clicker && clicker.post && clicker.post.course) {
+          PostsCache.updateClicker(clicker);
           sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
         }
       });
