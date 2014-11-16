@@ -126,7 +126,7 @@ module.exports = {
             posts : posts
           }).exec(function callback(err, postsCache) {
             postsCache.posts.sort(function(a, b) {
-              return a.id - b.id
+              return b.id - a.id
             });
             return cb(null, postsCache.posts);
           });
@@ -149,20 +149,32 @@ module.exports = {
         if (err || !postsCache)
           return;
 
+        var found = false;
         for (var i = postsCache.posts.length - 1; i >= 0; i--) {
           if (postsCache.posts[i].id == attendance.post.id) {
+            found = true;
             postsCache.posts[i].attendance.checked_students = attendance.checked_students;
             postsCache.posts[i].attendance.late_students = attendance.late_students;
           }
         }
 
-        PostsCache
-        .update({
-          courseID : attendance.post.course
-        }, {
-          posts : postsCache.posts
-        }).exec(function callback(err, postsCaches) {
-        });
+        if (!found) {
+          Posts
+          .findOneById(attendance.post.id)
+          .populate('attendance')
+          .exec(function callback(err, post) {
+            if (!err && post)
+              PostsCache.addPost(post.toWholeObject());
+          });
+        } else {
+          PostsCache
+          .update({
+            courseID : attendance.post.course
+          }, {
+            posts : postsCache.posts
+          }).exec(function callback(err, postsCaches) {
+          });
+        }
       });
     }
   },
@@ -176,8 +188,10 @@ module.exports = {
         if (err || !postsCache)
           return;
 
+        var found = false;
         for (var i = postsCache.posts.length - 1; i >= 0; i--) {
           if (postsCache.posts[i].id == clicker.post.id) {
+            found = true;
             postsCache.posts[i].clicker.a_students = clicker.a_students;
             postsCache.posts[i].clicker.b_students = clicker.b_students;
             postsCache.posts[i].clicker.c_students = clicker.c_students;
@@ -186,13 +200,23 @@ module.exports = {
           }
         }
 
-        PostsCache
-        .update({
-          courseID : clicker.post.course
-        }, {
-          posts : postsCache.posts
-        }).exec(function callback(err, postsCaches) {
-        });
+        if (!found) {
+          Posts
+          .findOneById(clicker.post.id)
+          .populate('clicker')
+          .exec(function callback(err, post) {
+            if (!err && post)
+              PostsCache.addPost(post.toWholeObject());
+          });
+        } else {
+          PostsCache
+          .update({
+            courseID : clicker.post.course
+          }, {
+            posts : postsCache.posts
+          }).exec(function callback(err, postsCaches) {
+          });
+        }
       });
     }
   },
@@ -206,49 +230,61 @@ module.exports = {
         if (err || !postsCache)
           return;
 
+        var found = false;
         for (var i = postsCache.posts.length - 1; i >= 0; i--) {
           if (postsCache.posts[i].id == notice.post.id) {
+            found = true;
             postsCache.posts[i].notice.seen_students = notice.seen_students;
           }
         }
 
-        PostsCache
-        .update({
-          courseID : notice.post.course
-        }, {
-          posts : postsCache.posts
-        }).exec(function callback(err, postsCaches) {
-        });
+        if (!found) {
+          Posts
+          .findOneById(notice.post.id)
+          .populate('notice')
+          .exec(function callback(err, post) {
+            if (!err && post)
+              PostsCache.addPost(post.toWholeObject());
+          });
+        } else {
+          PostsCache
+          .update({
+            courseID : notice.post.course
+          }, {
+            posts : postsCache.posts
+          }).exec(function callback(err, postsCaches) {
+          });
+        }
       });
     }
   },
 
   //create post
   addPost: function(post) {
-    post.course = post.course.id;
-    post.author = post.author.id;
-    if (post.attendance && post.attendance.cluster)
-      delete post.attendance.cluster;
+    // post.course = post.course.id;
+    // post.author = post.author.id;
+    // if (post.attendance && post.attendance.cluster)
+    //   delete post.attendance.cluster;
 
-    PostsCache
-    .findOneByCourseID(post.course)
-    .exec(function callback(err, postsCache) {
-      if (!err && postsCache && postsCache.posts) {
+    // PostsCache
+    // .findOneByCourseID(post.course)
+    // .exec(function callback(err, postsCache) {
+    //   if (!err && postsCache && postsCache.posts) {
 
-        var posts = [];
-        posts.push(post);
-        for (var i = postsCache.posts.length - 1; i >= 0; i--)
-          posts.push(postsCache.posts[i]);
+    //     var posts = [];
+    //     posts.push(post);
+    //     for (var i = postsCache.posts.length - 1; i >= 0; i--)
+    //       posts.push(postsCache.posts[i]);
 
-        PostsCache
-        .update({
-          courseID : post.course
-        }, {
-          posts : posts
-        }).exec(function callback(err, postsCaches) {
-        });
-      }
-    });
+    //     PostsCache
+    //     .update({
+    //       courseID : post.course
+    //     }, {
+    //       posts : posts
+    //     }).exec(function callback(err, postsCaches) {
+    //     });
+    //   }
+    // });
   },
 
   //update message
