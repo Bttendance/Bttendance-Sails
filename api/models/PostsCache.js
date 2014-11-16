@@ -205,7 +205,6 @@ module.exports = {
           .findOneById(clicker.post.id)
           .populate('clicker')
           .exec(function callback(err, post) {
-            console.log(err);
             if (!err && post)
               PostsCache.addPost(post.toWholeObject());
           });
@@ -262,30 +261,30 @@ module.exports = {
 
   //create post
   addPost: function(post) {
-    // post.course = post.course.id;
-    // post.author = post.author.id;
-    // if (post.attendance && post.attendance.cluster)
-    //   delete post.attendance.cluster;
+    post.course = post.course.id;
+    post.author = post.author.id;
+    if (post.attendance && post.attendance.cluster)
+      delete post.attendance.cluster;
 
-    // PostsCache
-    // .findOneByCourseID(post.course)
-    // .exec(function callback(err, postsCache) {
-    //   if (!err && postsCache && postsCache.posts) {
+    PostsCache
+    .findOneByCourseID(post.course)
+    .exec(function callback(err, postsCache) {
+      if (!err && postsCache && postsCache.posts) {
 
-    //     var posts = [];
-    //     posts.push(post);
-    //     for (var i = postsCache.posts.length - 1; i >= 0; i--)
-    //       posts.push(postsCache.posts[i]);
+        var posts = [];
+        posts.push(post);
+        for (var i = postsCache.posts.length - 1; i >= 0; i--)
+          posts.push(postsCache.posts[i]);
 
-    //     PostsCache
-    //     .update({
-    //       courseID : post.course
-    //     }, {
-    //       posts : posts
-    //     }).exec(function callback(err, postsCaches) {
-    //     });
-    //   }
-    // });
+        PostsCache
+        .update({
+          courseID : post.course
+        }, {
+          posts : posts
+        }).exec(function callback(err, postsCaches) {
+        });
+      }
+    });
   },
 
   //update message
