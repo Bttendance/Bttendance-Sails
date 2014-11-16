@@ -164,7 +164,7 @@ module.exports = {
           .populate('attendance')
           .exec(function callback(err, post) {
             if (!err && post)
-              PostsCache.addPost(post.toWholeObject());
+              PostsCache.addPostForMistake(post.toWholeObject());
           });
         } else {
           PostsCache
@@ -206,7 +206,7 @@ module.exports = {
           .populate('clicker')
           .exec(function callback(err, post) {
             if (!err && post)
-              PostsCache.addPost(post.toWholeObject());
+              PostsCache.addPostForMistake(post.toWholeObject());
           });
         } else {
           PostsCache
@@ -244,7 +244,7 @@ module.exports = {
           .populate('notice')
           .exec(function callback(err, post) {
             if (!err && post)
-              PostsCache.addPost(post.toWholeObject());
+              PostsCache.addPostForMistake(post.toWholeObject());
           });
         } else {
           PostsCache
@@ -257,6 +257,32 @@ module.exports = {
         }
       });
     }
+  },
+
+  //add post if there is false cache hit
+  addPostForMistake: function(post) {
+    if (post.attendance && post.attendance.cluster)
+      delete post.attendance.cluster;
+
+    PostsCache
+    .findOneByCourseID(post.course)
+    .exec(function callback(err, postsCache) {
+      if (!err && postsCache && postsCache.posts) {
+
+        var posts = [];
+        posts.push(post);
+        for (var i = postsCache.posts.length - 1; i >= 0; i--)
+          posts.push(postsCache.posts[i]);
+
+        PostsCache
+        .update({
+          courseID : post.course
+        }, {
+          posts : posts
+        }).exec(function callback(err, postsCaches) {
+        });
+      }
+    });
   },
 
   //create post
