@@ -181,7 +181,6 @@ module.exports = {
 
   //clicker after update
   updateClicker: function(clicker) {
-    console.log('updateClicker');
     if (clicker.post && clicker.post.course) {
       PostsCache
       .findOneByCourseID(clicker.post.course)
@@ -202,16 +201,15 @@ module.exports = {
         }
 
         if (!found) {
-          console.log('updateClicker : not found');
           Posts
           .findOneById(clicker.post.id)
           .populate('clicker')
           .exec(function callback(err, post) {
+            console.log(err);
             if (!err && post)
               PostsCache.addPost(post.toWholeObject());
           });
         } else {
-          console.log('updateClicker : found');
           PostsCache
           .update({
             courseID : clicker.post.course
