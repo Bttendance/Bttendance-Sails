@@ -107,6 +107,115 @@ exports.send = function(user, title, message, type, course_id) {
 	}
 }
 
+exports.sends = function(users, title, message, type, course_id) {
+	if (!user.device.notification_key)
+		return;
+
+	var locale = user.locale;
+	if (!locale || locale != 'ko')
+		locale = 'en';
+	message = sails.__({ phrase: message, locale: locale });
+
+	var iphones = [];
+	var androids = [];
+
+	for (var i = users.length - 1; i >= 0; i--) {
+		if (users[i].device.type == 'android')
+			androids.push(users[i]);
+		else if (users[i].device.type == 'iphone')
+			iphones.push(users[i]);
+	}
+
+	if (androids.length > 0) {
+
+		var msg = new gcm.Message({
+		    collapseKey: 'bttendance',
+		    delayWhileIdle: false,
+		    timeToLive: 4,
+		    data: {
+		      type: type,
+		      course_id: course_id,
+		    	title: title,
+		      message: message
+		    }
+		});
+
+		var registrationIds = [];
+		for (var i = androids.length - 1; i >= 0; i--)
+			registrationIds.push(androids[i].device.notification_key);
+
+		var sender;
+		// if (process.env.NODE_ENV == 'development')
+		//  	sender = new gcm.Sender('AIzaSyCqiq_YpGtSzIi7lr5SGcL5a74nJxm6K3o');
+		// else
+	 	sender = new gcm.Sender('AIzaSyByrjmrKWgg1IvZhFZspzYVMykKHaGzK0o');
+		 
+		sender.send(msg, registrationIds, 4, function (err, result) {
+			if (err)
+				console.log(err);
+			else {
+    		console.log("Android notification has been sent to");
+    		console.log(androids);
+			}
+		});
+
+	} 
+
+	if (iphones.length > 0) {
+
+		var options;
+		if (process.env.NODE_ENV == 'development') {
+			options = { cert: './assets/certification/cert_development.pem',
+									certData: null,
+									key: './assets/certification/key_development.pem',
+									keyData: null,
+									// passphrase: "bttendance",
+									ca: null,
+									gateway: "gateway.sandbox.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		} else { //production
+			options = { cert: './assets/certification/cert_production.pem',
+									certData: null,
+									key: './assets/certification/key_production.pem',
+									keyData: null,
+									// passphrase: "bttendanceutopia",
+									ca: null,
+									gateway: "gateway.push.apple.com",
+									port: 2195,
+									enhanced: true,
+									errorCallback: undefined,
+									cacheLength: 100 };
+		}
+
+    var apnConnection = new apn.Connection(options);
+		var note = new apn.Notification();
+
+		var alert = "Notification from " + title;
+		if (message)
+			alert = title + " : " + message;
+
+		note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+		note.badge = 1;
+		note.sound = "ping.aiff";
+		note.alert = alert;
+		note.payload = {
+			'type' 			: type,
+			'course_id' : course_id,
+			'title' 		: title,
+			'message'   : message
+		};
+
+		for (var i = iphones.length - 1; i >= 0; i--)
+			apnConnection.pushNotification(note, iphones[i].device.notification_key);
+
+		console.log("iOS notification has been sent to");
+		console.log(iphones);
+	}
+}
+
 exports.resendAttedance = function(attendance_id) {
 
 	Attendances
@@ -210,7 +319,7 @@ exports.resendClicker = function(clicker_id) {
   		.sort('id DESC').exec(function(err, users) {
   			if (err || !users)
   				return;
-  			
+  			 
   			for (var i = 0; i < users.length; i++)
   				if (users[i].setting && users[i].setting.clicker) {
   					var locale = users[i].locale;

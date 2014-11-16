@@ -119,7 +119,6 @@ module.exports = {
             courseID : id,
             course : courseJson 
           }).exec(function callback(err, courseCache) {
-            console.log(err);
             return cb(null, courseJson);
           });
         });
@@ -129,42 +128,25 @@ module.exports = {
     });
   },
 
-  updateFromCache: function(user) {
-    UserCache
-    .findOneByEmail(user.email)
-    .exec(function callback(err, userCache) {
-      if (err || !userCache) {
-        UserCache
+  updateFromCache: function(course) {
+
+    CourseCache
+    .findOneByCourseID(course.id)
+    .exec(function callback(err, courseCache) {
+      if (err || !courseCache) {
+        CourseCache
         .create({
-          email : user.email,
-          user : user.toWholeObject() 
-        }).exec(function callback(err, userCache) {
+          courseID : course.id,
+          course : course.toWholeObject() 
+        }).exec(function callback(err, courseCache) {
         });
       } else {
-        if (populateCount(userCache.user) > 0 && populateCount(user) == 0) {
-          Users
-          .findOneByEmail(user.email)
-          .populateAll()
-          .exec(function callback(err, user) {
-            if (err || !user)
-              return;
-
-            UserCache
-            .update({
-              email : user.email
-            }, {
-              user : user.toWholeObject() 
-            }).exec(function callback(err, userCache) {
-            });
-          });
-        }
-
-        UserCache
+        CourseCache
         .update({
-          email : user.email
+          courseID : course.id
         }, {
-          user : user.toWholeObject() 
-        }).exec(function callback(err, userCache) {
+          course : course.toWholeObject() 
+        }).exec(function callback(err, courseCache){
         });
       }
     });

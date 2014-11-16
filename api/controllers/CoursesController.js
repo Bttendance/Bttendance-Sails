@@ -46,15 +46,8 @@ module.exports = {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
 
-	    	Posts
-	    	.find({
-	    		course: course.id
-	    	})
-				.populate('attendance')
-				.populate('clicker')
-				.populate('notice')
-	  		.sort('id DESC')
-	  		.exec(function callback(err, posts) {
+	  		PostsCache
+	  		.findFromCache(course_id, function callback(err, posts) {
 	  			if (err || !posts) {
 							course.grade = 0;
 							course.attendance_rate = 0;
@@ -270,6 +263,7 @@ module.exports = {
 									});
 
 									UserCache.updateFromCache(user_new);
+						      CourseCache.updateFromCache(course);
 							  	return res.send(user_new.toWholeObject());
 								});
 						  });
@@ -411,6 +405,21 @@ module.exports = {
 							smtpTransport.sendMail(mailOptions, function(error, info) {
 							});
 
+				  		CourseCache
+				  		.findOneByCourseID(course.id)
+				  		.exec(function callback(err, courseCache) {
+				  			if (!err && courseCache && courseCache.course.students_count) {
+				  				courseCache.course.students_count = course.students.length + 1;
+				  				CourseCache
+				  				.update({
+				  					courseID : courseCache.courseID
+				  				}, {
+				  					course : courseCache.course
+				  				}).exec(function callback(err, courseCache){
+				  				});
+				  			}
+				  		});
+
 							UserCache.updateFromCache(user_new);
 					  	return res.send(user_new.toWholeObject());
 						});
@@ -426,7 +435,7 @@ module.exports = {
 		var username = req.param('username');
 		var course_id = req.param('course_id');
 
-		Courses.findOneById(course_id).exec(function callback(err, course) {
+		Courses.findOneById(course_id).populate('students').exec(function callback(err, course) {
 			if (err || !course)
 			    return res.send(500, Error.log(req, "Course Unjoin Error", "Course doesn't exist."));
 
@@ -470,6 +479,22 @@ module.exports = {
 						if (err || !user_new)
 					    return res.send(500, Error.log(req, "Course Unjoin Error", "User doesn't exist."));
 
+
+			  		CourseCache
+			  		.findOneByCourseID(course.id)
+			  		.exec(function callback(err, courseCache) {
+			  			if (!err && courseCache && courseCache.course.students_count) {
+			  				courseCache.course.students_count = course.students.length - 1;
+			  				CourseCache
+			  				.update({
+			  					courseID : courseCache.courseID
+			  				}, {
+			  					course : courseCache.course
+			  				}).exec(function callback(err, courseCache){
+			  				});
+			  			}
+			  		});
+
 						UserCache.updateFromCache(user_new);
 				  	return res.send(user_new.toWholeObject());
 					});
@@ -485,28 +510,27 @@ module.exports = {
 		var course_id = req.param('course_id');
 		var page = req.param('page');
 
+		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
+
 		UserCache
 		.findFromCache(email, function callback(err, user) {
 			if (err || !user) 
 				return res.send(500, Error.log(req, "Course Info Error", "User doesn't exist."));
 
 	  	var supervising_courses = Arrays.getIds(user.supervising_courses);
+		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 			CourseCache
 			.findFromCache(course_id, function callback(err, course) {
   			if (err || !course)
 					return res.send(500, Error.log(req, "Course Info Error", "Course doesn't exist."));
+		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
-	  		Posts
-	  		.find({
-	  			course: course_id
-	  		})
-				.populate('attendance')
-				.populate('clicker')
-				.populate('notice')
-	  		.sort('id DESC').exec(function(err, posts) {
+	  		PostsCache
+	  		.findFromCache(course_id, function callback(err, posts) {
 	  			if (err || !posts)
 				    return res.send(500, Error.log(req, "Course Feed Error", "Posts doesn't exist."));
+		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					for (var i = 0; i < posts.length; i++) {
 
@@ -535,7 +559,6 @@ module.exports = {
 		  				}
 		  			}
 
-						posts[i] = posts[i].toWholeObject();
 						posts[i].course = CourseCache.toJSON(course);
 	  				if (posts[i].type == 'attendance') {
 							posts[i].grade = grade;
@@ -553,6 +576,7 @@ module.exports = {
 		      .exec(function callback(err, users) {
 		      	if (err || !user)
 					  	return res.send(posts);
+		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 
 					  for (var i = posts.length - 1; i >= 0; i--) {
 					  	for (var j = users.length - 1; j >= 0; j--) {
@@ -571,6 +595,7 @@ module.exports = {
 					  	}
 					  }
 
+		console.log(Moment().format('MMMM Do YYYY, h:mm:ss SSS a'));
 				  	return res.send(posts);
 		      });
 	  		});
@@ -595,6 +620,21 @@ module.exports = {
 		  .populate('managers')
 		  .exec(function callback(err, course) {
 		  	if (!err && course) {
+
+		  		CourseCache
+		  		.findOneByCourseID(course.id)
+		  		.exec(function callback(err, courseCache) {
+		  			if (!err && courseCache) {
+		  				courseCache.course.opened = true;
+		  				CourseCache
+		  				.update({
+		  					courseID : courseCache.courseID
+		  				}, {
+		  					course : courseCache.course
+		  				}).exec(function callback(err, courseCache){
+		  				});
+		  			}
+		  		});
 
 		  		async.each(course.students, function(user, callback) {
 		  			UserCache
@@ -672,6 +712,21 @@ module.exports = {
 		  .populate('managers')
 		  .exec(function callback(err, course) {
 		  	if (!err && course) {
+
+		  		CourseCache
+		  		.findOneByCourseID(course.id)
+		  		.exec(function callback(err, courseCache) {
+		  			if (!err && courseCache) {
+		  				courseCache.course.opened = false;
+		  				CourseCache
+		  				.update({
+		  					courseID : courseCache.courseID
+		  				}, {
+		  					course : courseCache.course
+		  				}).exec(function callback(err, courseCache){
+		  				});
+		  			}
+		  		});
 
 		  		async.each(course.students, function(user, callback) {
 		  			UserCache
@@ -815,7 +870,6 @@ module.exports = {
 			  mang.supervising_courses.add(course.id);
 
 				mang.save(function callback(err) {
-					console.log(err);
 					if (err)
 		        return res.send(500, Error.alert(req, "Adding Manager Error", "Oh uh, fail to save %s as a manager.\nPlease try again.", mang.full_name));
 
@@ -828,6 +882,7 @@ module.exports = {
 			      if (err || !course)
 			        return res.send(500, Error.alert(req, "Adding Manager Error", "Course doesn't exist."));
 
+			      CourseCache.updateFromCache(course);
 		        return res.send(course.toWholeObject());
 			    });
 				});
