@@ -9,7 +9,7 @@ module.exports = {
 
 	test: function(req, res) {
 		Devices
-		.findOneByUuid('B0:D0:9C:83:07:37')
+		.findByUuid(['B0:D0:9C:83:07:37', 'ac9d3b01-59d5-4937-a827-2dbc39349fab'])
 		.exec(function callback(err, devices) {
 			console.log(devices);
 		});
