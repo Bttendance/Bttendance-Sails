@@ -109,7 +109,7 @@ module.exports = {
 
 				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, progress_time * 500);
 
-				  		// PostsCache.addPost(post.toWholeObject());
+				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 				  	});
 					});
