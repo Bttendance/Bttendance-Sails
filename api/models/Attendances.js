@@ -170,7 +170,9 @@ var bttendance = function(id, cb) {
         console.log(emails);
 
         Devices
-        .findByUuid(uuids)
+        .find({
+          uuid : uuids
+        })
         .exec(function callback(err, devices) {
           if (err || !devices) {
             restructorBttendances(bttendances);
@@ -186,9 +188,6 @@ var bttendance = function(id, cb) {
             courseUsers.push(course.students[i]);
           for (var i = course.managers.length - 1; i >= 0; i--)
             courseUsers.push(course.managers[i]);
-
-          console.log('courseUsers');
-          console.log(courseUsers);
 
           // Vaild User Sets
           var validEmails = []; //user array
