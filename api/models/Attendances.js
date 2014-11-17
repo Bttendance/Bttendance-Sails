@@ -77,13 +77,15 @@ module.exports = {
         return diff > 60 * 1000;
       },
       function (callback) {
-        bttendance(values.id, function cb(err, attendance) {
-          if (!err && attendance) {
-            PostsCache.updateAttendance(attendance);
-            sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
-          }
-          callback();
-        });
+        setTimeout(function() { 
+          bttendance(values.id, function cb(err, attendance) {
+            if (!err && attendance) {
+              PostsCache.updateAttendance(attendance);
+              sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
+            }
+            callback();
+          });
+        }, 1000);
       },
       function (err) {
       }
@@ -171,7 +173,7 @@ var bttendance = function(id, cb) {
 
         Devices
         .find({
-          uuid : uuids
+          uuid : ['C8:19:F7:70:77:73', '40:B0:FA:62:55:CE', '40:B0:FA:62:55:CD']
         })
         .exec(function callback(err, devices) {
           if (err || !devices) {
