@@ -74,7 +74,7 @@ module.exports = {
         var createdAt = Moment(values.createdAt);
         var diff = Moment().diff(createdAt);
         console.log('diff : ' + diff);
-        return diff > 60 * 1000;
+        return diff > 70 * 1000;
       },
       function (callback) {
         setTimeout(function() { 
@@ -102,7 +102,7 @@ module.exports = {
     
     var createdAt = Moment(values.createdAt);
     var diff = Moment().diff(createdAt);
-    if (diff >= 60 * 1000)
+    if (diff >= 70 * 1000)
       Attendances
       .findOneById(values.id)
       .populateAll()
@@ -172,9 +172,7 @@ var bttendance = function(id, cb) {
         console.log(emails);
 
         Devices
-        .find({
-          uuid : uuids
-        })
+        .findByUuid(uuids)
         .exec(function callback(err, devices) {
           if (err || !devices) {
             restructorBttendances(bttendances);
