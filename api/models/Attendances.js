@@ -173,7 +173,7 @@ var bttendance = function(id, cb) {
 
         Devices
         .find({
-          uuid : ['C8:19:F7:70:77:73', '40:B0:FA:62:55:CE', '40:B0:FA:62:55:CD']
+          uuid : uuids
         })
         .exec(function callback(err, devices) {
           if (err || !devices) {
