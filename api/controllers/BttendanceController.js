@@ -10,7 +10,7 @@ module.exports = {
 	test: function(req, res) {
 		console.log('hello');
 		Devices
-		.findOneByUuid('C8:19:F7:70:77:73')
+		.findByUuid([ '54:E4:3A:05:8E:F6', '40:B0:FA:62:55:CE', 'CC:05:1B:6E:8E:71' ] )
 		.exec(function callback(err, devices) {
 			console.log(err);
 			console.log(devices);
