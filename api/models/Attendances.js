@@ -171,7 +171,17 @@ var bttendance = function(id, cb) {
         console.log('emails');
         console.log(emails);
 
+        var uuidsForDevice = [];
+        for (var i = uuids.length - 1; i >= 0; i--) {
+          var uuidForDeivce = {};
+          uuidForDeivce.uuid = uuids[i];
+          uuidsForDevice.push(uuidForDevice);
+        };
+
         Devices
+        .find({
+          or : uuidsForDevice
+        })
         .findByUuid(uuids)
         .exec(function callback(err, devices) {
           if (err || !devices) {
