@@ -88,6 +88,8 @@ module.exports = {
         }, 1000);
       },
       function (err) {
+        console.log('Attendance afterCreate Error');
+        console.log(err);
       }
     );
 
