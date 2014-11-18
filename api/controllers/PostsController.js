@@ -89,6 +89,8 @@ module.exports = {
 			    		if (err || !course)
 				  			return res.send(500, Error.log(req, "Start Clicker Error", "Course doesn't exist."));
 
+				  		PostsCache.addPost(post.toWholeObject());
+				  		
 					  	// Send notification about post to Prof & Std
 					  	var notiUsers = new Array();
 					  	for (var i = 0; i < course.students.length; i++)
@@ -109,7 +111,6 @@ module.exports = {
 
 				  		setTimeout(function() { Noti.resendClicker(post.clicker.id); }, progress_time * 500);
 
-				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 				  	});
 					});
@@ -168,31 +169,32 @@ module.exports = {
 			    		if (err || !course)
 				  			return res.send(500, Error.log(req, "Start Attendance Error", "Course doesn't exist."));
 
-						  	// Send notification about post to Prof & Std
-						  	var notiUsers = new Array();
-						  	for (var i = 0; i < course.students.length; i++)
-						  		notiUsers.push(course.students[i].id);
-						  	for (var i = 0; i < course.managers.length; i++)
-						  		notiUsers.push(course.managers[i].id);
-						  	
-					  		Users
-					  		.findById(notiUsers)
-								.populate('device')
-								.populate('setting')
-					  		.sort('id DESC')
-					  		.exec(function callback(err, users) {
-					  			for (var j = 0; j < users.length; j++) {
-					  				if (users[j].setting && users[j].setting.attendance) {
-								  		if (type == 'auto')
-							  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id);
-					  				}
-					  			}
-					  		});
+				  		PostsCache.addPost(post.toWholeObject());
+
+					  	// Send notification about post to Prof & Std
+					  	var notiUsers = new Array();
+					  	for (var i = 0; i < course.students.length; i++)
+					  		notiUsers.push(course.students[i].id);
+					  	for (var i = 0; i < course.managers.length; i++)
+					  		notiUsers.push(course.managers[i].id);
+					  	
+				  		Users
+				  		.findById(notiUsers)
+							.populate('device')
+							.populate('setting')
+				  		.sort('id DESC')
+				  		.exec(function callback(err, users) {
+				  			for (var j = 0; j < users.length; j++) {
+				  				if (users[j].setting && users[j].setting.attendance) {
+							  		if (type == 'auto')
+						  				Noti.send(users[j], post.course.name, "Attendance check has been started", "attendance_started", course.id);
+				  				}
+				  			}
+				  		});
 
 				  		if (type == 'auto')
 					  		setTimeout(function() { Noti.resendAttedance(post.attendance.id); }, 33000);
 
-				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 				  	});
 					});
@@ -249,6 +251,8 @@ module.exports = {
 			    		if (err || !course)
 				  			return res.send(500, Error.log(req, "Post Notice Error", "Course doesn't exist."));
 
+				  		PostsCache.addPost(post.toWholeObject());
+
 					  	// Send notification about post to Prof & Std
 					  	var notiUsers = new Array();
 					  	for (var i = 0; i < course.students.length; i++)
@@ -267,7 +271,6 @@ module.exports = {
 					  				Noti.send(users[j], post.course.name, "You have new notice.", "notice", course.id);
 				  		});
 
-				  		PostsCache.addPost(post.toWholeObject());
 					  	return res.send(post.toWholeObject());
 			    	});
 				  });

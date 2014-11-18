@@ -80,6 +80,7 @@ module.exports = {
         setTimeout(function() { 
           bttendance(values.id, function cb(err, attendance) {
             if (!err && attendance) {
+              console.log('Attendance Socket Boradcase : ' + attendance.clusters);
               PostsCache.updateAttendance(attendance);
               sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
             }
@@ -110,6 +111,7 @@ module.exports = {
       .populateAll()
       .exec(function callback(err, attendance) {
         if (attendance && attendance.post && attendance.post.course) {
+          console.log('Attendance Socket Boradcase : ' + attendance.clusters);
           PostsCache.updateAttendance(attendance);
           sails.sockets.broadcast('Course#' + attendance.post.course, 'attendance', attendance.toWholeObject());
         }
