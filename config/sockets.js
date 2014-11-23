@@ -21,7 +21,7 @@ module.exports.sockets = {
   * automatically.                                                           *
   *                                                                          *
   ***************************************************************************/
-  onConnect: function(session, socket) {
+  onConnect: function (session, socket) {
     // By default: do nothing.
     var socketID = sails.sockets.id(socket);
     sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
@@ -34,7 +34,7 @@ module.exports.sockets = {
   * disconnects                                                              *
   *                                                                          *
   ***************************************************************************/
-  onDisconnect: function(session, socket) {
+  onDisconnect: function (session, socket) {
     // By default: do nothing.
   },
 

@@ -9,14 +9,14 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
-  	user: {
+    // One-to-many
+    user: {
       model: 'User',
       required: true,
       index: true
-  	},
+    },
 
-    // One to Many
+    // One-to-many
     school: {
       model: 'School',
       required: true,
@@ -24,10 +24,9 @@ module.exports = {
     },
 
     identity: {
-    	type: 'string',
+      type: 'string',
       required: true
     }
 
   }
 };
-

@@ -1,5 +1,5 @@
 /**
-* Questions.js
+* Question.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -14,7 +14,7 @@ module.exports = {
       required: true
     },
 
-    choice_count: {
+    choiceCount: {
       type: 'integer',
       required: true,
       max: 5,
@@ -22,19 +22,19 @@ module.exports = {
       defaultsTo: 4
     },
 
-    progress_time: {
+    progressTime: {
       type: 'integer',
       required: true,
       defaultsTo: 60
     },
 
-    show_info_on_select: {
+    showInfoOnSelect: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    detail_privacy: { //all, none, professor
+    detailPrivacy: {
       type: 'string',
       enum: ['all', 'none', 'professor'],
       required: true,
@@ -42,23 +42,27 @@ module.exports = {
     },
 
     owner: {
-      model: 'Users'
+      model: 'User'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.owner;
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.owner = this.owner;
+
       return obj;
     }
   }

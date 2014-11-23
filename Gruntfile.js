@@ -12,7 +12,7 @@
  * Check out the `tasks` directory instead.
  */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
 
 	// Load the include-all library in order to require all of our grunt

@@ -7,41 +7,40 @@
 
 module.exports = {
 
-	clicker: function(req, res) {
-		var device_type = req.param('device_type');
-		var locale = req.param('locale');
-		var app_version = req.param('app_version');
+  clicker: function (req, res) {
+    var device_type = req.param('device_type');
+    var locale = req.param('locale');
+    var app_version = req.param('app_version');
 
-		res.contentType('text/html; charset=utf-8');
-		if (locale == 'ko')
-			return res.view('tutorial/tutorial-clicker.ejs');
-		else
-			return res.view('tutorial/tutorial-clicker-en.ejs');
-	},
+    res.contentType('text/html; charset=utf-8');
+    if (locale == 'ko')
+      return res.view('tutorial/tutorial-clicker.ejs');
+    else
+      return res.view('tutorial/tutorial-clicker-en.ejs');
+  },
 
-	attendance: function(req, res) {
-		var device_type = req.param('device_type');
-		var locale = req.param('locale');
-		var app_version = req.param('app_version');
+  attendance: function (req, res) {
+    var device_type = req.param('device_type');
+    var locale = req.param('locale');
+    var app_version = req.param('app_version');
 
-		res.contentType('text/html; charset=utf-8');
-		if (locale == 'ko')
-			return res.view('tutorial/tutorial-attendance.ejs');
-		else
-			return res.view('tutorial/tutorial-attendance-en.ejs');
-	},
+    res.contentType('text/html; charset=utf-8');
+    if (locale == 'ko')
+      return res.view('tutorial/tutorial-attendance.ejs');
+    else
+      return res.view('tutorial/tutorial-attendance-en.ejs');
+  },
 
-	notice: function(req, res) {
-		var device_type = req.param('device_type');
-		var locale = req.param('locale');
-		var app_version = req.param('app_version');
+  notice: function (req, res) {
+    var device_type = req.param('device_type');
+    var locale = req.param('locale');
+    var app_version = req.param('app_version');
 
-		res.contentType('text/html; charset=utf-8');
-		if (locale == 'ko')
-			return res.view('tutorial/tutorial-notice.ejs');
-		else
-			return res.view('tutorial/tutorial-notice-en.ejs');
-	}
-	
+    res.contentType('text/html; charset=utf-8');
+    if (locale == 'ko')
+      return res.view('tutorial/tutorial-notice.ejs');
+    else
+      return res.view('tutorial/tutorial-notice-en.ejs');
+  }
+
 };
-

@@ -1,5 +1,5 @@
 /**
- * Courses
+ * Course
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
@@ -10,7 +10,7 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
+    // One-to-many
     school: {
       model: 'School',
       index: true
@@ -38,22 +38,22 @@ module.exports = {
       defaultsTo: true
     },
 
-    // One to Many
+    // One-to-many
     managers: {
-    	collection: 'SupervisingCourse',
-    	via: 'course'
-    },
-    
-    // One to Many
-    students: {
-    	collection: 'AttendingCourse',
-    	via: 'course'
+      collection: 'SupervisingCourse',
+      via: 'course'
     },
 
-    // One to Many
+    // One-to-many
+    students: {
+      collection: 'AttendingCourse',
+      via: 'course'
+    },
+
+    // One-to-many
     posts: {
-    	collection: 'Post',
-    	via: 'course'
+      collection: 'Post',
+      via: 'course'
     },
 
     information: {
@@ -78,14 +78,15 @@ module.exports = {
       via: 'course'
     },
 
-    // One to Many
+    // One-to-many
     questions: {
       collection: 'ClickerQuestion',
       via: 'course'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.managers;
@@ -97,26 +98,29 @@ module.exports = {
       delete obj.endDate;
       delete obj.schedules;
       delete obj.alarms;
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.managers = this.managers;
-      obj.students_count = this.students.length;
-      obj.posts_count = this.posts.length;
+      obj.studentsCount = this.students.length;
+      obj.postsCount = this.posts.length;
       obj.questions_count = this.questions.length;
       obj.information = this.information;
       obj.beginDate = this.beginDate;
       obj.endDate = this.endDate;
       obj.schedules = this.schedules;
       obj.alarms_count = this.alarms.length;
+
       return obj;
     }
-    
+
   }
 
 };

@@ -9,19 +9,18 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
+    // One-to-many
     notice: {
       model: 'Notice',
       required: true,
       index: true
     },
 
-    // One Way
+    // One-to-one
     student: {
-    	model: 'User',
+      model: 'User',
       required: true
     }
 
   }
 };
-

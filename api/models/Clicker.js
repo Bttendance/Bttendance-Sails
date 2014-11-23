@@ -7,9 +7,9 @@
 
 module.exports = {
 
-	attributes: {
+  attributes: {
 
-    // One Way
+    // One-to-one
     post: {
       model: 'Post',
       required: true,
@@ -48,55 +48,55 @@ module.exports = {
       defaultsTo: 'professor'
     },
 
-    // One to Many
+    // One-to-many
     choices: {
       collection: 'ClickerChoice',
       via: 'clicker'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       return obj;
     }
-	},
+  },
 
-  afterCreate: function(values, next) {
-
-    for (var i =  1; i <= values.progress_time; i++) {
-      setTimeout(function() { 
-    
-        Clickers
+  afterCreate: function (values, next) {
+    for (var i =  1; i <= values.progressTime; i++) {
+      setTimeout(function () {
+        Clicker
         .findOneById(values.id)
         .populateAll()
-        .exec(function callback(err, clicker) {
+        .exec(function (err, clicker) {
           if (clicker && clicker.post && clicker.post.course)
-            sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+            sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());
         });
-
       }, i * 1000);
     };
 
     next();
   },
 
-  afterUpdate: function(values, next) {
-    
-    var createdAt = Moment(values.createdAt);
-    var diff = Moment().diff(createdAt);
-    if (diff >= values.progress_time * 1000)
-      Clickers
+  afterUpdate: function (values, next) {
+    var createdAt = Moment(values.createdAt),
+        diff = Moment().diff(createdAt);
+
+    if (diff >= values.progressTime * 1000) {
+      Clicker
       .findOneById(values.id)
       .populateAll()
-      .exec(function callback(err, clicker) {
+      .exec(function (err, clicker) {
         if (clicker && clicker.post && clicker.post.course)
-          sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());       
+          sails.sockets.broadcast('Course#' + clicker.post.course, 'clicker', clicker.toWholeObject());
       });
+    }
 
     next();
   }

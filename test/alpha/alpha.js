@@ -5,7 +5,7 @@ var request = require('supertest');
 var querystring = require('querystring');
 var passwordHash = require('password-hash');
 var async = require('async');
- 
+
 var app;
 var Baseurl;
 
@@ -19,8 +19,8 @@ var postNoti;
 
 // new models
 var userTFA;
- 
-before(function(done) {
+
+before(function (done) {
 
   Sails.lift({
 
@@ -46,36 +46,36 @@ before(function(done) {
       grunt: false
     }
 
-  }, function(err, sails) {
+  }, function (err, sails) {
     app = sails;
     Baseurl = sails.getBaseurl();
     // console.log(sails.config);
 
     async.series([
       // create device
-      function(callback){
-        Devices.create({
+      function (callback){
+        Device.create({
           type: 'android',
           uuid: 'android_uuid'
         }).exec(callback);
       },
       // create user
-      function(callback){
-        Users.create({
+      function (callback){
+        User.create({
           username: 'heehwan',
           password: 'password',
           email: 'heehwan.park@bttendance.com',
-          full_name: 'Hee Hwan Park',
-          device: 1     
+          fullName: 'Hee Hwan Park',
+          device: 1
         }).exec(callback);
       },
       // associate device - user
-      function(callback){
-        Devices.update({ id: 1 }, { owner: 1 })
+      function (callback){
+        Device.update({ id: 1 }, { owner: 1 })
         .exec(callback);
       },
       // create school
-      function(callback){
+      function (callback){
         Schools.create({
           name: 'Bttendance',
           website: 'http://www.bttendance.com',
@@ -83,33 +83,33 @@ before(function(done) {
         }).exec(callback);
       },
       // associate school - user
-      function(callback){
-        Users
+      function (callback){
+        User
         .findOneById(1)
         .populate('employed_schools')
         .exec(function cb(err, user) {
           console.log(user.employed_schools);
           user.employed_schools.add(1);
           user.save(function cb(err, user) {
-            callback();
+            callback ();
           });
         });
       },
       // create course
-      function(callback){
-        Courses.create({
+      function (callback){
+        Course.create({
           name: 'Test Course',
           school: 1,
           professor_name: 'Hee Hwan Park'
         }).exec(callback);
       },
       // get user
-      function(callback){
-        Users
+      function (callback){
+        User
         .findOneById(1)
         .populate('device')
-        .populate('supervising_courses')
-        .populate('attending_courses')
+        .populate('supervisingCourses')
+        .populate('attendingCourses')
         .populate('employed_schools')
         .populate('serials')
         .populate('enrolled_schools')
@@ -117,7 +117,7 @@ before(function(done) {
         .exec(callback);
       },
       // get school
-      function(callback){
+      function (callback){
         Schools
         .findOneById(1)
         .populate('serials')
@@ -127,8 +127,8 @@ before(function(done) {
         .exec(callback);
       },
       // get course
-      function(callback){
-        Courses
+      function (callback){
+        Course
         .findOneById(1)
         .populate('posts')
         .populate('managers')
@@ -136,11 +136,11 @@ before(function(done) {
         .populate('school')
         .exec(callback);
       }
-    ], function(err, results){  
+    ], function (err, results){
       userHH = results[6].toOldObject();
       schoolBT = results[7].toOldObject();
       courseBT = results[8].toOldObject();
-      
+
       console.log(userHH);
       console.log(schoolBT);
       console.log(courseBT);
@@ -150,20 +150,20 @@ before(function(done) {
   });
 });
 
-describe('User', function(done) {
+describe('User', function (done) {
 
   // ####post : api/user/signup => UserJSON
-  //     full_name
+  //     fullName
   //     username
   //     email
   //     password
   //     device_type
   //     device_uuid
-  describe('#SignUp', function(done) {
+  describe('#SignUp', function (done) {
     it('POST / should create an user', function (done) {
 
       var params = {};
-      params.full_name = 'Tae Hwan Kim';
+      params.fullName = 'Tae Hwan Kim';
       params.username = 'TheFinestArtist';
       params.email = 'thefinestartist@bttendance.com';
       params.password = 'password';
@@ -172,12 +172,12 @@ describe('User', function(done) {
 
       request(Baseurl).post('/api/user/signup/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         userTFA = JSON.parse(res.text);
         var user = JSON.parse(res.text);
-        assert.equal(user.full_name, params.full_name);
+        assert.equal(user.fullName, params.fullName);
         assert.equal(user.username, params.username);
         assert.equal(user.email, params.email);
         assert.ok(passwordHash.verify(params.password, user.password));
@@ -193,7 +193,7 @@ describe('User', function(done) {
   //     username
   //     password
   //     device_uuid
-  describe('#AutoSignIn', function(done) {
+  describe('#AutoSignIn', function (done) {
     it('GET / should return an user', function (done) {
 
       var params = {};
@@ -203,7 +203,7 @@ describe('User', function(done) {
 
       request(Baseurl).get('/api/user/auto/signin/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         var user = JSON.parse(res.text);
@@ -220,7 +220,7 @@ describe('User', function(done) {
   //     username or email
   //     password (unhashed)
   //     device_uuid
-  describe('#SignIn', function(done) {
+  describe('#SignIn', function (done) {
     it('GET / should return an user', function (done) {
 
       var params = {};
@@ -230,7 +230,7 @@ describe('User', function(done) {
 
       request(Baseurl).get('/api/user/signin/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         var user = JSON.parse(res.text);
@@ -245,7 +245,7 @@ describe('User', function(done) {
 
   // ####put : api/user/forgot/password => UserJSON
   //     email
-  describe('#ForgotPassword', function(done) {
+  describe('#ForgotPassword', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
@@ -253,7 +253,7 @@ describe('User', function(done) {
 
       request(Baseurl).put('/api/user/forgot/password/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         userTFA = JSON.parse(res.text);
@@ -270,7 +270,7 @@ describe('User', function(done) {
   //     password
   //     device_uuid
   //     notification_key
-  describe('#UpdateNotificationKey', function(done) {
+  describe('#UpdateNotificationKey', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
@@ -281,7 +281,7 @@ describe('User', function(done) {
 
       request(Baseurl).put('/api/user/update/notification_key/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         userTFA = JSON.parse(res.text);
@@ -301,7 +301,7 @@ describe('User', function(done) {
   //     password
   //     device_uuid
   //     profile_image
-  describe('#UpdateProfileImage', function(done) {
+  describe('#UpdateProfileImage', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
@@ -312,7 +312,7 @@ describe('User', function(done) {
 
       request(Baseurl).put('/api/user/update/profile_image/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         userTFA = JSON.parse(res.text);
@@ -332,7 +332,7 @@ describe('User', function(done) {
   //     password
   //     device_uuid
   //     email
-  describe('#UpdateEmail', function(done) {
+  describe('#UpdateEmail', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
@@ -343,7 +343,7 @@ describe('User', function(done) {
 
       request(Baseurl).put('/api/user/update/email/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         userTFA = JSON.parse(res.text);
@@ -358,23 +358,23 @@ describe('User', function(done) {
     });
   });
 
-  // ####put : api/user/update/full_name => UserJSON
+  // ####put : api/user/update/fullName => UserJSON
   //     username
   //     password
   //     device_uuid
-  //     full_name
-  describe('#UpdateFullName', function(done) {
+  //     fullName
+  describe('#UpdateFullName', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
       params.username = userTFA.username;
       params.password = userTFA.password;
       params.device_uuid = userTFA.device_uuid;
-      params.full_name = 'Tae Hwan Kim';
+      params.fullName = 'Tae Hwan Kim';
 
-      request(Baseurl).put('/api/user/update/full_name/?' + querystring.stringify(params))
+      request(Baseurl).put('/api/user/update/fullName/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
 
         userTFA = JSON.parse(res.text);
@@ -382,7 +382,7 @@ describe('User', function(done) {
         assert.equal(user.username, params.username);
         assert.equal(user.password, params.password);
         assert.equal(user.device_uuid, params.device_uuid);
-        assert.equal(user.full_name, 'Tae Hwan Kim');
+        assert.equal(user.fullName, 'Tae Hwan Kim');
 
         done();
       });
@@ -393,7 +393,7 @@ describe('User', function(done) {
   //     username
   //     password
   //     page
-  describe('#Feed', function(done) {
+  describe('#Feed', function (done) {
     it('GET / should return an all posts', function (done) {
 
       var params = {};
@@ -402,7 +402,7 @@ describe('User', function(done) {
 
       request(Baseurl).get('/api/user/feed/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
         done();
       });
@@ -412,7 +412,7 @@ describe('User', function(done) {
   // ####get : api/user/courses => CourseJSON LIST + grade (integer percent)
   //     username
   //     password
-  describe('#Courses', function(done) {
+  describe('#Course', function (done) {
     it('GET / should return an all courses', function (done) {
 
       var params = {};
@@ -421,7 +421,7 @@ describe('User', function(done) {
 
       request(Baseurl).get('/api/user/courses/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
         done();
       });
@@ -431,7 +431,7 @@ describe('User', function(done) {
   // ####get : api/user/schools => SchoolJSON LIST
   //     username
   //     password
-  describe('#Schools', function(done) {
+  describe('#Schools', function (done) {
     it('GET / should return an all schools', function (done) {
 
       var params = {};
@@ -440,7 +440,7 @@ describe('User', function(done) {
 
       request(Baseurl).get('/api/user/schools/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
         done();
       });
@@ -450,8 +450,8 @@ describe('User', function(done) {
   // ####put : api/user/attend/course => UserJSON
   //     username
   //     password
-  //     course_id
-  describe('#Attend Course', function(done) {
+  //     courseId
+  describe('#Attend Course', function (done) {
     it('GET / should return an user with new course', function (done) {
 
       var params = {};
@@ -460,7 +460,7 @@ describe('User', function(done) {
 
       request(Baseurl).get('/api/user/schools/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
-      .expect(200).end(function(err, res) {
+      .expect(200).end(function (err, res) {
         if (err) throw(err);
         done();
       });
@@ -469,6 +469,6 @@ describe('User', function(done) {
 
 });
 
-after(function(done) {
+after(function (done) {
   app.lower(done);
 });

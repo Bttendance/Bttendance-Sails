@@ -1,5 +1,5 @@
 /**
- * Devices
+ * Device
  *
  * @module      :: Model
  * @description :: A short summary of how this model works and what it represents.
@@ -37,9 +37,9 @@ module.exports = {
       type: 'string'
     },
 
-    // One to Many
+    // One-to-many
     owner: {
-    	model: 'User'
+      model: 'User'
     },
 
     ownerChangedAt: {
@@ -47,28 +47,34 @@ module.exports = {
       required: true
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.owner;
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.owner = this.owner;
+
       return obj;
     }
-    
+
   },
 
-  beforeCreate: function(values, next) {
-    if (values.type == 'android')
+  beforeCreate: function (values, next) {
+    if (values.type == 'android') {
       values.mac_address = values.uuid;
+    }
+
     next();
   },
 

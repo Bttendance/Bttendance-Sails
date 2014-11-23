@@ -1,151 +1,154 @@
 /**
- * ClickerQuestionsController
+ * ClickerQuestionController
  *
  * @description :: Server-side logic for managing clickerquestions
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var Error = require('../utils/errors');
-var Arrays = require('../utils/arrays');
+var Error = require('../utils/errors'),
+    Arrays = require('../utils/arrays');
 
 module.exports = {
-	
-	course: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var course_id = req.param('course_id');
 
-		ClickerQuestions
-		.find({
-			course: course_id
-		})
-		.sort('id DESC')
-		.populateAll()
-		.exec(function callback(err, clickerQuestions) {
-			if (err || !clickerQuestions)
-				return res.send(500, Error.log(req, "Get Questions Error", "Questions doesn't exist."));
+  course: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var courseId = req.param('courseId');
 
-			for (var i = 0; i < clickerQuestions.length; i++)
-				clickerQuestions[i] = clickerQuestions[i].toWholeObject();
-	  	return res.send(clickerQuestions);
-		});
-	},
+    ClickerQuestion.find({ course: courseId })
+      .sort('id DESC')
+      .populateAll()
+      .exec(function (err, clickerQuestions) {
+        if (err || !clickerQuestions) {
+          return res.send(500, Error.log(req, "Get Questions Error", "Questions doesn't exist."));
+        }
 
-	create: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var email = req.param('email');
-		var course_id = req.param('course_id');
-		var message = req.param('message');
-		var choice_count = req.param('choice_count');
-		var progress_time = req.param('progress_time');
-		var show_info_on_select = req.param('show_info_on_select');
-		var detail_privacy = req.param('detail_privacy');
+        for (var i = 0; i < clickerQuestions.length; i++) {
+          clickerQuestions[i] = clickerQuestions[i].toWholeObject();
+        }
 
-		if (!progress_time)
-			progress_time = 60;
-		if (!show_info_on_select)
-			show_info_on_select = true;
-		if (!detail_privacy)
-			detail_privacy = 'professor';
-		
-		if (show_info_on_select == 'false' || show_info_on_select == 'NO')
-			show_info_on_select = false;
-		else
-			show_info_on_select = true;
+        return res.send(clickerQuestions);
+      });
+  },
 
-		Users
-		.findOneByEmail(email)
-		.exec(function callback(err, user) {
-			if (err || !user)
-				return res.send(500, Error.log(req, "Create Questions Error", "User doesn't exist."));
+  create: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var email = req.param('email'),
+        courseId = req.param('courseId'),
+        message = req.param('message'),
+        choiceCount = req.param('choiceCount'),
+        progressTime = req.param('progressTime'),
+        showInfoOnSelect = req.param('showInfoOnSelect'),
+        detailPrivacy = req.param('detailPrivacy');
 
-  		ClickerQuestions
-			.create({
-				message: message,
-				choice_count: choice_count,
-				progress_time: progress_time,
-				show_info_on_select: show_info_on_select,
-				detail_privacy: detail_privacy,
-				author: user.id,
-				course: course_id
-			}).exec(function callback(err, clickerQuestion) {
-		  	if (err || !clickerQuestion)
-					return res.send(500, Error.log(req, "Create Questions Error", "Fail to create question."));
+    if (!progressTime) {
+      progressTime = 60;
+    }
+    if (!showInfoOnSelect) {
+      showInfoOnSelect = true;
+    }
+    if (!detailPrivacy) {
+      detailPrivacy = 'professor';
+    }
 
-	  		ClickerQuestions
-	  		.findOneById(clickerQuestion.id)
-	  		.populateAll()
-	  		.exec(function callback(err, clickerQuestion) {
-					if (err || !clickerQuestion)
-						return res.send(500, Error.log(req, "Create Questions Error", "Question doesn't exist."));
+    if (showInfoOnSelect === 'false' || showInfoOnSelect === 'NO') {
+      showInfoOnSelect = false;
+    } else {
+      showInfoOnSelect = true;
+    }
 
-			  	return res.send(clickerQuestion.toWholeObject());
-	  		});
-			});
-		});
-	},
+    User.findOneByEmail(email)
+      .exec(function (err, user) {
+        if (err || !user) {
+          return res.send(500, Error.log(req, "Create Questions Error", "User doesn't exist."));
+        }
 
-	edit: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var clicker_question_id = req.param('clicker_question_id');
-		var message = req.param('message');
-		var choice_count = req.param('choice_count');
-		var progress_time = req.param('progress_time');
-		var show_info_on_select = req.param('show_info_on_select');
-		var detail_privacy = req.param('detail_privacy');
+        ClickerQuestion.create({
+            message: message,
+            choiceCount: choiceCount,
+            progressTime: progressTime,
+            showInfoOnSelect: showInfoOnSelect,
+            detailPrivacy: detailPrivacy,
+            author: user.id,
+            course: courseId
+          }).exec(function (err, clickerQuestion) {
+            if (err || !clickerQuestion) {
+              return res.send(500, Error.log(req, "Create Questions Error", "Fail to create question."));
+            }
 
-		if (!progress_time)
-			progress_time = 60;
-		if (!show_info_on_select)
-			show_info_on_select = true;
-		if (!detail_privacy)
-			detail_privacy = 'professor';
-		
-		if (show_info_on_select == 'false' || show_info_on_select == 'NO')
-			show_info_on_select = false;
-		else
-			show_info_on_select = true;
+            ClickerQuestion.findOneById(clickerQuestion.id)
+              .populateAll()
+              .exec(function (err, clickerQuestion) {
+                if (err || !clickerQuestion) {
+                  return res.send(500, Error.log(req, "Create Questions Error", "Question doesn't exist."));
+                }
 
-		ClickerQuestions
-		.findOneById(clicker_question_id)
-		.populateAll()
-		.exec(function callback(err, clickerQuestion) {
-			if (err || !clickerQuestion)
-				return res.send(500, Error.alert(req, "Update Questions Error", "Fail to find current question."));
+                return res.send(clickerQuestion.toWholeObject());
+              });
+          });
+      });
+  },
 
-			clickerQuestion.message = message;
-			clickerQuestion.choice_count = choice_count;
-			clickerQuestion.progress_time = progress_time;
-			clickerQuestion.show_info_on_select = show_info_on_select;
-			clickerQuestion.detail_privacy = detail_privacy;
-			clickerQuestion.save(function callback(err) {
-				if (err)
-					return res.send(500, Error.alert(req, "Update Questions Error", "Fail to save question."));
+  edit: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var clickerQuestionId = req.param('clickerQuestionId');
+    var message = req.param('message');
+    var choiceCount = req.param('choiceCount');
+    var progressTime = req.param('progressTime');
+    var showInfoOnSelect = req.param('showInfoOnSelect');
+    var detailPrivacy = req.param('detailPrivacy');
 
-		  	return res.send(clickerQuestion.toWholeObject());
-			});
-		});
-	},
+    if (!progressTime)
+      progressTime = 60;
+    if (!showInfoOnSelect)
+      showInfoOnSelect = true;
+    if (!detailPrivacy)
+      detailPrivacy = 'professor';
 
-	remove: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var clicker_question_id = req.param('clicker_question_id');
+    if (showInfoOnSelect === 'false' || showInfoOnSelect === 'NO')
+      showInfoOnSelect = false;
+    else
+      showInfoOnSelect = true;
 
-		ClickerQuestions
-		.findOneById(clicker_question_id)
-		.populateAll()
-		.exec(function callback(err, clickerQuestion) {
-			if (err || !clickerQuestion)
-				return res.send(500, Error.alert(req, "Delete Questions Error", "Fail to find current question."));
+    ClickerQuestion.findOneById(clickerQuestionId)
+      .populateAll()
+      .exec(function (err, clickerQuestion) {
+        if (err || !clickerQuestion) {
+          return res.send(500, Error.alert(req, "Update Questions Error", "Fail to find current question."));
+        }
 
-			clickerQuestion.course = null;
-			clickerQuestion.save(function callback(err) {
-				if (err)
-					return res.send(500, Error.alert(req, "Delete Questions Error", "Deleting question error."));
+        clickerQuestion.message = message;
+        clickerQuestion.choiceCount = choiceCount;
+        clickerQuestion.progressTime = progressTime;
+        clickerQuestion.showInfoOnSelect = showInfoOnSelect;
+        clickerQuestion.detailPrivacy = detailPrivacy;
+        clickerQuestion.save(function (err) {
+          if (err) {
+            return res.send(500, Error.alert(req, "Update Questions Error", "Fail to save question."));
+          }
 
-		  	return res.send(clickerQuestion.toWholeObject());
-			});
-		});
-	}
-	
+          return res.send(clickerQuestion.toWholeObject());
+        });
+      });
+  },
+
+  remove: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var clickerQuestionId = req.param('clickerQuestionId');
+
+    ClickerQuestion.findOneById(clickerQuestionId)
+      .populateAll()
+      .exec(function (err, clickerQuestion) {
+        if (err || !clickerQuestion)
+          return res.send(500, Error.alert(req, "Delete Questions Error", "Fail to find current question."));
+
+        clickerQuestion.course = null;
+        clickerQuestion.save(function (err) {
+          if (err)
+            return res.send(500, Error.alert(req, "Delete Questions Error", "Deleting question error."));
+
+          return res.send(clickerQuestion.toWholeObject());
+        });
+      });
+  }
+
 };
-

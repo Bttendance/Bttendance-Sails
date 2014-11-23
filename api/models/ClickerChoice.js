@@ -9,21 +9,21 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
+    // One-to-many
     clicker: {
       model: 'Clicker',
       required: true,
       index: true
     },
 
-    // One Way
+    // One-to-one
     student: {
-    	model: 'User',
+      model: 'User',
       required: true
     },
 
     choice: {
-    	type: 'string',
+      type: 'string',
       required: true,
       enum: ['o', 'x', '1', '2', '3', '4', '5', 'a', 'b', 'c', 'd', 'e', 'text'],
       defaultsTo: 'text'
@@ -37,4 +37,3 @@ module.exports = {
 
   }
 };
-

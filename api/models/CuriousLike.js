@@ -9,19 +9,18 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
+    // One-to-many
     curious: {
       model: 'Curious',
       required: true,
       index: true
     },
 
-    // One Way
+    // One-to-one
     like: {
-    	model: 'User',
+      model: 'User',
       required: true
     }
 
   }
 };
-

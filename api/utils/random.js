@@ -6,7 +6,7 @@
  *
  */
 
-exports.string = function(length) {
+exports.string = function (length) {
   var text = "";
   var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
 

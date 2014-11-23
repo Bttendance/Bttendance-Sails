@@ -9,14 +9,14 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
-  	user: {
+    // One-to-many
+    user: {
       model: 'User',
       required: true,
       index: true
-  	},
+    },
 
-    // One to Many
+    // One-to-many
     course: {
       model: 'Course',
       required: true,
@@ -24,11 +24,10 @@ module.exports = {
     },
 
     state: {
-    	type: 'string',
+      type: 'string',
       required: true,
       enum: ['attending', 'droped', 'removed']
     }
 
   }
 };
-

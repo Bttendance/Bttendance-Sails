@@ -2,7 +2,7 @@
  * Attending or Supervising
  *
  * @module      :: Policy
- * @description :: 
+ * @description ::
  * @docs        :: http://sailsjs.org/#!documentation/policies
  */
 
@@ -11,45 +11,45 @@ var Arrays = require('../utils/arrays');
 
 module.exports = function attending_or_supervising (req, res, next) {
 
-	// Params
-	var email = req.param('email');
-	var password = req.param('password');
-	var course_id = req.param('course_id');
+  // Params
+  var email = req.param('email');
+  var password = req.param('password');
+  var courseId = req.param('courseId');
 
-	if (!email)
-		return res.send(400, Error.log(req, "Course Policy Error", "Email is required."));
+  if (!email)
+    return res.send(400, Error.log(req, "Course Policy Error", "Email is required."));
 
-	if (!password || !course_id)
-		return res.send(400, Error.log(req, "Course Policy Error", "Password and course id is required."));
+  if (!password || !courseId)
+    return res.send(400, Error.log(req, "Course Policy Error", "Password and course id is required."));
 
-	Users
-	.findOneByEmail(email)
-	.populate('supervising_courses')
-	.populate('attending_courses')
-	.exec(function callback(err, user) {
+  User
+  .findOneByEmail(email)
+  .populate('supervisingCourses')
+  .populate('attendingCourses')
+  .exec(function (err, user) {
 
-		// Error handling
-		if (err) {
-	    console.log(err);
-	    return res.send(500, Error.log(req, "Course Policy Error", "Error in user find method."));
+    // Error handling
+    if (err) {
+      console.log(err);
+      return res.send(500, Error.log(req, "Course Policy Error", "Error in user find method."));
 
-	  // No User found
-	  } else if (!user) {
-	    return res.send(404, Error.log(req, "Course Policy Error", "User doesn't exitst."));
+    // No User found
+    } else if (!user) {
+      return res.send(404, Error.log(req, "Course Policy Error", "User doesn't exitst."));
 
-	  // Password Doesn't Match
-	  } else if (user.password != password) {
-		  return res.send(404, Error.log(req, "Course Policy Error", "Password doesn't match."));
+    // Password Doesn't Match
+    } else if (user.password != password) {
+      return res.send(404, Error.log(req, "Course Policy Error", "Password doesn't match."));
 
-		// User attending check
-		} else if (Arrays.getIds(user.attending_courses).indexOf(Number(course_id)) < 0
-			&& Arrays.getIds(user.supervising_courses).indexOf(Number(course_id)) < 0) {
-		  return res.send(403, Error.log(req, "Course Policy Error", "User is not attending or supervising current course."));
+    // User attending check
+    } else if (Arrays.getIds(user.attendingCourses).indexOf(Number(courseId)) < 0
+      && Arrays.getIds(user.supervisingCourses).indexOf(Number(courseId)) < 0) {
+      return res.send(403, Error.log(req, "Course Policy Error", "User is not attending or supervising current course."));
 
-		// Found User
-	  } else {
-	  	return next();
-	  }
-	});
+    // Found User
+    } else {
+      return next();
+    }
+  });
 
 };

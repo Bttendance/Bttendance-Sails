@@ -1,23 +1,23 @@
 /**
  * Bootstrap
  */
- 
+
 var Sails = require('sails');
 var assert = require('assert');
 var request = require('supertest');
- 
+
 /**
  * Before ALL the test bootstrap the server
  */
- 
+
 var app;
 var Baseurl;
- 
-before(function(done) {
-  
+
+before(function (done) {
+
   // TODO: Create the database
   // Database.createDatabase.....
- 
+
   Sails.lift({
 
     port: 1338,
@@ -33,55 +33,55 @@ before(function(done) {
       }
     },
 
-    models: { 
-      connection: 'main', 
-      migrate: 'safe' 
+    models: {
+      connection: 'main',
+      migrate: 'safe'
     },
 
     hooks: {
       grunt: false
     }
 
-  }, function(err, sails) {
+  }, function (err, sails) {
     app = sails;
     Baseurl = sails.getBaseurl();
     done(err, sails);
   });
 
 });
- 
 
-describe('Basic', function(done) {
-  it("should cause error", function(done) {
+
+describe('Basic', function (done) {
+  it("should cause error", function (done) {
     assert.notEqual(1, 2, "error");
     done();
   });
 });
- 
-describe('User', function(done) {
-  it("should be able to create", function(done) {
-    Users.create({username: "heeheee", password: "asdfasdf", full_name: "heeheee", email: "a@b.c"}, function(err, user) {
+
+describe('User', function (done) {
+  it("should be able to create", function (done) {
+    User.create({username: "heeheee", password: "asdfasdf", fullName: "heeheee", email: "a@b.c"}, function (err, user) {
       assert.notEqual(user, undefined);
       done();
     });
   });
 });
- 
-describe('Routes', function(done) {
+
+describe('Routes', function (done) {
   it('GET / should return 200', function (done) {
-    request(Baseurl).get('/api/users').expect(200, function(err) {
+    request(Baseurl).get('/api/users').expect(200, function (err) {
       if (err) throw(err);
       done();
     });
   });
 });
- 
+
 /**
  * After ALL the tests, lower sails
  */
-after(function(done) {
+after(function (done) {
   // TODO: Clean up db
   // Database.clean...
 
-  app.lower(done); 
+  app.lower(done);
 });

@@ -1,139 +1,143 @@
 /**
- * AttendanceAlarmsController
+ * AttendanceAlarmController
  *
  * @description :: Server-side logic for managing alarms
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var Error = require('../utils/errors');
-var Moment = require('moment-timezone');
-var Cron = require('cron');
+var Error = require('../utils/errors'),
+    Moment = require('moment-timezone'),
+    Cron = require('cron');
 
 module.exports = {
-	
-	course: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var course_id = req.param('course_id');
 
-		AttendanceAlarms
-		.find({
-			course: course_id
-		})
-		.sort('id DESC')
-		.populateAll()
-		.exec(function callback(err, attendanceAlarms) {
-			if (err || !attendanceAlarms)
-				return res.send(500, Error.log(req, "Get Alarms Error", "Alarms doesn't exist."));
+  course: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var courseId = req.param('courseId');
 
-			for (var i = 0; i < attendanceAlarms.length; i++)
-				attendanceAlarms[i] = attendanceAlarms[i].toWholeObject();
-	  	return res.send(attendanceAlarms);
-		});
-	},
+    AttendanceAlarm.find({ course: courseId })
+      .sort('id DESC')
+      .populateAll()
+      .exec(function (err, attendanceAlarms) {
+        if (err || !attendanceAlarms) {
+          return res.send(500, Error.log(req, "Get Alarms Error", "Alarms doesn't exist."));
+        }
 
-	create_manual: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var email = req.param('email');
-		var course_id = req.param('course_id');
-		var scheduled_at = req.param('scheduled_at');
+        for (var i = 0; i < attendanceAlarms.length; i++) {
+          attendanceAlarms[i] = attendanceAlarms[i].toWholeObject();
+        }
 
-		Users
-		.findOneByEmail(email)
-		.exec(function callback(err, user) {
-			if (err || !user)
-				return res.send(500, Error.log(req, "Create Alarms Error", "User doesn't exist."));
+        return res.send(attendanceAlarms);
+      });
+  },
 
-  		AttendanceAlarms
-			.create({
-				scheduled_at: scheduled_at,
-				author: user.id,
-				course: course_id,
-				type: 'manual'
-			}).exec(function callback(err, attendanceAlarm) {
-		  	if (err || !attendanceAlarm)
-					return res.send(500, Error.log(req, "Create Alarms Error", "Fail to create alarm."));
+  create_manual: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var email = req.param('email'),
+        courseId = req.param('courseId'),
+        scheduledAt = req.param('scheduledAt');
 
-	  		AttendanceAlarms
-	  		.findOneById(attendanceAlarm.id)
-	  		.populateAll()
-	  		.exec(function callback(err, attendanceAlarm) {
-					if (err || !attendanceAlarm)
-						return res.send(500, Error.log(req, "Create Alarms Error", "Alarm doesn't exist."));
+    User.findOneByEmail(email)
+      .exec(function (err, user) {
+        if (err || !user) {
+          return res.send(500, Error.log(req, "Create Alarms Error", "User doesn't exist."));
+        }
 
-			  	return res.send(attendanceAlarm.toWholeObject());
-	  		});
-			});
-		});
-	},
+        AttendanceAlarm.create({
+            scheduledAt: scheduledAt,
+            author: user.id,
+            course: courseId,
+            type: 'manual'
+          }).exec(function (err, attendanceAlarm) {
+            if (err || !attendanceAlarm) {
+              return res.send(500, Error.log(req, "Create Alarms Error", "Fail to create alarm."));
+            }
 
-	remove_manual: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var attendance_alarm_id = req.param('attendance_alarm_id');
+            AttendanceAlarm.findOneById(attendanceAlarm.id)
+              .populateAll()
+              .exec(function (err, attendanceAlarm) {
+                if (err || !attendanceAlarm) {
+                  return res.send(500, Error.log(req, "Create Alarms Error", "Alarm doesn't exist."));
+                }
 
-		AttendanceAlarms
-		.findOneById(attendance_alarm_id)
-		.populateAll()
-		.exec(function callback(err, attendanceAlarm) {
-			if (err || !attendanceAlarm)
-				return res.send(500, Error.alert(req, "Delete Alarms Error", "Fail to find current alarm."));
+                return res.send(attendanceAlarm.toWholeObject());
+              });
+          });
+      });
+  },
 
-			attendanceAlarm.course = null;
-			attendanceAlarm.save(function callback(err) {
-				if (err)
-					return res.send(500, Error.alert(req, "Delete Alarms Error", "Deleting alarm error."));
+  remove_manual: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var attendanceAlarmId = req.param('attendanceAlarmId');
 
-		  	return res.send(attendanceAlarm.toWholeObject());
-			});
-		});
-	},
+    AttendanceAlarm.findOneById(attendanceAlarmId)
+      .populateAll()
+      .exec(function (err, attendanceAlarm) {
+        if (err || !attendanceAlarm) {
+          return res.send(500, Error.alert(req, "Delete Alarms Error", "Fail to find current alarm."));
+        }
 
-	on: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var attendance_alarm_id = req.param('attendance_alarm_id');
+        attendanceAlarm.course = null;
+        attendanceAlarm.save(function (err) {
+          if (err) {
+            return res.send(500, Error.alert(req, "Delete Alarms Error", "Deleting alarm error."));
+          }
 
-		AttendanceAlarms
-		.findOneById(attendance_alarm_id)
-		.populateAll()
-		.exec(function callback(err, attendanceAlarm) {
-			if (err || !attendanceAlarm)
-				return res.send(500, Error.alert(req, "Update Alarms Error", "Fail to find current alarm."));
+          return res.send(attendanceAlarm.toWholeObject());
+        });
+      });
+  },
 
-			if (attendanceAlarm.type != 'bundle') 
-				return res.send(500, Error.alert(req, "Update Alarms Error", "Current alarm is not albe to turn on."));
+  on: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var attendanceAlarmId = req.param('attendanceAlarmId');
 
-			attendanceAlarm.on = true;
-			attendanceAlarm.save(function callback(err) {
-				if (err)
-					return res.send(500, Error.alert(req, "Update Alarms Error", "Updating alarm error."));
+    AttendanceAlarm.findOneById(attendanceAlarmId)
+      .populateAll()
+      .exec(function (err, attendanceAlarm) {
+        if (err || !attendanceAlarm) {
+          return res.send(500, Error.alert(req, "Update Alarms Error", "Fail to find current alarm."));
+        }
 
-		  	return res.send(attendanceAlarm.toWholeObject());
-			});
-		});
-	},
+        if (attendanceAlarm.type !== 'bundle') {
+          return res.send(500, Error.alert(req, "Update Alarms Error", "Current alarm is not albe to turn on."));
+        }
 
-	off: function(req, res) {
-		res.contentType('application/json; charset=utf-8');
-		var attendance_alarm_id = req.param('attendance_alarm_id');
+        attendanceAlarm.on = true;
+        attendanceAlarm.save(function (err) {
+          if (err) {
+            return res.send(500, Error.alert(req, "Update Alarms Error", "Updating alarm error."));
+          }
 
-		AttendanceAlarms
-		.findOneById(attendance_alarm_id)
-		.populateAll()
-		.exec(function callback(err, attendanceAlarm) {
-			if (err || !attendanceAlarm)
-				return res.send(500, Error.alert(req, "Update Alarms Error", "Fail to find current alarm."));
+          return res.send(attendanceAlarm.toWholeObject());
+        });
+      });
+  },
 
-			if (attendanceAlarm.type != 'bundle') 
-				return res.send(500, Error.alert(req, "Update Alarms Error", "Current alarm is not albe to turn off."));
+  off: function (req, res) {
+    res.contentType('application/json; charset=utf-8');
+    var attendanceAlarmId = req.param('attendanceAlarmId');
 
-			attendanceAlarm.on = false;
-			attendanceAlarm.save(function callback(err) {
-				if (err)
-					return res.send(500, Error.alert(req, "Update Alarms Error", "Updating alarm error."));
+    AttendanceAlarm.findOneById(attendanceAlarmId)
+      .populateAll()
+      .exec(function (err, attendanceAlarm) {
+        if (err || !attendanceAlarm) {
+          return res.send(500, Error.alert(req, "Update Alarms Error", "Fail to find current alarm."));
+        }
 
-		  	return res.send(attendanceAlarm.toWholeObject());
-			});
-		});
-	}
-	
+        if (attendanceAlarm.type !== 'bundle') {
+          return res.send(500, Error.alert(req, "Update Alarms Error", "Current alarm is not albe to turn off."));
+        }
+
+        attendanceAlarm.on = false;
+        attendanceAlarm.save(function (err) {
+          if (err) {
+            return res.send(500, Error.alert(req, "Update Alarms Error", "Updating alarm error."));
+          }
+
+          return res.send(attendanceAlarm.toWholeObject());
+        });
+      });
+  }
+
 };
-

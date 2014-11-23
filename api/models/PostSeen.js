@@ -9,19 +9,18 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
+    // One-to-many
     post: {
       model: 'Post',
       required: true,
       index: true
     },
 
-    // One Way
+    // One-to-one
     user: {
-    	model: 'User',
+      model: 'User',
       required: true
     }
 
   }
 };
-

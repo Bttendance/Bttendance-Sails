@@ -9,25 +9,24 @@ module.exports = {
 
   attributes: {
 
-    // One to Many
+    // One-to-many
     attendance: {
       model: 'Attendance',
       required: true,
       index: true
     },
 
-    // One Way
+    // One-to-one
     student: {
-    	model: 'User',
+      model: 'User',
       required: true
     },
 
     state: {
-    	type: 'string',
+      type: 'string',
       required: true,
       enum: ['attended', 'tardy', 'abscent', 'claimed']
     }
 
   }
 };
-

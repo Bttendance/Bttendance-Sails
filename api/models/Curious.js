@@ -1,5 +1,5 @@
 /**
-* Curiouses.js
+* Curious.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-    // One Way
+    // One-to-one
     post: {
       model: 'Post',
       required: true,
@@ -28,49 +28,49 @@ module.exports = {
       defaultsTo: ''
     },
 
-    // One to Many
-  	likes: {
+    // One-to-many
+    likes: {
       collection: 'CuriousLike',
       via: 'curious'
-  	},
+    },
 
-    // One to Many
-  	followers: {
+    // One-to-many
+    followers: {
       collection: 'CuriousFollower',
       via: 'curious'
-  	},
+    },
 
-    // One to Many
+    // One-to-many
     comments: {
       collection: 'Comment',
       via: 'curious'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       return obj;
     }
   },
 
-  afterUpdate: function(values, next) {
-    
-    Curiouses
+  afterUpdate: function (values, next) {
+    Curious
     .findOneById(values.id)
     .populateAll()
-    .exec(function callback(err, curious) {
+    .exec(function (err, curious) {
       if (curious && curious.post && curious.post.course) {
-        sails.sockets.broadcast('Course#' + curious.post.course, 'curious', curious.toWholeObject());       
+        sails.sockets.broadcast('Course#' + curious.post.course, 'curious', curious.toWholeObject());
       }
     });
 
     next();
   }
-  
-};
 
+};

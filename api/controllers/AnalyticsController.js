@@ -10,92 +10,107 @@
  * ea = itunes, playstore
  * el = blog pages : category_order (ex : peerinstruction_1) or Homepage
  */
+ var request = require('request');
 
 module.exports = {
 
-	// Blog -> itunes
-	// http://www.bttd.co/api/analytics/itunes?ec=Blog&ea=itunes&el=페이지명 
-	// Homepage -> itunes
-	// http://www.bttd.co/api/analytics/itunes?ec=Homepage&ea=itunes&el=home
-	itunes : function(req, res) {
-		var ec = req.param('ec');
-		var ea = req.param('ea');
-		var el = req.param('el');
+  // Blog -> itunes
+  // http://www.bttd.co/api/analytics/itunes?ec=Blog&ea=itunes&el=페이지명
+  // Homepage -> itunes
+  // http://www.bttd.co/api/analytics/itunes?ec=Homepage&ea=itunes&el=home
+  itunes : function (req, res) {
+    var ec = req.param('ec'),
+        ea = req.param('ea'),
+        el = req.param('el'),
+        analytics = 'http://www.google-analytics.com/collect?v=1&tid=UA-46797708-1&cid=555&t=event',
+        append = '';
 
-		var analytics = 'http://www.google-analytics.com/collect?v=1&tid=UA-46797708-1&cid=555&t=event';
-		var append = '';
-		if (ec)
-			append = append +'&ec=' + ec;
-		if (ea)
-			append = append +'&ea=' + ea;
-		if (el)
-			append = append +'&el=' + el;
-		analytics = analytics + append;
+    if (ec) {
+      append = append +'&ec=' + ec;
+    }
 
-		var request = require('request');
-		request(analytics, function (error, response, body) {
-		  if (!error && response.statusCode == 200) {
-		    console.log(append);
-		  }
-		})
+    if (ea) {
+      append = append +'&ea=' + ea;
+    }
 
-		return res.redirect('https://itunes.apple.com/us/app/bttendance/id829410376?ls=1&mt=8');
-	},
+    if (el) {
+      append = append +'&el=' + el;
+    }
 
-	// Blog -> Google playstore	
-	// http://www.bttd.co/api/analytics/playstore?ec=Blog&ea=playstore&el=페이지명
-	// Homepage -> Google playstore
-	// http://www.bttd.co/api/analytics/playstore?ec=Homepage&ea=playstore&el=home
-	playstore : function(req, res) {
-		var ec = req.param('ec');
-		var ea = req.param('ea');
-		var el = req.param('el');
+    analytics = analytics + append;
 
-		var analytics = 'http://www.google-analytics.com/collect?v=1&tid=UA-46797708-1&cid=555&t=event';
-		var append = '';
-		if (ec)
-			append = append +'&ec=' + ec;
-		if (ea)
-			append = append +'&ea=' + ea;
-		if (el)
-			append = append +'&el=' + el;
-		analytics = analytics + append;
+    request(analytics, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(append);
+      }
+    });
 
-		var request = require('request');
-		request(analytics, function (error, response, body) {
-		  if (!error && response.statusCode == 200) {
-		    console.log(append);
-		  }
-		})
+    return res.redirect('https://itunes.apple.com/us/app/bttendance/id829410376?ls=1&mt=8');
+  },
 
-		return res.redirect('https://play.google.com/store/apps/details?id=com.bttendance');
-	},
+  // Blog -> Google playstore
+  // http://www.bttd.co/api/analytics/playstore?ec=Blog&ea=playstore&el=페이지명
+  // Homepage -> Google playstore
+  // http://www.bttd.co/api/analytics/playstore?ec=Homepage&ea=playstore&el=home
+  playstore : function (req, res) {
+    var ec = req.param('ec'),
+        ea = req.param('ea'),
+        el = req.param('el'),
+        analytics = 'http://www.google-analytics.com/collect?v=1&tid=UA-46797708-1&cid=555&t=event',
+        append = '';
 
-	// Blog -> Homepage
-	// http://www.bttd.co/api/analytics/homepage?ec=Blog&ea=Homepage&el=페이지명
-	homepage : function(req, res) {
-		var ec = req.param('ec');
-		var ea = req.param('ea');
-		var el = req.param('el');
+    if (ec) {
+      append = append +'&ec=' + ec;
+    }
 
-		var analytics = 'http://www.google-analytics.com/collect?v=1&tid=UA-46797708-1&cid=555&t=event';
-		var append = '';
-		if (ec)
-			append = append +'&ec=' + ec;
-		if (ea)
-			append = append +'&ea=' + ea;
-		if (el)
-			append = append +'&el=' + el;
-		analytics = analytics + append;
+    if (ea) {
+      append = append +'&ea=' + ea;
+    }
 
-		var request = require('request');
-		request(analytics, function (error, response, body) {
-		  if (!error && response.statusCode == 200) {
-		    console.log(append);
-		  }
-		})
+    if (el) {
+      append = append +'&el=' + el;
+    }
 
-		return res.redirect('http://www.bttendance.com');
-	}
+    analytics = analytics + append;
+
+    request(analytics, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(append);
+      }
+    });
+
+    return res.redirect('https://play.google.com/store/apps/details?id=com.bttendance');
+  },
+
+  // Blog -> Homepage
+  // http://www.bttd.co/api/analytics/homepage?ec=Blog&ea=Homepage&el=페이지명
+  homepage : function (req, res) {
+    var ec = req.param('ec'),
+        ea = req.param('ea'),
+        el = req.param('el'),
+        analytics = 'http://www.google-analytics.com/collect?v=1&tid=UA-46797708-1&cid=555&t=event',
+        append = '';
+
+    if (ec) {
+      append = append +'&ec=' + ec;
+    }
+
+    if (ea) {
+      append = append +'&ea=' + ea;
+    }
+
+    if (el) {
+      append = append +'&el=' + el;
+    }
+
+    analytics = analytics + append;
+
+    request(analytics, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(append);
+      }
+    });
+
+    return res.redirect('http://www.bttendance.com');
+  }
 };
-

@@ -9,10 +9,10 @@ module.exports = {
 
   attributes: {
 
-  	course: {
-			model: 'Course',
+    course: {
+      model: 'Course',
       index: true
-  	},
+    },
 
     weekday: {
       type: 'string',
@@ -21,13 +21,13 @@ module.exports = {
     },
 
     time: {
-    	type: 'string',
-    	required: true
+      type: 'string',
+      required: true
     },
 
     timezone: {
-    	type: 'string',
-    	required: true
+      type: 'string',
+      required: true
     },
 
     alarms: {
@@ -35,22 +35,25 @@ module.exports = {
       via: 'schedule'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.alarms;
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
       obj.alarms = this.alarms;
+
       return obj;
     }
   }
 };
-

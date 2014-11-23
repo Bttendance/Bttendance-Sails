@@ -1,5 +1,5 @@
 /**
-* Notices.js
+* Notice.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-    // One Way
+    // One-to-one
     post: {
       model: 'Post',
       required: true,
@@ -29,36 +29,37 @@ module.exports = {
       defaultsTo: ''
     },
 
-    // One to Many
+    // One-to-many
     targets: {
       collection: 'NoticeTarget',
       via: 'notice'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       return obj;
     }
   },
-  
-  afterUpdate: function(values, next) {
-    
-    Notices
-    .findOneById(values.id)
-    .populateAll()
-    .exec(function callback(err, notice) {
-      if (notice && notice.post && notice.post.course) 
-        sails.sockets.broadcast('Course#' + notice.post.course, 'notice', notice.toWholeObject());
-    });
+
+  afterUpdate: function (values, next) {
+    Notice
+      .findOneById(values.id)
+      .populateAll()
+      .exec(function (err, notice) {
+        if (notice && notice.post && notice.post.course) {
+          sails.sockets.broadcast('Course#' + notice.post.course, 'notice', notice.toWholeObject());
+        }
+      });
 
     next();
   }
 
 };
-

@@ -10,10 +10,10 @@ module.exports = {
 
   attributes: {
 
-    // this has to be ENGLISH
+    // This has to be English
     name: {
-    	type: 'string',
-    	required: true
+      type: 'string',
+      required: true
     },
 
     type: {
@@ -22,37 +22,41 @@ module.exports = {
       required: true
     },
 
-    // One to Many
+    // One-to-many
     courses: {
-    	collection: 'Course',
-    	via: 'school'
+      collection: 'Course',
+      via: 'school'
     },
 
-    // One to Many
+    // One-to-many
     managers: {
-    	collection: 'EmployedSchool',
-    	via: 'school'
+      collection: 'EmployedSchool',
+      via: 'school'
     },
 
-    // One to Many
+    // One-to-many
     students: {
-    	collection: 'EnrolledSchool',
-    	via: 'school'
+      collection: 'EnrolledSchool',
+      via: 'school'
     },
 
-    toJSON: function() {
+    toJSON: function () {
       var obj = this.toObject();
+
       delete obj.createdAt;
       delete obj.updatedAt;
+
       return obj;
     },
 
-    toWholeObject: function() {
-      var json = JSON.stringify(this);
-      var obj = JSON.parse(json);
+    toWholeObject: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
       obj.createdAt = this.createdAt;
       obj.updatedAt = this.updatedAt;
+
       return obj;
-    } 
+    }
   }
 };

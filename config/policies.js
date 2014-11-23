@@ -39,28 +39,28 @@ module.exports.policies = {
     '*': 'isDev'
   },
 
-  SocketsController: {
+  SocketController: {
     'connect': true
   },
 
-  UsersController: {
+  UserController: {
     signup: true,
     auto_signin: true,
     signin: true,
     forgot_password: true,
     update_password: 'isUser',
-    update_full_name: 'isUser',
+    update_fullName: 'isUser',
     update_email: 'isUser',
     feed: 'isUser',
     courses: 'isUser',
     search: 'isUser'
   },
 
-  DevicesController: {
+  DeviceController: {
     update_notification_key: 'isUser'
   },
 
-  SettingsController: {
+  SettingController: {
     update_attendance: 'isUser',
     update_clicker: 'isUser',
     update_notice: 'isUser',
@@ -68,25 +68,25 @@ module.exports.policies = {
     update_clicker_defaults: 'isUser'
   },
 
-  QuestionsController: {
+  QuestionController: {
     mine: 'isUser',
     create: 'isUser',
     edit: 'isUser',
     remove: 'isUser'
   },
 
-  IdentificationsController: {
+  IdentificationController: {
     update_identity: 'enrolled'
   },
 
-  SchoolsController: {
+  SchoolController: {
     create: 'isUser',
     all: 'isUser',
     courses: 'isUser',
     enroll: 'isUser'
   },
 
-  CoursesController: {
+  CourseController: {
     info: 'attending_or_supervising',
     create_instant: 'isUser',
     search: 'isUser',
@@ -102,7 +102,7 @@ module.exports.policies = {
     export_grades: 'supervising'
   },
 
-  PostsController: {
+  PostController: {
     start_clicker: 'supervising',
     start_attendance: 'supervising',
     create_notice: 'supervising',
@@ -110,7 +110,7 @@ module.exports.policies = {
     remove: 'supervising'
   },
 
-  AttendancesController: {
+  AttendanceController: {
     from_courses: 'isUser',
     found_device: true,
     check_manually: 'isUser',
@@ -118,16 +118,12 @@ module.exports.policies = {
     toggle_manually: 'isUser'
   },
 
-  ClickersController: {
+  ClickerController: {
     click: 'isUser'
   },
 
-  NoticesController: {
+  NoticeController: {
     seen: 'isUser'
-  },
-
-  TokensController: {
-    verify: true
   },
 
   TutorialController: {
