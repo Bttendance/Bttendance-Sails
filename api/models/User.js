@@ -87,7 +87,7 @@ module.exports = {
       return obj;
     },
 
-    toWholeObject: function () {
+    toWholeJSON: function () {
       var json = JSON.stringify(this),
           obj = JSON.parse(json);
 
