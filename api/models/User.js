@@ -108,15 +108,37 @@ module.exports = {
       obj.enrolled_schools = this.enrolled_schools;
 
       return obj;
+    },
+
+    /**
+     * Sign Up a user.
+     * @param  {Object}   options
+     *            => email {String} email of user
+     *            => password {String} unhashed password of user
+     *            => name {String} name of user
+     *            => locale {String} i18n of user
+     * @param  {Function} cb
+     */
+    signUp: function (options, cb) {
+
+      User
+        .create({
+          email: options.email,
+          password: options.password,
+          name: options.name,
+          locale: options.locale
+        }).exec(function (err, user) {
+          if (err) return cb(err);
+          if (!user) return cb(new Error('No User Created.'));
+          return cb(user);
+        });
     }
 
   },
 
   beforeValidate: function (values, next) {
-    if (values.email) {
+    if (values.email)
       values.email = values.email.toLowerCase();
-    }
-
     next();
   },
 
@@ -124,25 +146,12 @@ module.exports = {
     values.password = PasswordHash.generate(values.password);
     Settings
       .create()
-      .exec(function (err, setting) {
-        if (err || !setting) {
-          next(err);
-        } else {
-          values.setting = setting.id;
-          next();
-        }
-      });
-  },
-
-  afterCreate: function (values, next) {
-    Settings
-      .update({ id: values.setting }, { owner: values.id })
-      .exec(function (err, setting) {
-        if (err || !setting) {
-          next(err);
-        } else {
-          next();
-        }
+      .exec(function (err, settings) {
+        if (err) return next(err);
+        if (!settings) return next(new Error('No Settings Created.'));
+        values.setting = setting.id;
+        return next();
       });
   }
+
 };
