@@ -46,7 +46,7 @@ module.exports = {
     },
 
     // One-to-one
-    setting: {
+    settings: {
       model: 'Settings',
       required: true
     },
@@ -83,8 +83,8 @@ module.exports = {
       delete obj.updatedAt;
       delete obj.password;
       delete obj.locale;
-      delete obj.device;
-      delete obj.setting;
+      delete obj.devices;
+      delete obj.settings;
       delete obj.supervisingCourses;
       delete obj.attendingCourses;
       delete obj.employed_schools;
@@ -101,12 +101,28 @@ module.exports = {
       obj.updatedAt = this.updatedAt;
       obj.password = this.password;
       obj.locale = this.locale;
-      obj.device = this.device;
-      obj.setting = this.setting;
-      obj.supervisingCourses = this.supervisingCourses;
-      obj.attendingCourses = this.attendingCourses;
-      obj.employed_schools = this.employed_schools;
-      obj.enrolled_schools = this.enrolled_schools;
+
+      obj.devices = [];
+      for (var i = this.devices.length - 1; i >= 0; i--)
+        obj.devices.push(this.devices[i].toSimpleJSON());
+
+      obj.settings = this.settings;
+
+      obj.supervisingCourses = [];
+      for (var i = this.supervisingCourses.length - 1; i >= 0; i--)
+        obj.supervisingCourses.push(this.supervisingCourses[i].toSimpleJSON());
+
+      obj.attendingCourses = [];
+      for (var i = this.attendingCourses.length - 1; i >= 0; i--)
+        obj.attendingCourses.push(this.attendingCourses[i].toSimpleJSON());
+
+      obj.employedSchools = [];
+      for (var i = this.employedSchools.length - 1; i >= 0; i--)
+        obj.employedSchools.push(this.employedSchools[i].toSimpleJSON());
+
+      obj.enrolledSchools = [];
+      for (var i = this.enrolledSchools.length - 1; i >= 0; i--)
+        obj.enrolledSchools.push(this.enrolledSchools[i].toSimpleJSON());   
 
       return obj;
     },
