@@ -111,10 +111,10 @@ module.exports = {
     },
 
     /**
-     * Sign Up a user.
+     * Sign Up
      * @param  {Object}   options
      *            => email {String} email of user
-     *            => password {String} unhashed password of user
+     *            => password {String} un-hashed password of user
      *            => name {String} name of user
      *            => locale {String} i18n of user
      * @param  {Function} cb
@@ -130,6 +130,24 @@ module.exports = {
         }).exec(function (err, user) {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Created.'));
+          return cb(user);
+        });
+    },
+
+    /**
+     * Log In
+     * @param  {Object}   options
+     *            => email {String} email of user
+     *            => password {String} hashed password of user
+     * @param  {Function} cb
+     */
+    logIn: function (options, cb) {
+
+      User
+        .findOneByEmail(options.email)
+        .exec(function (err, user) {
+          if (err) return cb(err);
+          if (!user) return cb(new Error('No User Found.'));
           return cb(user);
         });
     }
