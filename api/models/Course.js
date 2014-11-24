@@ -50,10 +50,10 @@ module.exports = {
       via: 'course'
     },
 
-    // One-to-many
-    posts: {
-      collection: 'Post',
-      via: 'course'
+    studentsCount: {
+      type: 'integer',
+      required: true,
+      defaultsTo: 0
     },
 
     information: {
@@ -68,19 +68,21 @@ module.exports = {
       type: 'date'
     },
 
+    // One-to-many
     schedules: {
       collection: 'Schedule',
       via: 'course'
     },
 
+    // One-to-many
     alarms: {
       collection: 'AttendanceAlarm',
       via: 'course'
     },
 
     // One-to-many
-    questions: {
-      collection: 'ClickerQuestion',
+    clickerSets: {
+      collection: 'ClickerSet',
       via: 'course'
     },
 

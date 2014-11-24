@@ -21,7 +21,7 @@ module.exports = {
       index: true
     },
 
-    // One-to-one
+    // One-Way
     author: {
       model: 'User'
     },

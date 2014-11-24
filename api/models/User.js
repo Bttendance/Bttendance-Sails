@@ -28,7 +28,7 @@ module.exports = {
       required: true
     },
 
-    fullName: {
+    name: {
       type: 'string',
       required: true
     },

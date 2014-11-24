@@ -16,7 +16,7 @@ module.exports = {
       index: true
     },
 
-    // One-to-one
+    // One-Way
     like: {
       model: 'User',
       required: true

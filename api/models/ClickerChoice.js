@@ -16,7 +16,7 @@ module.exports = {
       index: true
     },
 
-    // One-to-one
+    // One-Way
     student: {
       model: 'User',
       required: true
@@ -33,7 +33,7 @@ module.exports = {
       type: 'string',
       required: true,
       defaultsTo: ''
-    },
+    }
 
   }
 };

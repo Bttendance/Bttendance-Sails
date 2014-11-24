@@ -15,7 +15,7 @@ module.exports = {
       index: true
     },
 
-    // One-to-one
+    // One-to-many
     author: {
       model: 'User',
       required: true

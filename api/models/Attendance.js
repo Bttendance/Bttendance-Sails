@@ -11,11 +11,16 @@ module.exports = {
 
   attributes: {
 
-    // One-to-one
-    post: {
-      model: 'Post',
-      required: true,
+    // One-Way
+    course: {
+      model: 'Course',
       index: true
+    },
+
+    // One-Way
+    author: {
+      model: 'User',
+      required: true
     },
 
     type: {
@@ -30,9 +35,16 @@ module.exports = {
       via: 'attendance'
     },
 
+    // One-to-many
     clusters: {
-      type: 'json',
-      defaultsTo: []
+      collection: 'AttendanceCluster',
+      via: 'attendance'
+    },
+
+    // One-Way
+    seen: {
+      model: 'Seen',
+      required: true
     },
 
     toJSON: function () {

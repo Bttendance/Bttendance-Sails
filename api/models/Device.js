@@ -10,6 +10,11 @@ module.exports = {
 
   attributes: {
 
+    // One-to-many
+    owner: {
+      model: 'User'
+    },
+
     os: {
       type: 'string',
       required: true,
@@ -35,11 +40,6 @@ module.exports = {
 
     notificationKey: {
       type: 'string'
-    },
-
-    // One-to-many
-    owner: {
-      model: 'User'
     },
 
     ownerChangedAt: {

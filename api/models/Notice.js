@@ -9,11 +9,16 @@ module.exports = {
 
   attributes: {
 
-    // One-to-one
-    post: {
-      model: 'Post',
-      required: true,
+    // One-Way
+    course: {
+      model: 'Course',
       index: true
+    },
+
+    // One-Way
+    author: {
+      model: 'User',
+      required: true
     },
 
     type: {
@@ -33,6 +38,12 @@ module.exports = {
     targets: {
       collection: 'NoticeTarget',
       via: 'notice'
+    },
+
+    // One-Way
+    seen: {
+      model: 'Seen',
+      required: true
     },
 
     toJSON: function () {
