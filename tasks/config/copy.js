@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Copy files and folders.
  *

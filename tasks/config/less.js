@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Compiles LESS files into CSS.
  *

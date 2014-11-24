@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * View Engine Configuration
  * (sails.config.views)

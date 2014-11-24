@@ -1,3 +1,4 @@
+'use strict';
 
 var Sails = require('sails');
 var assert = require('assert');
@@ -65,7 +66,7 @@ before(function (done) {
           username: 'heehwan',
           password: 'password',
           email: 'heehwan.park@bttendance.com',
-          fullName: 'Hee Hwan Park',
+          name: 'Hee Hwan Park',
           device: 1
         }).exec(callback);
       },
@@ -86,10 +87,10 @@ before(function (done) {
       function (callback){
         User
         .findOneById(1)
-        .populate('employed_schools')
+        .populate('employedSchools')
         .exec(function cb(err, user) {
-          console.log(user.employed_schools);
-          user.employed_schools.add(1);
+          console.log(user.employedSchools);
+          user.employedSchools.add(1);
           user.save(function cb(err, user) {
             callback ();
           });
@@ -100,7 +101,7 @@ before(function (done) {
         Course.create({
           name: 'Test Course',
           school: 1,
-          professor_name: 'Hee Hwan Park'
+          professorName: 'Hee Hwan Park'
         }).exec(callback);
       },
       // get user
@@ -110,9 +111,9 @@ before(function (done) {
         .populate('device')
         .populate('supervisingCourses')
         .populate('attendingCourses')
-        .populate('employed_schools')
+        .populate('employedSchools')
         .populate('serials')
-        .populate('enrolled_schools')
+        .populate('enrolledSchools')
         .populate('identifications')
         .exec(callback);
       },
@@ -153,22 +154,22 @@ before(function (done) {
 describe('User', function (done) {
 
   // ####post : api/user/signup => UserJSON
-  //     fullName
+  //     name
   //     username
   //     email
   //     password
-  //     device_type
-  //     device_uuid
+  //     deviceType
+  //     deviceUuid
   describe('#SignUp', function (done) {
     it('POST / should create an user', function (done) {
 
       var params = {};
-      params.fullName = 'Tae Hwan Kim';
+      params.name = 'Tae Hwan Kim';
       params.username = 'TheFinestArtist';
       params.email = 'thefinestartist@bttendance.com';
       params.password = 'password';
-      params.device_type = 'iphone';
-      params.device_uuid = 'iphone_uuid';
+      params.deviceType = 'iphone';
+      params.deviceUuid = 'iphone_uuid';
 
       request(Baseurl).post('/api/user/signup/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
@@ -177,12 +178,12 @@ describe('User', function (done) {
 
         userTFA = JSON.parse(res.text);
         var user = JSON.parse(res.text);
-        assert.equal(user.fullName, params.fullName);
+        assert.equal(user.name, params.name);
         assert.equal(user.username, params.username);
         assert.equal(user.email, params.email);
         assert.ok(passwordHash.verify(params.password, user.password));
-        assert.equal(user.device_type, params.device_type);
-        assert.equal(user.device_uuid, params.device_uuid);
+        assert.equal(user.deviceType, params.deviceType);
+        assert.equal(user.deviceUuid, params.deviceUuid);
 
         done();
       });
@@ -192,14 +193,14 @@ describe('User', function (done) {
   // ####get : api/user/auto/signin => UserJSON
   //     username
   //     password
-  //     device_uuid
+  //     deviceUuid
   describe('#AutoSignIn', function (done) {
     it('GET / should return an user', function (done) {
 
       var params = {};
       params.username = 'TheFinestArtist';
       params.password = userTFA.password;
-      params.device_uuid = 'iphone_uuid';
+      params.deviceUuid = 'iphone_uuid';
 
       request(Baseurl).get('/api/user/auto/signin/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
@@ -209,7 +210,7 @@ describe('User', function (done) {
         var user = JSON.parse(res.text);
         assert.equal(user.username, params.username);
         assert.equal(user.password, params.password);
-        assert.equal(user.device_uuid, params.device_uuid);
+        assert.equal(user.deviceUuid, params.deviceUuid);
 
         done();
       });
@@ -219,14 +220,14 @@ describe('User', function (done) {
   // ####get : api/user/signin => UserJSON
   //     username or email
   //     password (unhashed)
-  //     device_uuid
+  //     deviceUuid
   describe('#SignIn', function (done) {
     it('GET / should return an user', function (done) {
 
       var params = {};
       params.username = 'TheFinestArtist';
       params.password = 'password';
-      params.device_uuid = 'iphone_uuid';
+      params.deviceUuid = 'iphone_uuid';
 
       request(Baseurl).get('/api/user/signin/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
@@ -236,7 +237,7 @@ describe('User', function (done) {
         var user = JSON.parse(res.text);
         assert.equal(user.username, params.username);
         assert.ok(passwordHash.verify(params.password, user.password));
-        assert.equal(user.device_uuid, params.device_uuid);
+        assert.equal(user.deviceUuid, params.deviceUuid);
 
         done();
       });
@@ -265,21 +266,21 @@ describe('User', function (done) {
     });
   });
 
-  // ####put : api/user/update/notification_key => UserJSON
-  //     username
+  // ####put : api/user/update/notificationKey => UserJSON
+  //     user
   //     password
-  //     device_uuid
-  //     notification_key
+  //     deviceUuid
+  //     notificationKey
   describe('#UpdateNotificationKey', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
       params.username = userTFA.username;
       params.password = userTFA.password;
-      params.device_uuid = userTFA.device_uuid;
-      params.notification_key = 'notification_key';
+      params.deviceUuid = userTFA.deviceUuid;
+      params.notificationKey = 'notificationKey';
 
-      request(Baseurl).put('/api/user/update/notification_key/?' + querystring.stringify(params))
+      request(Baseurl).put('/api/user/update/notificationKey/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
       .expect(200).end(function (err, res) {
         if (err) throw(err);
@@ -288,8 +289,8 @@ describe('User', function (done) {
         var user = JSON.parse(res.text);
         assert.equal(user.username, params.username);
         assert.equal(user.password, params.password);
-        assert.equal(user.device_uuid, params.device_uuid);
-        assert.equal(user.notification_key, 'notification_key');
+        assert.equal(user.deviceUuid, params.deviceUuid);
+        assert.equal(user.notificationKey, 'notificationKey');
 
         done();
       });
@@ -299,18 +300,18 @@ describe('User', function (done) {
   // ####put : api/user/update/profile_image => UserJSON
   //     username
   //     password
-  //     device_uuid
-  //     profile_image
+  //     deviceUuid
+  //     profileImage
   describe('#UpdateProfileImage', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
       params.username = userTFA.username;
       params.password = userTFA.password;
-      params.device_uuid = userTFA.device_uuid;
-      params.profile_image = 'profile_image';
+      params.deviceUuid = userTFA.deviceUuid;
+      params.profileImage = 'profileImage';
 
-      request(Baseurl).put('/api/user/update/profile_image/?' + querystring.stringify(params))
+      request(Baseurl).put('/api/user/update/profileImage/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
       .expect(200).end(function (err, res) {
         if (err) throw(err);
@@ -319,8 +320,8 @@ describe('User', function (done) {
         var user = JSON.parse(res.text);
         assert.equal(user.username, params.username);
         assert.equal(user.password, params.password);
-        assert.equal(user.device_uuid, params.device_uuid);
-        assert.equal(user.profile_image, 'profile_image');
+        assert.equal(user.deviceUuid, params.deviceUuid);
+        assert.equal(user.profileImage, 'profileImage');
 
         done();
       });
@@ -330,15 +331,15 @@ describe('User', function (done) {
   // ####put : api/user/update/email => UserJSON
   //     username
   //     password
-  //     device_uuid
+  //     deviceUuid
   //     email
   describe('#UpdateEmail', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
-      params.username = userTFA.username;
+      params.user = userTFA.user;
       params.password = userTFA.password;
-      params.device_uuid = userTFA.device_uuid;
+      params.deviceUuid = userTFA.deviceUuid;
       params.email = 'thefinestartist@bttendance.com';
 
       request(Baseurl).put('/api/user/update/email/?' + querystring.stringify(params))
@@ -350,7 +351,7 @@ describe('User', function (done) {
         var user = JSON.parse(res.text);
         assert.equal(user.username, params.username);
         assert.equal(user.password, params.password);
-        assert.equal(user.device_uuid, params.device_uuid);
+        assert.equal(user.deviceUuid, params.deviceUuid);
         assert.equal(user.email, 'thefinestartist@bttendance.com');
 
         done();
@@ -358,21 +359,21 @@ describe('User', function (done) {
     });
   });
 
-  // ####put : api/user/update/fullName => UserJSON
+  // ####put : api/user/update/name => UserJSON
   //     username
   //     password
-  //     device_uuid
-  //     fullName
-  describe('#UpdateFullName', function (done) {
+  //     deviceUuid
+  //     name
+  describe('#UpdateName', function (done) {
     it('PUT / should return an user', function (done) {
 
       var params = {};
       params.username = userTFA.username;
       params.password = userTFA.password;
-      params.device_uuid = userTFA.device_uuid;
-      params.fullName = 'Tae Hwan Kim';
+      params.deviceUuid = userTFA.deviceUuid;
+      params.name = 'Tae Hwan Kim';
 
-      request(Baseurl).put('/api/user/update/fullName/?' + querystring.stringify(params))
+      request(Baseurl).put('/api/user/update/name/?' + querystring.stringify(params))
       .expect('Content-Type', /json/)
       .expect(200).end(function (err, res) {
         if (err) throw(err);
@@ -381,8 +382,8 @@ describe('User', function (done) {
         var user = JSON.parse(res.text);
         assert.equal(user.username, params.username);
         assert.equal(user.password, params.password);
-        assert.equal(user.device_uuid, params.device_uuid);
-        assert.equal(user.fullName, 'Tae Hwan Kim');
+        assert.equal(user.deviceUuid, params.deviceUuid);
+        assert.equal(user.name, 'Tae Hwan Kim');
 
         done();
       });

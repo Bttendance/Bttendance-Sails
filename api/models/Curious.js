@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Curious.js
 *

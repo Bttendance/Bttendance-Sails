@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Built-in Log Configuration
  * (sails.config.log)

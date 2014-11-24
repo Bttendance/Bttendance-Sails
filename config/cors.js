@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Cross-Origin Resource Sharing (CORS) Settings
  * (sails.config.cors)

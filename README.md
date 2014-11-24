@@ -137,7 +137,7 @@ module.exports = {
 
     // List Postgres users on current machine
     $ \du
-    
+
     // Describe structure of specific table
     $ \d+ <table name>
 
@@ -164,10 +164,10 @@ module.exports = {
 
     // Get value for a specific key
     $ GET <key name>
-    
+
     // Exit redis cli
     $ CTRL+C
-    
+
     // Drop all key-values (WARNING : DO NOT USE IN PRODUCTION DATABASE SERVER)
     $ FLUSHALL
 

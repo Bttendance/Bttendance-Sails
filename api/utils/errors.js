@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Errors.js
  *
@@ -11,86 +13,87 @@
  *	}
  */
 
-exports.log = function (req, title, message) {
-  return log(req, title, message, undefined);
-};
+ module.exports = {
 
-exports.toast = function (req, title, message) {
-  return toast(req, title, message, undefined);
-};
+  log: function (req, title, message, param1, param2) {
+    var url = req.url,
+        log = url + ' : ' + title + ' : ' + message;
 
-exports.alert = function (req, title, message) {
-  return alert(req, title, message, undefined);
-};
+    if (param1) {
+      log = log + ' : ' + param1;
+    }
+    if (param2) {
+      log = log + ' : ' + param2;
+    }
 
-exports.log = function (req, title, message, param1) {
-  return log(req, title, message, param1, undefined);
-};
+    sails.log.debug(log);
 
-exports.toast = function (req, title, message, param1) {
-  return toast(req, title, message, param1, undefined);
-};
+    var locale = req.param('locale');
+    if (!locale || locale !== 'ko') {
+      locale = 'en';
+    }
 
-exports.alert = function (req, title, message, param1) {
-  return alert(req, title, message, param1, undefined);
-};
+    var json = {
+      type: 'log',
+      title: sails.__({ phrase: title, locale: locale }),
+      message: sails.__({ phrase: message, locale: locale }, param1, param2)
+    };
 
-exports.log = function (req, title, message, param1, param2) {
-  var url = req.url;
-  var log = url + ' : ' + title + ' : ' + message;
-  if (param1)
-    log = log + ' : ' + param1;
-  if (param2)
-    log = log + ' : ' + param2;
-  sails.log.debug(log);
+    return json;
+  },
 
-  var locale = req.param('locale');
-  if (!locale || locale != 'ko')
-    locale = 'en';
+  toast: function (req, title, message, param1, param2) {
+    var url = req.url,
+        log = url + ' : ' + title + ' : ' + message;
 
-  var json = {};
-  json.type = 'log';
-  json.title = sails.__({ phrase: title, locale: locale });
-  json.message = sails.__({ phrase: message, locale: locale }, param1, param2);
-  return json;
-};
+    if (param1) {
+      log = log + ' : ' + param1;
+    }
+    if (param2) {
+      log = log + ' : ' + param2;
+    }
 
-exports.toast = function (req, title, message, param1, param2) {
-  var url = req.url;
-  var log = url + ' : ' + title + ' : ' + message;
-  if (param1)
-    log = log + ' : ' + param1;
-  if (param2)
-    log = log + ' : ' + param2;
-  sails.log.warn(log);
+    sails.log.warn(log);
 
-  var locale = req.param('locale');
-  if (!locale || locale != 'ko')
-    locale = 'en';
+    var locale = req.param('locale');
+    if (!locale || locale !== 'ko') {
+      locale = 'en';
+    }
 
-  var json = {};
-  json.type = 'toast';
-  json.title = sails.__({ phrase: title, locale: locale });
-  json.message = sails.__({ phrase: message, locale: locale }, param1, param2);
-  return json;
-};
+    var json = {
+      type: 'toast',
+      title: sails.__({ phrase: title, locale: locale }),
+      message: sails.__({ phrase: message, locale: locale }, param1, param2)
+    };
 
-exports.alert = function (req, title, message, param1, param2) {
-  var url = req.url;
-  var log = url + ' : ' + title + ' : ' + message;
-  if (param1)
-    log = log + ' : ' + param1;
-  if (param2)
-    log = log + ' : ' + param2;
-  sails.log.error(log);
+    return json;
+  },
 
-  var locale = req.param('locale');
-  if (!locale || locale != 'ko')
-    locale = 'en';
+  alert: function (req, title, message, param1, param2) {
+    var url = req.url,
+        log = url + ' : ' + title + ' : ' + message;
 
-  var json = {};
-  json.type = 'alert';
-  json.title = sails.__({ phrase: title, locale: locale });
-  json.message = sails.__({ phrase: message, locale: locale }, param1, param2);
-  return json;
+    if (param1) {
+      log = log + ' : ' + param1;
+    }
+    if (param2) {
+      log = log + ' : ' + param2;
+    }
+
+    sails.log.error(log);
+
+    var locale = req.param('locale');
+    if (!locale || locale !== 'ko') {
+      locale = 'en';
+    }
+
+    var json = {
+      type: 'alert',
+      title: sails.__({ phrase: title, locale: locale }),
+      message: sails.__({ phrase: message, locale: locale }, param1, param2)
+    };
+
+    return json;
+  }
+
 };

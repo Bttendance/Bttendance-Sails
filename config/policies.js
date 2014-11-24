@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Policy Mappings
  * (sails.config.policies)
@@ -37,27 +39,27 @@ module.exports.policies = {
 
   UserController: {
     signup: true,
-    auto_signin: true,
+    autoSignin: true,
     signin: true,
-    forgot_password: true,
-    update_password: 'isUser',
-    update_fullName: 'isUser',
-    update_email: 'isUser',
+    forgotPassword: true,
+    updatePassword: 'isUser',
+    updateName: 'isUser',
+    updateEmail: 'isUser',
     feed: 'isUser',
     courses: 'isUser',
     search: 'isUser'
   },
 
   DeviceController: {
-    update_notification_key: 'isUser'
+    updateNotificationKey: 'isUser'
   },
 
   SettingController: {
-    update_attendance: 'isUser',
-    update_clicker: 'isUser',
-    update_notice: 'isUser',
-    update_curious: 'isUser',
-    update_clicker_defaults: 'isUser'
+    updateAttendance: 'isUser',
+    updateClicker: 'isUser',
+    updateNotice: 'isUser',
+    updateCurious: 'isUser',
+    updateClickerDefaults: 'isUser'
   },
 
   QuestionController: {
@@ -68,7 +70,7 @@ module.exports.policies = {
   },
 
   IdentificationController: {
-    update_identity: 'enrolled'
+    updateIdentity: 'enrolled'
   },
 
   SchoolController: {
@@ -79,35 +81,35 @@ module.exports.policies = {
   },
 
   CourseController: {
-    info: 'attending_or_supervising',
-    create_instant: 'isUser',
+    info: 'attendingOrSupervising',
+    createInstant: 'isUser',
     search: 'isUser',
     attend: 'isUser',
     dettend: 'attending',
-    feed: 'attending_or_supervising',
+    feed: 'attendingOrSupervising',
     open: 'supervising',
     close: 'supervising',
-    students: 'attending_or_supervising',
-    add_manager: 'supervising',
+    students: 'attendingOrSupervising',
+    addManager: 'supervising',
     attendance_grades: 'supervising',
     clicker_grades: 'supervising',
     export_grades: 'supervising'
   },
 
   PostController: {
-    start_clicker: 'supervising',
-    start_attendance: 'supervising',
-    create_notice: 'supervising',
-    update_message: 'supervising',
+    startClicker: 'supervising',
+    startAttendance: 'supervising',
+    createNotice: 'supervising',
+    updateMessage: 'supervising',
     remove: 'supervising'
   },
 
   AttendanceController: {
-    from_courses: 'isUser',
-    found_device: true,
-    check_manually: 'isUser',
-    uncheck_manually: 'isUser',
-    toggle_manually: 'isUser'
+    fromCourses: 'isUser',
+    foundDevice: true,
+    checkManually: 'isUser',
+    uncheckManually: 'isUser',
+    toggleManually: 'isUser'
   },
 
   ClickerController: {

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Precompiles Underscore templates to a `.jst` file.
  *

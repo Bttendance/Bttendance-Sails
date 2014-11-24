@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Internationalization / Localization Settings
  * (sails.config.i18n)

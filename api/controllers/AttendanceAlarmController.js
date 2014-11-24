@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * AttendanceAlarmController
  *
@@ -5,9 +7,8 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var Error = require('../utils/errors'),
-    Moment = require('moment-timezone'),
-    Cron = require('cron');
+var error = require('../utils/errors'),
+    moment = require('moment-timezone');
 
 module.exports = {
 
@@ -20,7 +21,7 @@ module.exports = {
       .populateAll()
       .exec(function (err, attendanceAlarms) {
         if (err || !attendanceAlarms) {
-          return res.send(500, Error.log(req, "Get Alarms Error", "Alarms doesn't exist."));
+          return res.send(500, error.log(req, 'Get Alarms Error', 'Alarms don\'t exist.'));
         }
 
         for (var i = 0; i < attendanceAlarms.length; i++) {
@@ -31,7 +32,7 @@ module.exports = {
       });
   },
 
-  create_manual: function (req, res) {
+  createManual: function (req, res) {
     res.contentType('application/json; charset=utf-8');
     var email = req.param('email'),
         courseId = req.param('courseId'),
@@ -40,7 +41,7 @@ module.exports = {
     User.findOneByEmail(email)
       .exec(function (err, user) {
         if (err || !user) {
-          return res.send(500, Error.log(req, "Create Alarms Error", "User doesn't exist."));
+          return res.send(500, error.log(req, 'Create Alarms Error', 'User doesn\'t exist.'));
         }
 
         AttendanceAlarm.create({
@@ -50,14 +51,14 @@ module.exports = {
             type: 'manual'
           }).exec(function (err, attendanceAlarm) {
             if (err || !attendanceAlarm) {
-              return res.send(500, Error.log(req, "Create Alarms Error", "Fail to create alarm."));
+              return res.send(500, error.log(req, 'Create Alarms Error', 'Fail to create alarm.'));
             }
 
             AttendanceAlarm.findOneById(attendanceAlarm.id)
               .populateAll()
               .exec(function (err, attendanceAlarm) {
                 if (err || !attendanceAlarm) {
-                  return res.send(500, Error.log(req, "Create Alarms Error", "Alarm doesn't exist."));
+                  return res.send(500, error.log(req, 'Create Alarms Error', 'Alarm doesn\'t exist.'));
                 }
 
                 return res.send(attendanceAlarm.toWholeObject());
@@ -66,7 +67,7 @@ module.exports = {
       });
   },
 
-  remove_manual: function (req, res) {
+  removeManual: function (req, res) {
     res.contentType('application/json; charset=utf-8');
     var attendanceAlarmId = req.param('attendanceAlarmId');
 
@@ -74,13 +75,13 @@ module.exports = {
       .populateAll()
       .exec(function (err, attendanceAlarm) {
         if (err || !attendanceAlarm) {
-          return res.send(500, Error.alert(req, "Delete Alarms Error", "Fail to find current alarm."));
+          return res.send(500, error.alert(req, 'Delete Alarms Error', 'Fail to find current alarm.'));
         }
 
         attendanceAlarm.course = null;
         attendanceAlarm.save(function (err) {
           if (err) {
-            return res.send(500, Error.alert(req, "Delete Alarms Error", "Deleting alarm error."));
+            return res.send(500, error.alert(req, 'Delete Alarms Error', 'Deleting alarm error.'));
           }
 
           return res.send(attendanceAlarm.toWholeObject());
@@ -96,17 +97,17 @@ module.exports = {
       .populateAll()
       .exec(function (err, attendanceAlarm) {
         if (err || !attendanceAlarm) {
-          return res.send(500, Error.alert(req, "Update Alarms Error", "Fail to find current alarm."));
+          return res.send(500, error.alert(req, 'Update Alarms Error', 'Fail to find current alarm.'));
         }
 
         if (attendanceAlarm.type !== 'bundle') {
-          return res.send(500, Error.alert(req, "Update Alarms Error", "Current alarm is not albe to turn on."));
+          return res.send(500, error.alert(req, 'Update Alarms Error', 'Current alarm is not albe to turn on.'));
         }
 
         attendanceAlarm.on = true;
         attendanceAlarm.save(function (err) {
           if (err) {
-            return res.send(500, Error.alert(req, "Update Alarms Error", "Updating alarm error."));
+            return res.send(500, error.alert(req, 'Update Alarms Error', 'Updating alarm error.'));
           }
 
           return res.send(attendanceAlarm.toWholeObject());
@@ -122,17 +123,17 @@ module.exports = {
       .populateAll()
       .exec(function (err, attendanceAlarm) {
         if (err || !attendanceAlarm) {
-          return res.send(500, Error.alert(req, "Update Alarms Error", "Fail to find current alarm."));
+          return res.send(500, error.alert(req, 'Update Alarms Error', 'Fail to find current alarm.'));
         }
 
         if (attendanceAlarm.type !== 'bundle') {
-          return res.send(500, Error.alert(req, "Update Alarms Error", "Current alarm is not albe to turn off."));
+          return res.send(500, error.alert(req, 'Update Alarms Error', 'Current alarm is not albe to turn off.'));
         }
 
         attendanceAlarm.on = false;
         attendanceAlarm.save(function (err) {
           if (err) {
-            return res.send(500, Error.alert(req, "Update Alarms Error", "Updating alarm error."));
+            return res.send(500, error.alert(req, 'Update Alarms Error', 'Updating alarm error.'));
           }
 
           return res.send(attendanceAlarm.toWholeObject());

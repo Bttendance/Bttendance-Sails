@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Polls.js
  *
@@ -96,8 +98,8 @@ module.exports = {
   },
 
   afterUpdate: function (values, next) {
-    var createdAt = Moment(values.createdAt),
-        diff = Moment().diff(createdAt);
+    var createdAt = moment(values.createdAt),
+        diff = moment().diff(createdAt);
 
     if (diff >= values.progressTime * 1000) {
       Clicker

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * SeenUser.js
 *
@@ -9,7 +11,7 @@ module.exports = {
 
   attributes: {
 
-  	//One-to-Many
+    //One-to-Many
     seen: {
       model: 'Seen',
       required: true
@@ -17,10 +19,9 @@ module.exports = {
 
     //One-Way
     user: {
-    	model: 'User',
-    	required: true
+      model: 'User',
+      required: true
     }
 
   }
 };
-

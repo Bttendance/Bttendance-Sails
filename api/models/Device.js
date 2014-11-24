@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Device
  *
@@ -69,8 +71,8 @@ module.exports = {
   },
 
   beforeCreate: function (values, next) {
-    if (values.type == 'android') {
-      values.mac_address = values.uuid;
+    if (values.type === 'android') {
+      values.MACAddress = values.uuid;
     }
 
     next();

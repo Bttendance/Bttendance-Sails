@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Seen.js
 *
@@ -17,4 +19,3 @@ module.exports = {
 
   }
 };
-

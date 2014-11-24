@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * ClickerController.js
  *
@@ -5,7 +7,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var Error = require('../utils/errors');
+var error = require('../utils/errors');
 
 module.exports = {
 
@@ -18,34 +20,34 @@ module.exports = {
     User.findOneByEmail(email)
       .exec(function (err, user) {
         if (err || !user) {
-          return res.send(500, Error.log(req, "Clicker Click Error", "User doesn't exitst."));
+          return res.send(500, error.log(req, "Clicker Click Error", "User doesn't exitst."));
         }
 
         Clicker.findOneById(clickerId)
           .populateAll()
           .exec(function (err, clicker) {
             if (err || !clicker) {
-              return res.send(500, Error.log(req, "Clicker Click Error", "Clicker doesn't exitst."));
+              return res.send(500, error.log(req, "Clicker Click Error", "Clicker doesn't exitst."));
             }
 
             if (choiceNumber > clicker.choiceCount) {
-              return res.send(500, Error.log(req, "Clicker Click Error", "Clicker choice is out of bound."));
+              return res.send(500, error.log(req, "Clicker Click Error", "Clicker choice is out of bound."));
             }
 
-            if (clicker.a_students.indexOf(user.id) != -1) {
-              return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen A as a choice."));
+            if (clicker.a_students.indexOf(user.id) !== -1) {
+              return res.send(500, error.toast(req, "Clicker Click Error", "You've already chosen A as a choice."));
             }
-            if (clicker.b_students.indexOf(user.id) != -1) {
-              return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen B as a choice."));
+            if (clicker.b_students.indexOf(user.id) !== -1) {
+              return res.send(500, error.toast(req, "Clicker Click Error", "You've already chosen B as a choice."));
             }
-            if (clicker.c_students.indexOf(user.id) != -1) {
-              return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen C as a choice."));
+            if (clicker.c_students.indexOf(user.id) !== -1) {
+              return res.send(500, error.toast(req, "Clicker Click Error", "You've already chosen C as a choice."));
             }
-            if (clicker.d_students.indexOf(user.id) != -1) {
-              return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen D as a choice."));
+            if (clicker.d_students.indexOf(user.id) !== -1) {
+              return res.send(500, error.toast(req, "Clicker Click Error", "You've already chosen D as a choice."));
             }
-            if (clicker.e_students.indexOf(user.id) != -1) {
-              return res.send(500, Error.toast(req, "Clicker Click Error", "You've already chosen E as a choice."));
+            if (clicker.e_students.indexOf(user.id) !== -1) {
+              return res.send(500, error.toast(req, "Clicker Click Error", "You've already chosen E as a choice."));
             }
 
             switch (choiceNumber) {

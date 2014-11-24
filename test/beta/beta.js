@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Bootstrap
  */
@@ -60,7 +62,7 @@ describe('Basic', function (done) {
 
 describe('User', function (done) {
   it("should be able to create", function (done) {
-    User.create({username: "heeheee", password: "asdfasdf", fullName: "heeheee", email: "a@b.c"}, function (err, user) {
+    User.create({username: "heeheee", password: "asdfasdf", name: "heeheee", email: "a@b.c"}, function (err, user) {
       assert.notEqual(user, undefined);
       done();
     });

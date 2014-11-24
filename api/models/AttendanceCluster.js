@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * AttendanceCluster.js
 *
@@ -30,4 +32,3 @@ module.exports = {
 
   }
 };
-

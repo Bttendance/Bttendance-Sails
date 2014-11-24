@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Compress CSS files.
  *

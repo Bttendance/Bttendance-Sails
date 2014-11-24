@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Global Variable Configuration
  * (sails.config.globals)

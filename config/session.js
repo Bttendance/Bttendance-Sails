@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Session Configuration
  * (sails.config.session)

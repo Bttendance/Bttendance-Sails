@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * SupervisingCourse.js
 *
@@ -35,10 +37,15 @@ module.exports = {
 
       delete obj.createdAt;
       delete obj.updatedAt;
-      if (this.user)
+
+      if (this.user) {
         obj.user = this.user.id;
-      if (this.course)
+      }
+
+      if (this.course) {
         obj.course = this.course.id;
+      }
+
       obj.state = this.state;
 
       return obj;

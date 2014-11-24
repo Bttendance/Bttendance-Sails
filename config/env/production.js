@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Production environment settings
  *

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * New Relic agent configuration.
  *
@@ -8,12 +10,12 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name : getAppname(),
+  app_ : getAppname(),
   /**
    * Your New Relic license key.
    */
   license_key : '39d45e8fc99c1bf416541fa836b87b5b1978d615',
-  
+
   logging : {
     /**
      * Level at which to log. 'trace' is most useful to New Relic when diagnosing
@@ -25,10 +27,10 @@ exports.config = {
 };
 
 function getAppname() {
-  if (process.env.NODE_ENV == 'production')
+  if (process.env.NODE_ENV === 'production')
     return ['Bttendance'];
-  else if (process.env.NODE_ENV == 'development')
+  else if (process.env.NODE_ENV === 'development')
     return ['Bttendance-dev'];
-  else 
+  else
     return ['Bttendance-local'];
 }

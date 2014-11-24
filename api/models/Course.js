@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Course
  *
@@ -113,12 +115,12 @@ module.exports = {
       obj.managers = this.managers;
       obj.studentsCount = this.students.length;
       obj.postsCount = this.posts.length;
-      obj.questions_count = this.questions.length;
+      obj.questionsCount = this.questions.length;
       obj.information = this.information;
       obj.beginDate = this.beginDate;
       obj.endDate = this.endDate;
       obj.schedules = this.schedules;
-      obj.alarms_count = this.alarms.length;
+      obj.alarmsCount = this.alarms.length;
 
       return obj;
     }

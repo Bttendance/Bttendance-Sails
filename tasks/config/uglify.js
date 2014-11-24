@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Minify files with UglifyJS.
  *

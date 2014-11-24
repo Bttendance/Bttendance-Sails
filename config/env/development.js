@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Development environment settings
  *

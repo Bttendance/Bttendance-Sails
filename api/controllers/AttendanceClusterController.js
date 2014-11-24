@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * AttendanceclusterController
  *
@@ -6,6 +8,5 @@
  */
 
 module.exports = {
-	
-};
 
+};

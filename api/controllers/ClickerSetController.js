@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * ClickerQuestionController
  *
@@ -5,7 +7,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var Error = require('../utils/errors'),
+var error = require('../utils/errors'),
     Arrays = require('../utils/arrays');
 
 module.exports = {
@@ -19,7 +21,7 @@ module.exports = {
       .populateAll()
       .exec(function (err, clickerQuestions) {
         if (err || !clickerQuestions) {
-          return res.send(500, Error.log(req, "Get Questions Error", "Questions doesn't exist."));
+          return res.send(500, error.log(req, "Get Questions Error", "Questions doesn't exist."));
         }
 
         for (var i = 0; i < clickerQuestions.length; i++) {
@@ -59,7 +61,7 @@ module.exports = {
     User.findOneByEmail(email)
       .exec(function (err, user) {
         if (err || !user) {
-          return res.send(500, Error.log(req, "Create Questions Error", "User doesn't exist."));
+          return res.send(500, error.log(req, "Create Questions Error", "User doesn't exist."));
         }
 
         ClickerQuestion.create({
@@ -72,14 +74,14 @@ module.exports = {
             course: courseId
           }).exec(function (err, clickerQuestion) {
             if (err || !clickerQuestion) {
-              return res.send(500, Error.log(req, "Create Questions Error", "Fail to create question."));
+              return res.send(500, error.log(req, "Create Questions Error", "Fail to create question."));
             }
 
             ClickerQuestion.findOneById(clickerQuestion.id)
               .populateAll()
               .exec(function (err, clickerQuestion) {
                 if (err || !clickerQuestion) {
-                  return res.send(500, Error.log(req, "Create Questions Error", "Question doesn't exist."));
+                  return res.send(500, error.log(req, "Create Questions Error", "Question doesn't exist."));
                 }
 
                 return res.send(clickerQuestion.toWholeObject());
@@ -113,7 +115,7 @@ module.exports = {
       .populateAll()
       .exec(function (err, clickerQuestion) {
         if (err || !clickerQuestion) {
-          return res.send(500, Error.alert(req, "Update Questions Error", "Fail to find current question."));
+          return res.send(500, error.alert(req, "Update Questions Error", "Fail to find current question."));
         }
 
         clickerQuestion.message = message;
@@ -123,7 +125,7 @@ module.exports = {
         clickerQuestion.detailPrivacy = detailPrivacy;
         clickerQuestion.save(function (err) {
           if (err) {
-            return res.send(500, Error.alert(req, "Update Questions Error", "Fail to save question."));
+            return res.send(500, error.alert(req, "Update Questions Error", "Fail to save question."));
           }
 
           return res.send(clickerQuestion.toWholeObject());
@@ -139,12 +141,12 @@ module.exports = {
       .populateAll()
       .exec(function (err, clickerQuestion) {
         if (err || !clickerQuestion)
-          return res.send(500, Error.alert(req, "Delete Questions Error", "Fail to find current question."));
+          return res.send(500, error.alert(req, "Delete Questions Error", "Fail to find current question."));
 
         clickerQuestion.course = null;
         clickerQuestion.save(function (err) {
           if (err)
-            return res.send(500, Error.alert(req, "Delete Questions Error", "Deleting question error."));
+            return res.send(500, error.alert(req, "Delete Questions Error", "Deleting question error."));
 
           return res.send(clickerQuestion.toWholeObject());
         });

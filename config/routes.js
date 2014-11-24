@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Route Mappings
  * (sails.config.routes)
@@ -58,24 +60,24 @@ module.exports.routes = {
 
   /************* User API ************/
   'POST /api/user/signup'         : 'UserController.signup',
-  'GET /api/user/auto/signin'     : 'UserController.auto_signin',
+  'GET /api/user/auto/signin'     : 'UserController.autoSignin',
   'POST /api/user/signin'         : 'UserController.signin',
-  'PUT /api/user/forgot/password' : 'UserController.forgot_password',
-  'PUT /api/user/update/password' : 'UserController.update_password',
-  'PUT /api/user/update/fullName': 'UserController.update_fullName',
-  'PUT /api/user/update/email'    : 'UserController.update_email',
+  'PUT /api/user/forgot/password' : 'UserController.forgotPassword',
+  'PUT /api/user/update/password' : 'UserController.updatePassword',
+  'PUT /api/user/update/name'     : 'UserController.updateName',
+  'PUT /api/user/update/email'    : 'UserController.updateEmail',
   'GET /api/user/courses'         : 'UserController.courses',
   'GET /api/user/search'          : 'UserController.search',
 
   /************* Device API ************/
-  'PUT /api/device/update/notification_key': 'DeviceController.update_notification_key',
+  'PUT /api/device/update/notification_key': 'DeviceController.updateNotificationKey',
 
   /************* Settings API ************/
-  'PUT /api/settings/update/attendance'      : 'SettingsController.update_attendance',
-  'PUT /api/settings/update/clicker'         : 'SettingsController.update_clicker',
-  'PUT /api/settings/update/notice'          : 'SettingsController.update_notice',
-  'PUT /api/settings/update/curious'         : 'SettingsController.update_curious',
-  'PUT /api/settings/update/clicker/defaults': 'SettingsController.update_clicker_defaults',
+  'PUT /api/settings/update/attendance'      : 'SettingsController.updateAttendance',
+  'PUT /api/settings/update/clicker'         : 'SettingsController.updateClicker',
+  'PUT /api/settings/update/notice'          : 'SettingsController.updateNotice',
+  'PUT /api/settings/update/curious'         : 'SettingsController.updateCurious',
+  'PUT /api/settings/update/clicker/defaults': 'SettingsController.updateClickerDefaults',
 
   /************* Question API ************/
   'GET /api/question/mine'     : 'QuestionController.mine',
@@ -84,7 +86,7 @@ module.exports.routes = {
   'DELETE /api/question/remove': 'QuestionController.remove',
 
   /************* Identification API ************/
-  'PUT /api/identification/update/identity': 'IdentificationController.update_identity',
+  'PUT /api/identification/update/identity': 'IdentificationController.updateIdentity',
 
   /************* School API ************/
   'POST /api/school/create': 'SchoolController.create',
@@ -94,32 +96,32 @@ module.exports.routes = {
 
   /************* Course API ************/
   'GET /api/course/info'             : 'CourseController.info',
-  'POST /api/course/create/instant'  : 'CourseController.create_instant',
+  'POST /api/course/create/instant'  : 'CourseController.createInstant',
   'GET /api/course/search'           : 'CourseController.search',
-  'PUT /api/course/attend'           : 'CourseCo ntroller.attend',
+  'PUT /api/course/attend'           : 'CourseController.attend',
   'PUT /api/course/dettend'          : 'CourseController.dettend',
   'GET /api/course/feed'             : 'CourseController.feed',
   'PUT /api/course/open'             : 'CourseController.open',
   'PUT /api/course/close'            : 'CourseController.close',
   'GET /api/course/students'         : 'CourseController.students',
-  'PUT /api/course/add/manager'      : 'CourseController.add_manager',
-  'GET /api/course/attendance/record': 'CourseController.attendance_record',
-  'GET /api/course/clicker/record'   : 'CourseController.clicker_record',
-  'PUT /api/course/export/record'    : 'CourseController.export_record',
+  'PUT /api/course/add/manager'      : 'CourseController.addManager',
+  'GET /api/course/attendance/record': 'CourseController.attendanceRecord',
+  'GET /api/course/clicker/record'   : 'CourseController.clickerRecord',
+  'PUT /api/course/export/record'    : 'CourseController.exportRecord',
 
   /************* Post API ************/
-  'POST /api/post/start/attendance': 'PostController.start_attendance',
-  'POST /api/post/start/clicker'   : 'PostController.start_clicker',
-  'POST /api/post/create/notice'   : 'PostController.create_notice',
-  'PUT /api/post/update/message'   : 'PostController.update_message',
+  'POST /api/post/start/attendance': 'PostController.startAttendance',
+  'POST /api/post/start/clicker'   : 'PostController.startClicker',
+  'POST /api/post/create/notice'   : 'PostController.createNotice',
+  'PUT /api/post/update/message'   : 'PostController.updateMessage',
   'DELETE /api/post/remove'        : 'PostController.remove',
 
   /************* Attendance API ************/
-  'GET /api/attendance/from/courses'    : 'AttendanceController.from_courses',
-  'PUT /api/attendance/found/device'    : 'AttendanceController.found_device',
-  'PUT /api/attendance/check/manually'  : 'AttendanceController.check_manually',
-  'PUT /api/attendance/uncheck/manually': 'AttendanceController.uncheck_manually',
-  'PUT /api/attendance/toggle/manually' : 'AttendanceController.toggle_manually',
+  'GET /api/attendance/from/courses'    : 'AttendanceController.fromCourses',
+  'PUT /api/attendance/found/device'    : 'AttendanceController.foundDevice',
+  'PUT /api/attendance/check/manually'  : 'AttendanceController.checkManually',
+  'PUT /api/attendance/uncheck/manually': 'AttendanceController.uncheckManually',
+  'PUT /api/attendance/toggle/manually' : 'AttendanceController.toggleManually',
 
   /************* Clicker API ************/
   'PUT /api/clicker/click': 'ClickerController.click',
@@ -133,37 +135,37 @@ module.exports.routes = {
   '/tutorial/notice'    : 'TutorialController.notice',
 
   /************* Deprecated API ************/
-  '/api/sockets/connect' : 'DeprecatedController.updateApp',
-  '/api/users/signup' : 'DeprecatedController.updateApp',
-  '/api/users/auto/signin' : 'DeprecatedController.updateApp',
-  '/api/users/signin' : 'DeprecatedController.updateApp',
-  '/api/users/forgot/password' : 'DeprecatedController.updateApp',
-  '/api/users/update/password' : 'DeprecatedController.updateApp',
-  '/api/users/courses' : 'DeprecatedController.updateApp',
-  '/api/devices/update/notification_key' : 'DeprecatedController.updateApp',
-  '/api/identifications/update/identity' : 'DeprecatedController.updateApp',
-  '/api/schools/create' : 'DeprecatedController.updateApp',
-  '/api/schools/all' : 'DeprecatedController.updateApp',
-  '/api/schools/enroll' : 'DeprecatedController.updateApp',
-  '/api/courses/info' : 'DeprecatedController.updateApp',
-  '/api/courses/create/instant' : 'DeprecatedController.updateApp',
-  '/api/courses/search' : 'DeprecatedController.updateApp',
-  '/api/courses/attend' : 'DeprecatedController.updateApp',
-  '/api/courses/dettend' : 'DeprecatedController.updateApp',
-  '/api/courses/feed' : 'DeprecatedController.updateApp',
-  '/api/courses/open' : 'DeprecatedController.updateApp',
-  '/api/courses/close' : 'DeprecatedController.updateApp',
-  '/api/courses/add/manager' : 'DeprecatedController.updateApp',
-  '/api/courses/students' : 'DeprecatedController.updateApp',
-  '/api/courses/attendance/grades' : 'DeprecatedController.updateApp',
-  '/api/courses/clicker/grades' : 'DeprecatedController.updateApp',
-  '/api/courses/export/grades' : 'DeprecatedController.updateApp',
-  '/api/posts/start/attendance' : 'DeprecatedController.updateApp',
-  '/api/posts/start/clicker' : 'DeprecatedController.updateApp',
-  '/api/posts/create/notice' : 'DeprecatedController.updateApp',
-  '/api/posts/create/curious' : 'DeprecatedController.updateApp',
-  '/api/posts/update/message' : 'DeprecatedController.updateApp',
-  '/api/posts/remove' : 'DeprecatedController.updateApp',
+  '/api/sockets/connect'                : 'DeprecatedController.updateApp',
+  '/api/users/signup'                   : 'DeprecatedController.updateApp',
+  '/api/users/auto/signin'              : 'DeprecatedController.updateApp',
+  '/api/users/signin'                   : 'DeprecatedController.updateApp',
+  '/api/users/forgot/password'          : 'DeprecatedController.updateApp',
+  '/api/users/update/password'          : 'DeprecatedController.updateApp',
+  '/api/users/courses'                  : 'DeprecatedController.updateApp',
+  '/api/devices/update/notification_key': 'DeprecatedController.updateApp',
+  '/api/identifications/update/identity': 'DeprecatedController.updateApp',
+  '/api/schools/create'                 : 'DeprecatedController.updateApp',
+  '/api/schools/all'                    : 'DeprecatedController.updateApp',
+  '/api/schools/enroll'                 : 'DeprecatedController.updateApp',
+  '/api/courses/info'                   : 'DeprecatedController.updateApp',
+  '/api/courses/create/instant'         : 'DeprecatedController.updateApp',
+  '/api/courses/search'                 : 'DeprecatedController.updateApp',
+  '/api/courses/attend'                 : 'DeprecatedController.updateApp',
+  '/api/courses/dettend'                : 'DeprecatedController.updateApp',
+  '/api/courses/feed'                   : 'DeprecatedController.updateApp',
+  '/api/courses/open'                   : 'DeprecatedController.updateApp',
+  '/api/courses/close'                  : 'DeprecatedController.updateApp',
+  '/api/courses/add/manager'            : 'DeprecatedController.updateApp',
+  '/api/courses/students'               : 'DeprecatedController.updateApp',
+  '/api/courses/attendance/grades'      : 'DeprecatedController.updateApp',
+  '/api/courses/clicker/grades'         : 'DeprecatedController.updateApp',
+  '/api/courses/export/grades'          : 'DeprecatedController.updateApp',
+  '/api/posts/start/attendance'         : 'DeprecatedController.updateApp',
+  '/api/posts/start/clicker'            : 'DeprecatedController.updateApp',
+  '/api/posts/create/notice'            : 'DeprecatedController.updateApp',
+  '/api/posts/create/curious'           : 'DeprecatedController.updateApp',
+  '/api/posts/update/message'           : 'DeprecatedController.updateApp',
+  '/api/posts/remove'                   : 'DeprecatedController.updateApp',
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`

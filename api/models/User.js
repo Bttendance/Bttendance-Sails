@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * User
  *
@@ -104,14 +106,12 @@ module.exports = {
      * @param  {Object}   options
      *            => email {String} email of user
      *            => password {String} un-hashed password of user
-     *            => name {String} name of user
+     *            => name {String}  of user
      *            => locale {String} i18n of user
      * @param  {Function} cb
      */
     signUp: function (options, cb) {
-
-      User
-        .create({
+      User.create({
           email: options.email,
           password: options.password,
           name: options.name,
@@ -119,6 +119,7 @@ module.exports = {
         }).exec(function (err, user) {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Created.'));
+
           return cb(user.toWholeJSON());
         });
     },
@@ -131,12 +132,11 @@ module.exports = {
      * @param  {Function} cb
      */
     logIn: function (options, cb) {
-
-      User
-        .findOneByEmail(options.email)
+      User.findOneByEmail(options.email)
         .exec(function (err, user) {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Found.'));
+
           return cb(user.toWholeJSON());
         });
     }

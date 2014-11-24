@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Bootstrap
  * (sails.config.bootstrap)

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Attendance.js
  *
@@ -5,7 +7,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
-var Moment = require('moment');
+var moment = require('moment');
 
 module.exports = {
 
@@ -82,8 +84,8 @@ module.exports = {
   },
 
   afterUpdate: function (values, next) {
-    var createdAt = Moment(values.createdAt),
-        diff = Moment().diff(createdAt);
+    var createdAt = moment(values.createdAt),
+        diff = moment().diff(createdAt);
 
     if (diff >= 60 * 1000)
       Attendance

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Connections
  * (sails.config.connections)

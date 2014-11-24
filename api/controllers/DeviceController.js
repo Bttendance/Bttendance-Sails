@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * DeviceController
  *
@@ -15,45 +17,47 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var Error = require('../utils/errors');
+var error = require('../utils/errors');
 
 module.exports = {
 
-  update_notification_key: function (req, res) {
+  updateNotificationKey: function (req, res) {
     res.contentType('application/json; charset=utf-8');
-    var email = req.param('email');
-    var device_uuid = req.param('device_uuid');
-    var notification_key = req.param('notification_key');
+    var email = req.param('email'),
+        deviceUuid = req.param('deviceUuid'),
+        notificationKey = req.param('notificationKey');
 
-    if (!notification_key)
-      return res.send(400, Error.log(req, "Notification Key Update Error", "Key is required."));
+    if (!notificationKey) {
+      return res.send(400, error.log(req, "Notification Key Update Error", "Key is required."));
+    }
 
-    User
-    .findOneByEmail(email)
-    .populateAll()
-    .exec(function (err, user) {
-      if (err || !user)
-        return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
+    User.findOneByEmail(email)
+      .populateAll()
+      .exec(function (err, user) {
+        if (err || !user) {
+          return res.send(404, error.log(req, "Notification Key Update Error", "User doesn't exist."));
+        }
 
-      if (device_uuid != user.device.uuid)
-        return res.send(404, Error.log(req, "Notification Key Update Error", "Device doesn't match."));
+        if (deviceUuid !== user.device.uuid) {
+          return res.send(404, error.log(req, "Notification Key Update Error", "Device doesn't match."));
+        }
 
-      Device
-      .update({ id : user.device.id }, { notification_key : notification_key })
-      .exec(function (err, device) {
-        if (err || !device)
-          return res.send(404, Error.log(req, "Notification Key Update Error", "Updating Device Failed."));
+        Device.update({ id : user.device.id }, { notificationKey : notificationKey })
+          .exec(function (err, device) {
+            if (err || !device) {
+              return res.send(404, error.log(req, "Notification Key Update Error", "Updating Device Failed."));
+            }
 
-        User
-        .findOneById(user.id)
-        .populateAll()
-        .exec(function (err, user) {
-          if (err || !user)
-            return res.send(404, Error.log(req, "Notification Key Update Error", "User doesn't exist."));
+            User.findOneById(user.id)
+              .populateAll()
+              .exec(function (err, user) {
+                if (err || !user) {
+                  return res.send(404, error.log(req, "Notification Key Update Error", "User doesn't exist."));
+                }
 
-          return res.send(user.toWholeObject());
-        });
+                return res.send(user.toWholeObject());
+              });
+          });
       });
-    });
   }
 };
