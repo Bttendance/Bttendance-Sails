@@ -27,16 +27,8 @@ module.exports.policies = {
   ***************************************************************************/
   '*': 'isDev',
 
-  AdminController: {
-    '*': true
-  },
-
-  AnalyticsController: {
-    '*': true
-  },
-
-  MigrationController: {
-    '*': 'isDev'
+  DeprecatedController: {
+    'updateApp': true
   },
 
   SocketController: {
