@@ -75,8 +75,9 @@ module.exports = {
       via: 'user'
     },
 
-    toJSON: function () {
-      var obj = this.toObject();
+    toSimpleJSON: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
 
       delete obj.createdAt;
       delete obj.updatedAt;
