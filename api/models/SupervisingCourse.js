@@ -27,6 +27,21 @@ module.exports = {
       type: 'string',
       required: true,
       enum: ['teaching', 'assistting', 'dropped', 'removed']
+    },
+
+    toSimpleJSON: function () {
+      var json = JSON.stringify(this),
+          obj = JSON.parse(json);
+
+      delete obj.createdAt;
+      delete obj.updatedAt;
+      if (this.user)
+        obj.user = this.user.id;
+      if (this.course)
+        obj.course = this.course.id;
+      obj.state = this.state;
+
+      return obj;
     }
 
   }
