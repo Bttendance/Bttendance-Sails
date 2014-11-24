@@ -29,13 +29,11 @@ module.exports = {
     },
 
     uuid: {
-      type: 'string',
-      unique: true
+      type: 'string'
     },
 
     macAddress: {
-      type: 'string',
-      unique: true
+      type: 'string'
     },
 
     notificationKey: {
