@@ -119,7 +119,7 @@ module.exports = {
         }).exec(function (err, user) {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Created.'));
-          return cb(user);
+          return cb(user.toWholeJSON());
         });
     },
 
@@ -137,7 +137,7 @@ module.exports = {
         .exec(function (err, user) {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Found.'));
-          return cb(user);
+          return cb(user.toWholeJSON());
         });
     }
 
