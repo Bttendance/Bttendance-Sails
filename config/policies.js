@@ -21,7 +21,7 @@
 
 module.exports.policies = {
 
-  '*': 'isDev',
+  '*': ['Development', 'Translation'],
 
   DeprecatedController: {
     updateApp: true

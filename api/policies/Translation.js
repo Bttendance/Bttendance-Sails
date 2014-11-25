@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * isDev
+ * Translation
  *
  * @module      :: Policy
  * @description ::
@@ -11,11 +11,7 @@
 var error = require('../utils/errors');
 
 module.exports = function isDev (req, res, next) {
+	if (req.param('locale') != 'ko')
 
-  // isDev Policy
-  if (process.env.NODE_ENV === 'development') {
-    return next();
-  }
-
-  return res.send(403, error.log(req, "Develop Policy Error", "Forbidden in production mode."));
+	next();
 };
