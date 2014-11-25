@@ -23,91 +23,34 @@
 
 module.exports.connections = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Local disk storage for DEVELOPMENT ONLY                                  *
-  *                                                                          *
-  * Installed by default.                                                    *
-  *                                                                          *
-  ***************************************************************************/
   localDiskDb: {
-    adapter: 'sails-disk'
+    adapter   : 'sails-disk'
   },
 
-  /***************************************************************************
-  *                                                                          *
-  * MySQL is the world's most popular relational database.                   *
-  * http://en.wikipedia.org/wiki/MySQL                                       *
-  *                                                                          *
-  * Run: npm install sails-mysql                                             *
-  *                                                                          *
-  ***************************************************************************/
-  someMysqlServer: {
-    adapter: 'sails-mysql',
-    host: 'YOUR_MYSQL_SERVER_HOSTNAME_OR_IP_ADDRESS',
-    user: 'YOUR_MYSQL_USER',
-    password: 'YOUR_MYSQL_PASSWORD',
-    database: 'YOUR_MYSQL_DB'
+  memory: {
+    adapter   : 'sails-memory'
   },
 
-  /***************************************************************************
-  *                                                                          *
-  * MongoDB is the leading NoSQL database.                                   *
-  * http://en.wikipedia.org/wiki/MongoDB                                     *
-  *                                                                          *
-  * Run: npm install sails-mongo                                             *
-  *                                                                          *
-  ***************************************************************************/
-  someMongodbServer: {
-    adapter: 'sails-mongo',
-    host: 'localhost',
-    port: 27017,
-    // user: 'username',
-    // password: 'password',
-    // database: 'your_mongo_db_name_here'
+  postgresql: {
+    module    : 'sails-postgresql',
+    url       : process.env.DATABASE_URL,
+    pool      : false,
+    ssl       : true
   },
 
-  /***************************************************************************
-  *                                                                          *
-  * PostgreSQL is another officially supported relational database.          *
-  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
-  *                                                                          *
-  * Run: npm install sails-postgresql                                        *
-  *                                                                          *
-  ***************************************************************************/
-  postgresProduction: {
-    module: 'sails-postgresql',
-    url: process.env.DATABASE_URL,
-    pool: false,
-    ssl: true
-  },
+  redis: {
+    module    : 'sails-redis',
+    host      : process.env.REDIS_HOST,
+    port      : process.env.REDIS_PORT,
+    options   : {
+      auth_pass: process.env.REDIS_PASS,
+      parser: 'javascript',
+      return_buffers: false,
+      detect_buffers: false,
+      socket_nodelay: true,
+      no_ready_check: false,
+      enable_offline_queue: true
+    }
+  }
 
-  /***************************************************************************
-  *                                                                          *
-  * More adapters: https://github.com/balderdashy/sails                      *
-  *                                                                          *
-  ***************************************************************************/
-
-  // psql "dbname=postgres"
-  // postgresLocal: {
-  //   module   : 'sails-postgresql',
-  //   host     : 'localhost',
-  //   port     : 5432,
-  //   user     : 'TheFinestArtist',
-  //   password : 'postgres',
-  //   database : 'postgres'
-  // },
-
-  // memory: {
-  //   adapter: 'sails-memory'
-  // }
 };
-
-exports.getPostgres = function () {
-  if (process.env.NODE_ENV === 'production')
-    return 'postgresProduction';
-  else if (process.env.NODE_ENV === 'development')
-    return 'postgresDevelopment';
-  else
-    return 'postgresDevelopment';
-}

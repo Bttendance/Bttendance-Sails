@@ -21,20 +21,14 @@
 
 module.exports.policies = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Default policy for all controllers and actions (`true` allows public     *
-  * access)                                                                  *
-  *                                                                          *
-  ***************************************************************************/
   '*': 'isDev',
 
   DeprecatedController: {
-    'updateApp': true
+    updateApp: true
   },
 
   SocketController: {
-    'connect': true
+    connect: true
   },
 
   UserController: {
