@@ -42,12 +42,6 @@ module.exports = {
       via: 'notice'
     },
 
-    // One-Way
-    seen: {
-      model: 'Seen',
-      required: true
-    },
-
     toJSON: function () {
       var obj = this.toObject();
 

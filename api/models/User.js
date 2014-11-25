@@ -54,26 +54,14 @@ module.exports = {
     },
 
     // One-to-many
-    supervisingCourses: {
-      collection: 'SupervisingCourse',
+    courses: {
+      collection: 'UserCourse',
       via: 'user'
     },
 
     // One-to-many
-    attendingCourses: {
-      collection: 'AttendingCourse',
-      via: 'user'
-    },
-
-    // One-to-many
-    employedSchools: {
-      collection: 'EmployedSchool',
-      via: 'user'
-    },
-
-    // One-to-many
-    enrolledSchools: {
-      collection: 'EnrolledSchool',
+    schools: {
+      collection: 'UserSchool',
       via: 'user'
     },
 

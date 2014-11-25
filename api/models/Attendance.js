@@ -43,12 +43,6 @@ module.exports = {
       via: 'attendance'
     },
 
-    // One-Way
-    seen: {
-      model: 'Seen',
-      required: true
-    },
-
     toJSON: function () {
       var obj = this.toObject();
 

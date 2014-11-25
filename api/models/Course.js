@@ -41,14 +41,8 @@ module.exports = {
     },
 
     // One-to-many
-    managers: {
-      collection: 'SupervisingCourse',
-      via: 'course'
-    },
-
-    // One-to-many
-    students: {
-      collection: 'AttendingCourse',
+    users: {
+      collection: 'UserCourse',
       via: 'course'
     },
 
