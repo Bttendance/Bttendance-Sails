@@ -7,7 +7,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var error = require('../utils/Errors');
+var error = require('../utils/errors');
 
 module.exports = {
 

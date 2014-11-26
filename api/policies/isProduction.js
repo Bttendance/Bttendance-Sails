@@ -8,7 +8,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/policies
  */
 
-var error = require('../utils/Errors');
+var error = require('../utils/errors');
 
 module.exports = function isProduction (req, res, next) {
 

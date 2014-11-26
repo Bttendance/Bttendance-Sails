@@ -7,8 +7,8 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var error = require('../utils/Errors'),
-    Arrays = require('../utils/Arrays');
+var error = require('../utils/errors'),
+    Arrays = require('../utils/arrays');
 
 module.exports = {
 

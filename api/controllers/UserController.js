@@ -17,9 +17,9 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var error = require('../utils/Errors'),
-    Arrays = require('../utils/Arrays'),
-    Random = require('../utils/Random'),
+var error = require('../utils/errors'),
+    Arrays = require('../utils/arrays'),
+    Random = require('../utils/random'),
     PasswordHash = require('password-hash'),
     Nodemailer = require("nodemailer"),
     FS = require('fs'),

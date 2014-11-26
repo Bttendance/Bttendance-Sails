@@ -17,9 +17,9 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var error = require('../utils/Errors'),
-    Arrays = require('../utils/Arrays'),
-    Noti = require('../utils/Notifications'),
+var error = require('../utils/errors'),
+    Arrays = require('../utils/arrays'),
+    Noti = require('../utils/notifications'),
     Xlsx = require('node-xlsx'),
     Nodemailer = require("nodemailer"),
     moment = require('moment'),
@@ -27,7 +27,7 @@ var error = require('../utils/Errors'),
     QueryString = require('querystring'),
     FS = require('fs'),
     Path = require('path'),
-    Random = require('../utils/Random');
+    Random = require('../utils/random');
 
 module.exports = {
 

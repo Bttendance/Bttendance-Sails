@@ -7,9 +7,9 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-var Noti = require('../utils/Notifications'),
-    error = require('../utils/Errors'),
-    Arrays = require('../utils/Arrays'),
+var Noti = require('../utils/notifications'),
+    error = require('../utils/errors'),
+    Arrays = require('../utils/arrays'),
     moment = require('moment');
 
 module.exports = {
