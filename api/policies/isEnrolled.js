@@ -14,39 +14,31 @@ var error = require('../utils/Errors'),
 module.exports = function isEnrolled (req, res, next) {
 
   // Params
-  var email = req.param('email'),
-      password = req.param('password'),
+  var userId = req.param('userId'),
       schoolId = req.param('schoolId');
 
-  if (!email) {
-    return res.send(400, error.alert(req, "isEnrolled Policy Error", "Email is required."));
+  if (!userId) {
+    return res.send(400, error.log(req, "isEnrolled Policy Error", "User ID is required."));
   }
 
-  if (!password || !schoolId) {
-    return res.send(400, error.alert(req, "isEnrolled Policy Error", "Password and School ID is required."));
+  if (!schoolId) {
+    return res.send(400, error.log(req, "isEnrolled Policy Error", "School ID is required."));
   }
 
-  User.findOneByEmail(email)
-    .populate('enrolledSchools')
-    .exec(function (err, user) {
-      // Error handling
+  UserSchool
+    .findOne({
+      user: userId,
+      course: schoolId
+    })
+    .exec(function (err, userSchool) {
+
       if (err) {
-        console.log(err);
-        return res.send(500, error.log(req, "isEnrolled Policy Error", "Error in user find method."));
+        return res.send(500, error.log(req, "isEnrolled Policy Error", "Error in UserSchool find method."));
 
-      // No User found
-      } else if (!user) {
-        return res.send(404, error.log(req, "isEnrolled Policy Error", "User doesn't exitst."));
-
-      // Password Doesn't Match
-      } else if (user.password !== password) {
-        return res.send(404, error.log(req, "isEnrolled Policy Error", "Password doesn't match."));
-
-      // User attending check
-      } else if (Arrays.getIds(user.enrolledSchools).indexOf(Number(schoolId)) < 0) {
+      } else if (!userSchool
+        || userSchool.state != 'student') {
         return res.send(403, error.log(req, "isEnrolled Policy Error", "User is not enrolled current school."));
 
-      // Found User
       } else {
         return next();
       }

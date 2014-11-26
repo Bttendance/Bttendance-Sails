@@ -16,9 +16,9 @@ module.exports = {
 
     res.contentType('text/html; charset=utf-8');
     if (locale ==='ko')
-      return res.view('tutorial/tutorial-clicker.ejs');
+      return res.view('guide/guide-clicker.ejs');
     else
-      return res.view('tutorial/tutorial-clicker-en.ejs');
+      return res.view('guide/guide-clicker-en.ejs');
   },
 
   attendance: function (req, res) {
@@ -28,9 +28,9 @@ module.exports = {
 
     res.contentType('text/html; charset=utf-8');
     if (locale === 'ko') {
-      return res.view('tutorial/tutorial-attendance.ejs');
+      return res.view('guide/guide-attendance.ejs');
     } else {
-      return res.view('tutorial/tutorial-attendance-en.ejs');
+      return res.view('guide/guide-attendance-en.ejs');
     }
   },
 
@@ -41,9 +41,9 @@ module.exports = {
 
     res.contentType('text/html; charset=utf-8');
     if (locale === 'ko') {
-      return res.view('tutorial/tutorial-notice.ejs');
+      return res.view('guide/guide-notice.ejs');
     } else {
-      return res.view('tutorial/tutorial-notice-en.ejs');
+      return res.view('guide/guide-notice-en.ejs');
     }
   }
 

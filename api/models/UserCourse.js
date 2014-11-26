@@ -26,13 +26,13 @@ module.exports = {
     },
 
     /**
-    * @Supervisor   :   teaching, assisting
+    * @Supervisor   :   supervising, assisting
     * @Student      :   attending, dropped, kicked
     */
     state: {
       type: 'string',
       required: true,
-      enum: ['teaching', 'assisting', 'attending', 'dropped', 'kicked']
+      enum: ['supervising', 'assisting', 'attending', 'dropped', 'kicked']
     },
 
     toSimpleJSON: function () {

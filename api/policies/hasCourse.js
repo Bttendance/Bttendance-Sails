@@ -17,12 +17,12 @@ module.exports = function hasCourse (req, res, next) {
   var userId = req.param('userId'),
       courseId = req.param('courseId');
 
-  if (!email) {
-    return res.send(400, error.log(req, "hasCourse Policy Error", "Email is required."));
+  if (!userId) {
+    return res.send(400, error.log(req, "hasCourse Policy Error", "User ID is required."));
   }
 
-  if (!password || !courseId) {
-    return res.send(400, error.log(req, "hasCourse Policy Error", "Password and course id is required."));
+  if (!courseId) {
+    return res.send(400, error.log(req, "hasCourse Policy Error", "Course ID is required."));
   }
 
   UserCourse
@@ -32,20 +32,13 @@ module.exports = function hasCourse (req, res, next) {
     })
     .exec(function (err, userCourse) {
 
-      // Error handling
       if (err) {
         return res.send(500, error.log(req, "hasCourse Policy Error", "Error in UserCourse find method."));
 
-      // No User found
-      } else if (!userCourse) {
-        return res.send(404, error.log(req, "hasCourse Policy Error", "UserCourse doesn't exitst."));
-
-      // User attending check
-      } else if (Arrays.getIds(user.attendingCourses).indexOf(Number(courseId)) < 0
-        && Arrays.getIds(user.supervisingCourses).indexOf(Number(courseId)) < 0) {
+      } else if (!userCourse
+        || ['dropped', 'kicked'].indexOf(userCourse.state) !== -1) {
         return res.send(403, error.log(req, "hasCourse Policy Error", "User is not attending or supervising current course."));
 
-      // Found User
       } else {
         return next();
       }
