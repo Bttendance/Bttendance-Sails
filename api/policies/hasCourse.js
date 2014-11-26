@@ -14,8 +14,7 @@ var error = require('../utils/Errors'),
 module.exports = function hasCourse (req, res, next) {
 
   // Params
-  var email = req.param('email'),
-      password = req.param('password'),
+  var userId = req.param('userId'),
       courseId = req.param('courseId');
 
   if (!email) {
@@ -26,23 +25,20 @@ module.exports = function hasCourse (req, res, next) {
     return res.send(400, error.log(req, "hasCourse Policy Error", "Password and course id is required."));
   }
 
-  User.findOneByEmail(email)
-    .populate('supervisingCourses')
-    .populate('attendingCourses')
-    .exec(function (err, user) {
+  UserCourse
+    .findOne({
+      user: userId,
+      course: courseId
+    })
+    .exec(function (err, userCourse) {
 
       // Error handling
       if (err) {
-        console.log(err);
-        return res.send(500, error.log(req, "hasCourse Policy Error", "Error in user find method."));
+        return res.send(500, error.log(req, "hasCourse Policy Error", "Error in UserCourse find method."));
 
       // No User found
-      } else if (!user) {
-        return res.send(404, error.log(req, "hasCourse Policy Error", "User doesn't exitst."));
-
-      // Password Doesn't Match
-      } else if (user.password !== password) {
-        return res.send(404, error.log(req, "hasCourse Policy Error", "Password doesn't match."));
+      } else if (!userCourse) {
+        return res.send(404, error.log(req, "hasCourse Policy Error", "UserCourse doesn't exitst."));
 
       // User attending check
       } else if (Arrays.getIds(user.attendingCourses).indexOf(Number(courseId)) < 0
@@ -54,5 +50,4 @@ module.exports = function hasCourse (req, res, next) {
         return next();
       }
     });
-
 };

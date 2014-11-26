@@ -21,8 +21,6 @@
 
 module.exports.policies = {
 
-  '*': 'Translation',
-
   DeprecatedController: {
   },
 
@@ -33,82 +31,41 @@ module.exports.policies = {
   },
 
   MigrationController: {
-    '*': 'Development'
+    '*': 'isDevelopment'
   },
 
   UserController: {
     signup: true,
     autoSignin: true,
     signin: true,
-    forgotPassword: true,
-    updatePassword: 'isUser',
-    updateName: 'isUser',
-    updateEmail: 'isUser',
-    feed: 'isUser',
-    courses: 'isUser',
-    search: 'isUser'
+    forgotPassword: true
   },
 
   DeviceController: {
-    updateNotificationKey: 'isUser'
   },
 
   SettingController: {
-    updateAttendance: 'isUser',
-    updateClicker: 'isUser',
-    updateNotice: 'isUser',
-    updateCurious: 'isUser',
-    updateClickerDefaults: 'isUser'
   },
 
   QuestionController: {
-    mine: 'isUser',
-    create: 'isUser',
-    edit: 'isUser',
-    remove: 'isUser'
   },
 
   IdentificationController: {
-    updateIdentity: 'enrolled'
   },
 
   SchoolController: {
-    create: 'isUser',
-    all: 'isUser',
-    courses: 'isUser',
-    enroll: 'isUser'
   },
 
   CourseController: {
-    info: 'attendingOrSupervising',
-    createInstant: 'isUser',
-    search: 'isUser',
-    attend: 'isUser',
-    dettend: 'attending',
-    feed: 'attendingOrSupervising',
-    open: 'supervising',
-    close: 'supervising',
-    students: 'attendingOrSupervising',
-    addManager: 'supervising',
-    attendance_grades: 'supervising',
-    clicker_grades: 'supervising',
-    export_grades: 'supervising'
   },
 
   AttendanceController: {
-    fromCourses: 'isUser',
-    foundDevice: true,
-    checkManually: 'isUser',
-    uncheckManually: 'isUser',
-    toggleManually: 'isUser'
   },
 
   ClickerController: {
-    click: 'isUser'
   },
 
   NoticeController: {
-    seen: 'isUser'
   },
 
 };
