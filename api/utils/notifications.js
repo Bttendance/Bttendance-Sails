@@ -6,11 +6,34 @@
  * @module			:: JSON Handler
  * @description	:: Contains logic for notification JSON handling.
  *
- *  {
- *      "type": "type",
+ * {
+ *      "type": "type", (
+ *          attdWillStart, 
+ *          attdStarted, 
+ *          attdOnGoing, 
+ *          attdChecked, 
+ *          attdClaimed, 
+ *          attdAbscent, 
+ *
+ *          clickerStartd, 
+ *          clickerOnGoing, 
+ *
+ *          noticePosted, 
+ *          noticeAgain, 
+ *          noticeUpdated, 
+ *
+ *          curiousPosted, 
+ *          curiousLiked, 
+ *          curiousCommented, 
+ *
+ *          courseCreated,
+ *          addedAsManager, 
+ *          kickedFromCourse
+ *          )
+ *      "courseID: : "courseID",
  *      "title" : "title",
  *      "message": "message"
- *  }
+ * }
  */
 
 var gcm = require('node-gcm'),

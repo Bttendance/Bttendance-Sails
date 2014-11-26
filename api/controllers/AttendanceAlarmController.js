@@ -7,7 +7,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var error = require('../utils/errors'),
+var error = require('../utils/Errors'),
     moment = require('moment-timezone');
 
 module.exports = {

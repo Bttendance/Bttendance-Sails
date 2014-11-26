@@ -21,14 +21,19 @@
 
 module.exports.policies = {
 
-  '*': ['Development', 'Translation'],
+  '*': 'Translation',
 
   DeprecatedController: {
-    updateApp: true
   },
 
   SocketController: {
-    connect: true
+  },
+
+  TutorialController: {
+  },
+
+  MigrationController: {
+    '*': 'Development'
   },
 
   UserController: {
@@ -90,14 +95,6 @@ module.exports.policies = {
     export_grades: 'supervising'
   },
 
-  PostController: {
-    startClicker: 'supervising',
-    startAttendance: 'supervising',
-    createNotice: 'supervising',
-    updateMessage: 'supervising',
-    remove: 'supervising'
-  },
-
   AttendanceController: {
     fromCourses: 'isUser',
     foundDevice: true,
@@ -113,9 +110,5 @@ module.exports.policies = {
   NoticeController: {
     seen: 'isUser'
   },
-
-  TutorialController: {
-    '*': true
-  }
 
 };
