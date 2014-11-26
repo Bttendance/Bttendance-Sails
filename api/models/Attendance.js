@@ -41,24 +41,8 @@ module.exports = {
     clusters: {
       collection: 'AttendanceCluster',
       via: 'attendance'
-    },
-
-    toJSON: function () {
-      var obj = this.toObject();
-
-      delete obj.clusters;
-
-      return obj;
-    },
-
-    toWholeObject: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      obj.clusters = this.clusters;
-
-      return obj;
     }
+    
   },
 
   afterCreate: function (values, next) {

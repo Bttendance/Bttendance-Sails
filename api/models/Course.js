@@ -80,43 +80,6 @@ module.exports = {
     clickerSets: {
       collection: 'ClickerSet',
       via: 'course'
-    },
-
-    toJSON: function () {
-      var obj = this.toObject();
-
-      delete obj.createdAt;
-      delete obj.updatedAt;
-      delete obj.managers;
-      delete obj.students;
-      delete obj.posts;
-      delete obj.questions;
-      delete obj.information;
-      delete obj.beginDate;
-      delete obj.endDate;
-      delete obj.schedules;
-      delete obj.alarms;
-
-      return obj;
-    },
-
-    toWholeObject: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.managers = this.managers;
-      obj.studentsCount = this.students.length;
-      obj.postsCount = this.posts.length;
-      obj.questionsCount = this.questions.length;
-      obj.information = this.information;
-      obj.beginDate = this.beginDate;
-      obj.endDate = this.endDate;
-      obj.schedules = this.schedules;
-      obj.alarmsCount = this.alarms.length;
-
-      return obj;
     }
 
   }

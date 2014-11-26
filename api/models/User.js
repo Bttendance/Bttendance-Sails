@@ -65,28 +65,10 @@ module.exports = {
       via: 'user'
     },
 
-    toSimpleJSON: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      delete obj.createdAt;
-      delete obj.updatedAt;
-      delete obj.password;
-      delete obj.locale;
-
-      return obj;
-    },
-
-    toWholeJSON: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.password = this.password;
-      obj.locale = this.locale;
-
-      return obj;
+    // One-to-many
+    authentications: {
+      collection: 'Authentication',
+      via: 'user'
     },
 
     /**
@@ -108,7 +90,7 @@ module.exports = {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Created.'));
 
-          return cb(user.toWholeJSON());
+          return cb(user);
         });
     },
 
@@ -125,7 +107,7 @@ module.exports = {
           if (err) return cb(err);
           if (!user) return cb(new Error('No User Found.'));
 
-          return cb(user.toWholeJSON());
+          return cb(user);
         });
     }
 

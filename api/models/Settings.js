@@ -29,29 +29,16 @@ module.exports = {
       defaultsTo: true
     },
 
-    curious: {
+    curiousCreated: {
       type: 'boolean',
       required: true,
       defaultsTo: true
     },
 
-    toJSON: function () {
-      var obj = this.toObject();
-
-      delete obj.createdAt;
-      delete obj.updatedAt;
-
-      return obj;
-    },
-
-    toWholeObject: function () {
-      var json = JSON.stringify(this);
-          obj = JSON.parse(json);
-
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-
-      return obj;
+    curiousFollowing: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: true
     }
 
   }

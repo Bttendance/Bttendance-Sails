@@ -52,27 +52,6 @@ module.exports = {
       enum: ['all', 'none', 'professor'],
       required: true,
       defaultsTo: 'professor'
-    },
-
-    toJSON: function () {
-      var obj = this.toObject();
-
-      delete obj.createdAt;
-      delete obj.updatedAt;
-      delete obj.course;
-
-      return obj;
-    },
-
-    toWholeObject: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.course = this.course;
-
-      return obj;
     }
   }
 };

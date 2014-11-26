@@ -40,19 +40,6 @@ module.exports = {
     targets: {
       collection: 'NoticeTarget',
       via: 'notice'
-    },
-
-    toJSON: function () {
-      var obj = this.toObject();
-
-      return obj;
-    },
-
-    toWholeObject: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      return obj;
     }
   },
 

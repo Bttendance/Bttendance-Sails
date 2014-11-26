@@ -45,27 +45,6 @@ module.exports = {
     ownerChangedAt: {
       type: 'date',
       required: true
-    },
-
-    toJSON: function () {
-      var obj = this.toObject();
-
-      delete obj.createdAt;
-      delete obj.updatedAt;
-      delete obj.owner;
-
-      return obj;
-    },
-
-    toWholeObject: function () {
-      var json = JSON.stringify(this),
-          obj = JSON.parse(json);
-
-      obj.createdAt = this.createdAt;
-      obj.updatedAt = this.updatedAt;
-      obj.owner = this.owner;
-
-      return obj;
     }
 
   },
