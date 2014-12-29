@@ -195,6 +195,6 @@ module.exports = {
 - Email: thefinestartist@bttendance.com
 
 #### Devin Doolin
-- Email: icddevin@gmail.com
+- Email: icddevin@bttendance.com
 
 #### Copyright 2014 @Bttendance Inc.
