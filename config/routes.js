@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Route Mappings
  * (sails.config.routes)
@@ -38,136 +36,349 @@ module.exports.routes = {
   },
 
   /************* Admin APIs ************/
-  '/api/admin/show'   : 'AdminController.show',
-  '/api/admin/user'   : 'AdminController.user',
-  '/api/admin/analyze': 'AdminController.analyze',
-  '/api/admin/emails' : 'AdminController.emails',
+  '/api/admin/show': {
+    controller: 'admin',
+    action: 'show'
+  },
+
+  '/api/admin/user': {
+    controller: 'admin',
+    action: 'user'
+  },
+
+  '/api/admin/analyze': {
+    controller: 'admin',
+    action: 'analyze'
+  },
+
+  '/api/admin/active': {
+    controller: 'admin',
+    action: 'active'
+  },
+
+  '/api/admin/emails': {
+    controller: 'admin',
+    action: 'emails'
+  },
+
+  '/api/admin/noti': {
+    controller: 'admin',
+    action: 'noti'
+  },
 
   /************* Analytics APIs ************/
-  '/api/analytics/itunes'   : 'AnalyticsController.itunes',
-  '/api/analytics/playstore': 'AnalyticsController.playstore',
-  '/api/analytics/homepage' : 'AnalyticsController.homepage',
+  '/api/analytics/itunes': {
+    controller: 'analytics',
+    action: 'itunes'
+  },
+
+  '/api/analytics/playstore': {
+    controller: 'analytics',
+    action: 'playstore'
+  },
+
+  '/api/analytics/homepage': {
+    controller: 'analytics',
+    action: 'homepage'
+  },
 
   /************* Migration APIs ************/
-  '/api/migration/migrate1': 'MigrationController.migrate1',
-  '/api/migration/migrate2': 'MigrationController.migrate2',
-  '/api/migration/migrate3': 'MigrationController.migrate3',
-  '/api/migration/migrate4': 'MigrationController.migrate4',
-  '/api/migration/migrate5': 'MigrationController.migrate5',
+  '/api/migration/migrate': {
+    controller: 'migration',
+    action: 'migrate'
+  },
 
-  /************* Socket API ************/
-  'PUT /api/socket/connect': 'SocketController.connect',
+  /************* Sockets API ************/  
+  'put /api/sockets/connect': {
+    controller: 'sockets',
+    action: 'connect'
+  },
 
-  /************* User API ************/
-  'POST /api/user/signup'         : 'UserController.signup',
-  'GET /api/user/auto/signin'     : 'UserController.autoSignin',
-  'POST /api/user/signin'         : 'UserController.signin',
-  'PUT /api/user/forgot/password' : 'UserController.forgotPassword',
-  'PUT /api/user/update/password' : 'UserController.updatePassword',
-  'PUT /api/user/update/name'     : 'UserController.updateName',
-  'PUT /api/user/update/email'    : 'UserController.updateEmail',
-  'GET /api/user/courses'         : 'UserController.courses',
-  'GET /api/user/search'          : 'UserController.search',
+  /************* Users API ************/  
+  'post /api/users/signup': {
+    controller: 'users',
+    action: 'signup'
+  },
 
-  /************* Device API ************/
-  'PUT /api/device/update/notification_key': 'DeviceController.updateNotificationKey',
+  'get /api/users/auto/signin': {
+    controller: 'users',
+    action: 'auto_signin'
+  },
 
-  /************* Settings API ************/
-  'PUT /api/settings/update/attendance'      : 'SettingsController.updateAttendance',
-  'PUT /api/settings/update/clicker'         : 'SettingsController.updateClicker',
-  'PUT /api/settings/update/notice'          : 'SettingsController.updateNotice',
-  'PUT /api/settings/update/curious'         : 'SettingsController.updateCurious',
-  'PUT /api/settings/update/clicker/defaults': 'SettingsController.updateClickerDefaults',
+  'get /api/users/signin': {
+    controller: 'users',
+    action: 'signin'
+  },
 
-  /************* Question API ************/
-  'GET /api/question/mine'     : 'QuestionController.mine',
-  'POST /api/question/create'  : 'QuestionController.create',
-  'PUT /api/question/edit'     : 'QuestionController.edit',
-  'DELETE /api/question/remove': 'QuestionController.remove',
+  'put /api/users/forgot/password': {
+    controller: 'users',
+    action: 'forgot_password'
+  },
 
-  /************* Identification API ************/
-  'PUT /api/identification/update/identity': 'IdentificationController.updateIdentity',
+  'put /api/users/update/password': {
+    controller: 'users',
+    action: 'update_password'
+  },
 
-  /************* School API ************/
-  'POST /api/school/create': 'SchoolController.create',
-  'GET /api/school/all'    : 'SchoolController.all',
-  'GET /api/school/courses': 'SchoolController.courses',
-  'PUT /api/school/enroll' : 'SchoolController.enroll',
+  'put /api/users/update/full_name': {
+    controller: 'users',
+    action: 'update_full_name'
+  },
 
-  /************* Course API ************/
-  'GET /api/course/info'             : 'CourseController.info',
-  'POST /api/course/create/instant'  : 'CourseController.createInstant',
-  'GET /api/course/search'           : 'CourseController.search',
-  'PUT /api/course/attend'           : 'CourseController.attend',
-  'PUT /api/course/dettend'          : 'CourseController.dettend',
-  'GET /api/course/feed'             : 'CourseController.feed',
-  'PUT /api/course/open'             : 'CourseController.open',
-  'PUT /api/course/close'            : 'CourseController.close',
-  'GET /api/course/students'         : 'CourseController.students',
-  'PUT /api/course/add/manager'      : 'CourseController.addManager',
-  'GET /api/course/attendance/record': 'CourseController.attendanceRecord',
-  'GET /api/course/clicker/record'   : 'CourseController.clickerRecord',
-  'PUT /api/course/export/record'    : 'CourseController.exportRecord',
+  'put /api/users/update/email': {
+    controller: 'users',
+    action: 'update_email'
+  },
 
-  /************* Post API ************/
-  'POST /api/post/start/attendance': 'PostController.startAttendance',
-  'POST /api/post/start/clicker'   : 'PostController.startClicker',
-  'POST /api/post/create/notice'   : 'PostController.createNotice',
-  'PUT /api/post/update/message'   : 'PostController.updateMessage',
-  'DELETE /api/post/remove'        : 'PostController.remove',
+  'get /api/users/feed': {
+    controller: 'users',
+    action: 'feed'
+  },
 
-  /************* Attendance API ************/
-  'GET /api/attendance/from/courses'    : 'AttendanceController.fromCourses',
-  'PUT /api/attendance/found/device'    : 'AttendanceController.foundDevice',
-  'PUT /api/attendance/check/manually'  : 'AttendanceController.checkManually',
-  'PUT /api/attendance/uncheck/manually': 'AttendanceController.uncheckManually',
-  'PUT /api/attendance/toggle/manually' : 'AttendanceController.toggleManually',
+  'get /api/users/courses': {
+    controller: 'users',
+    action: 'courses'
+  },
 
-  /************* Clicker API ************/
-  'PUT /api/clicker/click': 'ClickerController.click',
+  'get /api/users/search': {
+    controller: 'users',
+    action: 'search'
+  },
 
-  /************* Notice API ************/
-  'PUT /api/notice/seen': 'NoticeController.seen',
+  /************* Devices API ************/  
+  'put /api/devices/update/notification_key': {
+    controller: 'devices',
+    action: 'update_notification_key'
+  },
 
-  /************* Tutorial API ************/
-  '/tutorial/clicker'   : 'TutorialController.clicker',
-  '/tutorial/attendance': 'TutorialController.attendance',
-  '/tutorial/notice'    : 'TutorialController.notice',
+  /************* Settings API ************/  
+  'put /api/settings/update/attendance': {
+    controller: 'settings',
+    action: 'update_attendance'
+  },  
 
-  /************* Deprecated API ************/
-  '/api/sockets/connect'                : 'DeprecatedController.updateApp',
-  '/api/users/signup'                   : 'DeprecatedController.updateApp',
-  '/api/users/auto/signin'              : 'DeprecatedController.updateApp',
-  '/api/users/signin'                   : 'DeprecatedController.updateApp',
-  '/api/users/forgot/password'          : 'DeprecatedController.updateApp',
-  '/api/users/update/password'          : 'DeprecatedController.updateApp',
-  '/api/users/courses'                  : 'DeprecatedController.updateApp',
-  '/api/devices/update/notification_key': 'DeprecatedController.updateApp',
-  '/api/identifications/update/identity': 'DeprecatedController.updateApp',
-  '/api/schools/create'                 : 'DeprecatedController.updateApp',
-  '/api/schools/all'                    : 'DeprecatedController.updateApp',
-  '/api/schools/enroll'                 : 'DeprecatedController.updateApp',
-  '/api/courses/info'                   : 'DeprecatedController.updateApp',
-  '/api/courses/create/instant'         : 'DeprecatedController.updateApp',
-  '/api/courses/search'                 : 'DeprecatedController.updateApp',
-  '/api/courses/attend'                 : 'DeprecatedController.updateApp',
-  '/api/courses/dettend'                : 'DeprecatedController.updateApp',
-  '/api/courses/feed'                   : 'DeprecatedController.updateApp',
-  '/api/courses/open'                   : 'DeprecatedController.updateApp',
-  '/api/courses/close'                  : 'DeprecatedController.updateApp',
-  '/api/courses/add/manager'            : 'DeprecatedController.updateApp',
-  '/api/courses/students'               : 'DeprecatedController.updateApp',
-  '/api/courses/attendance/grades'      : 'DeprecatedController.updateApp',
-  '/api/courses/clicker/grades'         : 'DeprecatedController.updateApp',
-  '/api/courses/export/grades'          : 'DeprecatedController.updateApp',
-  '/api/posts/start/attendance'         : 'DeprecatedController.updateApp',
-  '/api/posts/start/clicker'            : 'DeprecatedController.updateApp',
-  '/api/posts/create/notice'            : 'DeprecatedController.updateApp',
-  '/api/posts/create/curious'           : 'DeprecatedController.updateApp',
-  '/api/posts/update/message'           : 'DeprecatedController.updateApp',
-  '/api/posts/remove'                   : 'DeprecatedController.updateApp',
+  'put /api/settings/update/clicker': {
+    controller: 'settings',
+    action: 'update_clicker'
+  },
+
+  'put /api/settings/update/notice': {
+    controller: 'settings',
+    action: 'update_notice'
+  },
+
+  'put /api/settings/update/clicker/defaults': {
+    controller: 'settings',
+    action: 'update_clicker_defaults'
+  },
+
+  /************* Questions API ************/  
+  'get /api/questions/mine': {
+    controller: 'questions',
+    action: 'mine'
+  },  
+
+  'post /api/questions/create': {
+    controller: 'questions',
+    action: 'create'
+  },
+
+  'put /api/questions/edit': {
+    controller: 'questions',
+    action: 'edit'
+  },
+
+  'delete /api/questions/remove': {
+    controller: 'questions',
+    action: 'remove'
+  },
+
+  /************* Identifications API ************/  
+  'put /api/identifications/update/identity': {
+    controller: 'identifications',
+    action: 'update_identity'
+  },
+
+  /************* Schools API ************/  
+  'post /api/schools/create': {
+    controller: 'schools',
+    action: 'create'
+  },
+
+  'get /api/schools/all': {
+    controller: 'schools',
+    action: 'all'
+  },
+
+  'get /api/schools/courses': {
+    controller: 'schools',
+    action: 'courses'
+  },
+
+  'put /api/schools/enroll': {
+    controller: 'schools',
+    action: 'enroll'
+  },
+
+  /************* Courses API ************/  
+  'get /api/courses/info': {
+    controller: 'courses',
+    action: 'info'
+  },
+
+  'post /api/courses/create/instant': {
+    controller: 'courses',
+    action: 'create_instant'
+  },
+
+  'get /api/courses/search': {
+    controller: 'courses',
+    action: 'search'
+  },
+
+  'put /api/courses/attend': {
+    controller: 'courses',
+    action: 'attend'
+  },
+
+  'put /api/courses/dettend': {
+    controller: 'courses',
+    action: 'dettend'
+  },
+
+  'get /api/courses/feed': {
+    controller: 'courses',
+    action: 'feed'
+  },
+
+  'put /api/courses/open': {
+    controller: 'courses',
+    action: 'open'
+  },
+
+  'put /api/courses/close': {
+    controller: 'courses',
+    action: 'close'
+  },
+
+  'get /api/courses/students': {
+    controller: 'courses',
+    action: 'students'
+  },
+
+  'put /api/courses/add/manager': {
+    controller: 'courses',
+    action: 'add_manager'
+  },
+
+  'get /api/courses/grades': {
+    controller: 'courses',
+    action: 'attendance_grades'
+  },
+
+  'get /api/courses/attendance/grades': {
+    controller: 'courses',
+    action: 'attendance_grades'
+  },
+
+  'get /api/courses/clicker/grades': {
+    controller: 'courses',
+    action: 'clicker_grades'
+  },
+
+  'put /api/courses/export/grades': {
+    controller: 'courses',
+    action: 'export_grades'
+  },
+
+  /************* Posts API ************/  
+  'post /api/posts/start/attendance': {
+    controller: 'posts',
+    action: 'start_attendance'
+  },
+
+  'post /api/posts/start/clicker': {
+    controller: 'posts',
+    action: 'start_clicker'
+  },
+
+  'post /api/posts/create/notice': {
+    controller: 'posts',
+    action: 'create_notice'
+  },
+
+  'put /api/posts/update/message': {
+    controller: 'posts',
+    action: 'update_message'
+  },
+
+  'delete /api/posts/remove': {
+    controller: 'posts',
+    action: 'remove'
+  },
+
+  /************* Attendances API ************/  
+  'get /api/attendances/from/courses': {
+    controller: 'attendances',
+    action: 'from_courses'
+  },
+
+  'put /api/attendances/found/device': {
+    controller: 'attendances',
+    action: 'found_device'
+  },
+
+  'put /api/attendances/check/manually': {
+    controller: 'attendances',
+    action: 'check_manually'
+  },
+
+  'put /api/attendances/uncheck/manually': {
+    controller: 'attendances',
+    action: 'uncheck_manually'
+  },
+
+  'put /api/attendances/toggle/manually': {
+    controller: 'attendances',
+    action: 'toggle_manually'
+  },
+
+  /************* Clickers API ************/ 
+  'put /api/clickers/click': {
+    controller: 'clickers',
+    action: 'click'
+  },
+
+  /************* Notices API ************/ 
+  'put /api/notices/seen': {
+    controller: 'notices',
+    action: 'seen'
+  },
+
+  /************* Tokens API ************/  
+  '/verify/:token_key': {
+    controller: 'tokens',
+    action: 'verify'
+  },
+
+  /************* Tutorial Views ************/  
+  '/tutorial/clicker': {
+    controller: 'tutorial',
+    action: 'clicker'
+  },
+
+  '/tutorial/attendance': {
+    controller: 'tutorial',
+    action: 'attendance'
+  },
+
+  '/tutorial/notice': {
+    controller: 'tutorial',
+    action: 'notice'
+  }
 
   // If a request to a URL doesn't match any of the custom routes above,
   // it is matched against Sails route blueprints.  See `config/blueprints.js`
   // for configuration options and examples.
 };
+ 

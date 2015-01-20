@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Arrays.js
  *
@@ -8,32 +6,32 @@
  *
  */
 
-module.exports = {
+exports.getIds = function(jsonArray) {
+	if (!jsonArray)
+		return new Array();
 
-  getIds: function (jsonArray) {
-    if (!jsonArray) {
-      return [];
-    }
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+  	ids.push(jsonArray[i].id);
+	return ids;
+}
 
-    var ids = [];
-    for (var i = 0; i < jsonArray.length; i++) {
-      ids.push(jsonArray[i].id);
-    }
+exports.getUsernames = function(jsonArray) {
+	if (!jsonArray)
+		return new Array();
 
-    return ids;
-  },
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+  	ids.push(jsonArray[i].username);
+	return ids;
+}
 
-  getEmails: function (jsonArray) {
-    if (!jsonArray) {
-      return [];
-    }
+exports.getEmails = function(jsonArray) {
+	if (!jsonArray)
+		return new Array();
 
-    var ids = [];
-    for (var i = 0; i < jsonArray.length; i++) {
-      ids.push(jsonArray[i].email);
-    }
-
-    return ids;
-  }
-
-};
+  var ids = new Array();
+  for (var i = 0; i < jsonArray.length; i++)
+  	ids.push(jsonArray[i].email);
+	return ids;
+}

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Cross-Site Request Forgery Protection Settings
  * (sails.config.csrf)

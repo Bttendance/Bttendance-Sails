@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * WebSocket Server Settings
  * (sails.config.sockets)
@@ -23,8 +21,15 @@ module.exports.sockets = {
   * automatically.                                                           *
   *                                                                          *
   ***************************************************************************/
-  onConnect: function (session, socket) {
+  onConnect: function(session, socket) {
     // By default: do nothing.
+
+    // For Beta
+    Clickers.watch(socket);
+    Attendances.watch(socket);
+    Notices.watch(socket);
+    Posts.watch(socket);
+
     var socketID = sails.sockets.id(socket);
     sails.sockets.emit(socketID, 'onConnect', {socketID: socketID});
   },
@@ -36,8 +41,14 @@ module.exports.sockets = {
   * disconnects                                                              *
   *                                                                          *
   ***************************************************************************/
-  onDisconnect: function (session, socket) {
+  onDisconnect: function(session, socket) {
     // By default: do nothing.
+
+    // For Beta
+    Clickers.unwatch(socket);
+    Attendances.unwatch(socket);
+    Notices.unwatch(socket);
+    Posts.unwatch(socket);
   },
 
 
@@ -93,10 +104,10 @@ module.exports.sockets = {
   ***************************************************************************/
 
   adapter: 'redis',
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  db:   process.env.REDIS_DB,
-  pass: process.env.REDIS_PASS,
+  host: process.env.REDIS_HOST || 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
+  port: process.env.REDIS_PORT || 15296,
+  db:   process.env.REDIS_DB   || 'redis-app23178340',
+  pass: process.env.REDIS_PASS || 'sZ17PA571loLwYNt',
 
 
   /***************************************************************************

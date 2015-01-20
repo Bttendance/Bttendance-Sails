@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * 400 (Bad Request) Handler
  *
@@ -63,3 +61,4 @@ module.exports = function badRequest(data, options) {
   });
 
 };
+

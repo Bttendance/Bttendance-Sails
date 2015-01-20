@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * 404 (Not Found) Handler
  *
@@ -81,3 +79,4 @@ module.exports = function notFound (data, options) {
   });
 
 };
+

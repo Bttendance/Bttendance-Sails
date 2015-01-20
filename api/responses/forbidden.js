@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * 403 (Forbidden) Handler
  *
@@ -76,3 +74,4 @@ module.exports = function forbidden (data, options) {
   });
 
 };
+

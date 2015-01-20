@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * 500 (Server Error) Response
  *
@@ -76,3 +74,4 @@ module.exports = function serverError (data, options) {
   });
 
 };
+

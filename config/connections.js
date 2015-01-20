@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Connections
  * (sails.config.connections)
@@ -23,27 +21,151 @@
 
 module.exports.connections = {
 
+  /***************************************************************************
+  *                                                                          *
+  * Local disk storage for DEVELOPMENT ONLY                                  *
+  *                                                                          *
+  * Installed by default.                                                    *
+  *                                                                          *
+  ***************************************************************************/
   localDiskDb: {
-    adapter   : 'sails-disk'
+    adapter: 'sails-disk'
   },
 
-  memory: {
-    adapter   : 'sails-memory'
+  /***************************************************************************
+  *                                                                          *
+  * MySQL is the world's most popular relational database.                   *
+  * http://en.wikipedia.org/wiki/MySQL                                       *
+  *                                                                          *
+  * Run: npm install sails-mysql                                             *
+  *                                                                          *
+  ***************************************************************************/
+  someMysqlServer: {
+    adapter: 'sails-mysql',
+    host: 'YOUR_MYSQL_SERVER_HOSTNAME_OR_IP_ADDRESS',
+    user: 'YOUR_MYSQL_USER',
+    password: 'YOUR_MYSQL_PASSWORD',
+    database: 'YOUR_MYSQL_DB'
   },
 
-  postgresql: {
-    module    : 'sails-postgresql',
-    url       : process.env.DATABASE_URL,
-    pool      : false,
-    ssl       : true
+  /***************************************************************************
+  *                                                                          *
+  * MongoDB is the leading NoSQL database.                                   *
+  * http://en.wikipedia.org/wiki/MongoDB                                     *
+  *                                                                          *
+  * Run: npm install sails-mongo                                             *
+  *                                                                          *
+  ***************************************************************************/
+  someMongodbServer: {
+    adapter: 'sails-mongo',
+    host: 'localhost',
+    port: 27017,
+    // user: 'username',
+    // password: 'password',
+    // database: 'your_mongo_db_name_here'
   },
 
-  redis: {
-    module    : 'sails-redis',
-    host      : process.env.REDIS_HOST,
-    port      : process.env.REDIS_PORT,
-    options   : {
-      auth_pass: process.env.REDIS_PASS,
+  /***************************************************************************
+  *                                                                          *
+  * PostgreSQL is another officially supported relational database.          *
+  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
+  *                                                                          *
+  * Run: npm install sails-postgresql                                        *
+  *                                                                          *
+  *                                                                          *
+  ***************************************************************************/
+  somePostgresqlServer: {
+    adapter: 'sails-postgresql',
+    host: 'YOUR_POSTGRES_SERVER_HOSTNAME_OR_IP_ADDRESS',
+    user: 'YOUR_POSTGRES_USER',
+    password: 'YOUR_POSTGRES_PASSWORD',
+    database: 'YOUR_POSTGRES_DB'
+  },
+
+  /***************************************************************************
+  *                                                                          *
+  * PostgreSQL is another officially supported relational database.          *
+  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
+  *                                                                          *
+  * Run: npm install sails-postgresql                                        *
+  *                                                                          *
+  *                                                                          *
+  ***************************************************************************/
+  // psql "dbname=d8n4i2f6q5clp2 host=ec2-54-225-88-13.compute-1.amazonaws.com user=u7nsa3j4q3ng05 password=pf3koh48m9br384km90u7kng962 port=5642 sslmode=require"
+  postgresProduction: {
+    module   : 'sails-postgresql',
+    host     : 'ec2-54-225-88-13.compute-1.amazonaws.com',
+    port     : 5642,
+    user     : 'u7nsa3j4q3ng05',
+    password : 'pf3koh48m9br384km90u7kng962',
+    database : 'd8n4i2f6q5clp2',
+    ssl      : true
+  },
+
+  /***************************************************************************
+  *                                                                          *
+  * PostgreSQL is another officially supported relational database.          *
+  * http://en.wikipedia.org/wiki/PostgreSQL                                  *
+  *                                                                          *
+  * Run: npm install sails-postgresql                                        *
+  *                                                                          *
+  *                                                                          *
+  ***************************************************************************/
+  // psql "dbname=d9vocafm0kncoe host=ec2-54-204-42-178.compute-1.amazonaws.com user=neqpefgtcbgyym password=ub0oR3o9VsAbGsuiYarNsx4yqw port=5432 sslmode=require"
+  postgresDevelopment: {
+    module   : 'sails-postgresql',
+    host     : 'ec2-54-204-42-178.compute-1.amazonaws.com',
+    port     : 5432,
+    user     : 'neqpefgtcbgyym',
+    password : 'ub0oR3o9VsAbGsuiYarNsx4yqw',
+    database : 'd9vocafm0kncoe',
+    ssl      : true
+  },
+
+
+  /***************************************************************************
+  *                                                                          *
+  * More adapters: https://github.com/balderdashy/sails                      *
+  *                                                                          *
+  ***************************************************************************/
+
+  // psql "dbname=postgres"
+  // postgresLocal: {
+  //   module   : 'sails-postgresql',
+  //   host     : 'localhost',
+  //   port     : 5432,
+  //   user     : 'TheFinestArtist',
+  //   password : 'postgres',
+  //   database : 'postgres'
+  // },
+
+  // memory: {
+  //   adapter: 'sails-memory'
+  // }
+
+  // redis-cli -h pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com -p 15511 -a eBKknThiKi1VHZSe
+  redisProduction: {
+    module   : 'sails-redis',
+    host     : 'pub-redis-15511.us-east-1-3.3.ec2.garantiadata.com',
+    port     : 15511,
+    options: {
+      auth_pass: 'eBKknThiKi1VHZSe',
+      parser: 'javascript',
+      return_buffers: false,
+      detect_buffers: false,
+      socket_nodelay: true,
+      no_ready_check: false,
+      enable_offline_queue: true
+    }
+  },
+
+  // redis-cli -h pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com -p 15296 -a sZ17PA571loLwYNt
+  redisDevelopment: {
+    module   : 'sails-redis',
+    host     : 'pub-redis-15296.us-east-1-3.3.ec2.garantiadata.com',
+    port     : 15296,
+    options: {
+      auth_pass: 'sZ17PA571loLwYNt',
       parser: 'javascript',
       return_buffers: false,
       detect_buffers: false,
@@ -54,3 +176,21 @@ module.exports.connections = {
   }
 
 };
+
+exports.getPostgres = function() {
+  if (process.env.NODE_ENV == 'production')
+    return 'postgresProduction';
+  else if (process.env.NODE_ENV == 'development')
+    return 'postgresDevelopment';
+  else 
+    return 'postgresDevelopment';
+},
+
+exports.getRedis = function() {
+    if (process.env.NODE_ENV == 'production')
+        return 'redisProduction';
+    else if (process.env.NODE_ENV == 'development')
+        return 'redisDevelopment';
+    else 
+        return 'redisDevelopment';
+}

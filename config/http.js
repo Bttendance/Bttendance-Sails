@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * HTTP Server Settings
  * (sails.config.http)

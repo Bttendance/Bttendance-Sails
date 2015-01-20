@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Policy Mappings
  * (sails.config.policies)
@@ -21,51 +19,130 @@
 
 module.exports.policies = {
 
-  DeprecatedController: {
+  /***************************************************************************
+  *                                                                          *
+  * Default policy for all controllers and actions (`true` allows public     *
+  * access)                                                                  *
+  *                                                                          *
+  ***************************************************************************/
+  '*': 'isDev',
+
+  AdminController: {
+    '*': true
   },
 
-  SocketController: {
+  PostsCacheController: {
+    '*': true
   },
 
-  TutorialController: {
+  CourseCacheController: {
+    '*': true
+  },
+
+  UserCacheController: {
+    '*': true
+  },
+
+  AnalyticsController: {
+    '*': true
   },
 
   MigrationController: {
-    '*': 'isDevelopment'
+    '*': 'isDev'
   },
 
-  UserController: {
+  SocketsController: {
+    'connect': true
+  },
+
+  UsersController: {
     signup: true,
-    autoSignin: true,
+    auto_signin: true,
     signin: true,
-    forgotPassword: true
+    forgot_password: true,
+    update_password: 'isUser',
+    update_full_name: 'isUser',
+    update_email: 'isUser',
+    feed: 'isUser',
+    courses: 'isUser',
+    search: 'isUser'
   },
 
-  DeviceController: {
+  DevicesController: {
+    update_notification_key: 'isUser'
   },
 
-  SettingController: {
+  SettingsController: {
+    update_attendance: 'isUser',
+    update_clicker: 'isUser',
+    update_notice: 'isUser',
+    update_clicker_defaults: 'isUser'
   },
 
-  QuestionController: {
+  QuestionsController: {
+    mine: 'isUser',
+    create: 'isUser',
+    edit: 'isUser',
+    remove: 'isUser'
   },
 
-  IdentificationController: {
+  IdentificationsController: {
+    update_identity: 'enrolled'
   },
 
-  SchoolController: {
+  SchoolsController: {
+    create: 'isUser',
+    all: 'isUser',
+    courses: 'isUser',
+    enroll: 'isUser'
   },
 
-  CourseController: {
+  CoursesController: {
+    info: 'attending_or_supervising',
+    create_instant: 'isUser',
+    search: 'isUser',
+    attend: 'isUser',
+    dettend: 'attending',
+    feed: 'attending_or_supervising',
+    open: 'supervising',
+    close: 'supervising',
+    students: 'attending_or_supervising',
+    add_manager: 'supervising',
+    attendance_grades: 'supervising',
+    clicker_grades: 'supervising',
+    export_grades: 'supervising'
   },
 
-  AttendanceController: {
+  PostsController: {
+    start_clicker: 'supervising',
+    start_attendance: 'supervising',
+    create_notice: 'supervising',
+    update_message: 'supervising',
+    remove: 'supervising'
   },
 
-  ClickerController: {
+  AttendancesController: {
+    from_courses: 'isUser',
+    found_device: true,
+    check_manually: 'isUser',
+    uncheck_manually: 'isUser',
+    toggle_manually: 'isUser'
   },
 
-  NoticeController: {
+  ClickersController: {
+    click: 'isUser'
   },
+
+  NoticesController: {
+    seen: 'isUser'
+  },
+
+  TokensController: {
+    verify: true
+  },
+
+  TutorialController: {
+    '*': true
+  }
 
 };

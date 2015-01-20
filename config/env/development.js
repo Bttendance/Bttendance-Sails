@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Development environment settings
  *
@@ -20,7 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'postgresql'
+    connection: 'postgresDevelopment'
   }
 
 };

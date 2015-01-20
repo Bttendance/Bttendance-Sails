@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Default model configuration
  * (sails.config.models)
@@ -22,7 +20,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  connection: 'postgresql',
-  migrate: 'safe'
+  connection: connections.getPostgres(),
 
+  migrate: 'safe'
 };
